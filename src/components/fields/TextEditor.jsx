@@ -7,20 +7,11 @@ export default class TextEditor extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.cb_change = this.cb_change.bind(this);
-    this.state = { html: '' };
-    this.props.data_channel.handler = this.get_data.bind(this);
   }
 
 
-  get_data() {
-    return this.state.html;
-  }
-
-
-  cb_change(ctx, html, _, event_origin) {
-    this.state.html = html;
+  update(ctx, html, _, event_origin) {
+    this.props.field.value = html;
     if (event_origin === 'user') {
       ctx.should_update();
     }
@@ -28,12 +19,12 @@ export default class TextEditor extends React.Component {
 
 
   render() {
+    const block = this.props.block;
     const field = this.props.field;
-    const field_def = this.props.field_definition;
 
     return (
       <Context__PageData.Consumer>{(ctx) => (
-        <ReactQuill value={field} onChange={(...args) => this.cb_change(ctx, ...args)} />
+        <ReactQuill value={field.value} onChange={(...args) => this.update.call(this, ctx, ...args)} />
       )}</Context__PageData.Consumer>
     );
   }

@@ -6,25 +6,25 @@ export default class TextInput extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.input_ref = React.createRef();
-    this.props.data_channel.handler = this.get_data.bind(this);
   }
 
 
-  get_data() {
-    return this.input_ref.current.value;
+  update(ctx) {
+    this.props.field.value = this.input_ref.current.value;
+    ctx.should_update();
   }
 
 
   render() {
+    const block = this.props.block;
     const field = this.props.field;
-    const field_def = this.props.field_definition;
+
+    this.input_ref = React.createRef();
 
     return (
       <Context__PageData.Consumer>{(ctx) => (
         <div>
-          <input type="text" ref={this.input_ref} value={field} onChange={ctx.should_update} />
+          <input type="text" ref={this.input_ref} value={field.value} onChange={_ => this.update.call(this, ctx)} />
         </div>
       )}</Context__PageData.Consumer>
     );

@@ -4,6 +4,7 @@ import TextEditor from './components/fields/TextEditor';
 import Bool       from './components/fields/Bool';
 import Radios     from './components/fields/Radios';
 import WPImage    from './components/fields/WPImage';
+import * as utils from './utils';
 
 //
 // type: May be a react component, 'sub-block', 'sub-block array'
@@ -34,86 +35,61 @@ const lp_color_mode_fields = [
   },
 ];
 
+const btn_actions = {
+  link: 'Link',
+  scroll_to_block: 'Scroll to block',
+  play_video: 'Play video',
+};
+const btn_action_opts = [
+  { name: 'action', type: Radios, options: btn_actions },
+  { name: 'url', type: TextInput, description: 'Button URL' },
+  { name: 'target_block_numbeer', type: TextInput, description: 'Target block number' },
+  { name: 'video_url', type: TextInput, description: 'Video URL' },
+];
+
 
 // component definitions
 // ------------------------------------
 
-const Components = { };
+const Components = {
+  register(type, def) {
+    def.type = type;  // For easy identification of the block by name
+    Components[type] = def;
+  }
+};
 
 
 // Digcon -------------
 
-Components.DCCallout = [
-  // callout_text: 3,
-];
-Components.DCCompany_logos = { };
-Components.DCCta = { };
-Components.DCImpact_quote = { };
-Components.DCIntro_text = { };
-Components.DCQuote = { };
-Components.DCSlider = { };
-Components.DCSocial_embed = { };
-Components.DCText_content = { };
+// Components.register('DCCallout', [
+//   // callout_text: 3,
+// ];
+// Components.DCCompany_logos = [ ];
+// Components.DCCta = [ ];
+// Components.DCImpact_quote = [ ];
+// Components.DCIntro_text = [ ];
+// Components.DCQuote = [ ];
+// Components.DCSlider = [ ];
+// Components.DCSocial_embed = [ ];
+// Components.DCText_content = [ ];
 
 
 // LP -------------
 
-Components.LPButton = { };
-Components.LPButtons = { };
-Components.LPCallout = { };
-Components.LPCard = { };
-Components.LPCards = { };
-Components.LPColumn = { };
-Components.LPColumns = { };
-Components.LPCustom_html = { };
-Components.LPEmbed = { };
-Components.LPFeaturedButton = [
-  { name: 'use_featured_button', type: Bool, description: 'Has featured button?' },
+Components.register('LPButton', [
+  { name: 'text', type: TextInput, description: 'Button text' },
   {
-    name: 'action',
+    name: 'style',
     type: Radios,
     options: {
-      link: 'Link',
-      scroll_to_block: 'Scroll to block',
-      play_video: 'Play video',
+      'primary': 'Primary',
+      'secondary': 'Secondary',
+      'tertiary': 'Tertiary',
     },
+    description: 'Button style',
   },
-  { name: 'url', type: TextInput },
-  { name: 'target_block_numbeer', type: TextInput, description: 'Target block number' },
-  { name: 'featured_video_url', type: TextInput, description: 'Video URL' },
-  { name: 'pulse_effect', type: Bool, description: 'Pulse effect?' },
-  { name: 'new_tab', type: Bool, description: 'Open in new tab?' },
-];
-Components.LPForm = { };
-Components.LPGalleryImage = { };
-Components.LPHeader = [
-  { name: 'content_title', type: TextInput },
-  { name: 'content', type: TextEditor },
-  { name: 'looks-like-a-butt', type: Bool },
-];
-
-Components.LPImageGallery = { };
-Components.LPImage = [
-  { name: 'img', type: WPImage, description: 'The image' },
-  {
-    name: 'size',
-    type: Radios,
-    options: {
-      small: 'Small',
-      medium: 'Medium',
-      large: 'Large',
-      full: 'Full Width',
-    },
-  },
-  { name: 'supporting_text', type: 'sub-block', description: 'Supporting text' },
-  { name: 'featured_button', type: 'sub-block', description: 'Featured button' },
-].concat(lp_color_mode_fields);
-Components.LPImpactText = { };
-Components.LPLongText = { };
-Components.LPQuote = { };
-Components.LPQuotes = { };
-Components.LPSocialEmbeds = { };
-Components.LPSupportingText = [
+].concat(btn_action_opts));
+Components.register('LPSupportingText', [
   { name: 'title', type: TextInput },
   { name: 'content', type: TextEditor },
   {
@@ -127,20 +103,102 @@ Components.LPSupportingText = [
     },
   },
   { name: 'has_buttons', type: Bool },
-  { name: 'buttons', type: 'sub-block array', subblock_component: Components.LPButton, description: 'Buttons', },
-];
+  {
+    name: 'buttons',
+    type: 'sub-block array',
+    subblock_types: [Components.LPButton],
+    description: 'Buttons',
+  },
+]);
+Components.register('LPFeaturedButton', [
+  { name: 'use_featured_button', type: Bool, description: 'Has featured button?' },
+  { name: 'pulse_effect', type: Bool, description: 'Pulse effect?' },
+  { name: 'new_tab', type: Bool, description: 'Open in new tab?' },
+].concat(btn_action_opts));
+// Components.LPButtons = [ ];
+// Components.LPCallout = [ ];
+// Components.LPCard = [ ];
+// Components.LPCards = [ ];
+// Components.LPColumn = [ ];
+// Components.LPColumns = [ ];
+// Components.LPCustom_html = [ ];
+// Components.LPEmbed = [ ];
+// Components.LPForm = [ ];
+// Components.LPGalleryImage = [ ];
+Components.register('LPHeader', [
+  { name: 'content_title', type: TextInput },
+  { name: 'content', type: TextEditor },
+  {
+    name: 'supporting_text',
+    type: 'sub-block',
+    subblock_type: Components.LPSupportingText,
+    description: 'Supporting text'
+  },
+  {
+    name: 'featured_button',
+    type: 'sub-block',
+    subblock_type: Components.LPFeaturedButton,
+    description: 'Featured button'
+  },
+]);
+// Components.LPImageGallery = [ ];
+Components.register('LPImage', [
+  { name: 'img', type: WPImage, description: 'The image' },
+  {
+    name: 'size',
+    type: Radios,
+    options: {
+      small: 'Small',
+      medium: 'Medium',
+      large: 'Large',
+      full: 'Full Width',
+    },
+  },
+  {
+    name: 'supporting_text',
+    type: 'sub-block',
+    subblock_type: Components.LPSupportingText,
+    description: 'Supporting text'
+  },
+  {
+    name: 'featured_button',
+    type: 'sub-block',
+    subblock_type: Components.LPFeaturedButton,
+    description: 'Featured button'
+  },
+].concat(lp_color_mode_fields));
+// Components.LPImpactText = [ ];
+// Components.LPLongText = [ ];
+// Components.LPQuote = [ ];
+// Components.LPQuotes = [ ];
+// Components.LPSocialEmbeds = [ ];
 
 
 // PB -------------
 
-Components.PBGraph = { };
-Components.PBHtml = { };
-Components.PBImage = { };
-Components.PBOembed = { };
-Components.PBSlider = { };
-Components.PBSoftCta = { };
-Components.PBTable = { };
-Components.PBTextBlock = { };
+// Components.PBGraph = [ ];
+// Components.PBHtml = [ ];
+// Components.PBImage = [ ];
+// Components.PBOembed = [ ];
+// Components.PBSlider = [ ];
+// Components.PBSoftCta = [ ];
+// Components.PBTable = [ ];
+// Components.PBTextBlock = [ ];
+
+// Helper to get definition for
+Components.get = function(__type) {
+  if (!__type) {
+    throw Error(utils.Err__BlockNoType());
+  }
+  const def = Components[__type];
+  if (!def) {
+    throw Error(utils.Err__NoComponentDef(__type));
+  }
+  if (def.constructor !== Array) {
+    throw Error(utils.Err__InvalidComponentDef(__type));
+  }
+  return def;
+};
 
 export default Components;
 

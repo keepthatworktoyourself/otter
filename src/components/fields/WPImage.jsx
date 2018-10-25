@@ -8,26 +8,26 @@ export default class FileInput extends React.Component {
     super(props);
 
     this.input_ref = React.createRef();
-    this.props.data_channel.handler = this.get_data.bind(this);
   }
 
 
-  get_data() {
-    return this.input_ref.current.value;
+  update(ctx) {
+    this.props.field.value = this.input_ref.current.value;
+    ctx.should_update();
   }
 
 
   render() {
+    const block = this.props.block;
     const field = this.props.field;
-    const field_def = this.props.field_definition;
 
     return (
       <Context__PageData.Consumer>{(ctx) => (
         <div>
-          <input id="file" type="text" ref={this.input_ref} value={field} onChange={ctx.should_update} />
+        <input id="file" type="text" ref={this.input_ref} value={field.value} onChange={_ => this.update.call(this, ctx)} />
           <div style={{ width: '12rem', 'height': '12rem', backgroundColor: 'lightblue', border: '1px solid grey' }}>
             {field && (
-              <img src={field} style={{'width': '100%'}} />
+              <img src={field.value} style={{'width': '100%'}} />
             )}
           </div>
         </div>
