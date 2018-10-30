@@ -1,25 +1,19 @@
 import React from 'react';
 import RecursiveFieldRenderer from './RecursiveFieldRenderer';
-
-
-const subblock_styles = {
-  padding: '1rem',
-  marginLeft: '1rem',
-  marginBottom: '1rem',
-  border: '1px solid rgba(0,0,0, 0.075)',
-  backgroundColor: 'rgba(0,0,0, 0.025)',
-  position: 'relative',
-};
+import Context__PageData from './Context__PageData';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faChevronDown, faTimes} from '@fortawesome/free-solid-svg-icons';
 
 
 export default class Block extends React.Component {
 
   constructor(props) {
     super(props);
+  }
 
-    this.state = {
-      context_obj: null,
-    };
+
+  cb_delete(ctx, ev) {
+    ctx.remove_block(this.props.block.uid);
   }
 
 
@@ -27,12 +21,26 @@ export default class Block extends React.Component {
     const block = this.props.block;
 
     return (
-      <div class="block__outer" style={{ paddingBottom: '1rem' }}>
-        <h3>{block.type}</h3>
-        <div class="block__inner">
-          <RecursiveFieldRenderer block={block} />
+      <Context__PageData.Consumer>{(ctx) => (
+        <div style={{ paddingBottom: '1rem' }}>
+          <div className="bg" style={{ padding: '1rem' }}>
+            <div style={{ position: 'relative' }}>
+
+              <div style={{ position: 'absolute', top: 0, right: 0 }}>
+                <a className="button is-rounded is-small is-outlined" onClick={ev => this.cb_delete.call(this, ctx, ev)}>
+                  <FontAwesomeIcon icon={faTimes} />
+                </a>
+              </div>
+
+              <h3 className="title is-4">{block.type}</h3>
+              <div className="">
+                <RecursiveFieldRenderer block={block} />
+              </div>
+
+            </div>
+          </div>
         </div>
-      </div>
+      )}</Context__PageData.Consumer>
     );
   }
 

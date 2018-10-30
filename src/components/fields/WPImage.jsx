@@ -27,7 +27,7 @@ export default class FileInput extends React.Component {
         <input id="file" type="text" ref={this.input_ref} value={field.value} onChange={_ => this.update.call(this, ctx)} />
           <div style={{ width: '12rem', 'height': '12rem', backgroundColor: 'lightblue', border: '1px solid grey' }}>
             {field && (
-              <img src={field.value} style={{'width': '100%'}} />
+              <img src={field.value} alt="your preview" style={{'width': '100%'}} />
             )}
           </div>
         </div>

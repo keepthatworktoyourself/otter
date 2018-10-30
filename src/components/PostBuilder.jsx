@@ -34,6 +34,14 @@ function context_obj(pb_instance) {
     add_repeater_item(repeater_uid, type) {
       pb_instance.add_repeater_item(repeater_uid, type);
     },
+
+    remove_repeater_item(repeater_uid, item_uid) {
+      pb_instance.remove_repeater_item(repeater_uid, item_uid);
+    },
+
+    remove_block(block_uid) {
+      pb_instance.remove_block(block_uid);
+    },
   };
 }
 
@@ -122,7 +130,11 @@ export default class PostBuilder extends React.Component {
           value: null,
         };
 
-        if (field_def.type === 'sub-block') {
+        if (!field_def) {
+          console.log('error: field_def not found', field, data_block, block_definition);
+        }
+
+        if (field_def.type === 'subblock') {
           const sub_data_block = (data_block && data_block[field_def.name]) || null;
           field.value = this.create_render_block(
             field_def.subblock_type,
@@ -130,7 +142,7 @@ export default class PostBuilder extends React.Component {
           );
         }
 
-        else if (field_def.type === 'sub-block array') {
+        else if (field_def.type === 'subblock array') {
           const sub_data_blocks = (data_block && data_block[field_def.name]) || [ ];
           field.value = sub_data_blocks.map(b => this.create_render_block(
             component_definitions.get(b.__type),
@@ -175,16 +187,33 @@ export default class PostBuilder extends React.Component {
   // -----------------------------------
 
   add_repeater_item(repeater_uid, type) {
-    console.log('add_repeater_item', repeater_uid, type);
     const repeater = this.repeaters[repeater_uid];
-    if (!repeater) {
-      return;
+    if (repeater) {
+      const item = this.create_render_block(type, null);
+      repeater.value.push(item);
+      this.context_obj.should_update();
     }
+  }
 
-		const item = this.create_render_block(type, null);
-		repeater.value.push(item);
 
-		this.context_obj.should_update();
+  // remove_repeater_item()
+  // -----------------------------------
+
+  remove_repeater_item(repeater_uid, item_uid) {
+    const repeater = this.repeaters[repeater_uid];
+    if (repeater) {
+      repeater.value = repeater.value.filter(item => item.uid !== item_uid);
+      this.context_obj.should_update();
+    }
+  }
+
+
+  // remove_block()
+  // -----------------------------------
+
+  remove_block(block_uid) {
+    this.state.render_data = this.state.render_data.filter(block => block.uid !== block_uid);
+    this.context_obj.should_update();
   }
 
 
@@ -242,7 +271,7 @@ export default class PostBuilder extends React.Component {
     console.log(this.state.render_data);
 
     return (
-      <div class="post-builder" style={{ padding: '1rem' }}>
+      <div className="post-builder container" style={{ }}>
         <Context__PageData.Provider value={this.context_obj}>
           <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
             <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
@@ -251,7 +280,7 @@ export default class PostBuilder extends React.Component {
                 {this.state.render_data.map((block, index) => (
                   <DnD.Draggable key={`block-${index}`} draggableId={`block-${index}`} index={index} type="block">{(prov, snap) => (
 
-                    <div class="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
+                    <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
                       <Block block={block} block_index={index} context_obj={this.context_obj}/>
                     </div>
 
@@ -269,115 +298,4 @@ export default class PostBuilder extends React.Component {
   }
 
 }
-
-
-// // addBlock()
-// // -----------------------------------
-//
-// addBlock = (ev, classNameString) => {
-//   const key = "block-" + get_random_int(10000);
-//   const block_fields = {};
-//   const block_def = Components[classNameString];
-//   let block = {};
-//   block['__type_name'] = classNameString;
-//
-//   if (block_def.sections) {
-//     Object.values(block_def.sections).map((section) => {
-//       block = this.setFieldData(section.fields, block);
-//     })
-//   }
-//   else {
-//     block = this.setFieldData(block_def.fields, block);
-//   }
-//
-//   this.setState(prevState => ({
-//     blocks: {...prevState.blocks, [key]: block},
-//     columns: {
-//       ...prevState.columns,
-//       'column-1': {
-//         ...prevState.columns['column-1'],
-//         blockIds: [...prevState.columns['column-1'].blockIds, key]
-//       }
-//     }
-//   }));
-//
-//   document.getElementById('block-menu').classList.add("dn");
-//
-//   // TODO send state wherever needs to be used
-// }
-//
-//
-// // deleteBlock()
-// // -----------------------------------
-// deleteBlock = (event, blockId) => {
-//   const blocks = this.state.blocks;
-//   const blockIds = this.state.columns['column-1'].blockIds;
-//   delete blocks[blockId];
-//   blockIds.splice(blockIds.indexOf(blockId),1);
-//
-//   this.setState(prevState => ({
-//     blocks: blocks,
-//     columns: {
-//       ...prevState.columns,
-//       'column-1': {
-//         ...prevState.columns['column-1'],
-//         blockIds: blockIds,
-//       }
-//     }
-//   }));
-//
-//   // TODO send state wherever needs to be used
-//   setTimeout(() => { console.log(this.state) }, 3000);
-// }
-//
-//
-// // Drag & drop
-// // -----------------------------------
-//
-// onDragEnd = result => {
-//   const { destination, source, draggableId} = result;
-//
-//   if (!destination) {
-//     return;
-//   }
-//
-//   const has_moved = destination.droppableId !== source.droppableId || destination.index !== source.index;
-//   if (!has_moved) {
-//     return;
-//   }
-//
-//   const column = this.state.columns[source.droppableId];
-//   const newBlockIds = Array.from(column.blockIds);
-//   // reorder the blockIds as those determine the order of blocks
-//   // NOTE might require some extra work when sending data to db
-//   // to ensure that the changes in order are reflected
-//   newBlockIds.splice(source.index, 1);
-//   newBlockIds.splice(destination.index, 0, draggableId);
-//
-//   const newColumn = {
-//     ...column,
-//     blockIds: newBlockIds,
-//   };
-//
-//   // TODO reorder blocks not just blockIds
-//
-//   const newState = {
-//     ...this.state,
-//     columns: {
-//       ...this.state.columns,
-//       [newColumn.id]: newColumn,
-//     },
-//   };
-//
-//   this.setState(newState);
-//
-//   setTimeout(() => { console.log(this.state) }, 3000);
-//   // TODO prepare data to be sent to db
-//
-//   // other syntax:
-//   // this.setState(prevState => ({
-//   //   columns: {...prevState.columns, [newColumn.id]: newColumn,
-//   //   }
-//   // }));
-// }
 

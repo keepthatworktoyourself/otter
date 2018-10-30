@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PostBuilder from './components/PostBuilder';
 import './index.css';
+import 'bulma/css/bulma.min.css';
 import './quill.snow.css';
+
 
 function query_data() {
   const q = window.location.search;
@@ -17,6 +19,7 @@ function query_data() {
       return accum;
     }, { });
 }
+
 
 function post_id() {
   const data = query_data();

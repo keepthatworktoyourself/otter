@@ -3,16 +3,9 @@ import * as DnD from 'react-beautiful-dnd';
 import InnerBlock from './InnerBlock';
 import Context__PageData from './Context__PageData';
 import toggler from './toggler';
-
-
-const subblock_styles = {
-  padding: '1rem',
-  marginLeft: '1rem',
-  marginBottom: '1rem',
-  border: '1px solid rgba(0,0,0, 0.075)',
-  backgroundColor: 'rgba(0,0,0, 0.025)',
-  position: 'relative',
-};
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faChevronDown, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
+import {rnd_str} from '../utils';
 
 
 export default class Block extends React.Component {
@@ -27,7 +20,7 @@ export default class Block extends React.Component {
   }
 
 
-  cb_add_item(ctx, ev, type) {
+  cb_add(ctx, ev, type) {
     ev.stopPropagation();
     ev.preventDefault();
 
@@ -35,32 +28,49 @@ export default class Block extends React.Component {
     ctx.add_repeater_item(this.props.field.uid, type);
   }
 
+  cb_delete(ctx, ev, subblock) {
+    ev.stopPropagation();
+    ev.preventDefault();
+
+    ctx.remove_repeater_item(this.props.field.uid, subblock.uid);
+  }
+
 
   render() {
     const block = this.props.block;
     const field = this.props.field;
     const show_add_item_dialogue = this.state && this.state.show_dialogue;
+    const toggle_id = `repeater-${rnd_str(8)}`;
 
     const repeater_title = field.def.description || field.def.name;
     const arr = field.value;
 
     return (
       <Context__PageData.Consumer>{(ctx) => (
-        <div class="repeater" style={subblock_styles}>
+        <div className="repeater" data-id={block.uid}>
 
-          <h3 style={{ marginBottom: '0.6rem', cursor: 'pointer' }} onClick={toggler}>
-            {repeater_title}
-          </h3>
+          <div style={{ paddingBottom: '0.5rem' }}>
+            {repeater_title && (
+              <h4 style={{ cursor: 'pointer' }} className="title is-6 is-marginless" onClick={toggler} data-toggler-target={toggle_id}>
+                {repeater_title}
+                <span className="icon c-toggler-icon"><FontAwesomeIcon icon={faChevronDown} /></span>
+              </h4>
+            )}
+          </div>
 
-          <div class="repeater__inner toggle">
+          <div className="toggle" id={toggle_id} style={{ display: 'none' }}>
+
+            {/* Repeater items */}
             <DnD.Droppable droppableId={field.uid} type={field.uid}>{(prov, snap) => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
 
                 {(arr || [ ]).map((subblock, i) => (
                   <DnD.Draggable key={subblock.uid} draggableId={subblock.uid} index={i} type={field.uid}>{(prov, snap) => (
-                    <div class="wrapper-repeater-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps}>
+                    <div className="repeater-item-wrapper" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps}>
 
-                      <InnerBlock block={subblock} contents_hidden={false} />
+                      <div style={{ paddingBottom: '0.5rem' }}>
+                        <InnerBlock block={subblock} contents_hidden={false} cb_delete={ev => this.cb_delete.call(this, ctx, ev, subblock)} />
+                      </div>
 
                     </div>
                   )}</DnD.Draggable>
@@ -70,18 +80,36 @@ export default class Block extends React.Component {
 
               </div>
             )}</DnD.Droppable>
-          </div>
+            {/* End repeater items */}
 
-          <div style={{ width: '3rem', height: '3rem', backgroundColor: 'lightblue', cursor: 'pointer' }} onClick={this.cb_toggle_additem_dialogue.bind(this)}>
-            {show_add_item_dialogue && (
-              <ul>
-                {(field.def.subblock_types || [ ]).map(t => (
-                  <li onClick={ev => this.cb_add_item.call(this, ctx, ev, t)} style={{ backgroundColor: 'green' }}>{t.type}</li>
-                ))}
-              </ul>
-            )}
-          </div>
+            {/* Add button */}
+            <div style={{ paddingTop: '0.5rem', paddingBottom: '1rem' }}>
+              <div className={`dropdown ${show_add_item_dialogue ? 'is-active' : ''}`}>
 
+                <div className="dropdown-trigger">
+                  <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.cb_toggle_additem_dialogue.bind(this)}>
+                    <span className="icon is-small has-text-grey">
+                      <FontAwesomeIcon icon={faPlusCircle} />
+                    </span>
+                    <span>Add</span>
+                  </button>
+                </div>
+
+                <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div className="dropdown-content">
+                    {(field.def.subblock_types || [ ]).map(t => (
+                      <a className="dropdown-item" onClick={ev => this.cb_add.call(this, ctx, ev, t)}>
+                        {t.type}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            {/* End add button */}
+
+          </div>
         </div>
       )}</Context__PageData.Consumer>
     );

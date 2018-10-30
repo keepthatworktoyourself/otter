@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
 import Context__PageData from '../Context__PageData';
+import FieldLabel from './FieldLabel';
 
 
 export default class TextEditor extends React.Component {
@@ -24,7 +25,12 @@ export default class TextEditor extends React.Component {
 
     return (
       <Context__PageData.Consumer>{(ctx) => (
-        <ReactQuill value={field.value} onChange={(...args) => this.update.call(this, ctx, ...args)} />
+        <div className="field" key={field.uid}>
+
+          <FieldLabel field={field} />
+          <ReactQuill value={field.value} onChange={(...args) => this.update.call(this, ctx, ...args)} />
+
+        </div>
       )}</Context__PageData.Consumer>
     );
   }
