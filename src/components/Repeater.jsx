@@ -58,58 +58,61 @@ export default class Block extends React.Component {
             )}
           </div>
 
-          <div className="toggle" id={toggle_id} style={{ display: 'none' }}>
+          <div className="toggle" id={toggle_id} style={{ display: 'none', paddingBottom: '0.5rem' }}>
+            <div style={{ padding: '1rem', border: '2px dotted rgba(0,0,0, 0.15)', borderRadius: '1.3rem' }}>
 
-            {/* Repeater items */}
-            <DnD.Droppable droppableId={field.uid} type={field.uid}>{(prov, snap) => (
-              <div ref={prov.innerRef} {...prov.droppableProps}>
+              {/* Repeater items */}
+              <DnD.Droppable droppableId={field.uid} type={field.uid}>{(prov, snap) => (
+                <div ref={prov.innerRef} {...prov.droppableProps}>
 
-                {(arr || [ ]).map((subblock, i) => (
-                  <DnD.Draggable key={subblock.uid} draggableId={subblock.uid} index={i} type={field.uid}>{(prov, snap) => (
-                    <div className="repeater-item-wrapper" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps}>
+                  {(arr || [ ]).map((subblock, i) => (
+                    <DnD.Draggable key={subblock.uid} draggableId={subblock.uid} index={i} type={field.uid}>{(prov, snap) => (
+                      <div className="repeater-item-wrapper" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps}>
 
-                      <div style={{ paddingBottom: '0.5rem' }}>
-                        <InnerBlock block={subblock} contents_hidden={false} cb_delete={ev => this.cb_delete.call(this, ctx, ev, subblock)} />
+                        <div style={{ paddingBottom: '0.5rem' }}>
+                          <InnerBlock block={subblock} contents_hidden={false} cb_delete={ev => this.cb_delete.call(this, ctx, ev, subblock)} />
+                        </div>
+
                       </div>
+                    )}</DnD.Draggable>
+                  ))}
 
-                    </div>
-                  )}</DnD.Draggable>
-                ))}
+                  {prov.placeholder}
 
-                {prov.placeholder}
-
-              </div>
-            )}</DnD.Droppable>
-            {/* End repeater items */}
-
-            {/* Add button */}
-            <div style={{ paddingTop: '0.5rem', paddingBottom: '1rem' }}>
-              <div className={`dropdown ${show_add_item_dialogue ? 'is-active' : ''}`}>
-
-                <div className="dropdown-trigger">
-                  <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.cb_toggle_additem_dialogue.bind(this)}>
-                    <span className="icon is-small has-text-grey">
-                      <FontAwesomeIcon icon={faPlusCircle} />
-                    </span>
-                    <span>Add</span>
-                  </button>
                 </div>
+              )}</DnD.Droppable>
+              {/* End repeater items */}
 
-                <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                  <div className="dropdown-content">
-                    {(field.def.subblock_types || [ ]).map(t => (
-                      <a className="dropdown-item" onClick={ev => this.cb_add.call(this, ctx, ev, t)}>
-                        {t.type}
-                      </a>
-                    ))}
+              {/* 'Add' button */}
+              <div>
+                <div className={`dropdown ${show_add_item_dialogue ? 'is-active' : ''}`}>
+
+                  <div className="dropdown-trigger">
+                    <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.cb_toggle_additem_dialogue.bind(this)}>
+                      <span className="icon is-small has-text-grey">
+                        <FontAwesomeIcon icon={faPlusCircle} />
+                      </span>
+                      <span>Add</span>
+                    </button>
                   </div>
+
+                  <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div className="dropdown-content">
+                      {(field.def.subblock_types || [ ]).map(t => (
+                        <a className="dropdown-item" onClick={ev => this.cb_add.call(this, ctx, ev, t)}>
+                          {t.description}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+
                 </div>
-
               </div>
-            </div>
-            {/* End add button */}
+              {/* End 'add' button */}
 
-          </div>
+            </div>
+          </div>{/* End toggle */}
+
         </div>
       )}</Context__PageData.Consumer>
     );

@@ -16,3 +16,10 @@
   transform: rotate(-180deg);
 }
 
+
+@media screen and (max-width: 767px) {
+  .c-label-margin-btm-phone {
+    margin-bottom: 0.4em;
+  }
+}
+

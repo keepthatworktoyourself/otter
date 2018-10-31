@@ -28,11 +28,12 @@ export default class Block extends React.Component {
 
               <div style={{ position: 'absolute', top: 0, right: 0 }}>
                 <a className="button is-rounded is-small is-outlined" onClick={ev => this.cb_delete.call(this, ctx, ev)}>
+                  <span style={{ marginRight: '0.5rem' }}>Delete block</span>
                   <FontAwesomeIcon icon={faTimes} />
                 </a>
               </div>
 
-              <h3 className="title is-4">{block.type}</h3>
+              <h3 className="title is-4">{block.def.description}</h3>
               <div className="">
                 <RecursiveFieldRenderer block={block} />
               </div>

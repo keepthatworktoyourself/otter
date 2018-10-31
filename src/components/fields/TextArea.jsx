@@ -16,8 +16,8 @@ export default class TextArea extends React.Component {
 
 
   render() {
-    const block = this.props.block;
     const field = this.props.field;
+    const block = this.props.block;
 
     this.textarea_ref = React.createRef();
 
@@ -25,7 +25,7 @@ export default class TextArea extends React.Component {
       <Context__PageData.Consumer>{(ctx) => (
         <div className="field">
 
-          <FieldLabel field={field} />
+          <FieldLabel field={field} block={block} />
           <textarea className="textarea" ref={this.textarea_ref} value={field.value} onChange={_ => this.update.call(this, ctx)} />
 
         </div>

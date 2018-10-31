@@ -122,6 +122,7 @@ export default class PostBuilder extends React.Component {
   create_render_block(block_definition, data_block) {
     const render_block = {
       type: block_definition.type,
+      def: block_definition,
       uid: this.uid.call(this),
       fields: block_definition.reduce((accum, field_def) => {
         const field = {
@@ -169,17 +170,16 @@ export default class PostBuilder extends React.Component {
   // -----------------------------------
 
   get_render_data(page_data) {
-    const self = this;
-
     function datablock_arr_to_renderblock_arr(arr_blocks) {
       return arr_blocks.map(b => {
-        return self.create_render_block.call(self, component_definitions.get(
-          b.__type), b
-        );
+        return this.create_render_block(component_definitions.get(b.__type), b);
       });
     }
 
-    return datablock_arr_to_renderblock_arr(page_data);
+    const render_data = datablock_arr_to_renderblock_arr.call(this, page_data)
+    render_data.forEach(b => b.is_top_level = true);
+
+    return render_data;
   }
 
 
@@ -281,7 +281,7 @@ export default class PostBuilder extends React.Component {
                   <DnD.Draggable key={`block-${index}`} draggableId={`block-${index}`} index={index} type="block">{(prov, snap) => (
 
                     <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
-                      <Block block={block} block_index={index} context_obj={this.context_obj}/>
+                      <Block block={block} context_obj={this.context_obj}/>
                     </div>
 
                   )}</DnD.Draggable>

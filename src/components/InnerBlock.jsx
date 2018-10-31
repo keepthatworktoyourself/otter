@@ -33,12 +33,13 @@ export default class InnerBlock extends React.Component {
         )}
 
         <div className="toggle" id={toggle_id} style={{ display: contents_hidden ? 'none' : 'block' }}>
-          <div className="bg" style={{ padding: '1rem' }}>
+          <div className="bg" style={{ padding: '1rem', borderRadius: '1rem' }}>
             <div style={{ position: 'relative', paddingTop: this.props.cb_delete ? '0.75rem' : 0 }}>
 
               {this.props.cb_delete && (
-                <div style={{ position: 'absolute', top: 0, left: 0 }}>
-                  <a className="button is-rounded is-small is-danger is-outlined" onClick={this.props.cb_delete}>
+                <div style={{ position: 'absolute', top: 0, right: 0 }}>
+                  <a className="button is-rounded is-small is-outlined" onClick={this.props.cb_delete}>
+                    <span style={{ paddingRight: '0.5rem' }}>Delete</span>
                     <FontAwesomeIcon icon={faTimes} />
                   </a>
                 </div>

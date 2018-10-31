@@ -1,5 +1,6 @@
 import React from 'react';
 import Context__PageData from '../Context__PageData';
+import FieldLabel from './FieldLabel';
 
 
 export default class FileInput extends React.Component {
@@ -23,12 +24,25 @@ export default class FileInput extends React.Component {
 
     return (
       <Context__PageData.Consumer>{(ctx) => (
-        <div>
-        <input id="file" type="text" ref={this.input_ref} value={field.value} onChange={_ => this.update.call(this, ctx)} />
-          <div style={{ width: '12rem', 'height': '12rem', backgroundColor: 'lightblue', border: '1px solid grey' }}>
-            {field && (
-              <img src={field.value} alt="your preview" style={{'width': '100%'}} />
+        <div className="field">
+          <div className="is-flex" style={{ alignItems: 'flex-start' }}>
+
+            <div className="is-flex-tablet" style={{ alignItems: 'center'}}>
+              <div className="c-label-margin-btm-phone">
+                <FieldLabel field={field} block={block} align="left" colon={true} min_width={true} />
+              </div>
+
+              <div>
+                <a class="button is-small">Select</a>
+              </div>
+            </div>
+
+            {field.value && (
+              <div style={{ display: 'block', width: '5rem', marginLeft: '1rem' }} className="has-background-light">
+                <img src={field.value} alt="your preview" style={{ display: 'block', 'width': '100%' }} />
+              </div>
             )}
+
           </div>
         </div>
       )}</Context__PageData.Consumer>

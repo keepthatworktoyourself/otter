@@ -27,7 +27,7 @@ export default class TextEditor extends React.Component {
       <Context__PageData.Consumer>{(ctx) => (
         <div className="field" key={field.uid}>
 
-          <FieldLabel field={field} />
+          <FieldLabel field={field} block={block} />
           <ReactQuill value={field.value} onChange={(...args) => this.update.call(this, ctx, ...args)} />
 
         </div>
