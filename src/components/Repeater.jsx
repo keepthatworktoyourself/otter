@@ -1,6 +1,6 @@
 import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
-import InnerBlock from './InnerBlock';
+import SubBlock from './SubBlock';
 import Context__PageData from './Context__PageData';
 import toggler from './toggler';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -8,7 +8,7 @@ import {faChevronDown, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
 import {rnd_str} from '../utils';
 
 
-export default class Block extends React.Component {
+export default class Repeater extends React.Component {
 
   constructor(props) {
     super(props);
@@ -58,7 +58,7 @@ export default class Block extends React.Component {
             )}
           </div>
 
-          <div className="toggle" id={toggle_id} style={{ display: 'none', paddingBottom: '0.5rem' }}>
+          <div className="toggle" id={toggle_id} style={{ display: 'none' }}>
             <div style={{ padding: '1rem', border: '2px dotted rgba(0,0,0, 0.15)', borderRadius: '1.3rem' }}>
 
               {/* Repeater items */}
@@ -70,7 +70,7 @@ export default class Block extends React.Component {
                       <div className="repeater-item-wrapper" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps}>
 
                         <div style={{ paddingBottom: '0.5rem' }}>
-                          <InnerBlock block={subblock} contents_hidden={false} cb_delete={ev => this.cb_delete.call(this, ctx, ev, subblock)} />
+                          <SubBlock block={subblock} contents_hidden={false} cb_delete={ev => this.cb_delete.call(this, ctx, ev, subblock)} />
                         </div>
 
                       </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import * as utils from '../utils';
 import Repeater from './Repeater';
-import InnerBlock from './InnerBlock';
+import SubBlock from './SubBlock';
 
 
 export default class RecursiveFieldRenderer extends React.Component {
@@ -48,7 +48,7 @@ export default class RecursiveFieldRenderer extends React.Component {
       let out = null;
 
       if (field.def.type === 'subblock') {
-        out = <InnerBlock block={field.value} field={field} contents_hidden={true} />;
+        out = <SubBlock block={field.value} field={field} contents_hidden={true} />;
       }
 
       else if (field.def.type === 'subblock array') {

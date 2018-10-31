@@ -1,7 +1,12 @@
 
-
+body {
+  background-color: #3e4246;
+}
 .bg {
   background-color: rgba(0, 0, 0, 0.035);
+}
+.bg-solid {
+  background-color: #f7f7f7;
 }
 
 

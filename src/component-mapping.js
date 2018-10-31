@@ -105,6 +105,24 @@ const opts__dc_alignment = {
 
 
 
+// --- Core ------------------------------------
+
+Components.register('CoreForm', 'Marketo Form', [
+  { name: 'form_id', type: TextInput, description: 'Form' },
+  { name: 'prefill', type: Bool, description: 'Prefill', text__yes: 'Enabled', text__no: 'Disabled' },
+  { name: 'redirect', type: TextInput, description: 'Redirect' },
+  {
+    name: 'disable_business_email_filtering',
+    type: Bool,
+    description: 'Business email filtering',
+    text__yes: 'Disabled',  // sorry
+    text__no: 'Enabled',    //
+  },
+  { name: 'button_text_override', type: TextInput, description: 'button_text_override' },
+])
+
+
+
 // --- Digcon ------------------------------------
 
 Components.register('DCCallout', 'Callout', [
@@ -300,7 +318,7 @@ Components.register('LPColumn', 'Column', [
 
 Components.register('LPButtons', 'Buttons', [
   { name: 'buttons', type: 'subblock array', description: 'Buttons', subblock_types: [Components.LPButton] },
-  { name: 'has_short_title', type: Bool, description: 'Short title alongside?' },
+  { name: 'has_short_title', type: Bool, description: 'Short title?' },
   {
     name: 'short_title',
     type: TextInput,
@@ -344,17 +362,8 @@ Components.register('LPCustomHTML', 'Custom HTML', [
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPForm', 'Form', [
-  { name: 'form', type: TextInput, description: 'Form' },
-  { name: 'prefill', type: Bool, description: 'Prefill', text__yes: 'Enabled', text__no: 'Disabled' },
-  { name: 'custom_redirect', type: TextInput, description: 'Redirect' },
-  {
-    name: 'disable_business_email_filtering',
-    type: Bool,
-    description: 'Business email filtering',
-    text__yes: 'Disabled',  // (sorry)
-    text__no: 'Enabled',    //
-  },
+Components.register('LPForm', 'Form block', [
+	...Components.get('CoreForm'),
   lp_supporting_text,
   ...lp_color_mode_fields,
 ]);
@@ -385,13 +394,6 @@ Components.register('LPHeader', 'Jumbotron', [
     },
     display_if: [{ sibling: 'style', not_equal_to: 'standard' }, { sibling: 'style', not_equal_to: 'hanging' }],
   },
-  {
-    name: 'form',
-    type: 'subblock',
-    description: 'Form',
-    subblock_type: Components.LPForm,
-    display_if: [{ sibling: 'style', equal_to: 'form' }],
-  },
   { name: 'content_has_buttons', type: Bool, description: 'Has buttons?' },
   {
     name: 'content_buttons',
@@ -399,6 +401,13 @@ Components.register('LPHeader', 'Jumbotron', [
     description: 'Buttons',
     subblock_types: [Components.LPButton],
     display_if: [{ sibling: 'content_has_buttons', equal_to: true }],
+  },
+  {
+    name: 'form',
+    type: 'subblock',
+    description: 'Form',
+    subblock_type: Components.CoreForm,
+    display_if: [{ sibling: 'style', equal_to: 'form' }],
   },
   lp_featured_button,
   {

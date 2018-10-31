@@ -38,8 +38,8 @@ export default class FileInput extends React.Component {
             </div>
 
             {field.value && (
-              <div style={{ display: 'block', width: '5rem', marginLeft: '1rem' }} className="has-background-light">
-                <img src={field.value} alt="your preview" style={{ display: 'block', 'width': '100%' }} />
+              <div style={{ display: 'block', width: '5rem', height: '3rem', marginLeft: '1rem' }} className="has-background-light">
+                <img src={field.value} alt="your preview" style={{ display: 'block', width: '100%', maxWidth: '5rem', maxHeight: '3rem' }} />
               </div>
             )}
 

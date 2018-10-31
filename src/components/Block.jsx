@@ -23,7 +23,7 @@ export default class Block extends React.Component {
     return (
       <Context__PageData.Consumer>{(ctx) => (
         <div style={{ paddingBottom: '1rem' }}>
-          <div className="bg" style={{ padding: '1rem' }}>
+          <div className="bg-solid" style={{ padding: '1rem' }}>
             <div style={{ position: 'relative' }}>
 
               <div style={{ position: 'absolute', top: 0, right: 0 }}>

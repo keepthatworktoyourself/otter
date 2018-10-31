@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronDown, faTimes} from '@fortawesome/free-solid-svg-icons';
 import {rnd_str} from '../utils';
 
-export default class InnerBlock extends React.Component {
+export default class SubBlock extends React.Component {
 
   constructor(props) {
     super(props);
@@ -24,15 +24,15 @@ export default class InnerBlock extends React.Component {
       <div className="inner-block">
 
         {title && (
-          <div style={{ paddingBottom: '0.5rem' }}>
-            <h4 style={{ cursor: 'pointer' }} className="title is-6 is-marginless" onClick={toggler} data-toggler-target={toggle_id}>
+          <div>
+            <h4 style={{ cursor: 'pointer', paddingBottom: '0.5rem' }} className="title is-6 is-marginless" onClick={toggler} data-toggler-target={toggle_id}>
               {title}
               <span className="icon c-toggler-icon"><FontAwesomeIcon icon={faChevronDown} /></span>
             </h4>
           </div>
         )}
 
-        <div className="toggle" id={toggle_id} style={{ display: contents_hidden ? 'none' : 'block' }}>
+        <div className="toggle" id={toggle_id} style={{ display: contents_hidden ? 'none' : 'block', paddingBottom: '0.5rem' }}>
           <div className="bg" style={{ padding: '1rem', borderRadius: '1rem' }}>
             <div style={{ position: 'relative', paddingTop: this.props.cb_delete ? '0.75rem' : 0 }}>
 

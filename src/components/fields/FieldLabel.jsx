@@ -16,7 +16,7 @@ export default function FieldLabel(props) {
   const style_minwidth = props.min_width ? { minWidth: '9rem' } : { };
   const style_rpadding = props.align === 'left' ? { paddingRight: '1rem' } : { };
   const label = field.def.description || field.def.name;
-  const colon = colon && !label.match(/\?$/);
+  const colon = props.colon && !label.match(/\?$/);
 
   return (
     <div className={`label is-small ${class_align} has-text-grey`} style={{ ...style_minwidth, ...style_rpadding }}>

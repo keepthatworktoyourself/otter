@@ -260,39 +260,55 @@ export default class PostBuilder extends React.Component {
   // -----------------------------------
 
   render() {
+    let inner;
+
     if (this.state.error) {
-      return `Couldn't load post data`;
+      inner = (
+        <div className="bg-solid">
+          Couldn’t load post data
+        </div>
+      );
     }
 
-    if (!this.state.loaded) {
-      return `Loading...`;
+    else if (!this.state.loaded) {
+      inner = (
+        <div className="bg-solid">
+          Loading...
+        </div>
+      );
     }
 
-    console.log(this.state.render_data);
+    else {
+      inner = (
+        <div className="container">
+          <Context__PageData.Provider value={this.context_obj}>
+            <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
+              <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
+                <div ref={prov.innerRef} {...prov.droppableProps}>
+
+                  {this.state.render_data.map((block, index) => (
+                    <DnD.Draggable key={`block-${index}`} draggableId={`block-${index}`} index={index} type="block">{(prov, snap) => (
+
+                      <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
+                        <Block block={block} context_obj={this.context_obj}/>
+                      </div>
+
+                    )}</DnD.Draggable>
+                  ))}
+
+                  {prov.placeholder}
+
+                </div>
+              )}</DnD.Droppable>
+            </DnD.DragDropContext>
+          </Context__PageData.Provider>
+        </div>
+      );
+    }
 
     return (
-      <div className="post-builder container" style={{ }}>
-        <Context__PageData.Provider value={this.context_obj}>
-          <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
-            <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
-              <div ref={prov.innerRef} {...prov.droppableProps}>
-
-                {this.state.render_data.map((block, index) => (
-                  <DnD.Draggable key={`block-${index}`} draggableId={`block-${index}`} index={index} type="block">{(prov, snap) => (
-
-                    <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
-                      <Block block={block} context_obj={this.context_obj}/>
-                    </div>
-
-                  )}</DnD.Draggable>
-                ))}
-
-                {prov.placeholder}
-
-              </div>
-            )}</DnD.Droppable>
-          </DnD.DragDropContext>
-        </Context__PageData.Provider>
+      <div className="post-builder" style={{ padding: '2rem' }}>
+        {inner}
       </div>
     );
   }
