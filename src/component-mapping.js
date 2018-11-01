@@ -59,6 +59,10 @@ const Components = {
     }
     return def;
   },
+
+  get_all() {
+    return Object.keys(Components).filter(type => Components[type].constructor === Array);
+  },
 };
 
 
@@ -119,7 +123,20 @@ Components.register('CoreForm', 'Marketo Form', [
     text__no: 'Enabled',    //
   },
   { name: 'button_text_override', type: TextInput, description: 'button_text_override' },
-])
+]);
+
+
+
+// --- PB ------------------------------------
+
+// Components.register('PBGraph', 'PBGraph', [ ]);
+// Components.register('PBHtml', 'PBHtml', [ ]);
+Components.register('PBImage', 'PBImage', [ ]);
+// Components.register('PBOembed', 'PBOembed', [ ]);
+// Components.register('PBSlider', 'PBSlider', [ ]);
+// Components.register('PBSoftCta', 'PBSoftCta', [ ]);
+// Components.register('PBTable', 'PBTable', [ ]);
+// Components.register('PBTextBlock', 'PBTextBlock', [ ]);
 
 
 
@@ -130,7 +147,7 @@ Components.register('DCCallout', 'Callout', [
   { name: 'callout_text', type: TextInput, description: 'Text' },
 ]);
 Components.register('DCCompanyLogos', 'Company logos', [
-  { name: 'company_logos', type: 'subblock array', description: 'Logos', subblock_types: [ Components.PBImage ] },  // HOIST
+  { name: 'company_logos', type: 'subblock array', description: 'Logos', subblock_types: [ Components.PBImage ] },
 ]);
 Components.register('DCCTA', 'CTA', [
   { name: 'heading', type: TextInput, description: 'Message' },
@@ -363,7 +380,7 @@ Components.register('LPCustomHTML', 'Custom HTML', [
 ]);
 
 Components.register('LPForm', 'Form block', [
-	...Components.get('CoreForm'),
+  ...Components.get('CoreForm'),
   lp_supporting_text,
   ...lp_color_mode_fields,
 ]);
@@ -495,18 +512,6 @@ Components.register('LPSocialEmbeds', 'SocialEmbeds', [
   lp_supporting_text,
   ...lp_color_mode_fields,
 ]);
-
-
-// --- PB ------------------------------------
-
-// Components.register('PBGraph', 'PBGraph', [ ]);
-// Components.register('PBHtml', 'PBHtml', [ ]);
-// Components.register('PBImage', 'PBImage', [ ]);
-// Components.register('PBOembed', 'PBOembed', [ ]);
-// Components.register('PBSlider', 'PBSlider', [ ]);
-// Components.register('PBSoftCta', 'PBSoftCta', [ ]);
-// Components.register('PBTable', 'PBTable', [ ]);
-// Components.register('PBTextBlock', 'PBTextBlock', [ ]);
 
 
 export default Components;

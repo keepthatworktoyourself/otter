@@ -33,7 +33,7 @@ export default class FileInput extends React.Component {
               </div>
 
               <div>
-                <a class="button is-small">Select</a>
+                <a className="button is-small">Select</a>
               </div>
             </div>
 

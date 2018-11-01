@@ -28,7 +28,7 @@ export default class TextInput extends React.Component {
         <div className="field" key={field.uid}>
 
           <FieldLabel field={field} block={block} />
-          <div class="control">
+          <div className="control">
             <input type="text" className="input" ref={this.input_ref} {...value} onChange={_ => this.update.call(this, ctx)} />
           </div>
 

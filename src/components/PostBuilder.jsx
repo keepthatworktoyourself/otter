@@ -6,6 +6,7 @@ import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
 import * as utils from '../utils';
 import Block from './Block';
+import AddBlockBtn from './AddBlockBtn';
 import Context__PageData from './Context__PageData';
 import component_definitions from '../component-mapping';
 
@@ -39,6 +40,11 @@ function context_obj(pb_instance) {
       pb_instance.remove_repeater_item(repeater_uid, item_uid);
     },
 
+    add_block(type, index) {
+      console.log('context, add_block', type, index);
+      pb_instance.add_block(type, index);
+    },
+
     remove_block(block_uid) {
       pb_instance.remove_block(block_uid);
     },
@@ -63,6 +69,10 @@ export default class PostBuilder extends React.Component {
 
     this.context_obj = context_obj(this);
     this.repeaters = { };
+    this.supported_blocks = component_definitions.get_all().reduce((accum, t) => {
+      accum[t] = component_definitions.get(t);
+      return accum;
+    }, { });
   }
 
 
@@ -208,6 +218,22 @@ export default class PostBuilder extends React.Component {
   }
 
 
+  // add_block()
+  // -----------------------------------
+
+  add_block(type, index) {
+    const b = this.create_render_block(component_definitions.get(type));
+    if (typeof index === 'number') {
+      this.state.render_data.splice(index, 0, b);
+    }
+    else {
+      this.state.render_data.push(b);
+    }
+
+    this.context_obj.should_update();
+  }
+
+
   // remove_block()
   // -----------------------------------
 
@@ -290,7 +316,7 @@ export default class PostBuilder extends React.Component {
                     <DnD.Draggable key={`block-${index}`} draggableId={`block-${index}`} index={index} type="block">{(prov, snap) => (
 
                       <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
-                        <Block block={block} context_obj={this.context_obj}/>
+                        <Block block={block} block_index={index} context_obj={this.context_obj} supported_blocks={this.supported_blocks} />
                       </div>
 
                     )}</DnD.Draggable>
@@ -302,6 +328,10 @@ export default class PostBuilder extends React.Component {
               )}</DnD.Droppable>
             </DnD.DragDropContext>
           </Context__PageData.Provider>
+
+          <div className="is-flex" style={{ justifyContent: 'center' }}>
+            <AddBlockBtn cb_select={(ev, type) => this.context_obj.add_block(type, null)} items={this.supported_blocks} popup_direction='up' />
+          </div>
         </div>
       );
     }

@@ -1,8 +1,10 @@
 import React from 'react';
 import RecursiveFieldRenderer from './RecursiveFieldRenderer';
 import Context__PageData from './Context__PageData';
+import AddBlockBtn from './AddBlockBtn';
+import component_definitions from '../component-mapping';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faChevronDown, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {faTimes} from '@fortawesome/free-solid-svg-icons';
 
 
 export default class Block extends React.Component {
@@ -17,12 +19,21 @@ export default class Block extends React.Component {
   }
 
 
+  cb_add(ctx, ev, block_type) {
+    ev.stopPropagation();
+    ev.preventDefault();
+
+    ctx.add_block(block_type, this.props.block_index);
+  }
+
+
   render() {
     const block = this.props.block;
 
     return (
       <Context__PageData.Consumer>{(ctx) => (
-        <div style={{ paddingBottom: '1rem' }}>
+        <div className="c-block" style={{ position: 'relative', paddingBottom: '1rem' }}>
+
           <div className="bg-solid" style={{ padding: '1rem' }}>
             <div style={{ position: 'relative' }}>
 
@@ -34,12 +45,17 @@ export default class Block extends React.Component {
               </div>
 
               <h3 className="title is-4">{block.def.description}</h3>
-              <div className="">
+              <div>
                 <RecursiveFieldRenderer block={block} />
               </div>
 
             </div>
           </div>
+
+          <div className="c-block-add-btn" style={{ position: 'absolute', top: '-1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 2 }}>
+            <AddBlockBtn cb_select={(ev, block_type) => this.cb_add.call(this, ctx, ev, block_type)} items={this.props.supported_blocks} />
+          </div>
+
         </div>
       )}</Context__PageData.Consumer>
     );
