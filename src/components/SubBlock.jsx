@@ -7,11 +7,6 @@ import {rnd_str} from '../utils';
 
 export default class SubBlock extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
-
   render() {
     const block = this.props.block;
     const field = this.props.field;  // Optional: the field wrapping 'block' (for title)

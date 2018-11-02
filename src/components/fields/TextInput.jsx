@@ -1,5 +1,5 @@
 import React from 'react';
-import Context__PageData from '../Context__PageData';
+import PageDataContext from '../PageDataContext';
 import FieldLabel from './FieldLabel';
 
 
@@ -7,33 +7,31 @@ export default class TextInput extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = { value: props.field.value || '' };
+    this.cb_change = this.cb_change.bind(this);
   }
 
 
-  update(ctx) {
-    this.props.field.value = this.input_ref.current.value;
-    ctx.should_update();
+  cb_change(ev) {
+    this.props.field.value = ev.currentTarget.value;
+    this.setState({ value: ev.currentTarget.value });
   }
 
 
   render() {
-    const block = this.props.block;
-    const field = this.props.field;
-
-    this.input_ref = React.createRef();
-    const value = Object.assign({ }, field.value ? { value: field.value } : { });
-
     return (
-      <Context__PageData.Consumer>{(ctx) => (
-        <div className="field" key={field.uid}>
+      <PageDataContext.Consumer>{(ctx) => (
+        <div className="field" key={this.props.field.uid}>
 
-          <FieldLabel field={field} block={block} />
+          {(this.ctx = ctx) && ''}
+          <FieldLabel field={this.props.field} block={this.props.block} />
           <div className="control">
-            <input type="text" className="input" ref={this.input_ref} {...value} onChange={_ => this.update.call(this, ctx)} />
+            <input type="text" className="input" value={this.state.value} onChange={this.cb_change} />
           </div>
 
         </div>
-      )}</Context__PageData.Consumer>
+      )}</PageDataContext.Consumer>
     );
   }
 

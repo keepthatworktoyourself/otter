@@ -29,7 +29,7 @@ import * as utils from './utils';
 //     text__yes: '',  // display text (optional, default: 'Yes')
 //     text__no:  '',  // ~            (optional, default: 'No')
 //
-//     // conditional display:
+//     // conditional display (NB only works on Bool/Radio/Select siblings)
 //     display_if: [{
 //       sibling: 'name of sibling field',
 //       equal_to: value,
@@ -106,6 +106,18 @@ const opts__dc_alignment = {
   center: 'Center',
   right: 'Right',
 };
+const opt__y_axis_spacing = {
+  name: 'y_spacing_select',
+  type: Radios,
+  description: 'Spacing',
+  options: {
+    default: 'Default',
+    none: 'None',
+    sm: 'Small',
+    md: 'Medium',
+    lg: 'Large',
+  },
+};
 
 
 
@@ -122,21 +134,175 @@ Components.register('CoreForm', 'Marketo Form', [
     text__yes: 'Disabled',  // sorry
     text__no: 'Enabled',    //
   },
-  { name: 'button_text_override', type: TextInput, description: 'button_text_override' },
+  { name: 'button_text_override', type: TextInput, description: 'Override button text' },
 ]);
 
 
 
 // --- PB ------------------------------------
 
-// Components.register('PBGraph', 'PBGraph', [ ]);
-// Components.register('PBHtml', 'PBHtml', [ ]);
-Components.register('PBImage', 'PBImage', [ ]);
-// Components.register('PBOembed', 'PBOembed', [ ]);
-// Components.register('PBSlider', 'PBSlider', [ ]);
-// Components.register('PBSoftCta', 'PBSoftCta', [ ]);
-// Components.register('PBTable', 'PBTable', [ ]);
-// Components.register('PBTextBlock', 'PBTextBlock', [ ]);
+const pb_crappy_custom_details = [
+  { name: 'show_details', type: Bool, description: 'Show details?' },
+  {
+    name: 'custom_details',
+    type: Radios,
+    description: 'Image details',
+    options: { off: 'Off', title: 'Title', caption: 'Caption', both: 'Both' },
+  },
+  {
+    name: 'custom_title',
+    type: TextInput,
+    description: 'Title',
+    display_if: [{ sibling: 'custom_details', not_equal_to: 'off' }, { sibling: 'custom_caption', not_equal_to: 'caption' }],
+  },
+  {
+    name: 'custom_caption',
+    type: TextInput,
+    description: 'Caption',
+    display_if: [{ sibling: 'custom_details', not_equal_to: 'off' }, { sibling: 'custom_caption', not_equal_to: 'title' }],
+  },
+];
+
+Components.register('PBCountdownTimer', 'PBCountdownTimer', [
+  { name: 'number', type: TextInput, description: 'Countdown number' },
+  { name: 'title', type: TextInput, description: 'Title' },
+  { name: 'heading', type: TextInput, description: 'Heading' },
+  { name: 'details', type: TextInput, description: 'Details' },
+  opt__y_axis_spacing,
+  { name: 'link_action', type: TextInput, description: '' },
+  { name: 'target_url', type: TextInput, description: '' },
+  { name: 'linked_wp_content_id', type: TextInput, description: '' },
+  { name: 'new_tab', type: TextInput, description: '' },
+]);
+
+Components.register('PBImage', 'PBImage', [
+  { name: 'image', type: WPImage, description: 'Image' },
+  { name: 'align', type: Radios, description: 'Align', options: { left: 'Left', center: 'Center', right: 'Right' } },
+  { name: 'width', type: Radios, description: 'Width', options: { column_width: 'Column', wide: 'Wide', full: 'Full' } },
+  { name: 'border', type: Bool, description: 'Has border?' },
+  ...pb_crappy_custom_details,
+]);
+
+Components.register('PBGraph', 'PBGraph', [
+  { name: 'image', type: WPImage, description: 'Image' },
+  { name: 'align', type: Radios, description: 'Align', options: { left: 'Left', center: 'Center', right: 'Right' } },
+  { name: 'width', type: Radios, description: 'Width', options: { column_width: 'Column', wide: 'Wide', full: 'Full' } },
+  { name: 'border', type: Bool, description: 'Has border?' },
+  ...pb_crappy_custom_details,
+]);
+
+Components.register('PBHtml', 'PBHtml', [
+  { name: 'content', type: TextArea, description: 'HTML Content' },
+  { name: 'max_width', type: Radios, description: 'Max width', options: { column: 'Column', wide: 'Wide' } },
+  { name: 'title', type: TextInput, description: 'HTML Content' },
+  { name: 'caption', type: TextInput, description: 'HTML Content' },
+]);
+
+Components.register('PBOembed', 'PBOembed', [
+  // { name: 'src', type: TextInput, description: 'OEmbed URL' },   // TODO: resolve oembed src ACF issue
+  { name: 'oembed', type: TextInput, description: 'OEmbed URL' },
+  {
+    name: 'video_mode',
+    type: Radios,
+    description: 'Play mode',
+    options: {
+      default: 'Default',
+      autoplay: 'Autoplay (muted)',
+      bg: 'Background (muted, looping)',
+    },
+  },
+  { name: 'width', type: Radios, description: '', options: { column_width: 'Column', wide: 'Wide', full: 'Full' } },
+  ...pb_crappy_custom_details,
+]);
+
+Components.register('PBTable', 'PBTable', [
+  { name: 'title', type: TextInput, description: 'Title' },
+  { name: 'caption', type: TextInput, description: 'Caption' },
+  { name: 'constrain_height', type: Bool, description: 'Constrain height?' },
+  { name: 'csv_file', type: WPImage, description: 'CSV data file' },
+]);
+
+Components.register('PBSlider', 'PBSlider', [
+  {
+    name: 'slides',
+    type: 'subblock array',
+    description: 'Slides',
+    subblock_types: [ Components.PBImage, Components.PBGraph, Components.PBOembed, Components.PBTable ],
+  },
+  { name: 'auto_slide', type: Bool, description: 'Auto slide (if no video)?' },
+  { name: 'hover_btns', type: Bool, description: 'Auto-hide buttons?' },
+  { name: 'light_gallery', type: Bool, description: 'Popup on click?' },
+  { name: 'style', type: Radios, description: 'Style', options: { stage: 'Stage', contained: 'Contained' } },
+  { name: 'max_width', type: Radios, description: 'Width', options: { regular: 'Normal', large: 'Large' } },
+]);
+
+Components.register('PBSoftCta', 'PBSoftCta', [
+  {
+    name: 'select_content_type',
+    type: Radios,
+    description: 'Content type',
+    options: {
+      webinar: 'Webinar',
+      report: 'Report',
+      case_study: 'Case study',
+      guide: 'Guide',
+      blog: 'Blog',
+      url: 'URL',
+      product: 'Product',
+      newsletter: 'Newsletter',
+    },
+  },  // TODO: make select
+  //   {
+  //   name: 'select_webinar',    // TODO: implement WPPost field with wp back-end integration...
+  //   type: WPPost,
+  //   description: 'Webinar',
+  //   display_if: [{ sibling: 'select_content_type', equal_to: 'webinar' }],
+  // },
+  //   {
+  //   name: 'select_report',
+  //   type: WPPost,
+  //   description: 'Report',
+  //   display_if: [{ sibling: 'select_content_type', equal_to: 'report' }],
+  // },
+  //   {
+  //   name: 'select_case_study',
+  //   type: WPPost,
+  //   description: 'Case study',
+  //   display_if: [{ sibling: 'select_content_type', equal_to: 'case_study' }],
+  // },
+  //   {
+  //   name: 'select_guide',
+  //   type: WPPost,
+  //   description: 'Guide',
+  //   display_if: [{ sibling: 'select_content_type', equal_to: 'guide' }],
+  // },
+  //   {
+  //   name: 'select_blog',
+  //   type: WPPost,
+  //   description: 'Blog post',
+  //   display_if: [{ sibling: 'select_content_type', equal_to: 'blog' }],
+  // },
+  {
+    name: 'select_url',
+    type: TextInput,
+    description: 'URL',
+    display_if: [{ sibling: 'select_content_type', equal_to: 'url' }],
+  },
+  {
+    name: 'select_product',
+    type: Radios,
+    description: 'Product',
+    options: { analytics: 'Analytics', audiences: 'Audiences', vizia: 'Vizia' },
+    display_if: [{ sibling: 'select_content_type', equal_to: 'product' }],
+  },
+  { name: 'custom_title', type: TextInput, description: 'Custom heading' },
+  { name: 'custom_text', type: TextInput, description: 'Custom text' },
+  { name: 'custom_btn_text', type: TextInput, description: 'Custom button text' },
+]);
+
+Components.register('PBTextBlock', 'PBTextBlock', [
+  { name: 'content', type: TextEditor, description: 'Content' },
+]);
 
 
 
@@ -146,29 +312,43 @@ Components.register('DCCallout', 'Callout', [
   { name: 'alignment', type: Radios, description: 'Alignment', options: opts__dc_alignment },
   { name: 'callout_text', type: TextInput, description: 'Text' },
 ]);
+
 Components.register('DCCompanyLogos', 'Company logos', [
   { name: 'company_logos', type: 'subblock array', description: 'Logos', subblock_types: [ Components.PBImage ] },
 ]);
+
 Components.register('DCCTA', 'CTA', [
   { name: 'heading', type: TextInput, description: 'Message' },
   { name: 'description', type: TextInput, description: 'Description' },
   { name: 'button_text', type: TextInput, description: 'Button text' },
-  { name: 'link_type', type: Radios, description: 'Link type', options: {
-    existing_content: 'Content item',
-    url: 'URL',
-  }},
-  { name: 'button_url', type: TextInput, description: 'Button URL' },                     // CONDITION
-  { name: 'existing_content_link', type: TextInput, description: 'Content item' },        //
+  {
+    name: 'link_type',
+    type: Radios,
+    description: 'Link type',
+    options: {
+      existing_content: 'Content item',
+      url: 'URL',
+    },
+  },
+  {
+    name: 'button_url',
+    type: TextInput,
+    description: 'Button URL',
+    display_if: [{ sibling: 'link_type', equal_to: 'url' }],
+  },
+  // {
+  //   name: 'existing_content_link',     // TODO: WPPost
+  //   type: TextInput,
+  //   description: 'Content item',
+  //   display_if: [{ sibling: 'link_type', equal_to: 'existing_content' }],
+  // },
+  opt__y_axis_spacing,
 ]);
-// Components.register('DCImpact_quote', 'DCImpact_quote', [         // DELETE?
-//  { name: 'alignment', type: Radios, description: 'Alignment', options: opts__dc_alignment },
-//   { name: 'is_shareable', type: Bool, description: 'Tweeting features?' },
-//   { name: 'quote', type: TextInput, description: 'Text' },
-//   { name: 'Author', }
-// ]);
+
 Components.register('DCIntro_text', 'Intro text', [
   { name: 'text', type: TextArea, description: 'Text' },
 ]);
+
 Components.register('DCQuote', 'Quote', [
   { name: 'alignment', type: Radios, description: 'Alignment', options: opts__dc_alignment },
   { name: 'is_shareable', type: Bool, description: 'Tweeting features?' },
@@ -176,25 +356,20 @@ Components.register('DCQuote', 'Quote', [
   { name: 'share_quote', type: TextArea, description: 'Text (max. tweet length)' },
   { name: 'author', type: TextInput, description: 'Author' },
 ]);
-Components.register('DCSlider', 'Slider', [
-  // { name: 'slides', type: 'subblock array', description: 'slides' },
-  { name: 'auto_slide', type: Bool, description: 'Auto-change every few seconds?' },
-  { name: 'hover_btns', type: Bool, description: 'Buttons only on hover?' },
-  { name: 'light_gallery', type: Bool, description: 'Click to zoom on images?' },
-  { name: 'style', type: Radios, description: 'Style', options: {
-    stage: 'Stage',
-    contained: 'Contained',
-  }},
-  { name: 'max_width', type: Radios, description: 'Max width', options: {
-    regular: 'Regular',
-    large: 'Large',
-  }},
-]);
+
 Components.register('DCSocialEmbed', 'SocialEmbed', [
   { name: 'social_type', type: Radios, description: 'Type', options: { twitter: 'Twitter' } },
-  { name: 'social_embeds', type: 'subblock array', description: 'Social embeds', subblock_types: [ Components.PBOembed ] },  // HOIST
+  {
+    name: 'social_embeds',
+    type: 'subblock array',
+    description: 'Social embeds',
+    subblock_types: [ Components.PBOembed ],
+  },
 ]);
-// Components.register('DCText_content', 'DCText_content', [ ]);
+Components.register('DCTextContent', 'DCTextContent', [
+  { name: 'content', type: TextEditor, description: 'Text' },
+  opt__y_axis_spacing,
+]);
 
 
 
@@ -215,6 +390,7 @@ Components.register('LPButton', 'Button', [
     description: 'Button style',
   },
 ].concat(opts__btn_actions));
+
 Components.register('LPSupportingText', 'Supporting text', [
   { name: 'title', type: TextInput, description: 'Title' },
   { name: 'content', type: TextEditor, description: 'Content' },
@@ -235,12 +411,10 @@ Components.register('LPSupportingText', 'Supporting text', [
     type: 'subblock array',
     subblock_types: [Components.LPButton],
     description: 'Supporting text buttons',
-    display_if: [{
-      sibling: 'has_buttons',
-      equal_to: true,
-    }],
+    display_if: [{ sibling: 'has_buttons', equal_to: true }],
   },
 ]);
+
 Components.register('LPFeaturedButton', 'Featured button', [
   { name: 'use_featured_button', type: Bool, description: 'Has featured button?' },
   { name: 'pulse_effect', type: Bool, description: 'Pulse effect?' },
@@ -258,14 +432,17 @@ Components.register('LPFeaturedButton', 'Featured button', [
   }
   return item;
 }));
+
 Components.register('LPEmbed', 'Embed', [
   { name: 'embed', type: TextInput, description: 'Embed URL' },
 ]);
+
 Components.register('LPGalleryImage', 'Gallery image', [
   { name: 'img', type: WPImage, description: 'Image' },
   { name: 'has_video', type: Bool, description: 'Play a video?' },
   { name: 'video_url', type: TextInput, description: 'Video URL', display_if: [{ sibling: 'has_video', equal_to: true }] },
 ]);
+
 Components.register('LPQuote', 'Quote', [
   { name: 'quotation', type: TextInput, description: 'Quote' },
   { name: 'byline', type: TextInput, description: 'Byline' },
@@ -315,6 +492,7 @@ Components.register('LPCard', 'Card', [
   { name: 'button', type: 'subblock', description: 'Button', subblock_type: Components.LPButton },
   { name: 'has_feature_button', type: Bool, description: 'Show feature button overlay?' },
 ]);
+
 Components.register('LPColumn', 'Column', [
   { name: 'img', type: WPImage, description: 'Image' },
   { name: 'title', type: TextInput, description: 'Column title' },
@@ -325,13 +503,13 @@ Components.register('LPColumn', 'Column', [
     type: 'subblock',
     description: 'Column button',
     subblock_type: Components.LPButton,
-    display_if: { sibling: 'has_button', equal_to: true },
+    display_if: [{ sibling: 'has_button', equal_to: true }],
   },
   lp_featured_button,
 ]);
 
 
-// Blocks
+// LP Blocks
 
 Components.register('LPButtons', 'Buttons', [
   { name: 'buttons', type: 'subblock array', description: 'Buttons', subblock_types: [Components.LPButton] },

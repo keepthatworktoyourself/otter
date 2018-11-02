@@ -1,5 +1,5 @@
 import React from 'react';
-import Context__PageData from '../Context__PageData';
+import PageDataContext from '../PageDataContext';
 import FieldLabel from './FieldLabel';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
@@ -10,20 +10,27 @@ export default class Select extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = { value: props.field.value || null };
+    this.cb_click = this.cb_click.bind(this);
+    this.cb_clear = this.cb_clear.bind(this);
+
+    this.radio_opts = Object.keys(props.field.def.options || { });
+    this.refs = this.radio_opts.map(_ => React.createRef());
   }
 
-
-  cb_click(ctx, ev) {
+  cb_click(ev) {
     const input = ev.currentTarget.querySelector('input');
     this.props.field.value = input.value;
-
-    ctx.should_update();
+    this.setState({ value: input.value });
+    this.ctx.should_update();
   }
 
 
-  cb_clear(ctx) {
+  cb_clear(ev) {
     this.props.field.value = null;
-    ctx.should_update();
+    this.setState({ value: null });
+    this.ctx.should_update();
   }
 
 
@@ -31,13 +38,11 @@ export default class Select extends React.Component {
     const field = this.props.field;
     const block = this.props.block;
     const input_name = 'radios-' + rnd_str(6);
-    const radio_opts = Object.keys(field.def.options);
-
-    this.refs = radio_opts.map(_ => React.createRef());
 
     return (
-      <Context__PageData.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{(ctx) => (
         <div className="field">
+          {(this.ctx = ctx) && ''}
           <div className="is-flex-tablet" style={{ alignItems: 'center' }}>
 
             <div className="c-label-margin-btm-phone">
@@ -47,32 +52,35 @@ export default class Select extends React.Component {
             <div className="is-flex" style={{ alignItems: 'center' }}>
               <div style={{ paddingRight: '0.5rem' }}>
                 <div className="buttons has-addons is-marginless">
-                  {radio_opts.map((opt, i) => {
+                  {this.radio_opts.length === 0 && `[Radio has no options]`}
+                  {this.radio_opts.map((opt, i) => {
                     const input_id = `${input_name}-input-${i}`;
                     const active = opt === field.value ? 'is-selected is-link' : '';
                     const sel = { checked: opt === field.value };
                     const ref = this.refs[i];
 
                     return (
-                      <a className={`button is-small ${active}`} style={{ marginBottom: 0 }} onClick={ev => this.cb_click.call(this, ctx, ev)}>
+                      <a className={`button is-small ${active}`} style={{ marginBottom: 0 }} onClick={this.cb_click} key={input_id}>
                         {field.def.options[opt]}
-                        <input type="radio" ref={ref} name={input_name} id={input_id} {...sel} value={opt} style={{ display: 'none' }} />
+                        <input type="radio" readOnly ref={ref} name={input_name} id={input_id} {...sel} value={opt} style={{ display: 'none' }} />
                       </a>
                     );
                   })}
                 </div>
               </div>
 
-              <div>
-                <a className="button is-rounded is-small is-light has-text-grey-light" onClick={_ => this.cb_clear.call(this, ctx)}>
-                  <FontAwesomeIcon icon={faTimes} />
-                </a>
-              </div>
+              {this.radio_opts.length > 0 && (
+                <div>
+                  <a className="button is-rounded is-small is-light has-text-grey-light" onClick={this.cb_clear}>
+                    <FontAwesomeIcon icon={faTimes} />
+                  </a>
+                </div>
+              )}
             </div>
 
           </div>
         </div>
-      )}</Context__PageData.Consumer>
+      )}</PageDataContext.Consumer>
     );
   }
 }

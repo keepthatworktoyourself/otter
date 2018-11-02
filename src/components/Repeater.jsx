@@ -1,7 +1,7 @@
 import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
 import SubBlock from './SubBlock';
-import Context__PageData from './Context__PageData';
+import PageDataContext from './PageDataContext';
 import toggler from './toggler';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronDown, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
@@ -9,11 +9,6 @@ import {rnd_str} from '../utils';
 
 
 export default class Repeater extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
 
   cb_toggle_additem_dialogue() {
     this.setState({ show_dialogue: !(this.state && this.state.show_dialogue) });
@@ -46,7 +41,7 @@ export default class Repeater extends React.Component {
     const arr = field.value;
 
     return (
-      <Context__PageData.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{(ctx) => (
         <div className="repeater" data-id={block.uid}>
 
           <div style={{ paddingBottom: '0.5rem' }}>
@@ -98,8 +93,8 @@ export default class Repeater extends React.Component {
 
                   <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content">
-                      {(field.def.subblock_types || [ ]).map(t => (
-                        <a className="dropdown-item" onClick={ev => this.cb_add.call(this, ctx, ev, t)}>
+                      {(field.def.subblock_types || [ ]).map((t, i) => (
+                        <a className="dropdown-item" onClick={ev => this.cb_add.call(this, ctx, ev, t)} key={i}>
                           {t.description}
                         </a>
                       ))}
@@ -114,7 +109,7 @@ export default class Repeater extends React.Component {
           </div>{/* End toggle */}
 
         </div>
-      )}</Context__PageData.Consumer>
+      )}</PageDataContext.Consumer>
     );
   }
 

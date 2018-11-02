@@ -4,10 +4,10 @@
 
 import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
-import * as utils from '../utils';
+// import * as utils from '../utils';
 import Block from './Block';
 import AddBlockBtn from './AddBlockBtn';
-import Context__PageData from './Context__PageData';
+import PageDataContext from './PageDataContext';
 import component_definitions from '../component-mapping';
 
 
@@ -23,13 +23,13 @@ function block_drag_styles(snapshot, provided) {
 
 // context_obj
 // -----------------------------------
-// - passed to Context__PageData as {value}
+// - passed to PageDataContext as {value}
 // - provides interface to update page_data blocks (calls setState on PostBuilder)
 
 function context_obj(pb_instance) {
   return {
     should_update() {
-      pb_instance.setState({ });
+      setTimeout(() => pb_instance.setState({ }), 10);
     },
 
     add_repeater_item(repeater_uid, type) {
@@ -41,7 +41,6 @@ function context_obj(pb_instance) {
     },
 
     add_block(type, index) {
-      console.log('context, add_block', type, index);
       pb_instance.add_block(type, index);
     },
 
@@ -64,9 +63,9 @@ export default class PostBuilder extends React.Component {
       loaded:      false,
       error:       false,
       render_data: null,    // Data processed into more useful fmt for JS app
-      i: 0,   // Used for generating unique IDs for fields/blocks (for DnD)
     };
 
+    this.i = 0;
     this.context_obj = context_obj(this);
     this.repeaters = { };
     this.supported_blocks = component_definitions.get_all().reduce((accum, t) => {
@@ -120,7 +119,7 @@ export default class PostBuilder extends React.Component {
   // -----------------------------------
 
   uid() {
-    return `uid-${this.state.i++}`;
+    return `uid-${this.i++}`;
   }
 
 
@@ -223,6 +222,7 @@ export default class PostBuilder extends React.Component {
 
   add_block(type, index) {
     const b = this.create_render_block(component_definitions.get(type));
+    b.is_top_level = true;
     if (typeof index === 'number') {
       this.state.render_data.splice(index, 0, b);
     }
@@ -238,8 +238,7 @@ export default class PostBuilder extends React.Component {
   // -----------------------------------
 
   remove_block(block_uid) {
-    this.state.render_data = this.state.render_data.filter(block => block.uid !== block_uid);
-    this.context_obj.should_update();
+    this.setState({ render_data: this.state.render_data.filter(block => block.uid !== block_uid) });
   }
 
 
@@ -305,15 +304,17 @@ export default class PostBuilder extends React.Component {
     }
 
     else {
+      const render_data = this.state.render_data;
+      const n_blocks = render_data.length;
       inner = (
-        <div className="container">
-          <Context__PageData.Provider value={this.context_obj}>
+        <div className="container" style={{ minHeight: '15rem' }}>
+          <PageDataContext.Provider value={this.context_obj}>
             <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
               <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
                 <div ref={prov.innerRef} {...prov.droppableProps}>
 
-                  {this.state.render_data.map((block, index) => (
-                    <DnD.Draggable key={`block-${index}`} draggableId={`block-${index}`} index={index} type="block">{(prov, snap) => (
+                  {render_data.map((block, index) => (
+                    <DnD.Draggable key={`block-${block.uid}`} draggableId={`block-${block.uid}`} index={index} type="block">{(prov, snap) => (
 
                       <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
                         <Block block={block} block_index={index} context_obj={this.context_obj} supported_blocks={this.supported_blocks} />
@@ -327,10 +328,10 @@ export default class PostBuilder extends React.Component {
                 </div>
               )}</DnD.Droppable>
             </DnD.DragDropContext>
-          </Context__PageData.Provider>
+          </PageDataContext.Provider>
 
           <div className="is-flex" style={{ justifyContent: 'center' }}>
-            <AddBlockBtn cb_select={(ev, type) => this.context_obj.add_block(type, null)} items={this.supported_blocks} popup_direction='up' />
+            <AddBlockBtn cb_select={(ev, type) => this.context_obj.add_block(type, null)} items={this.supported_blocks} popup_direction={n_blocks ? 'up' : 'down'}  />
           </div>
         </div>
       );

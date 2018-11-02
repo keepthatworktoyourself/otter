@@ -1,5 +1,4 @@
 import React from 'react';
-import RecursiveFieldRenderer from './RecursiveFieldRenderer';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faPlusCircle} from '@fortawesome/free-solid-svg-icons';
 
@@ -26,7 +25,6 @@ export default class AddBlockBtn extends React.Component {
   render() {
     const active = this.state.open ? 'is-active' : '';
     const popup_dir = this.props.popup_direction === 'up' ? 'is-up' : '';
-		console.log('AddBlockBtn: items', this.props.items);
 
     return (
       <div className={`dropdown ${popup_dir} ${active}`}>
@@ -41,8 +39,8 @@ export default class AddBlockBtn extends React.Component {
 
         <div className="dropdown-menu" style={{ left: '50%', transform: 'translateX(-50%)' }} id="dropdown-menu" role="menu">
           <div className="dropdown-content" style={{ maxHeight: '12rem', overflowY: 'scroll' }}>
-            {Object.keys(this.props.items).filter(x => x).map(t => (
-              <a className="dropdown-item" onClick={ev => this.cb_select(ev, t)}>
+            {Object.keys(this.props.items).filter(x => x).map((t, i) => (
+              <a className="dropdown-item" onClick={ev => this.cb_select(ev, t)} key={i}>
                 {this.props.items[t].description}
               </a>
             ))}

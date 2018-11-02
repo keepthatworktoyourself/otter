@@ -1,17 +1,19 @@
 import React from 'react';
-import Context__PageData from '../Context__PageData';
+import PageDataContext from '../PageDataContext';
 import FieldLabel from './FieldLabel';
-import {rnd_str} from '../../utils';
 
 
 export default class Bool extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = { value: props.field.value || false };
+    this.cb_click = this.cb_click.bind(this);
   }
 
 
-  cb_click(ctx, ev) {
+  cb_click(ev) {
     if (ev.currentTarget.getAttribute('data-value') === 'yes') {
       this.props.field.value = true;
     }
@@ -19,7 +21,8 @@ export default class Bool extends React.Component {
       this.props.field.value = false;
     }
 
-    ctx.should_update();
+    this.setState({ value: this.props.field.value });
+    this.ctx.should_update();
   }
 
 
@@ -30,8 +33,9 @@ export default class Bool extends React.Component {
     const text__no  = this.props.field.def.text__no || 'No';
 
     return (
-      <Context__PageData.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{(ctx) => (
         <div className="field">
+          {(this.ctx = ctx) && ''}
           <div className="is-flex-tablet" style={{ alignItems: 'center' }}>
 
             <div className="c-label-margin-btm-phone">
@@ -40,20 +44,20 @@ export default class Bool extends React.Component {
 
             <div className="is-flex" style={{ alignItems: 'center' }}>
               <div className="buttons has-addons is-marginless">
-                <a className={`button is-small ${field.value === true && 'is-selected is-link'}`} data-value="yes" style={{ marginBottom: 0 }} onClick={ev => this.cb_click.call(this, ctx, ev)}>
+                <a className={`button is-small ${field.value === true && 'is-selected is-link'}`} data-value="yes" style={{ marginBottom: 0 }} onClick={this.cb_click}>
                   {text__yes}
                 </a>
-                <a className={`button is-small ${field.value !== true && 'is-selected is-link'}`} data-value="no" style={{ marginBottom: 0 }} onClick={ev => this.cb_click.call(this, ctx, ev)}>
+                <a className={`button is-small ${field.value !== true && 'is-selected is-link'}`} data-value="no" style={{ marginBottom: 0 }} onClick={this.cb_click}>
                   {text__no}
                 </a>
               </div>
             </div>
 
-            <input type="checkbox" checked={field.value} style={{ display: 'none' }} />
+            <input type="checkbox" readOnly checked={this.state.value} style={{ display: 'none' }} />
 
           </div>
         </div>
-      )}</Context__PageData.Consumer>
+      )}</PageDataContext.Consumer>
     );
   }
 

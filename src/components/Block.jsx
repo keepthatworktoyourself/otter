@@ -1,18 +1,12 @@
 import React from 'react';
 import RecursiveFieldRenderer from './RecursiveFieldRenderer';
-import Context__PageData from './Context__PageData';
+import PageDataContext from './PageDataContext';
 import AddBlockBtn from './AddBlockBtn';
-import component_definitions from '../component-mapping';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 
 
 export default class Block extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
 
   cb_delete(ctx, ev) {
     ctx.remove_block(this.props.block.uid);
@@ -31,8 +25,8 @@ export default class Block extends React.Component {
     const block = this.props.block;
 
     return (
-      <Context__PageData.Consumer>{(ctx) => (
-        <div className="c-block" style={{ position: 'relative', paddingBottom: '1rem' }}>
+      <PageDataContext.Consumer>{(ctx) => (
+        <div className="c-block" style={{ position: 'relative', paddingBottom: '1rem' }} data-blocktype={block.type}>
 
           <div className="bg-solid" style={{ padding: '1rem' }}>
             <div style={{ position: 'relative' }}>
@@ -57,7 +51,7 @@ export default class Block extends React.Component {
           </div>
 
         </div>
-      )}</Context__PageData.Consumer>
+      )}</PageDataContext.Consumer>
     );
   }
 

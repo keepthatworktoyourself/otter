@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
-import Context__PageData from '../Context__PageData';
+import PageDataContext from '../PageDataContext';
 import FieldLabel from './FieldLabel';
 
 
@@ -8,14 +8,16 @@ export default class TextEditor extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.cb_change = this.cb_change.bind(this);
   }
 
 
-  update(ctx, html, _, event_origin) {
-    this.props.field.value = html;
-    if (event_origin === 'user') {
-      ctx.should_update();
-    }
+  cb_change(ctx, html, _, event_origin) {
+    // this.props.field.value = html;
+    // if (event_origin === 'user') {
+    //   ctx.should_update();
+    // }
   }
 
 
@@ -24,14 +26,14 @@ export default class TextEditor extends React.Component {
     const field = this.props.field;
 
     return (
-      <Context__PageData.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{(ctx) => (
         <div className="field" key={field.uid}>
 
           <FieldLabel field={field} block={block} />
-          <ReactQuill value={field.value} onChange={(...args) => this.update.call(this, ctx, ...args)} />
+          <ReactQuill defaultValue={field.value} onChange={this.cb_change} />
 
         </div>
-      )}</Context__PageData.Consumer>
+      )}</PageDataContext.Consumer>
     );
   }
 
