@@ -1,12 +1,19 @@
 {
   "name": "post-builder",
-  "version": "0.1.0",
+  "description": "A front-end javascript library for building content editors.",
+  "version": "0.0.1",
   "private": true,
+  "author": "Ben Hall <ben@ben.am> (https://ben.am/)",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "homepage": "https://github.com/BrandwatchLtd/brandwatch.com--post-builder",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BrandwatchLtd/brandwatch.com--post-builder.git"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.7",
     "@fortawesome/free-solid-svg-icons": "^5.4.2",
     "@fortawesome/react-fontawesome": "^0.1.3",
-    "babel-jest": "^23.6.0",
     "bulma": "^0.7.2",
     "react": "^16.4.2",
     "react-beautiful-dnd": "^9.0.2",
@@ -14,6 +21,13 @@
     "react-quill": "^1.3.1",
     "react-scripts": "1.1.5"
   },
+  "files": [
+    "README.md",
+    "LICENSE.md",
+    "index.js",
+    "src/",
+    "public/"
+  ],
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -21,7 +35,23 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "babel-jest": "^23.6.0",
     "jest": "^23.6.0",
     "react-test-renderer": "^16.5.2"
+  },
+  "//dependency_licenses": {
+    "NOTE!": "Please keep these up to date :)",
+    "@fortawesome/fontawesome-svg-core": "MIT",
+    "@fortawesome/free-solid-svg-icons": "CC BY 4.0 (applied to SVG icons)",
+    "@fortawesome/react-fontawesome": "MIT",
+    "babel-jest": "MIT",
+    "bulma": "MIT",
+    "react": "MIT",
+    "react-beautiful-dnd": "Apache-2.0",
+    "react-dom": "MIT",
+    "react-quill": "MIT",
+    "react-scripts": "MIT",
+    "jest": "MIT",
+    "react-test-renderer": "MIT"
   }
 }
