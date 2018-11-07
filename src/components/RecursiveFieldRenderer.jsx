@@ -15,7 +15,7 @@ export default function RecursiveFieldRenderer(props) {
 
     // Conditional rendering
     if (field.def.display_if && field.def.display_if.constructor === Array) {
-      const should_display = field.def.display_if.reduce((carry, rule) => {
+      field.should_display = field.def.display_if.reduce((carry, rule) => {
         const sibling = block.fields[rule.sibling] || null;
         const rule_eq  = rule.hasOwnProperty('equal_to');
         const rule_neq = rule.hasOwnProperty('not_equal_to');
@@ -30,7 +30,7 @@ export default function RecursiveFieldRenderer(props) {
         }
       }, true);
 
-      if (!should_display) {
+      if (!field.should_display) {
         return null;
       }
     }

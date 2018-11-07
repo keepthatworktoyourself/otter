@@ -84,15 +84,44 @@ export default class PostBuilder extends React.Component {
       return;
     }
 
-    const load = this.cb_load.bind(this);
+    this.load();
+  }
 
-    const url = `http://localhost/wp-content/themes/brandwatch/temp-backend.php?` +
-      `post_id=${this.props.post_id}`;
+
+  // load
+  // -----------------------------------
+
+  load() {
+    const base_url = `http://localhost/wp-content/themes/brandwatch/`;
+    const url = `${base_url}temp-backend.php?post_id=${this.props.post_id}`;
     fetch(url)
       .then(response => response.json())
-      .catch(err => load(false))
-      .then(this.cb_load.bind(this))
-      .catch(err => { console.log(err); load(false); });
+      .catch(err => this.cb_load(false))
+      .then(data => this.cb_load(data))
+      .catch(err => { console.log(err); this.cb_load(false); });
+  }
+
+
+  // save
+  // -----------------------------------
+
+  save() {
+    const url = `http://localhost/wp-content/themes/brandwatch/temp-backend--save.php`;
+    const data = this.get_plain_data();
+    console.log(data);
+    console.log(JSON.stringify(data));
+    const post_content = (
+      `post_id=${this.props.post_id}&` +
+      `data=${encodeURIComponent(JSON.stringify(data))}`
+    );
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: post_content,
+    }).then(response => console.log(response.json()));
   }
 
 
@@ -127,6 +156,22 @@ export default class PostBuilder extends React.Component {
   // -----------------------------------
   // - create a 'render block' item given a block definition and an
   //   optional data_block of existing data
+  // - a 'render block' is a combination of block data and component definitions
+  //   that's more convenient for rendering:
+  //     {
+  //       type: type name,
+  //       def:  component definition for block
+  //       uid:  a unique ID
+  //       fields: {
+  //         field_name: {
+  //           uid:    a unique ID,
+  //           def:    field definition withing component definition
+  //           value:  field value - may be a normal value, a subblock, or an array of subblocks
+  //         }
+  //         ...
+  //       }
+  //     }
+
 
   create_render_block(block_definition, data_block) {
     const render_block = {
@@ -142,6 +187,7 @@ export default class PostBuilder extends React.Component {
 
         if (!field_def) {
           console.log('error: field_def not found', field, data_block, block_definition);
+          return accum;
         }
 
         if (field_def.type === 'subblock') {
@@ -175,7 +221,7 @@ export default class PostBuilder extends React.Component {
   }
 
 
-  // get_render_data - convert loaded data to a more useful form
+  // get_render_data - convert loaded data to 'render blocks' (more useful)
   // -----------------------------------
 
   get_render_data(page_data) {
@@ -189,6 +235,43 @@ export default class PostBuilder extends React.Component {
     render_data.forEach(b => b.is_top_level = true);
 
     return render_data;
+  }
+
+
+  // get_plain_data - convert render blocks back to block data, for export
+  // -----------------------------------
+
+  get_plain_data() {
+    function get_block(render_block) {
+      const fields = Object.keys(render_block.fields).filter(f => render_block.fields[f].should_display !== false);
+
+      const block = fields.reduce((accum, field_name) => {
+        const field = render_block.fields[field_name];
+
+        if (field.def.type === 'subblock') {
+          accum[field_name] = get_block(field.value);
+        }
+
+        else if (field.def.type === 'subblock array') {
+          accum[field_name] = field.value.map(get_block);
+        }
+
+        else {
+          accum[field_name] = field.value;
+        }
+
+        if (accum[field_name] === '' || accum[field_name] === null) {
+          delete accum[field_name];
+        }
+
+        return accum;
+      }, { });
+
+      block.__type = render_block.def.type;
+      return block;
+    }
+
+    return this.state.render_data.map(get_block);
   }
 
 
@@ -308,6 +391,10 @@ export default class PostBuilder extends React.Component {
       const n_blocks = render_data.length;
       inner = (
         <div className="container" style={{ minHeight: '15rem' }}>
+          <div style={{ margin: '1rem' }}>
+            <a className="button" onClick={_ => this.save.call(this)}>Save</a>
+          </div>
+
           <PageDataContext.Provider value={this.context_obj}>
             <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
               <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (

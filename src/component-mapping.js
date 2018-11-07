@@ -353,7 +353,12 @@ Components.register('DCQuote', 'Quote', [
   { name: 'alignment', type: Radios, description: 'Alignment', options: opts__dc_alignment },
   { name: 'is_shareable', type: Bool, description: 'Tweeting features?' },
   { name: 'quote', type: TextArea, description: 'Text' },
-  { name: 'share_quote', type: TextArea, description: 'Text (max. tweet length)' },
+  {
+    name: 'share_quote',
+    type: TextArea,
+    description: 'Share text (keep max tweet length in mind)',
+    display_if: [{ sibling: 'is_shareable', equal_to: true }],
+  },
   { name: 'author', type: TextInput, description: 'Author' },
 ]);
 

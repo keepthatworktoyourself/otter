@@ -47,7 +47,7 @@ export default class Bool extends React.Component {
                 <a className={`button is-small ${field.value === true && 'is-selected is-link'}`} data-value="yes" style={{ marginBottom: 0 }} onClick={this.cb_click}>
                   {text__yes}
                 </a>
-                <a className={`button is-small ${field.value !== true && 'is-selected is-link'}`} data-value="no" style={{ marginBottom: 0 }} onClick={this.cb_click}>
+                <a className={`button is-small ${field.value === false && 'is-selected is-link'}`} data-value="no" style={{ marginBottom: 0 }} onClick={this.cb_click}>
                   {text__no}
                 </a>
               </div>
