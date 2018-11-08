@@ -13,7 +13,7 @@ function query_data() {
   }
 
   return q.substr(1).split('&')
-    .reduce(function(accum, item, i) {
+    .reduce(function(accum, item) {
       const parts = item.split('=');
       accum[parts[0]] = parts[1];
       return accum;

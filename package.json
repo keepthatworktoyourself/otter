@@ -1,14 +1,14 @@
 {
   "name": "post-builder",
-  "description": "A front-end javascript library for building content editors.",
+  "description": "Create a component-based page editor with user-defined declarative components.",
   "version": "0.0.1",
   "private": true,
   "author": "Ben Hall <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
-  "homepage": "https://github.com/BrandwatchLtd/brandwatch.com--post-builder",
+  "homepage": "https://github.com/BrandwatchLtd/iceberg-editor",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BrandwatchLtd/brandwatch.com--post-builder.git"
+    "url": "https://github.com/BrandwatchLtd/iceberg-editor.git"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.7",

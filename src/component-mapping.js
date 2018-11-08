@@ -40,7 +40,7 @@ import * as utils from './utils';
 
 
 const Components = {
-  register(type, description, def) {
+  define(type, description, def) {
     Components[type] = def;
     Components[type].type = type;
     Components[type].description = description;
@@ -123,7 +123,7 @@ const opt__y_axis_spacing = {
 
 // --- Core ------------------------------------
 
-Components.register('CoreForm', 'Marketo Form', [
+Components.define('CoreForm', 'Marketo Form', [
   { name: 'form_id', type: TextInput, description: 'Form' },
   { name: 'prefill', type: Bool, description: 'Prefill', text__yes: 'Enabled', text__no: 'Disabled' },
   { name: 'redirect', type: TextInput, description: 'Redirect' },
@@ -163,7 +163,7 @@ const pb_crappy_custom_details = [
   },
 ];
 
-Components.register('PBCountdownTimer', 'PBCountdownTimer', [
+Components.define('PBCountdownTimer', 'PBCountdownTimer', [
   { name: 'number', type: TextInput, description: 'Countdown number' },
   { name: 'title', type: TextInput, description: 'Title' },
   { name: 'heading', type: TextInput, description: 'Heading' },
@@ -175,7 +175,7 @@ Components.register('PBCountdownTimer', 'PBCountdownTimer', [
   { name: 'new_tab', type: TextInput, description: '' },
 ]);
 
-Components.register('PBImage', 'PBImage', [
+Components.define('PBImage', 'PBImage', [
   { name: 'image', type: WPImage, description: 'Image' },
   { name: 'align', type: Radios, description: 'Align', options: { left: 'Left', center: 'Center', right: 'Right' } },
   { name: 'width', type: Radios, description: 'Width', options: { column_width: 'Column', wide: 'Wide', full: 'Full' } },
@@ -183,7 +183,7 @@ Components.register('PBImage', 'PBImage', [
   ...pb_crappy_custom_details,
 ]);
 
-Components.register('PBGraph', 'PBGraph', [
+Components.define('PBGraph', 'PBGraph', [
   { name: 'image', type: WPImage, description: 'Image' },
   { name: 'align', type: Radios, description: 'Align', options: { left: 'Left', center: 'Center', right: 'Right' } },
   { name: 'width', type: Radios, description: 'Width', options: { column_width: 'Column', wide: 'Wide', full: 'Full' } },
@@ -191,14 +191,14 @@ Components.register('PBGraph', 'PBGraph', [
   ...pb_crappy_custom_details,
 ]);
 
-Components.register('PBHtml', 'PBHtml', [
+Components.define('PBHtml', 'PBHtml', [
   { name: 'content', type: TextArea, description: 'HTML Content' },
   { name: 'max_width', type: Radios, description: 'Max width', options: { column: 'Column', wide: 'Wide' } },
   { name: 'title', type: TextInput, description: 'HTML Content' },
   { name: 'caption', type: TextInput, description: 'HTML Content' },
 ]);
 
-Components.register('PBOembed', 'PBOembed', [
+Components.define('PBOembed', 'PBOembed', [
   // { name: 'src', type: TextInput, description: 'OEmbed URL' },   // TODO: resolve oembed src ACF issue
   { name: 'oembed', type: TextInput, description: 'OEmbed URL' },
   {
@@ -215,14 +215,14 @@ Components.register('PBOembed', 'PBOembed', [
   ...pb_crappy_custom_details,
 ]);
 
-Components.register('PBTable', 'PBTable', [
+Components.define('PBTable', 'PBTable', [
   { name: 'title', type: TextInput, description: 'Title' },
   { name: 'caption', type: TextInput, description: 'Caption' },
   { name: 'constrain_height', type: Bool, description: 'Constrain height?' },
   { name: 'csv_file', type: WPImage, description: 'CSV data file' },
 ]);
 
-Components.register('PBSlider', 'PBSlider', [
+Components.define('PBSlider', 'PBSlider', [
   {
     name: 'slides',
     type: 'subblock array',
@@ -236,7 +236,7 @@ Components.register('PBSlider', 'PBSlider', [
   { name: 'max_width', type: Radios, description: 'Width', options: { regular: 'Normal', large: 'Large' } },
 ]);
 
-Components.register('PBSoftCta', 'PBSoftCta', [
+Components.define('PBSoftCta', 'PBSoftCta', [
   {
     name: 'select_content_type',
     type: Radios,
@@ -300,7 +300,7 @@ Components.register('PBSoftCta', 'PBSoftCta', [
   { name: 'custom_btn_text', type: TextInput, description: 'Custom button text' },
 ]);
 
-Components.register('PBTextBlock', 'PBTextBlock', [
+Components.define('PBTextBlock', 'PBTextBlock', [
   { name: 'content', type: TextEditor, description: 'Content' },
 ]);
 
@@ -308,16 +308,16 @@ Components.register('PBTextBlock', 'PBTextBlock', [
 
 // --- Digcon ------------------------------------
 
-Components.register('DCCallout', 'Callout', [
+Components.define('DCCallout', 'Callout', [
   { name: 'alignment', type: Radios, description: 'Alignment', options: opts__dc_alignment },
   { name: 'callout_text', type: TextInput, description: 'Text' },
 ]);
 
-Components.register('DCCompanyLogos', 'Company logos', [
+Components.define('DCCompanyLogos', 'Company logos', [
   { name: 'company_logos', type: 'subblock array', description: 'Logos', subblock_types: [ Components.PBImage ] },
 ]);
 
-Components.register('DCCTA', 'CTA', [
+Components.define('DCCTA', 'CTA', [
   { name: 'heading', type: TextInput, description: 'Message' },
   { name: 'description', type: TextInput, description: 'Description' },
   { name: 'button_text', type: TextInput, description: 'Button text' },
@@ -345,11 +345,11 @@ Components.register('DCCTA', 'CTA', [
   opt__y_axis_spacing,
 ]);
 
-Components.register('DCIntro_text', 'Intro text', [
+Components.define('DCIntro_text', 'Intro text', [
   { name: 'text', type: TextArea, description: 'Text' },
 ]);
 
-Components.register('DCQuote', 'Quote', [
+Components.define('DCQuote', 'Quote', [
   { name: 'alignment', type: Radios, description: 'Alignment', options: opts__dc_alignment },
   { name: 'is_shareable', type: Bool, description: 'Tweeting features?' },
   { name: 'quote', type: TextArea, description: 'Text' },
@@ -362,7 +362,7 @@ Components.register('DCQuote', 'Quote', [
   { name: 'author', type: TextInput, description: 'Author' },
 ]);
 
-Components.register('DCSocialEmbed', 'SocialEmbed', [
+Components.define('DCSocialEmbed', 'SocialEmbed', [
   { name: 'social_type', type: Radios, description: 'Type', options: { twitter: 'Twitter' } },
   {
     name: 'social_embeds',
@@ -371,7 +371,7 @@ Components.register('DCSocialEmbed', 'SocialEmbed', [
     subblock_types: [ Components.PBOembed ],
   },
 ]);
-Components.register('DCTextContent', 'DCTextContent', [
+Components.define('DCTextContent', 'DCTextContent', [
   { name: 'content', type: TextEditor, description: 'Text' },
   opt__y_axis_spacing,
 ]);
@@ -382,7 +382,7 @@ Components.register('DCTextContent', 'DCTextContent', [
 
 // Reusables
 
-Components.register('LPButton', 'Button', [
+Components.define('LPButton', 'Button', [
   { name: 'text', type: TextInput, description: 'Button text' },
   {
     name: 'style',
@@ -396,7 +396,7 @@ Components.register('LPButton', 'Button', [
   },
 ].concat(opts__btn_actions));
 
-Components.register('LPSupportingText', 'Supporting text', [
+Components.define('LPSupportingText', 'Supporting text', [
   { name: 'title', type: TextInput, description: 'Title' },
   { name: 'content', type: TextEditor, description: 'Content' },
   {
@@ -420,7 +420,7 @@ Components.register('LPSupportingText', 'Supporting text', [
   },
 ]);
 
-Components.register('LPFeaturedButton', 'Featured button', [
+Components.define('LPFeaturedButton', 'Featured button', [
   { name: 'use_featured_button', type: Bool, description: 'Has featured button?' },
   { name: 'pulse_effect', type: Bool, description: 'Pulse effect?' },
 ].concat(opts__btn_actions).map(item => {
@@ -438,17 +438,17 @@ Components.register('LPFeaturedButton', 'Featured button', [
   return item;
 }));
 
-Components.register('LPEmbed', 'Embed', [
+Components.define('LPEmbed', 'Embed', [
   { name: 'embed', type: TextInput, description: 'Embed URL' },
 ]);
 
-Components.register('LPGalleryImage', 'Gallery image', [
+Components.define('LPGalleryImage', 'Gallery image', [
   { name: 'img', type: WPImage, description: 'Image' },
   { name: 'has_video', type: Bool, description: 'Play a video?' },
   { name: 'video_url', type: TextInput, description: 'Video URL', display_if: [{ sibling: 'has_video', equal_to: true }] },
 ]);
 
-Components.register('LPQuote', 'Quote', [
+Components.define('LPQuote', 'Quote', [
   { name: 'quotation', type: TextInput, description: 'Quote' },
   { name: 'byline', type: TextInput, description: 'Byline' },
   { name: 'avatar', type: WPImage, description: 'User avatar' },
@@ -490,7 +490,7 @@ const lp_color_mode_fields = [
   },
 ];
 
-Components.register('LPCard', 'Card', [
+Components.define('LPCard', 'Card', [
   { name: 'img', type: WPImage, description: 'Card image' },
   { name: 'label', type: TextInput, description: 'Label' },
   { name: 'title', type: TextInput, description: 'Title' },
@@ -498,7 +498,7 @@ Components.register('LPCard', 'Card', [
   { name: 'has_feature_button', type: Bool, description: 'Show feature button overlay?' },
 ]);
 
-Components.register('LPColumn', 'Column', [
+Components.define('LPColumn', 'Column', [
   { name: 'img', type: WPImage, description: 'Image' },
   { name: 'title', type: TextInput, description: 'Column title' },
   { name: 'content', type: TextEditor, description: 'Column content' },
@@ -516,7 +516,7 @@ Components.register('LPColumn', 'Column', [
 
 // LP Blocks
 
-Components.register('LPButtons', 'Buttons', [
+Components.define('LPButtons', 'Buttons', [
   { name: 'buttons', type: 'subblock array', description: 'Buttons', subblock_types: [Components.LPButton] },
   { name: 'has_short_title', type: Bool, description: 'Short title?' },
   {
@@ -528,20 +528,20 @@ Components.register('LPButtons', 'Buttons', [
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPCallout', 'Callout', [
+Components.define('LPCallout', 'Callout', [
   { name: 'title', type: TextInput, description: 'Title' },
   { name: 'content', type: TextEditor, description: 'Content' },
   lp_supporting_text,
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPCards', 'Cards', [
+Components.define('LPCards', 'Cards', [
   { name: 'cards', type: 'subblock array', description: 'Cards', subblock_types: [Components.LPCard] },
   lp_supporting_text,
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPColumns', 'Columns', [
+Components.define('LPColumns', 'Columns', [
   {
     name: 'layout',
     type: Radios,
@@ -556,19 +556,19 @@ Components.register('LPColumns', 'Columns', [
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPCustomHTML', 'Custom HTML', [
+Components.define('LPCustomHTML', 'Custom HTML', [
   { name: 'pasted_html', type: TextArea, description: 'HTML' },
   lp_supporting_text,
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPForm', 'Form block', [
+Components.define('LPForm', 'Form block', [
   ...Components.get('CoreForm'),
   lp_supporting_text,
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPHeader', 'Jumbotron', [
+Components.define('LPHeader', 'Jumbotron', [
   { name: 'content_title', type: TextInput, description: 'Title' },
   { name: 'content', type: TextEditor, description: 'Content' },
   {
@@ -637,13 +637,13 @@ Components.register('LPHeader', 'Jumbotron', [
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPImageGallery', 'Gallery', [
+Components.define('LPImageGallery', 'Gallery', [
   { name: 'images', type: 'subblock array', description: 'Images', subblock_types: [Components.LPGalleryImage] },
   lp_supporting_text,
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPImage', 'Image', [
+Components.define('LPImage', 'Image', [
   { name: 'img', type: WPImage, description: 'Image' },
   {
     name: 'size',
@@ -661,14 +661,14 @@ Components.register('LPImage', 'Image', [
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPImpactText', 'Impact Text', [
+Components.define('LPImpactText', 'Impact Text', [
   { name: 'content', type: TextInput, description: 'Text' },
   { name: 'byline', type: TextInput, description: 'Byline' },
   lp_supporting_text,
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPLongText', 'Long Text', [
+Components.define('LPLongText', 'Long Text', [
   { name: 'title', type: TextInput, description: 'Title' },
   { name: 'text_content', type: TextEditor, description: 'Content' },
   { name: 'has_buttons', type: Bool, description: 'Has buttons?' },
@@ -683,13 +683,13 @@ Components.register('LPLongText', 'Long Text', [
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPQuotes', 'Quotes', [
+Components.define('LPQuotes', 'Quotes', [
   { name: 'quotes', type: 'subblock array', description: 'Quotes', subblock_types: [Components.LPQuote] },
   lp_supporting_text,
   ...lp_color_mode_fields,
 ]);
 
-Components.register('LPSocialEmbeds', 'SocialEmbeds', [
+Components.define('LPSocialEmbeds', 'SocialEmbeds', [
   { name: 'social_type', type: Radios, description: 'Type', options: { twitter: 'Twitter' } },
   { name: 'embeds', type: 'subblock array', description: 'Embeds', subblock_types: [Components.LPEmbed] },
   lp_supporting_text,

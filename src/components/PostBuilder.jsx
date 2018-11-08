@@ -60,9 +60,10 @@ export default class PostBuilder extends React.Component {
     super(props);
 
     this.state = {
-      loaded:      false,
-      error:       false,
-      render_data: null,    // Data processed into more useful fmt for JS app
+      loaded:         false,
+      error:          false,
+      no_post_to_get: false,
+      render_blocks:  null,
     };
 
     this.i = 0;
@@ -80,7 +81,7 @@ export default class PostBuilder extends React.Component {
 
   componentDidMount() {
     if (!this.props.post_id) {
-      console.log('Not getting data, no post id');
+      this.setState({ no_post_to_get: true });
       return;
     }
 
@@ -135,11 +136,11 @@ export default class PostBuilder extends React.Component {
     }
 
     const page_data = JSON.parse(data.data) || [ ];
-    const render_data = this.get_render_data(page_data);
+    const render_blocks = this.get_render_blocks(page_data);
 
     this.setState({
       loaded: true,
-      render_data,
+      render_blocks,
     });
   }
 
@@ -221,20 +222,20 @@ export default class PostBuilder extends React.Component {
   }
 
 
-  // get_render_data - convert loaded data to 'render blocks' (more useful)
+  // get_render_blocks - convert loaded data to 'render blocks' (more useful)
   // -----------------------------------
 
-  get_render_data(page_data) {
+  get_render_blocks(page_data) {
     function datablock_arr_to_renderblock_arr(arr_blocks) {
       return arr_blocks.map(b => {
         return this.create_render_block(component_definitions.get(b.__type), b);
       });
     }
 
-    const render_data = datablock_arr_to_renderblock_arr.call(this, page_data)
-    render_data.forEach(b => b.is_top_level = true);
+    const render_blocks = datablock_arr_to_renderblock_arr.call(this, page_data)
+    render_blocks.forEach(b => b.is_top_level = true);
 
-    return render_data;
+    return render_blocks;
   }
 
 
@@ -271,7 +272,7 @@ export default class PostBuilder extends React.Component {
       return block;
     }
 
-    return this.state.render_data.map(get_block);
+    return this.state.render_blocks.map(get_block);
   }
 
 
@@ -307,10 +308,10 @@ export default class PostBuilder extends React.Component {
     const b = this.create_render_block(component_definitions.get(type));
     b.is_top_level = true;
     if (typeof index === 'number') {
-      this.state.render_data.splice(index, 0, b);
+      this.state.render_blocks.splice(index, 0, b);
     }
     else {
-      this.state.render_data.push(b);
+      this.state.render_blocks.push(b);
     }
 
     this.context_obj.should_update();
@@ -321,7 +322,7 @@ export default class PostBuilder extends React.Component {
   // -----------------------------------
 
   remove_block(block_uid) {
-    this.setState({ render_data: this.state.render_data.filter(block => block.uid !== block_uid) });
+    this.setState({ render_blocks: this.state.render_blocks.filter(block => block.uid !== block_uid) });
   }
 
 
@@ -343,12 +344,12 @@ export default class PostBuilder extends React.Component {
     const is_repeater_reorder = !is_block_reorder;  // Condition may need tightening
 
     if (is_block_reorder) {
-      const d = this.state.render_data;
+      const d = this.state.render_blocks;
 
       const [item] = d.splice(drag_result.source.index, 1);
       d.splice(drag_result.destination.index, 0, item);
 
-      this.setState({ render_data: d });
+      this.setState({ render_blocks: d });
     }
 
     else if (is_repeater_reorder) {
@@ -358,7 +359,7 @@ export default class PostBuilder extends React.Component {
         const [item] = arr.splice(drag_result.source.index, 1);
         arr.splice(drag_result.destination.idnex, 0, item);
 
-        this.setState({ render_data: this.state.render_data });
+        this.setState({ render_blocks: this.state.render_blocks });
       }
     }
   }
@@ -370,25 +371,22 @@ export default class PostBuilder extends React.Component {
   render() {
     let inner;
 
+    function msg_div(msg) {
+      return <div className="bg-solid has-text-centered" style={{ padding: '1rem' }}>{msg}</div>;
+    }
+
     if (this.state.error) {
-      inner = (
-        <div className="bg-solid">
-          Couldn’t load post data
-        </div>
-      );
+      inner = msg_div(`Couldn’t load post data`);
     }
-
+    else if (this.state.no_post_to_get) {
+      inner = msg_div(`No post specified!`);
+    }
     else if (!this.state.loaded) {
-      inner = (
-        <div className="bg-solid">
-          Loading...
-        </div>
-      );
+      inner = msg_div(`Loading...`);
     }
-
     else {
-      const render_data = this.state.render_data;
-      const n_blocks = render_data.length;
+      const render_blocks = this.state.render_blocks;
+      const n_blocks = render_blocks.length;
       inner = (
         <div className="container" style={{ minHeight: '15rem' }}>
           <div style={{ margin: '1rem' }}>
@@ -400,7 +398,7 @@ export default class PostBuilder extends React.Component {
               <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
                 <div ref={prov.innerRef} {...prov.droppableProps}>
 
-                  {render_data.map((block, index) => (
+                  {render_blocks.map((block, index) => (
                     <DnD.Draggable key={`block-${block.uid}`} draggableId={`block-${block.uid}`} index={index} type="block">{(prov, snap) => (
 
                       <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
