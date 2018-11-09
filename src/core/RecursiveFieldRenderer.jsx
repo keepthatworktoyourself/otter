@@ -1,7 +1,7 @@
 import React from 'react';
-import * as utils from '../utils';
 import Repeater from './Repeater';
 import SubBlock from './SubBlock';
+import * as utils from './utils';
 
 
 export default function RecursiveFieldRenderer(props) {

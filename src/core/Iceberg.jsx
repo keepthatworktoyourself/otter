@@ -4,11 +4,9 @@
 
 import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
-// import * as utils from '../utils';
 import Block from './Block';
 import AddBlockBtn from './AddBlockBtn';
 import PageDataContext from './PageDataContext';
-import component_definitions from '../component-mapping';
 
 
 function block_drag_styles(snapshot, provided) {
@@ -21,12 +19,13 @@ function block_drag_styles(snapshot, provided) {
 }
 
 
-// context_obj
+// PageDataContext object
 // -----------------------------------
-// - passed to PageDataContext as {value}
-// - provides interface to update page_data blocks (calls setState on PostBuilder)
+// - provides back-communication interface
+// - we break this out from Iceberg just to make clear the interface
+//   provided
 
-function context_obj(pb_instance) {
+function ctx(pb_instance) {
   return {
     should_update() {
       setTimeout(() => pb_instance.setState({ }), 10);
@@ -47,6 +46,8 @@ function context_obj(pb_instance) {
     remove_block(block_uid) {
       pb_instance.remove_block(block_uid);
     },
+
+    blockset: { },
   };
 }
 
@@ -54,94 +55,18 @@ function context_obj(pb_instance) {
 // PostBuilder
 // -----------------------------------
 
-export default class PostBuilder extends React.Component {
+export default class Iceberg extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      loaded:         false,
-      error:          false,
-      no_post_to_get: false,
-      render_blocks:  null,
+      render_blocks: null,
     };
 
     this.i = 0;
-    this.context_obj = context_obj(this);
+    this.ctx = ctx(this);
     this.repeaters = { };
-    this.supported_blocks = component_definitions.get_all().reduce((accum, t) => {
-      accum[t] = component_definitions.get(t);
-      return accum;
-    }, { });
-  }
-
-
-  // Init
-  // -----------------------------------
-
-  componentDidMount() {
-    if (!this.props.post_id) {
-      this.setState({ no_post_to_get: true });
-      return;
-    }
-
-    this.load();
-  }
-
-
-  // load
-  // -----------------------------------
-
-  load() {
-    const base_url = `http://localhost/wp-content/themes/brandwatch/`;
-    const url = `${base_url}temp-backend.php?post_id=${this.props.post_id}`;
-    fetch(url)
-      .then(response => response.json())
-      .catch(err => this.cb_load(false))
-      .then(data => this.cb_load(data))
-      .catch(err => { console.log(err); this.cb_load(false); });
-  }
-
-
-  // save
-  // -----------------------------------
-
-  save() {
-    const url = `http://localhost/wp-content/themes/brandwatch/temp-backend--save.php`;
-    const data = this.get_plain_data();
-    console.log(data);
-    console.log(JSON.stringify(data));
-    const post_content = (
-      `post_id=${this.props.post_id}&` +
-      `data=${encodeURIComponent(JSON.stringify(data))}`
-    );
-
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
-      body: post_content,
-    }).then(response => console.log(response.json()));
-  }
-
-
-  // cb_load
-  // -----------------------------------
-
-  cb_load(data) {
-    if (!data) {
-      this.setState({ error: true });
-      return;
-    }
-
-    const page_data = JSON.parse(data.data) || [ ];
-    const render_blocks = this.get_render_blocks(page_data);
-
-    this.setState({
-      loaded: true,
-      render_blocks,
-    });
   }
 
 
@@ -173,7 +98,6 @@ export default class PostBuilder extends React.Component {
   //       }
   //     }
 
-
   create_render_block(block_definition, data_block) {
     const render_block = {
       type: block_definition.type,
@@ -202,7 +126,7 @@ export default class PostBuilder extends React.Component {
         else if (field_def.type === 'subblock array') {
           const sub_data_blocks = (data_block && data_block[field_def.name]) || [ ];
           field.value = sub_data_blocks.map(b => this.create_render_block(
-            component_definitions.get(b.__type),
+            this.ctx.blockset.get(b.__type),
             b
           ));
 
@@ -227,9 +151,10 @@ export default class PostBuilder extends React.Component {
 
   get_render_blocks(page_data) {
     function datablock_arr_to_renderblock_arr(arr_blocks) {
-      return arr_blocks.map(b => {
-        return this.create_render_block(component_definitions.get(b.__type), b);
-      });
+      return arr_blocks.map(b => this.create_render_block(
+        this.ctx.blockset.get(b.__type),
+        b
+      ));
     }
 
     const render_blocks = datablock_arr_to_renderblock_arr.call(this, page_data)
@@ -261,7 +186,7 @@ export default class PostBuilder extends React.Component {
           accum[field_name] = field.value;
         }
 
-        if (accum[field_name] === '' || accum[field_name] === null) {
+        if (accum[field_name] === '' || accum[field_name] === null || accum[field_name] === undefined) {
           delete accum[field_name];
         }
 
@@ -284,7 +209,7 @@ export default class PostBuilder extends React.Component {
     if (repeater) {
       const item = this.create_render_block(type, null);
       repeater.value.push(item);
-      this.context_obj.should_update();
+      this.ctx.should_update();
     }
   }
 
@@ -296,7 +221,7 @@ export default class PostBuilder extends React.Component {
     const repeater = this.repeaters[repeater_uid];
     if (repeater) {
       repeater.value = repeater.value.filter(item => item.uid !== item_uid);
-      this.context_obj.should_update();
+      this.ctx.should_update();
     }
   }
 
@@ -305,7 +230,7 @@ export default class PostBuilder extends React.Component {
   // -----------------------------------
 
   add_block(type, index) {
-    const b = this.create_render_block(component_definitions.get(type));
+    const b = this.create_render_block(this.ctx.blockset.get(type));
     b.is_top_level = true;
     if (typeof index === 'number') {
       this.state.render_blocks.splice(index, 0, b);
@@ -314,7 +239,7 @@ export default class PostBuilder extends React.Component {
       this.state.render_blocks.push(b);
     }
 
-    this.context_obj.should_update();
+    this.ctx.should_update();
   }
 
 
@@ -365,61 +290,86 @@ export default class PostBuilder extends React.Component {
   }
 
 
+  // cb_save
+  // -----------------------------------
+
+  save() {
+    const data = this.get_plain_data();
+    this.props.ext_interface && this.props.ext_interface.on_update(data);
+  }
+
+
   // render()
   // -----------------------------------
 
   render() {
     let inner;
+    const load_state = this.props.load_state;
+    this.ctx.blockset = this.props.blockset;
+
 
     function msg_div(msg) {
       return <div className="bg-solid has-text-centered" style={{ padding: '1rem' }}>{msg}</div>;
     }
 
-    if (this.state.error) {
+    if (load_state === 'error') {
       inner = msg_div(`Couldn’t load post data`);
     }
-    else if (this.state.no_post_to_get) {
+
+    else if (load_state === 'no post') {
       inner = msg_div(`No post specified!`);
     }
-    else if (!this.state.loaded) {
+
+    else if (!load_state === 'loading') {
       inner = msg_div(`Loading...`);
     }
-    else {
-      const render_blocks = this.state.render_blocks;
+
+    else if (load_state === 'loaded') {
+      let render_blocks = this.state.render_blocks;
+      if (!render_blocks) {
+        this.state.render_blocks = render_blocks = this.get_render_blocks(this.props.data);
+      }
+
       const n_blocks = render_blocks.length;
       inner = (
-        <div className="container" style={{ minHeight: '15rem' }}>
-          <div style={{ margin: '1rem' }}>
-            <a className="button" onClick={_ => this.save.call(this)}>Save</a>
+        <PageDataContext.Provider value={this.ctx}>
+
+          <div className="container" style={{ minHeight: '15rem' }}>
+            <div style={{ margin: '1rem' }}>
+              <a className="button" onClick={_ => this.save.call(this)}>Save</a>
+            </div>
+
+              <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
+                <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
+                  <div ref={prov.innerRef} {...prov.droppableProps}>
+
+                    {render_blocks.map((block, index) => (
+                      <DnD.Draggable key={`block-${block.uid}`} draggableId={`block-${block.uid}`} index={index} type="block">{(prov, snap) => (
+
+                        <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
+                          <Block block={block} block_index={index} ctx={this.ctx} />
+                        </div>
+
+                      )}</DnD.Draggable>
+                    ))}
+
+                    {prov.placeholder}
+
+                  </div>
+                )}</DnD.Droppable>
+              </DnD.DragDropContext>
+
+            <div className="is-flex" style={{ justifyContent: 'center' }}>
+              <AddBlockBtn cb_select={(ev, type) => this.ctx.add_block(type, null)} popup_direction={n_blocks ? 'up' : 'down'} />
+            </div>
+
           </div>
-
-          <PageDataContext.Provider value={this.context_obj}>
-            <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
-              <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
-                <div ref={prov.innerRef} {...prov.droppableProps}>
-
-                  {render_blocks.map((block, index) => (
-                    <DnD.Draggable key={`block-${block.uid}`} draggableId={`block-${block.uid}`} index={index} type="block">{(prov, snap) => (
-
-                      <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
-                        <Block block={block} block_index={index} context_obj={this.context_obj} supported_blocks={this.supported_blocks} />
-                      </div>
-
-                    )}</DnD.Draggable>
-                  ))}
-
-                  {prov.placeholder}
-
-                </div>
-              )}</DnD.Droppable>
-            </DnD.DragDropContext>
-          </PageDataContext.Provider>
-
-          <div className="is-flex" style={{ justifyContent: 'center' }}>
-            <AddBlockBtn cb_select={(ev, type) => this.context_obj.add_block(type, null)} items={this.supported_blocks} popup_direction={n_blocks ? 'up' : 'down'}  />
-          </div>
-        </div>
+        </PageDataContext.Provider>
       );
+    }
+
+    else {
+      inner = msg_div('Unknown load state');
     }
 
     return (

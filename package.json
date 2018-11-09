@@ -1,8 +1,7 @@
 {
-  "name": "post-builder",
-  "description": "Create a component-based page editor with user-defined declarative components.",
-  "version": "0.0.1",
-  "private": true,
+  "name": "iceberg-editor",
+  "description": "Embeddable contet editor, as a React component, with declaratively defined blocks.",
+  "version": "0.0.8",
   "author": "Ben Hall <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://github.com/BrandwatchLtd/iceberg-editor",
@@ -10,34 +9,47 @@
     "type": "git",
     "url": "https://github.com/BrandwatchLtd/iceberg-editor.git"
   },
+  "files": [
+    "README.md",
+    "LICENSE.md",
+    "dist",
+    "src/index.css",
+    "src/quill.snow.css"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "webpack --env prod",
+    "dev": "webpack-dev-server --mode development",
+    "build-for-publish": "npm run build && mkdir -p dist && cp -R demo/dist/*.css dist && babel src/core/ -d dist",
+    "prepublishOnly": "npm run build-for-publish"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.7",
     "@fortawesome/free-solid-svg-icons": "^5.4.2",
     "@fortawesome/react-fontawesome": "^0.1.3",
     "bulma": "^0.7.2",
-    "react": "^16.4.2",
     "react-beautiful-dnd": "^9.0.2",
-    "react-dom": "^16.4.2",
-    "react-quill": "^1.3.1",
-    "react-scripts": "1.1.5"
-  },
-  "files": [
-    "README.md",
-    "LICENSE.md",
-    "index.js",
-    "src/",
-    "public/"
-  ],
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "jest",
-    "eject": "react-scripts eject"
+    "react-quill": "^1.3.1"
   },
   "devDependencies": {
-    "babel-jest": "^23.6.0",
-    "jest": "^23.6.0",
-    "react-test-renderer": "^16.5.2"
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.5",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.0-beta.6",
+    "fast-sass-loader": "^1.4.6",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.4.4",
+    "node-sass": "^4.10.0",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  },
+  "peerDependencies": {
+    "react": "^16.6.1",
+    "react-dom": "^16.6.1"
   },
   "//dependency_licenses": {
     "NOTE!": "Please keep these up to date :)",

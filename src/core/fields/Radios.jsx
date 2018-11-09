@@ -3,7 +3,7 @@ import PageDataContext from '../PageDataContext';
 import FieldLabel from './FieldLabel';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
-import {rnd_str} from '../../utils';
+import {rnd_str} from '../utils';
 
 
 export default class Select extends React.Component {

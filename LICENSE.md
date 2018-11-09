@@ -1,4 +1,4 @@
-# brandwatch.com--post-builder license
+# Iceberg Editor licensing information
 
 This project is dual-licensed:
 

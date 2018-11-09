@@ -3,7 +3,7 @@ import RecursiveFieldRenderer from './RecursiveFieldRenderer';
 import toggler from './toggler';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronDown, faTimes} from '@fortawesome/free-solid-svg-icons';
-import {rnd_str} from '../utils';
+import {rnd_str} from './utils';
 
 export default class SubBlock extends React.Component {
 

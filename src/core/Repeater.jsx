@@ -5,7 +5,7 @@ import PageDataContext from './PageDataContext';
 import toggler from './toggler';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronDown, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
-import {rnd_str} from '../utils';
+import {rnd_str} from './utils';
 
 
 export default class Repeater extends React.Component {

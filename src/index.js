@@ -1,34 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PostBuilder from './components/PostBuilder';
+import {Iceberg, Blockset, Fields} from './core/index';
+
 import './index.css';
 import 'bulma/css/bulma.min.css';
 import './quill.snow.css';
 
+Iceberg.Blockset = Blockset;
+Iceberg.Fields = Fields;
 
-function query_data() {
-  const q = window.location.search;
-  if (!q || !q.length) {
-    return null;
-  }
-
-  return q.substr(1).split('&')
-    .reduce(function(accum, item) {
-      const parts = item.split('=');
-      accum[parts[0]] = parts[1];
-      return accum;
-    }, { });
-}
-
-
-function post_id() {
-  const data = query_data();
-  return data ? (data.post_id || null) : null;
-}
-
-
-ReactDOM.render(
-  <PostBuilder title='Post builder' post_id={post_id()} />,
-  document.getElementById('root')
-);
+export default Iceberg;
 

@@ -47,7 +47,7 @@ export default class Block extends React.Component {
           </div>
 
           <div className="c-block-add-btn" style={{ position: 'absolute', top: '-1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 2 }}>
-            <AddBlockBtn cb_select={(ev, block_type) => this.cb_add.call(this, ctx, ev, block_type)} items={this.props.supported_blocks} />
+            <AddBlockBtn cb_select={(ev, block_type) => this.cb_add.call(this, ctx, ev, block_type)} />
           </div>
 
         </div>
