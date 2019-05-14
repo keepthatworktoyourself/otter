@@ -43,16 +43,21 @@ module.exports = function(env) {
           test: /\.s?css$/,
           use: [
             production ? MiniCssExtractPlugin.loader : 'style-loader',
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                url: false,
+              },
+            },
             {
               loader: 'postcss-loader',
               options: {
-                plugins: require('cssnano')({
-                  discardComments: { removeAll: true },
-                }),
+                plugins: require('cssnano'),
               },
             },
-            'fast-sass-loader',
+            {
+              loader: 'fast-sass-loader',
+            },
           ],
         },
       ],
@@ -60,6 +65,9 @@ module.exports = function(env) {
     plugins: [ css_extract_plugin, htmlWebpackPlugin ],
     devServer: {
       port: 3000,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
     },
   };
 };
