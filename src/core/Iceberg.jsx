@@ -98,12 +98,12 @@ export default class Iceberg extends React.Component {
   //       }
   //     }
 
-  create_render_block(block_definition, data_block) {
+  create_render_block(definition, data_block) {
     const render_block = {
-      type: block_definition.type,
-      def: block_definition,
+      type: definition.type,
+      def: definition,
       uid: this.uid.call(this),
-      fields: block_definition.reduce((accum, field_def) => {
+      fields: definition.fields.reduce((accum, field_def) => {
         const field = {
           uid: this.uid.call(this),
           def: field_def,
@@ -111,7 +111,7 @@ export default class Iceberg extends React.Component {
         };
 
         if (!field_def) {
-          console.log('error: field_def not found', field, data_block, block_definition);
+          console.log('error: field_def not found', field, data_block, definition);
           return accum;
         }
 
@@ -125,9 +125,9 @@ export default class Iceberg extends React.Component {
 
         else if (field_def.type === 'subblock array') {
           const sub_data_blocks = (data_block && data_block[field_def.name]) || [ ];
-          field.value = sub_data_blocks.map(b => this.create_render_block(
-            this.ctx.blockset.get(b.__type),
-            b
+          field.value = sub_data_blocks.map(block => this.create_render_block(
+            this.ctx.blockset.get(block.__type),
+            block
           ));
 
           this.repeaters[field.uid] = field;
@@ -150,14 +150,11 @@ export default class Iceberg extends React.Component {
   // -----------------------------------
 
   get_render_blocks(page_data) {
-    function datablock_arr_to_renderblock_arr(arr_blocks) {
-      return arr_blocks.map(b => this.create_render_block(
-        this.ctx.blockset.get(b.__type),
-        b
-      ));
-    }
+    const render_blocks = page_data.map(block => this.create_render_block(
+      this.ctx.blockset.get(block.__type),
+      block
+    ));
 
-    const render_blocks = datablock_arr_to_renderblock_arr.call(this, page_data)
     render_blocks.forEach(b => b.is_top_level = true);
 
     return render_blocks;

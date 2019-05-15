@@ -6,19 +6,30 @@ import React, { Component } from 'react';
 import Iceberg from 'iceberg-editor';
 import 'iceberg-editor/dist/iceberg.css';
 
-const blockset = Iceberg.Blockset();
-
-blockset.define('HeaderBlock', 'Heading', [
-  { name: 'title', description: 'Title', type: Iceberg.Fields.TextInput },
-  { name: 'author', definitions: 'Author', type: Iceberg.Fields.TextInput },
-]);
-blockset.define('TextBlock', 'Text content', [
-  { name: 'content', description: 'Content', type: Iceberg.Fields.TextArea },
-]);
 
 const ext_interface = {
   on_update: (data) => console.log('new data!', data),
 };
+
+
+const blockset = Iceberg.Blockset([
+  {
+    type: 'HeaderBlock',
+    description: 'Heading',
+    fields: [
+      { name: 'title', description: 'Title', type: Iceberg.Fields.TextInput },
+      { name: 'author', description: 'Author', type: Iceberg.Fields.TextInput },
+    ],
+  },
+  {
+    type: 'TextBlock',
+    description: 'Text content',
+    fields: [
+      { name: 'content', description: 'Content', type: Iceberg.Fields.TextArea },
+    ],
+  },
+]);
+
 
 const dummy_data = [
   {

@@ -41,9 +41,9 @@ export default class AddBlockBtn extends React.Component {
 
           <div className="dropdown-menu" style={{ left: '50%', transform: 'translateX(-50%)' }} id="dropdown-menu" role="menu">
             <div className="dropdown-content" style={{ maxHeight: '12rem', overflowY: 'scroll' }}>
-              {ctx.blockset.get_all().map((t, i) => (
-                <a className="dropdown-item" onClick={ev => this.cb_select(ev, t)} key={i}>
-                  {ctx.blockset.get(t).description}
+              {ctx.blockset.map((def, i) => (
+                <a className="dropdown-item" onClick={ev => this.cb_select(ev, def.type)} key={i}>
+                  {def.description}
                 </a>
               ))}
             </div>

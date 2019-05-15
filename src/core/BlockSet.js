@@ -33,33 +33,27 @@ import * as utils from './utils';
 //   ...
 // ]
 
-export default function Blockset() {
-  const ret = {
-    define(type, description, def) {
-      ret[type] = def;
-      ret[type].type = type;
-      ret[type].description = description;
-    },
 
-    get(__type) {
-      if (!__type) {
-        throw Error(utils.Err__BlockNoType());
-      }
-      const def = ret[__type];
-      if (!def) {
-        throw Error(utils.Err__NoComponentDef(__type));
-      }
-      if (def.constructor !== Array) {
-        throw Error(utils.Err__InvalidComponentDef(__type));
-      }
-      return def;
-    },
-
-    get_all() {
-      return Object.keys(ret).filter(type => ret[type].constructor === Array);
-    },
+export default function Blockset(definitions_array) {
+  definitions_array.define = function(type, description, def) {
+    def.type = type;
+    def.description = description;
+    definitions_array[type] = def;
   };
 
-  return ret;
+  definitions_array.get = function(__type) {
+    if (!__type) {
+      throw Error(utils.Err__BlockNoType());
+    }
+
+    const def = definitions_array.find(item => item.type === __type);
+    if (def === undefined) {
+      throw Error(utils.Err__NoComponentDef(__type));
+    }
+
+    return def;
+  };
+
+  return definitions_array;
 };
 
