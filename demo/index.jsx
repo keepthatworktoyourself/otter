@@ -53,8 +53,8 @@ function load(post_id) {
   // const base_url = `http://localhost/wp-content/themes/brandwatch/`;
   // const url = `${base_url}temp-backend.php?post_id=${post_id}`;
 
-  // NB Fake ajax request for demo purposes.
-  // A real application would `return fetch(url)` or similar.
+  // NB - Fake ajax request for demo purposes.
+  //    - A real application would `return fetch(url)` or similar.
 
   return Promise.resolve({
     json: () => [
@@ -112,9 +112,10 @@ function cb_load(data) {
 
 const ext_interface = {
   on_update: function(data) {
-    console.log('on_change', data);
+    console.log('on_update', data);
   },
 };
+
 
 const state = {
   // post_id: get_post_id(),
@@ -122,7 +123,9 @@ const state = {
   data: [ ],
 };
 
+
 const post_parameter_supplied = true;
+
 
 if (!post_parameter_supplied) {
   state.load_state = 'no post';

@@ -1,6 +1,6 @@
-# Iceberg, an embeddable content editor <img align="right" src="src/ice.png" width=40 height=40>
+# Iceberg, a block-based content editor <img align="right" src="src/ice.png" width=40 height=40>
 
-An embeddable content editor, as a React component, composed from declaratively defined blocks.
+A react-embeddable content editor, defined entirely declaratively from block definitions.
 
 
 ## Example
@@ -13,14 +13,22 @@ import Iceberg from 'iceberg-editor';
 
 // Define some blocks for the content editor
 
-const blockset = Iceberg.Blockset();
-
-blockset.define('HeaderBlock', 'Heading', [
-  { name: 'title', description: 'Title', type: Iceberg.Fields.TextInput },
-  { name: 'author', description: 'Author', type: Iceberg.Fields.TextInput },
-]);
-blockset.define('TextBlock', 'Text content', [
-  { name: 'content', description: 'Content', type: Iceberg.Fields.TextArea },
+const blockset = Iceberg.Blockset([
+  {
+    type: 'HeaderBlock',
+    description: 'Heading',
+    fields: [
+      { name: 'title', description: 'Title', type: Iceberg.Fields.TextInput },
+      { name: 'author', description: 'Author', type: Iceberg.Fields.TextInput },
+    ]
+  },
+  {
+    type: 'TextBlock',
+    description: 'Text content',
+    fields: [
+      { name: 'content', description: 'Content', type: Iceberg.Fields.TextArea },
+    ],
+  },
 ]);
 
 
@@ -51,7 +59,7 @@ render();
 
 ## Sample setup with create-react-app
 
-Iceberg's just a react component so is easy to install. For example:
+Iceberg is just a react component so is easy to install. For example:
 
 ```sh
 npx create-react-app my-app
@@ -59,7 +67,11 @@ cd my-app
 npm i -P iceberg-editor
 ```
 
-Replace src/App.js with [this demo App.js file](src/App.js), run `npm run start`, then visit <a href="http://localhost:3000/">localhost:3000</a>.
+Then:
+
+- replace src/App.js with [this demo App.js file](src/App.js)
+- run `npm run start`
+- visit `localhost:3000`
 
 
 ## The Iceberg CSS
@@ -70,7 +82,7 @@ Iceberg needs its CSS present in the application where it's embedded:
 import 'iceberg-editor/dist/iceberg.css';
 ```
 
-iceberg.css is unfortunately fairly large at the moment (~150kB) due to the inclusion of bulma. Iceberg will transition to something more lightweight.
+iceberg.css is unfortunately fairly large at the moment (~150kB) due to the inclusion of bulma. Iceberg may transition to something more lightweight.
 
 If your app already includes bulma, you can import only iceberg's and Quill's (used for `TextEditor` fields) own CSS directly:
 
@@ -82,12 +94,12 @@ import 'iceberg-editor/src/quill.snow.css';
 
 ## Demo project
 
-The demo project has a small but fully-functioning, clone this repo and run `npm run dev` to start webpack-dev-server, then visit <a href="http://localhost:3000/">localhost:3000</a>.
+There's a super-simple demo project with two block definitions — a header and a text block — run `npm run dev` to start webpack-dev-server, then visit `http://localhost:3000`.
 
 
 ## Development
 
-Use the demo project for development with `npm run dev`. You'll probably want to add and remove a lot of block definitions to the Blockset in `demo/index.jsx` during development to activate the features you're working on. Before merging your work, you should probably reset the `demo` folder back to how it was initially.
+Use the demo project for development with `npm run dev`. You'll probably add block definitions to the Blockset in `demo/index.jsx` during development to activate the features you're working on. Before opening your pull request, you will probably want to reset the `demo` folder back to how it was initially.
 
 When you're ready to publish to npm, `npm publish` should do all the work for you.
 
@@ -99,5 +111,5 @@ Iceberg is dual-licensed to enable Wordpress integration. The license is:
 - GPLv2 for the purpose of embedding within Wordpress themes
 - MIT for all other purposes
 
-See [LICENSE.md](LICENSE.md) for further details.
+See [LICENSE.md](LICENSE.md) for details.
 
