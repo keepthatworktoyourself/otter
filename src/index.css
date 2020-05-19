@@ -1,0 +1,39 @@
+
+body {
+  background-color: #3e4246;
+}
+.bg {
+  background-color: rgba(0, 0, 0, 0.035);
+}
+.bg-solid {
+  background-color: #f7f7f7;
+}
+
+
+.c-toggler-icon {
+  position: relative;
+  top: 0.12rem;
+  margin-left: 0.3rem;
+
+  transition: transform 0.15s ease-in-out;
+}
+[data-toggle-open] .c-toggler-icon {
+  transform: rotate(-180deg);
+}
+
+
+@media screen and (max-width: 767px) {
+  .c-label-margin-btm-phone {
+    margin-bottom: 0.4em;
+  }
+}
+
+
+.c-block-add-btn {
+  display: none;
+}
+
+.c-block:hover .c-block-add-btn {
+  display: block;
+}
+

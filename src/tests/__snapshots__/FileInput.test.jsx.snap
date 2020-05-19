@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="di mr3 my3 w-40"
+>
+  <label
+    htmlFor="file"
+  >
+    Selected file: 
+    
+    <span
+      className="mx4 pa2 ba color-border-grey-4 br10 cursor-pointer"
+    >
+      Change
+    </span>
+  </label>
+</div>
+`;
