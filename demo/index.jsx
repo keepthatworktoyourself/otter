@@ -50,9 +50,6 @@ const blockset = Iceberg.Blockset([
 // -----------------------------------
 
 function load(post_id) {
-  // const base_url = `http://localhost/wp-content/themes/brandwatch/`;
-  // const url = `${base_url}temp-backend.php?post_id=${post_id}`;
-
   // NB - Fake ajax request for demo purposes.
   //    - A real application would `return fetch(url)` or similar.
 
