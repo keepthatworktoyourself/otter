@@ -1,9 +1,171 @@
 # Iceberg, a block-based content editor <img align="right" src="src/ice.png" width=40 height=40>
 
-A react-embeddable content editor, defined entirely declaratively from block definitions.
+A content editor, with declaratively defined content blocks. Easily imports as a react component. Generates data in a simple JSON format.
 
 
-## Example
+### Contents
+
+- [Block API](#block-api)
+- [Field API](#field-api)
+- [Sample setup with create-react-app](#sample-setup-with-create-react-app)
+- [Basic full example](#basic-full-example)
+- [CSS](#css)
+- [Demo project](#demo-project)
+- [Development](#development)
+
+
+
+## Block API
+
+`Iceberg.Blockset([ <block>, <block>, ... ]) -> blockset`
+
+- Define a blockset (a set of content blocks) for use in the editor.
+- Returns the blockset object.
+- Arguments:
+    - `[ <block>, <block>, ... ]`: an array of content block definitions
+
+```js
+const text_blocks = Iceberg.Blockset([{
+  type: 'MyTextBlock',
+  description: 'Text block',
+  fields: [ <field>, <field>, ... ],
+}]);
+```
+
+
+### Methods
+
+`get(block_type) -> block`
+
+- Defined on a blockset created with `Iceberg.blockset()`.
+- Returns the requested block object from the blockset array.
+
+
+
+## Field API
+
+A **block** contains one or more **fields** (see above).
+
+- `<field>` :
+
+```js
+{
+  name: 'content',
+  description: 'Content',
+  type: Iceberg.Fields.Textarea,
+  display_if: [{                  // To display this field only if a sibling has a value
+    sibling: <sibling_name>,
+    equal_to: <value>,            // mutually exclusive
+    not_equal_to: <value>,        //
+  }],
+}
+```
+
+(Note that `display_if` can only operate on siblings of type Bool or Radio.)
+
+
+### Field types:
+
+`Iceberg.Fields.TextInput`
+
+- A simple text input.
+
+`Iceberg.Fields.TextArea`
+
+- A textarea for multiline, unstyled text.
+
+`Iceberg.Fields.TextEditor`
+
+- Multiline rich text editor.
+
+`Iceberg.Fields.Bool`
+
+- A yes/no toggle.
+- Options:
+    - `text__yes: "Yes"`: label for the on state option
+    - `text__no:  "No"`: label for the off state option
+
+`Iceberg.Fields.Radios`
+
+- A set of radio buttons
+- Options:
+    - `options: { value: "Label", ... }` : the set of radios
+
+`Iceberg.Fields.WPImage`
+
+- For wordpress integration: a wordpress media item. **TBD.**
+
+`Iceberg.Fields.SubBlock`
+
+- Embed another block into this block. Iceberg can compose blocks together recursively, allowing for complex content types, and aiding re-use of block definitions.
+- Options:
+    - `description` : if supplied, used to title the wrapped subblock in the editor
+    - `subblock_type: MyTextBlock` : a block object (previously created with `Iceberg.Blockset()`) defining which subblock to embed.
+
+```js
+Iceberg.Blockset([
+  {
+    name: 'MyHeaderAndContentBlock',
+    fields: [
+      {
+        name: 'header',
+        description: 'Header',
+        type: Iceberg.Fields.TextInput,
+      },
+      {
+        name: 'content',
+        description: 'Content',
+        type: Iceberg.Fields.SubBlock,
+        subblock_type: text_blocks.get('MyTextBlock'),
+      },
+    ],
+  }
+]);
+```
+
+`Iceberg.Fields.SubBlockArray`
+
+- Create a picker where the user can manage an array of subblocks, picking from types you predefine.
+- Options:
+    - `description` : if suppied, used to title the wrapped subblock array in the editor
+    - `subblock_types: [ <block1>, <block2>, ... ]` : an array of block objects (previously created with `Iceberg.Blockset()`) defining what types of subblock the user can add to this subblock array.
+
+```js
+Iceberg.Blockset([
+  {
+    name: 'MyMultiContentBlock',
+    fields: [
+      {
+        name: 'content',
+        type: Iceberg.Fields.SubBlockArray,
+        subblock_types: [
+          my_blocks.get('MyContentBlock__1'),
+          my_blocks.get('MyContentBlock__2'),
+        ],
+      },
+    ],
+  }
+]);
+```
+
+
+
+## Sample setup with create-react-app
+
+```sh
+npx create-react-app my-app
+cd my-app
+npm i -P iceberg-editor
+```
+
+To start:
+
+- replace src/App.js with the [demo App.js file](src/App.js)
+- run `npm run start`
+- visit `localhost:3000`
+
+
+## Basic full example
 
 ```js
 import React from 'react';
@@ -11,7 +173,8 @@ import ReactDOM from 'react-dom';
 import Iceberg from 'iceberg-editor';
 
 
-// Define some blocks for the content editor
+// Define content blocks
+// -------------------------------
 
 const blockset = Iceberg.Blockset([
   {
@@ -20,7 +183,7 @@ const blockset = Iceberg.Blockset([
     fields: [
       { name: 'title', description: 'Title', type: Iceberg.Fields.TextInput },
       { name: 'author', description: 'Author', type: Iceberg.Fields.TextInput },
-    ]
+    ],
   },
   {
     type: 'TextBlock',
@@ -33,6 +196,7 @@ const blockset = Iceberg.Blockset([
 
 
 // Fetch some data & render
+// -------------------------------
 
 function render() {
   const data = [
@@ -47,6 +211,7 @@ function render() {
 
 
 // Handle updates
+// -------------------------------
 
 const ext_interface = {
   on_update: (data) => console.log('new data!', data),
@@ -57,34 +222,18 @@ render();
 ```
 
 
-## Sample setup with create-react-app
 
-Iceberg is just a react component so is easy to install. For example:
+## CSS
 
-```sh
-npx create-react-app my-app
-cd my-app
-npm i -P iceberg-editor
-```
-
-Then:
-
-- replace src/App.js with [this demo App.js file](src/App.js)
-- run `npm run start`
-- visit `localhost:3000`
-
-
-## The Iceberg CSS
-
-Iceberg needs its CSS present in the application where it's embedded:
+The CSS must be present in the application where it's embedded:
 
 ```js
 import 'iceberg-editor/dist/iceberg.css';
 ```
 
-iceberg.css is unfortunately fairly large at the moment (~150kB) due to the inclusion of bulma. Iceberg may transition to something more lightweight.
+iceberg.css currently includes bulma so at present weighs ~150kB. **TBD:** move to something more lightweight.
 
-If your app already includes bulma, you can import only iceberg's and Quill's (used for `TextEditor` fields) own CSS directly:
+If your app already includes bulma, you can import only the required Iceberg and Quill CSS directly (Quill is used for the rich text editor):
 
 ```js
 import 'iceberg-editor/src/index.css';
@@ -92,19 +241,23 @@ import 'iceberg-editor/src/quill.snow.css';
 ```
 
 
+
 ## Demo project
 
-There's a super-simple demo project with two block definitions — a header and a text block — run `npm run dev` to start webpack-dev-server, then visit `http://localhost:3000`.
+/demo contains a minimal sample editor using Iceberg. Run `npm run dev` to start webpack-dev-server, then visit `http://localhost:3000`.
+
+If prefer to use [parcel](https://parceljs.org) (npm i -g parcel-bundler), you can instead run `parcel demo/index.html`.
+
 
 
 ## Development
 
-Use the demo project for development with `npm run dev`. You'll probably add block definitions to the Blockset in `demo/index.jsx` during development to activate the features you're working on. Before opening your pull request, you will probably want to reset the `demo` folder back to how it was initially.
+Use the demo project and the `dev` task.
 
-When you're ready to publish to npm, `npm publish` should do all the work for you.
+To publish: `npm publish`.
 
 
-## License
+### License
 
 Iceberg is dual-licensed to enable Wordpress integration. The license is:
 

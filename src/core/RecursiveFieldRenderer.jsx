@@ -1,5 +1,6 @@
 import React from 'react';
 import Repeater from './Repeater';
+import Fields from './fields';
 import SubBlock from './SubBlock';
 import * as utils from './utils';
 
@@ -38,11 +39,11 @@ export default function RecursiveFieldRenderer(props) {
     // Render fields
     let out = null;
 
-    if (field.def.type === 'subblock') {
+    if (field.def.type === Fields.SubBlock) {
       out = <SubBlock block={field.value} field={field} contents_hidden={true} key={field.uid} />;
     }
 
-    else if (field.def.type === 'subblock array') {
+    else if (field.def.type === Fields.SubBlockArray) {
       out = <Repeater block={block} field={field} key={field.uid} />;
     }
 

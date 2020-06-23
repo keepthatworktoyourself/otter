@@ -1,12 +1,9 @@
-//
-// PostBuilder - top level component, retrieves post data and kicks off rendering
-//
-
 import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
 import Block from './Block';
 import AddBlockBtn from './AddBlockBtn';
 import PageDataContext from './PageDataContext';
+import Fields from './fields';
 
 
 function block_drag_styles(snapshot, provided) {
@@ -52,7 +49,7 @@ function ctx(pb_instance) {
 }
 
 
-// PostBuilder
+// Iceberg component
 // -----------------------------------
 
 export default class Iceberg extends React.Component {
@@ -115,7 +112,7 @@ export default class Iceberg extends React.Component {
           return accum;
         }
 
-        if (field_def.type === 'subblock') {
+        if (field_def.type === Fields.SubBlock) {
           const sub_data_block = (data_block && data_block[field_def.name]) || null;
           field.value = this.create_render_block(
             field_def.subblock_type,
@@ -123,7 +120,7 @@ export default class Iceberg extends React.Component {
           );
         }
 
-        else if (field_def.type === 'subblock array') {
+        else if (field_def.type === Fields.SubBlockArray) {
           const sub_data_blocks = (data_block && data_block[field_def.name]) || [ ];
           field.value = sub_data_blocks.map(block => this.create_render_block(
             this.ctx.blockset.get(block.__type),
@@ -171,11 +168,11 @@ export default class Iceberg extends React.Component {
       const block = fields.reduce((accum, field_name) => {
         const field = render_block.fields[field_name];
 
-        if (field.def.type === 'subblock') {
+        if (field.def.type === Fields.SubBlock) {
           accum[field_name] = get_block(field.value);
         }
 
-        else if (field.def.type === 'subblock array') {
+        else if (field.def.type === Fields.SubBlockArray) {
           accum[field_name] = field.value.map(get_block);
         }
 

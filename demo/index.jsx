@@ -5,24 +5,59 @@ import Iceberg from '../src/index';
 
 // Define the blockset for the content editor
 
-const blockset = Iceberg.Blockset([
+const blocks__header = Iceberg.Blockset([
   {
-    type: 'HeaderBlock',
-    description: 'Heading',
+    type: 'Header',
+    description: 'Header',
     fields: [
-      { name: 'title', description: 'Title', type: Iceberg.Fields.TextInput },
-      { name: 'author', description: 'Author', type: Iceberg.Fields.TextInput },
-    ],
-  },
-  {
-    type: 'TextBlock',
-    description: 'Text content',
-    fields: [
-      { name: 'content', description: 'Content', type: Iceberg.Fields.TextArea },
+      {
+        name:        'title',
+        description: 'Title',
+        type:        Iceberg.Fields.TextInput,
+      },
+      {
+        name:        'author',
+        description: 'Author',
+        type:        Iceberg.Fields.TextInput,
+      },
     ],
   },
 ]);
 
+const blocks__content = Iceberg.Blockset([
+  {
+    type: 'Text',
+    description: 'Text content',
+    fields: [
+      {
+        name:        'content',
+        description: 'Content',
+        type:        Iceberg.Fields.TextArea,
+      },
+    ],
+  },
+]);
+
+const blocks__other = Iceberg.Blockset([
+  {
+    type: 'MultiContent',
+    description: 'Multiple content items',
+    fields: [
+      {
+        name:           'content_items',
+        description:    'Content:',
+        type:           Iceberg.Fields.SubBlockArray,
+        subblock_types: [ blocks__content.get('Text') ],
+      },
+    ],
+  },
+]);
+
+const blocks__all = Iceberg.Blockset([].concat(
+	blocks__header,
+	blocks__content,
+	blocks__other
+));
 
 // function get_query_data() {
 //   const q = window.location.search;
@@ -56,14 +91,14 @@ function load(post_id) {
   return Promise.resolve({
     json: () => [
       {
-        __type: 'HeaderBlock',
+        __type: 'Header',
         title: 'Concerning the spiritual in art',
         author: 'Wassily Kandinsky',
       },
       {
-        __type: 'TextBlock',
+        __type: 'Text',
         content: 'Every work of art is the child of its age and, in many cases, the mother of our emotions...',
-      }
+      },
     ],
   });
 }
@@ -142,7 +177,7 @@ else {
 
 function render() {
   ReactDOM.render(
-    <Iceberg data={state.data} load_state={state.load_state} ext_interface={ext_interface} blockset={blockset} />,
+    <Iceberg data={state.data} load_state={state.load_state} ext_interface={ext_interface} blockset={blocks__all} />,
     document.getElementById('iceberg-container')
   );
 }

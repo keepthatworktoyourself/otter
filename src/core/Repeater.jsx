@@ -23,6 +23,7 @@ export default class Repeater extends React.Component {
     ctx.add_repeater_item(this.props.field.uid, type);
   }
 
+
   cb_delete(ctx, ev, subblock) {
     ev.stopPropagation();
     ev.preventDefault();

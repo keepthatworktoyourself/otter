@@ -1,7 +1,7 @@
 {
   "name": "iceberg-editor",
-  "description": "Embeddable contet editor, as a React component, with declaratively defined blocks.",
-  "version": "0.0.8",
+  "description": "Content editor react component, with declaratively defined content blocks.",
+  "version": "0.0.9",
   "author": "Ben Hall <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://github.com/BrandwatchLtd/iceberg-editor",
@@ -21,7 +21,8 @@
     "build": "webpack --env prod",
     "dev": "webpack-dev-server --mode development",
     "build-for-publish": "npm run build && mkdir -p dist && cp -R demo/dist/*.css dist && babel src/core/ -d dist",
-    "prepublishOnly": "npm run build-for-publish"
+    "prepublishOnly": "npm run build-for-publish",
+    "i": "rm -rf node_modules && npm install"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.18",
