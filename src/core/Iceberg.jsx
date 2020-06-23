@@ -289,7 +289,7 @@ export default class Iceberg extends React.Component {
 
   save() {
     const data = this.get_plain_data();
-    this.props.ext_interface && this.props.ext_interface.on_update(data);
+    this.props.delegate && this.props.delegate.on_update(data);
   }
 
 

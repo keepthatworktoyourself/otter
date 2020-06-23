@@ -142,7 +142,7 @@ function cb_load(data) {
 
 // Render
 
-const ext_interface = {
+const delegate = {
   on_update: function(data) {
     console.log('on_update', data);
   },
@@ -177,7 +177,7 @@ else {
 
 function render() {
   ReactDOM.render(
-    <Iceberg data={state.data} load_state={state.load_state} ext_interface={ext_interface} blockset={blocks__all} />,
+    <Iceberg data={state.data} load_state={state.load_state} delegate={delegate} blockset={blocks__all} />,
     document.getElementById('iceberg-container')
   );
 }

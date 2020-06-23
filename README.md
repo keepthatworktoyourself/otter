@@ -204,7 +204,7 @@ function render() {
   ];
 
   ReactDOM.render(
-    <Iceberg data={data} load_state='loaded' ext_interface={ext_interface} blocks={blockset} />,
+    <Iceberg data={data} load_state='loaded' delegate={delegate} blocks={blockset} />,
     document.querySelector('.iceberg-container')
   );
 }
@@ -213,7 +213,7 @@ function render() {
 // Handle updates
 // -------------------------------
 
-const ext_interface = {
+const delegate = {
   on_update: (data) => console.log('new data!', data),
 };
 

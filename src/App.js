@@ -7,7 +7,7 @@ import Iceberg from 'iceberg-editor';
 import 'iceberg-editor/dist/iceberg.css';
 
 
-const ext_interface = {
+const delegate = {
   on_update: (data) => console.log('new data!', data),
 };
 
@@ -48,7 +48,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
-        <Iceberg data={dummy_data} load_state='loaded' ext_interface={ext_interface} blocks={blockset} />
+        <Iceberg data={dummy_data} load_state='loaded' delegate={delegate} blocks={blockset} />
       </div>
     );
   }
