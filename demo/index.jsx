@@ -54,9 +54,9 @@ const blocks__other = Iceberg.Blockset([
 ]);
 
 const blocks__all = Iceberg.Blockset([].concat(
-	blocks__header,
-	blocks__content,
-	blocks__other
+  blocks__header,
+  blocks__content,
+  blocks__other
 ));
 
 // function get_query_data() {
@@ -112,7 +112,7 @@ function cb_load(data) {
     throw Error('cb_load called but data object missing');
   }
 
-  state.load_state = 'loaded';
+  state.load_state = Iceberg.State.Loaded;
   state.data = data || [ ];
 }
 
@@ -143,7 +143,7 @@ function cb_load(data) {
 // Render
 
 const delegate = {
-  on_update: function(data) {
+  on_update(data) {
     console.log('on_update', data);
   },
 };
@@ -164,14 +164,21 @@ if (!post_parameter_supplied) {
   render();
 }
 else {
-  state.load_state = 'loading';
+  state.load_state = Iceberg.State.Loading;
   render();
   load(state.post_id)
     .then(response => response.json())
     .then(cb_load)
-    .then(data => { state.load_state = 'loaded'; return data; })
+    .then(data => {
+      state.load_state = Iceberg.State.Loaded;
+      return data;
+    })
     .then(render)
-    .catch(err => { console.log(err); state.load_state = 'error'; render(); })
+    .catch(err => {
+      console.log(err);
+      state.load_state = Iceberg.State.Error;
+      render();
+    });
 }
 
 

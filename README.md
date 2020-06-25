@@ -5,6 +5,7 @@ A content editor, with declaratively defined content blocks. Easily imports as a
 
 ### Contents
 
+- [Iceberg element](#iceberg-element)
 - [Block API](#block-api)
 - [Field API](#field-api)
 - [Sample setup with create-react-app](#sample-setup-with-create-react-app)
@@ -13,6 +14,31 @@ A content editor, with declaratively defined content blocks. Easily imports as a
 - [Demo project](#demo-project)
 - [Development](#development)
 
+
+
+## Iceberg element
+
+```jsx
+<Iceberg data={data} load_state={Iceberg.State.Loaded} delegate={my_delegate} blocks={blockset} />,
+```
+
+Render an Iceberg editor.
+
+- `blocks` : the set of editor blocks available in this editor (see [Block API](#block-api))
+- `data` : initialize the editor with some content
+- `load_state` : one of the loading states (`Loading` and `Error` are useful when loading content data asynchronously):
+    - `Iceberg.State.Loading`
+    - `Iceberg.State.Loaded`
+    - `Iceberg.State.Error`
+- `delegate` : Iceberg calls the `on_update()` method of your delegate object when data is saved:
+
+```js
+const my_delagate = {
+  on_update(data) {
+    // Kick-off a request to update the post data
+  },
+};
+```
 
 
 ## Block API
@@ -195,6 +221,16 @@ const blockset = Iceberg.Blockset([
 ]);
 
 
+// Handle updates
+// -------------------------------
+
+const delegate = {
+  on_update(data) {
+    console.log('new data:', data),
+  },
+};
+
+
 // Fetch some data & render
 // -------------------------------
 
@@ -208,14 +244,6 @@ function render() {
     document.querySelector('.iceberg-container')
   );
 }
-
-
-// Handle updates
-// -------------------------------
-
-const delegate = {
-  on_update: (data) => console.log('new data!', data),
-};
 
 
 render();

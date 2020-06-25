@@ -4,6 +4,7 @@ import Block from './Block';
 import AddBlockBtn from './AddBlockBtn';
 import PageDataContext from './PageDataContext';
 import Fields from './fields';
+import State from './state';
 
 
 function block_drag_styles(snapshot, provided) {
@@ -306,19 +307,15 @@ export default class Iceberg extends React.Component {
       return <div className="bg-solid has-text-centered" style={{ padding: '1rem' }}>{msg}</div>;
     }
 
-    if (load_state === 'error') {
+    if (load_state === State.Error) {
       inner = msg_div(`Couldn’t load post data`);
     }
 
-    else if (load_state === 'no post') {
-      inner = msg_div(`No post specified!`);
-    }
-
-    else if (!load_state === 'loading') {
+    else if (!load_state === State.Loading) {
       inner = msg_div(`Loading...`);
     }
 
-    else if (load_state === 'loaded') {
+    else if (load_state === State.Loaded) {
       let render_blocks = this.state.render_blocks;
       if (!render_blocks) {
         this.state.render_blocks = render_blocks = this.get_render_blocks(this.props.data);
@@ -363,7 +360,7 @@ export default class Iceberg extends React.Component {
     }
 
     else {
-      inner = msg_div('Unknown load state');
+      inner = msg_div(`Unknown load state: ${load_state}`);
     }
 
     return (
