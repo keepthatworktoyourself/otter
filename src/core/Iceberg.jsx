@@ -5,6 +5,7 @@ import AddBlockBtn from './AddBlockBtn';
 import PageDataContext from './PageDataContext';
 import Fields from './fields';
 import State from './state';
+import Save from './save';
 
 
 function block_drag_styles(snapshot, provided) {
@@ -285,7 +286,7 @@ export default class Iceberg extends React.Component {
   }
 
 
-  // cb_save
+  // save
   // -----------------------------------
 
   save() {
@@ -300,8 +301,8 @@ export default class Iceberg extends React.Component {
   render() {
     let inner;
     const load_state = this.props.load_state;
+    const call_delegate = this.props.call_delegate;
     this.ctx.blockset = this.props.blockset;
-
 
     function msg_div(msg) {
       return <div className="bg-solid has-text-centered" style={{ padding: '1rem' }}>{msg}</div>;
@@ -321,34 +322,41 @@ export default class Iceberg extends React.Component {
         this.state.render_blocks = render_blocks = this.get_render_blocks(this.props.data);
       }
 
+      if (call_delegate === Save.OnInput) {
+        this.save.call(this);
+      }
+
       const n_blocks = render_blocks.length;
       inner = (
         <PageDataContext.Provider value={this.ctx}>
 
-          <div className="container" style={{ minHeight: '15rem' }}>
+          <div className="container" style={{ minHeight: '10rem' }}>
+
+            {call_delegate === Save.SaveButton && (
             <div style={{ margin: '1rem' }}>
               <a className="button" onClick={_ => this.save.call(this)}>Save</a>
             </div>
+            )}
 
-              <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
-                <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
-                  <div ref={prov.innerRef} {...prov.droppableProps}>
+            <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
+              <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
+                <div ref={prov.innerRef} {...prov.droppableProps}>
 
-                    {render_blocks.map((block, index) => (
-                      <DnD.Draggable key={`block-${block.uid}`} draggableId={`block-${block.uid}`} index={index} type="block">{(prov, snap) => (
+                  {render_blocks.map((block, index) => (
+                    <DnD.Draggable key={`block-${block.uid}`} draggableId={`block-${block.uid}`} index={index} type="block">{(prov, snap) => (
 
-                        <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
-                          <Block block={block} block_index={index} ctx={this.ctx} />
-                        </div>
+                      <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
+                        <Block block={block} block_index={index} ctx={this.ctx} />
+                      </div>
 
-                      )}</DnD.Draggable>
-                    ))}
+                    )}</DnD.Draggable>
+                  ))}
 
-                    {prov.placeholder}
+                  {prov.placeholder}
 
-                  </div>
-                )}</DnD.Droppable>
-              </DnD.DragDropContext>
+                </div>
+              )}</DnD.Droppable>
+            </DnD.DragDropContext>
 
             <div className="is-flex" style={{ justifyContent: 'center' }}>
               <AddBlockBtn cb_select={(ev, type) => this.ctx.add_block(type, null)} popup_direction={n_blocks ? 'up' : 'down'} />
