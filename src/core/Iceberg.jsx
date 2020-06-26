@@ -311,7 +311,7 @@ export default class Iceberg extends React.Component {
       inner = msg_div(`Couldn’t load post data`);
     }
 
-    else if (!load_state === State.Loading) {
+    else if (load_state === State.Loading) {
       inner = msg_div(`Loading...`);
     }
 
