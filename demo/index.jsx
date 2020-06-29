@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Iceberg from '../src/index';
+import '../src/css';
 
 
 // Define the blockset for the content editor

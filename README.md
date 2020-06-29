@@ -197,6 +197,7 @@ To start:
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Iceberg from 'iceberg-editor';
+import 'iceberg-editor/dist/iceberg.css';
 
 
 // Define content blocks
@@ -253,20 +254,13 @@ render();
 
 ## CSS
 
-The CSS must be present in the application where it's embedded:
+The app needs to import the Iceberg CSS:
 
 ```js
 import 'iceberg-editor/dist/iceberg.css';
 ```
 
-iceberg.css currently includes bulma so at present weighs ~150kB. **TBD:** move to something more lightweight.
-
-If your app already includes bulma, you can import only the required Iceberg and Quill CSS directly (Quill is used for the rich text editor):
-
-```js
-import 'iceberg-editor/src/index.css';
-import 'iceberg-editor/src/quill.snow.css';
-```
+This currently includes bulma so at present weighs ~150kB. **TBD:** move to something more lightweight.
 
 
 
