@@ -48,7 +48,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
-        <Iceberg data={dummy_data} load_state={Iceberg.State.Loaded} delegate={delegate} blocks={blockset} />
+        <Iceberg.Editor data={dummy_data} load_state={Iceberg.State.Loaded} delegate={delegate} blocks={blockset} />
       </div>
     );
   }

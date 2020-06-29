@@ -19,7 +19,7 @@ A content editor, with declaratively defined content blocks. Easily imports as a
 ## Iceberg element
 
 ```jsx
-<Iceberg data={data} load_state={Iceberg.State.Loaded} delegate={my_delegate} blocks={blockset} />,
+<Iceberg.Editor data={data} load_state={Iceberg.State.Loaded} delegate={my_delegate} blocks={blockset} />,
 ```
 
 Render an Iceberg editor.
@@ -240,7 +240,7 @@ function render() {
   ];
 
   ReactDOM.render(
-    <Iceberg data={data} load_state='loaded' delegate={delegate} blocks={blockset} />,
+    <Iceberg.Editor data={data} load_state='loaded' delegate={delegate} blocks={blockset} />,
     document.querySelector('.iceberg-container')
   );
 }

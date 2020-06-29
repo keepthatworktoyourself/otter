@@ -21,7 +21,7 @@ function block_drag_styles(snapshot, provided) {
 // PageDataContext object
 // -----------------------------------
 // - provides back-communication interface
-// - we break this out from Iceberg just to make clear the interface
+// - we break this out from the editor component just to make the interface clearer
 //   provided
 
 function ctx(pb_instance) {
@@ -51,10 +51,10 @@ function ctx(pb_instance) {
 }
 
 
-// Iceberg component
+// Iceberg editor component
 // -----------------------------------
 
-export default class Iceberg extends React.Component {
+export default class Editor extends React.Component {
 
   constructor(props) {
     super(props);

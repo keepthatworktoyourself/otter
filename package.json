@@ -1,7 +1,7 @@
 {
   "name": "iceberg-editor",
   "description": "Content editor react component, with declaratively defined content blocks.",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://github.com/keepthatworktoyourself/iceberg-editor",

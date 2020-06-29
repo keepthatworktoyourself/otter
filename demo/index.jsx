@@ -184,7 +184,7 @@ else {
 
 function render() {
   ReactDOM.render(
-    <Iceberg data={state.data} load_state={state.load_state} delegate={delegate} blockset={blocks__all} />,
+    <Iceberg.Editor data={state.data} load_state={state.load_state} delegate={delegate} blockset={blocks__all} />,
     document.getElementById('iceberg-container')
   );
 }
