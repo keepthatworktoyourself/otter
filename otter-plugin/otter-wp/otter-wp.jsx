@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Otter from 'otter-editor';
-import 'otter-editor/dist/otter.css';
 
 
 // Update
