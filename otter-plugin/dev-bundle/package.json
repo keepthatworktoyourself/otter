@@ -1,12 +1,16 @@
 {
   "scripts": {
     "i": "rm -rf node_modules && npm i",
+    "clean": "rm -rf dist",
     "build": "rm -rf dist && parcel build blockset.js",
-    "build-dev": "rm -rf dist && NODE_ENV=development parcel build --no-minify blockset.js"
+    "build-dev": "npm run clean && NODE_ENV=development parcel build --no-minify blockset.js"
   },
   "dependencies": {
-    "iceberg-editor": "^0.0.17",
+    "otter-editor": "^0.0.18",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.3"
   }
 }

@@ -1,13 +1,13 @@
 <?php
-  namespace Iceberg\Editor;
+  namespace Otter\Editor;
 
   function init() {
-    $proceed = is_admin() && \Iceberg\iceberg_for_post_type(get_post_type());
+    $proceed = is_admin() && \Otter\otter_for_post_type(get_post_type());
     if ($proceed) {
       \add_meta_box(
-        'iceberg-editor-metabox',
+        'otter-editor-metabox',
         'Editor',
-        '\Iceberg\Editor\render',
+        '\Otter\Editor\render',
         null,
         'normal',
         'high',
@@ -20,5 +20,5 @@
     require('metabox.php');
   }
 
-  add_action('add_meta_boxes', '\Iceberg\Editor\init', 100);
+  add_action('add_meta_boxes', '\Otter\Editor\init', 100);
 

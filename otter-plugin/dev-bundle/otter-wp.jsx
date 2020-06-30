@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Iceberg from 'iceberg-editor';
-import 'iceberg-editor/dist/iceberg.css';
+import Otter from 'otter-editor';
+import 'otter-editor/dist/otter.css';
 
 
 // Update
@@ -9,7 +9,7 @@ import 'iceberg-editor/dist/iceberg.css';
 
 const delegate = {
   on_update(data) {
-    window.parent.postMessage({ 'iceberg--set-data': data });
+    window.parent.postMessage({ 'otter--set-data': data });
     setTimeout(send_height_update, 10);
   },
 };
@@ -19,19 +19,19 @@ const delegate = {
 // -----------------------------------
 
 const state = {
-  load_state: Iceberg.State.Loading,
+  load_state: Otter.State.Loading,
   data: [ ],
   blocks: null,
 };
 
 function render() {
   ReactDOM.render(
-    <Iceberg.Editor data={state.data}
+    <Otter.Editor data={state.data}
              load_state={state.load_state}
              blockset={state.blocks}
              delegate={delegate}
-             call_delegate={Iceberg.Save.OnInput} />,
-    document.querySelector('.iceberg-container')
+             call_delegate={Otter.Save.OnInput} />,
+    document.querySelector('.otter-container')
   );
 }
 
@@ -40,21 +40,21 @@ function render() {
 // -----------------------------------
 
 function do_error() {
-  state.load_state = Iceberg.State.Error;
+  state.load_state = Otter.State.Error;
   render();
 }
 
 window.addEventListener('message', function(ev) {
-  const proceed = ev.data && ev.data['iceberg--set-initial-data'];
+  const proceed = ev.data && ev.data['otter--set-initial-data'];
   if (proceed) {
-    state.load_state = Iceberg.State.Loaded;
-    state.data = ev.data['iceberg--set-initial-data'];
+    state.load_state = Otter.State.Loaded;
+    state.data = ev.data['otter--set-initial-data'];
     render();
   }
 });
 
 function load() {
-  window.parent.postMessage({ 'iceberg--get-initial-data': true });
+  window.parent.postMessage({ 'otter--get-initial-data': true });
 }
 
 
@@ -63,7 +63,7 @@ function load() {
 
 function send_height_update() {
   window.parent.postMessage({
-    'iceberg--set-height': getComputedStyle(document.body).height,
+    'otter--set-height': getComputedStyle(document.body).height,
   });
 }
 

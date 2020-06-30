@@ -1,24 +1,24 @@
 <?php
-  $data = \Iceberg\load($post->ID);
-  $data = \Iceberg\serialize($data ? $data : []);
+  $data = \Otter\load($post->ID);
+  $data = \Otter\serialize($data ? $data : []);
 
-  $js_bundle = \Iceberg\iceberg_for_post_type($post->post_type);
-  $css_bundle = \Iceberg\css_bundle();
+  $js_bundle = \Otter\otter_for_post_type($post->post_type);
+  $css_bundle = \Otter\css_bundle();
 
-  $iframe_url = '../wp-content/plugins/iceberg-plugin/editor/editor.html';
+  $iframe_url = '../wp-content/plugins/otter-plugin/editor/editor.html';
 ?>
 
-<input type="text" name="iceberg-data" id="iceberg-data" style="display: none;" />
+<input type="text" name="otter-data" id="otter-data" style="display: none;" />
 
-<iframe class="iceberg-container" style="display: block; width: 100%;"
+<iframe class="otter-container" style="display: block; width: 100%;"
         src="<?= $iframe_url ?>"
-        data-iceberg-initial-data="<?= base64_encode($data) ?>"
-        data-iceberg-js-bundle="<?= base64_encode($js_bundle) ?>"
-        data-iceberg-css-bundle="<?= base64_encode($css_bundle) ?>">
+        data-otter-initial-data="<?= base64_encode($data) ?>"
+        data-otter-js-bundle="<?= base64_encode($js_bundle) ?>"
+        data-otter-css-bundle="<?= base64_encode($css_bundle) ?>">
 </iframe>
 
 <style>
-  #iceberg-editor-metabox .inside {
+  #otter-editor-metabox .inside {
     margin: 0;
     padding: 0;
   }
@@ -30,29 +30,29 @@
 
 <script>
   (function() {
-    const iframe = document.querySelector('.iceberg-container');
-    const input = document.querySelector('#iceberg-data');
+    const iframe = document.querySelector('.otter-container');
+    const input = document.querySelector('#otter-data');
 
 
-    // Provide user-bundled iceberg file
+    // Provide user-bundled otter file
     // -------------------------------
     // - Unlike the other messages, this comes from index.js, which
-    //   discovers the iceberg js bundle to load
+    //   discovers the otter js bundle to load
 
     window.addEventListener('message', function(ev) {
-      const js  = ev.data && ev.data['iceberg--get-js-bundle'];
-      const css = ev.data && ev.data['iceberg--get-css-bundle'];
+      const js  = ev.data && ev.data['otter--get-js-bundle'];
+      const css = ev.data && ev.data['otter--get-css-bundle'];
 
       if (js) {
-        const bundle_file = atob(iframe.getAttribute('data-iceberg-js-bundle'));
+        const bundle_file = atob(iframe.getAttribute('data-otter-js-bundle'));
         iframe.contentWindow.postMessage({
-          'iceberg--set-js-bundle': bundle_file,
+          'otter--set-js-bundle': bundle_file,
         });
       }
       else if (css) {
-        const bundle_file = atob(iframe.getAttribute('data-iceberg-css-bundle'));
+        const bundle_file = atob(iframe.getAttribute('data-otter-css-bundle'));
         iframe.contentWindow.postMessage({
-          'iceberg--set-css-bundle': bundle_file,
+          'otter--set-css-bundle': bundle_file,
         });
       }
     });
@@ -62,9 +62,9 @@
     // -------------------------------
 
     window.addEventListener('message', function(ev) {
-      const proceed = ev.data && ev.data['iceberg--set-height'];
+      const proceed = ev.data && ev.data['otter--set-height'];
       if (proceed) {
-        iframe.style.height = ev.data['iceberg--set-height'];
+        iframe.style.height = ev.data['otter--set-height'];
       }
     });
 
@@ -73,9 +73,9 @@
     // -------------------------------
 
     window.addEventListener('message', function(ev) {
-      const proceed = ev.data && ev.data['iceberg--set-data'];
+      const proceed = ev.data && ev.data['otter--set-data'];
       if (proceed) {
-        input.value = JSON.stringify(ev.data['iceberg--set-data']);
+        input.value = JSON.stringify(ev.data['otter--set-data']);
       }
     });
 
@@ -84,14 +84,14 @@
     // -------------------------------
 
     window.addEventListener('message', function(ev) {
-      const proceed = ev.data['iceberg--get-initial-data'];
+      const proceed = ev.data['otter--get-initial-data'];
       if (proceed) {
         const data = JSON.parse(atob(
-          iframe.getAttribute('data-iceberg-initial-data')
+          iframe.getAttribute('data-otter-initial-data')
         ));
 
         iframe.contentWindow.postMessage({
-          'iceberg--set-initial-data': data,
+          'otter--set-initial-data': data,
         });
       }
     });

@@ -1,26 +1,26 @@
 //
-// editor/editor.js - loads the user-created Iceberg bundle
+// editor/editor.js - loads the user-created Otter bundle
 //
 
 (function() {
   window.addEventListener('message', function(ev) {
-    const js  = ev.data && ev.data['iceberg--set-js-bundle'];
-    const css = ev.data && ev.data['iceberg--set-css-bundle'];
+    const js  = ev.data && ev.data['otter--set-js-bundle'];
+    const css = ev.data && ev.data['otter--set-css-bundle'];
 
     if (js) {
       const s = document.createElement('script');
-      s.src = ev.data['iceberg--set-js-bundle'];
+      s.src = ev.data['otter--set-js-bundle'];
       document.body.appendChild(s);
     }
     else if (css) {
       const l = document.createElement('link');
       l.rel = "stylesheet";
-      l.href = ev.data['iceberg--set-css-bundle'];
+      l.href = ev.data['otter--set-css-bundle'];
       document.head.appendChild(l);
     }
   });
 
-  window.parent.postMessage({ 'iceberg--get-js-bundle': true });
-  window.parent.postMessage({ 'iceberg--get-css-bundle': true });
+  window.parent.postMessage({ 'otter--get-js-bundle': true });
+  window.parent.postMessage({ 'otter--get-css-bundle': true });
 })();
 

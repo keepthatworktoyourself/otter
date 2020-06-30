@@ -1,16 +1,16 @@
 <?php
 /**
- * Iceberg-Plugin
+ * Otter-Plugin
  *
- * Plugin Name: Iceberg Editor
+ * Plugin Name: Otter Editor
  * Plugin URI:  https://wordpress.org/plugins/classic-editor/
- * Description: Iceberg: a declarative block-based editor
+ * Description: Otter: a declarative block-based editor
  * Version:     0.1
  * Author:      Ben Hallstein
  * Author URI:  https://ben.am/
  * License:     GPLv2 or later
  * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * Text Domain: iceberg-plugin
+ * Text Domain: otter-plugin
  * Domain Path: /languages
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
@@ -21,13 +21,13 @@
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-  namespace Iceberg;
+  namespace Otter;
 
   if (!defined('ABSPATH')) {
     exit('Invalid request.');
   }
 
-  if (class_exists('IcebergPlugin')) {
+  if (class_exists('OtterPlugin')) {
     return true;
   }
 
@@ -35,7 +35,7 @@
   require_once('metabox-init.php');
   require_once('dev-bundle/init.php');
 
-  class IcebergPlugin { }
+  class OtterPlugin { }
 
 
   // serialize()
@@ -50,7 +50,7 @@
   // -----------------------------------
 
   function save($post_id, array $data) {
-    return update_post_meta($post_id, 'iceberg-content', \Iceberg\serialize($data));
+    return update_post_meta($post_id, 'otter-content', \Otter\serialize($data));
   }
 
 
@@ -58,12 +58,12 @@
   // -----------------------------------
 
   function load($post_id) {
-    $result = get_post_meta($post_id, 'iceberg-content', true);
+    $result = get_post_meta($post_id, 'otter-content', true);
     try {
       $result = json_decode($result, true);
     }
     catch (\Throwable $exc) {
-      error_log("iceberg could not decode data for post $post_id");
+      error_log("otter could not decode data for post $post_id");
     }
     finally {
       return $result;
@@ -71,26 +71,26 @@
   }
 
 
-  // iceberg_for_post_type
+  // otter_for_post_type
   // -----------------------------------
   // - must be called on wp init with priority < 100
   // - $post_type can be a single type or an array
 
-  function iceberg_for_post_type($post_type, $bundle_path = null) {
-    static $icebergs = [ ];
+  function otter_for_post_type($post_type, $bundle_path = null) {
+    static $otters = [ ];
 
     if ($bundle_path) {
       if (is_array($post_type)) {
         foreach ($post_type as $p) {
-          $icebergs[$p] = $bundle_path;
+          $otters[$p] = $bundle_path;
         }
       }
       else {
-        $icebergs[$post_type] = $bundle_path;
+        $otters[$post_type] = $bundle_path;
       }
     }
 
-    return $icebergs[$post_type] ?? null;
+    return $otters[$post_type] ?? null;
   }
 
 
@@ -112,7 +112,7 @@
   // -----------------------------------
 
   add_action('save_post', function($post_id) {
-    $data = $_POST['iceberg-data'] ?? null;
+    $data = $_POST['otter-data'] ?? null;
     if ($data) {
       $data = preg_replace('/\\\"/', '"', $data);
       $arr = json_decode($data, true);
