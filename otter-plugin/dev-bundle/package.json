@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "i": "rm -rf node_modules && npm i",
+    "build": "rm -rf dist && parcel build blockset.js",
+    "build-dev": "rm -rf dist && NODE_ENV=development parcel build --no-minify blockset.js"
+  },
+  "dependencies": {
+    "iceberg-editor": "^0.0.17",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}

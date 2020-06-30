@@ -1,6 +1,14 @@
 .DS_Store
+
 node_modules
 package-lock.json
 dist
 demo/dist
 .cache
+
+dev-bundle/dist
+dev-bundle/node_modules
+dev-bundle/iceberg-editor
+dev-bundle/package-lock.json
+dev-bundle/.cache
+
