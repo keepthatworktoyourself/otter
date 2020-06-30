@@ -33,7 +33,7 @@
 
   require_once('classic-editor/classic-editor.php');
   require_once('metabox-init.php');
-  require_once('dev-bundle/init.php');
+  // require_once('dev-bundle/init.php');
 
   class OtterPlugin { }
 
@@ -90,7 +90,10 @@
       }
     }
 
-    return $otters[$post_type] ?? null;
+    if (is_string($post_type)) {
+      return $otters[$post_type] ?? null;
+    }
+    return null;
   }
 
 
