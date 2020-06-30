@@ -31,6 +31,7 @@
     return true;
   }
 
+  require_once('classic-editor/classic-editor.php');
   require_once('iceberg-editor.php');
 
 
