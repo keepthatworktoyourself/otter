@@ -7,7 +7,7 @@ module.exports = function(env) {
   const production = env === 'prod';
 
   const css_extract_plugin = new MiniCssExtractPlugin({
-    filename: 'iceberg.css',
+    filename: 'otter.css',
     sourceMap: false,
   });
 

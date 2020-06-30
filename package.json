@@ -1,13 +1,13 @@
 {
-  "name": "iceberg-editor",
+  "name": "otter-editor",
   "description": "Content editor react component, with declaratively defined content blocks.",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
-  "homepage": "https://github.com/keepthatworktoyourself/iceberg-editor",
+  "homepage": "https://github.com/keepthatworktoyourself/otter",
   "repository": {
     "type": "git",
-    "url": "https://github.com/keepthatworktoyourself/iceberg-editor.git"
+    "url": "https://github.com/keepthatworktoyourself/otter.git"
   },
   "files": [
     "README.md",
@@ -51,7 +51,9 @@
     "style-loader": "^1.2.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "peerDependencies": {
     "react": "^16.13.1",

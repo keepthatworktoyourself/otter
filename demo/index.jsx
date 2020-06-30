@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Iceberg from '../src/index';
+import Otter from '../src/index';
 import '../src/css';
 
 
 // Define the blockset for the content editor
 
-const blocks__header = Iceberg.Blockset([
+const blocks__header = Otter.Blockset([
   {
     type: 'Header',
     description: 'Header',
@@ -14,18 +14,18 @@ const blocks__header = Iceberg.Blockset([
       {
         name:        'title',
         description: 'Title',
-        type:        Iceberg.Fields.TextInput,
+        type:        Otter.Fields.TextInput,
       },
       {
         name:        'author',
         description: 'Author',
-        type:        Iceberg.Fields.TextInput,
+        type:        Otter.Fields.TextInput,
       },
     ],
   },
 ]);
 
-const blocks__content = Iceberg.Blockset([
+const blocks__content = Otter.Blockset([
   {
     type: 'Text',
     description: 'Text content',
@@ -33,13 +33,13 @@ const blocks__content = Iceberg.Blockset([
       {
         name:        'content',
         description: 'Content',
-        type:        Iceberg.Fields.TextArea,
+        type:        Otter.Fields.TextArea,
       },
     ],
   },
 ]);
 
-const blocks__other = Iceberg.Blockset([
+const blocks__other = Otter.Blockset([
   {
     type: 'MultiContent',
     description: 'Multiple content items',
@@ -47,14 +47,14 @@ const blocks__other = Iceberg.Blockset([
       {
         name:           'content_items',
         description:    'Content:',
-        type:           Iceberg.Fields.SubBlockArray,
+        type:           Otter.Fields.SubBlockArray,
         subblock_types: [ blocks__content.get('Text') ],
       },
     ],
   },
 ]);
 
-const blocks__all = Iceberg.Blockset([].concat(
+const blocks__all = Otter.Blockset([].concat(
   blocks__header,
   blocks__content,
   blocks__other
@@ -113,7 +113,7 @@ function cb_load(data) {
     throw Error('cb_load called but data object missing');
   }
 
-  state.load_state = Iceberg.State.Loaded;
+  state.load_state = Otter.State.Loaded;
   state.data = data || [ ];
 }
 
@@ -165,19 +165,19 @@ if (!post_parameter_supplied) {
   render();
 }
 else {
-  state.load_state = Iceberg.State.Loading;
+  state.load_state = Otter.State.Loading;
   render();
   load(state.post_id)
     .then(response => response.json())
     .then(cb_load)
     .then(data => {
-      state.load_state = Iceberg.State.Loaded;
+      state.load_state = Otter.State.Loaded;
       return data;
     })
     .then(render)
     .catch(err => {
       console.log(err);
-      state.load_state = Iceberg.State.Error;
+      state.load_state = Otter.State.Error;
       render();
     });
 }
@@ -185,8 +185,8 @@ else {
 
 function render() {
   ReactDOM.render(
-    <Iceberg.Editor data={state.data} load_state={state.load_state} delegate={delegate} blockset={blocks__all} />,
-    document.getElementById('iceberg-container')
+    <Otter.Editor data={state.data} load_state={state.load_state} delegate={delegate} blockset={blocks__all} />,
+    document.getElementById('otter-container')
   );
 }
 

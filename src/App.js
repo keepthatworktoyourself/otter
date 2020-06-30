@@ -1,10 +1,10 @@
 //
-// This is a demo App.js file for quick set-up of iceberg in a create-react-app project.
+// This is a demo App.js file for quick set-up of otter in a create-react-app project.
 //
 
 import React, { Component } from 'react';
-import Iceberg from 'iceberg-editor';
-import 'iceberg-editor/dist/iceberg.css';
+import Otter from 'otter-editor';
+import 'otter-editor/dist/otter.css';
 
 
 const delegate = {
@@ -12,20 +12,20 @@ const delegate = {
 };
 
 
-const blockset = Iceberg.Blockset([
+const blockset = Otter.Blockset([
   {
     type: 'HeaderBlock',
     description: 'Heading',
     fields: [
-      { name: 'title', description: 'Title', type: Iceberg.Fields.TextInput },
-      { name: 'author', description: 'Author', type: Iceberg.Fields.TextInput },
+      { name: 'title', description: 'Title', type: Otter.Fields.TextInput },
+      { name: 'author', description: 'Author', type: Otter.Fields.TextInput },
     ],
   },
   {
     type: 'TextBlock',
     description: 'Text content',
     fields: [
-      { name: 'content', description: 'Content', type: Iceberg.Fields.TextArea },
+      { name: 'content', description: 'Content', type: Otter.Fields.TextArea },
     ],
   },
 ]);
@@ -48,7 +48,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
-        <Iceberg.Editor data={dummy_data} load_state={Iceberg.State.Loaded} delegate={delegate} blocks={blockset} />
+        <Otter.Editor data={dummy_data} load_state={Otter.State.Loaded} delegate={delegate} blocks={blockset} />
       </div>
     );
   }

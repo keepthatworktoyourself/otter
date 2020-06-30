@@ -1,4 +1,4 @@
-# Iceberg Editor licensing information
+# Otter licensing information
 
 This project is dual-licensed:
 

@@ -51,7 +51,7 @@ function ctx(pb_instance) {
 }
 
 
-// Iceberg editor component
+// Editor component
 // -----------------------------------
 
 export default class Editor extends React.Component {
