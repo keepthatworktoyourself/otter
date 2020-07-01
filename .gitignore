@@ -6,9 +6,9 @@ dist
 demo/dist
 .cache
 
-dev-bundle/dist
-dev-bundle/node_modules
-dev-bundle/iceberg-editor
-dev-bundle/package-lock.json
-dev-bundle/.cache
+otter-plugin/dev-bundle/dist
+otter-plugin/dev-bundle/deps
+otter-plugin/dev-bundle/node_modules
+otter-plugin/dev-bundle/package-lock.json
+otter-plugin/dev-bundle/.cache
 

@@ -1,6 +1,6 @@
-import Otter from 'otter-editor';
-import OtterWP from 'otter-wp';
-import 'otter-editor/dist/otter.css';
+import Otter from './deps/otter-editor/index.js';
+import OtterWP from './deps/otter-wp.jsx';
+import '../../dist/otter.css';
 
 
 // Define blocks

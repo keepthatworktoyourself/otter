@@ -20,9 +20,10 @@
   "scripts": {
     "clean": "rm -rf dist && rm -rf demo/dist",
     "build": "npm run clean && webpack --env prod",
+    "build--npm": "npm run clean && npm run build && mkdir -p dist && cp -R demo/dist/*.css dist && babel src/index.js -d dist && babel src/core -d dist/core",
+    "prepublishOnly": "npm run build--npm",
     "dev": "webpack-dev-server --mode development",
-    "build-for-publish": "npm run clean && npm run build && mkdir -p dist && cp -R demo/dist/*.css dist && babel src/index.js -d dist && babel src/core -d dist/core",
-    "prepublishOnly": "npm run build-for-publish",
+    "dev--plugin": "babel -w src/index.js -d otter-plugin/dev-bundle/deps/otter-editor & babel -w src/core -d otter-plugin/dev-bundle/deps/otter-editor/core",
     "i": "rm -rf node_modules && npm install"
   },
   "dependencies": {
