@@ -2,9 +2,9 @@
   "scripts": {
     "i": "rm -rf node_modules && npm i",
     "clean": "rm -rf dist",
-    "build": "npm run clean && parcel build blockset.js",
-    "build-dev": "npm run clean && NODE_ENV=development parcel build --no-minify blockset.js",
-    "dev": "npm run clean && parcel watch blockset.js --no-hmr"
+    "build": "npm run clean && parcel build blocks.js",
+    "build-dev": "npm run clean && NODE_ENV=development parcel build --no-minify blocks.js",
+    "dev": "npm run clean && parcel watch blocks.js --no-hmr"
   },
   "dependencies": {
     "otter-editor": "0.0.18",
