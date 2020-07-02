@@ -30,15 +30,25 @@ Renders an Otter editor.
     - `Otter.State.Loading`
     - `Otter.State.Loaded`
     - `Otter.State.Error`
-- `delegate` : Otter calls the `on_update()` method of your delegate object when data is saved:
+- `delegate` :
+    - `save()` : Otter calls this method of your delegate object when data is saved in the editor.
+    - `block_toggled()` : called when the user expands/closes a sub-block (e.g. if your otter editor is within an iframe, you might then update the iframe height.)
 
 ```js
 const my_delagate = {
-  on_update(data) {
+  save(data) {
     // Kick-off a request to update the post data
+  },
+  block_toggled() {
+    // set iframe height
   },
 };
 ```
+
+- `save` : control when to call `save()` on your delegate:
+    - `Otter.Save.OnInput` : whenever the user makes a change
+    - `Otter.Save.WhenSaveButtonClicked` : render a save button and call `save()` only when this is clicked
+
 
 
 ## Block API

@@ -1,6 +1,6 @@
 const Save = {
-  OnInput: 'OnInput',
-  SaveButton: 'SaveButton',
+  OnInput:               'OnInput',
+  WhenSaveButtonClicked: 'WhenSaveButtonClicked',
 };
 
 export default Save;

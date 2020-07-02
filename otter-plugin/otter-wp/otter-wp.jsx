@@ -7,8 +7,12 @@ import Otter from 'otter-editor';
 // -----------------------------------
 
 const delegate = {
-  on_update(data) {
+  save(data) {
     window.parent.postMessage({ 'otter--set-data': data });
+    setTimeout(send_height_update, 10);
+  },
+
+  block_toggled() {
     setTimeout(send_height_update, 10);
   },
 };
@@ -29,7 +33,7 @@ function render() {
              load_state={state.load_state}
              blockset={state.blocks}
              delegate={delegate}
-             call_delegate={Otter.Save.OnInput} />,
+             save={Otter.Save.OnInput} />,
     document.querySelector('.otter-container')
   );
 }

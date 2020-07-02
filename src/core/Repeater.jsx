@@ -47,7 +47,7 @@ export default class Repeater extends React.Component {
 
           <div style={{ paddingBottom: '0.5rem' }}>
             {repeater_title && (
-              <h4 style={{ cursor: 'pointer' }} className="title is-6 is-marginless" onClick={toggler} data-toggler-target={toggle_id}>
+              <h4 style={{ cursor: 'pointer' }} className="title is-6 is-marginless" onClick={ev => toggler(ev, ctx)} data-toggler-target={toggle_id}>
                 {repeater_title}
                 <span className="icon c-toggler-icon"><FontAwesomeIcon icon={faChevronDown} /></span>
               </h4>

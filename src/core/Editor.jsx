@@ -46,6 +46,10 @@ function ctx(pb_instance) {
       pb_instance.remove_block(block_uid);
     },
 
+    block_toggled() {
+      pb_instance.block_toggled();
+    },
+
     blockset: { },
   };
 }
@@ -77,10 +81,20 @@ export default class Editor extends React.Component {
   }
 
 
+  // block_toggled
+  // -----------------------------------
+
+  block_toggled() {
+    this.props.delegate &&
+      this.props.delegate.block_toggled &&
+      this.props.delegate.block_toggled();
+  }
+
+
   // create_render_block
   // -----------------------------------
-  // - create a 'render block' item given a block definition and an
-  //   optional data_block of existing data
+  // - create a 'render block' item from  a block definition and an optional
+  //   data_block of existing data
   // - a 'render block' is a combination of block data and component definitions
   //   that's more convenient for rendering:
   //     {
@@ -291,7 +305,9 @@ export default class Editor extends React.Component {
 
   save() {
     const data = this.get_plain_data();
-    this.props.delegate && this.props.delegate.on_update(data);
+    this.props.delegate &&
+      this.props.delegate.save &&
+      this.props.delegate.save(data);
   }
 
 
@@ -301,7 +317,7 @@ export default class Editor extends React.Component {
   render() {
     let inner;
     const load_state = this.props.load_state;
-    const call_delegate = this.props.call_delegate;
+    const when_to_save = this.props.save;
     this.ctx.blockset = this.props.blockset;
 
     function msg_div(msg) {
@@ -322,7 +338,7 @@ export default class Editor extends React.Component {
         this.state.render_blocks = render_blocks = this.get_render_blocks(this.props.data);
       }
 
-      if (call_delegate === Save.OnInput) {
+      if (when_to_save === Save.OnInput) {
         this.save.call(this);
       }
 
@@ -332,7 +348,7 @@ export default class Editor extends React.Component {
 
           <div className="container" style={{ minHeight: '10rem' }}>
 
-            {call_delegate === Save.SaveButton && (
+            {when_to_save === Save.WhenSaveButtonClicked && (
             <div style={{ margin: '1rem' }}>
               <a className="button" onClick={_ => this.save.call(this)}>Save</a>
             </div>
