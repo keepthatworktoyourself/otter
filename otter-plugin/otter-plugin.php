@@ -33,7 +33,7 @@
 
   require_once('classic-editor/classic-editor.php');
   require_once('metabox-init.php');
-  // require_once('dev-bundle/init.php');
+  require_once('dev/init.php');
 
   class OtterPlugin { }
 

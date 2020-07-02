@@ -95,6 +95,58 @@
         });
       }
     });
+
+
+    // Media button
+    // -------------------------------
+
+    const media_handler = {
+      frame: null,
+
+      open: function() {
+        if (media_handler.frame) {
+          media_handler.frame.open();
+          return;
+        }
+
+        media_handler.frame = wp.media({
+          title: 'Select an item',
+          // button: {
+          //   text: 'Select'
+          // },
+          // multiple: false,
+        });
+
+        media_handler.frame.on('select', media_handler.select);
+        media_handler.frame.open();
+      },
+
+      select: function() {
+        const item = media_handler
+          .frame
+          .state()
+          .get('selection').first().toJSON();
+
+        media_handler.send({
+          id: item.id,
+          url: item.url,
+          thumbnail: item.sizes && item.sizes.thumbnail && item.sizes.thumbnail.url,
+        });
+      },
+
+      send: function(item) {
+        iframe.contentWindow.postMessage({
+          'otter--set-wp-media-item': item,
+        });
+      },
+    };
+
+    window.addEventListener('message', function(ev) {
+      const proceed = ev.data && ev.data['otter--get-wp-media-item'];
+      if (proceed) {
+        media_handler.open();
+      }
+    });
   })();
 </script>
 

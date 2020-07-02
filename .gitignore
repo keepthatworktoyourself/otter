@@ -6,9 +6,9 @@ dist
 demo/dist
 .cache
 
-otter-plugin/dev-bundle/dist
-otter-plugin/dev-bundle/deps
-otter-plugin/dev-bundle/node_modules
-otter-plugin/dev-bundle/package-lock.json
-otter-plugin/dev-bundle/.cache
+otter-plugin/dev/dist
+otter-plugin/dev/deps
+otter-plugin/dev/node_modules
+otter-plugin/dev/package-lock.json
+otter-plugin/dev/.cache
 

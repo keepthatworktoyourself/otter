@@ -37,6 +37,17 @@ const blocks__content = Otter.Blockset([
       },
     ],
   },
+  {
+    type: 'Image',
+    description: 'Image',
+    fields: [
+      {
+        name:        'image',
+        description: 'Image',
+        type:        Otter.Fields.WPImage,
+      },
+    ],
+  },
 ]);
 
 const blocks__other = Otter.Blockset([
@@ -48,7 +59,7 @@ const blocks__other = Otter.Blockset([
         name:           'content_items',
         description:    'Content:',
         type:           Otter.Fields.SubBlockArray,
-        subblock_types: [ blocks__content.get('Text') ],
+        subblock_types: [ blocks__content.get('Text'), blocks__content.get('Image') ],
       },
     ],
   },
@@ -61,5 +72,5 @@ const blocks__all = Otter.Blockset([].concat(
 ));
 
 
-OtterWP.run(blocks__all);
+OtterWP.init(blocks__all);
 

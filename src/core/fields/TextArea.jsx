@@ -27,7 +27,7 @@ export default class TextArea extends React.Component {
 
           {(this.ctx = ctx) && ''}
           <FieldLabel field={this.props.field} block={this.props.block} />
-          <textarea className="textarea" ref={this.textarea_ref} value={this.props.field.value} onChange={this.cb_change} />
+          <textarea className="textarea" ref={this.textarea_ref} value={this.props.field.value || ''} onChange={this.cb_change} />
 
         </div>
       )}</PageDataContext.Consumer>

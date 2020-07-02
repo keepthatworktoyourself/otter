@@ -70,7 +70,7 @@ function send_height_update() {
 // Run
 // -----------------------------------
 
-function run(blocks) {
+function init(blocks) {
   setInterval(send_height_update, 5000);
 
   render();
@@ -79,6 +79,6 @@ function run(blocks) {
 }
 
 export default {
-  run,
+  init,
 };
 

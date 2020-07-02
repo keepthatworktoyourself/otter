@@ -8,7 +8,7 @@
     "clean": "rm -rf dist",
     "build--npm": "npm run clean && babel otter-wp.jsx -d dist",
     "prepublishOnly": "npm run build--npm",
-    "dev--plugin": "babel -w otter-wp.jsx -d ../dev-bundle/dist--otter-wp"
+    "dev--plugin": "babel -w otter-wp.jsx -d ../dev/dist--otter-wp"
   },
   "repository": {
     "type": "git",

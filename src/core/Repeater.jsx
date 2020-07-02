@@ -42,7 +42,7 @@ export default class Repeater extends React.Component {
     const arr = field.value;
 
     return (
-      <PageDataContext.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{ctx => (
         <div className="repeater" data-id={block.uid}>
 
           <div style={{ paddingBottom: '0.5rem' }}>
