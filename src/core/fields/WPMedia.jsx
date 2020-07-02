@@ -54,31 +54,51 @@ export default class WPMedia extends React.Component {
     return (
       <PageDataContext.Consumer>{ctx => (
         <div className="field">
-          <div className="is-flex" style={{ alignItems: 'flex-start' }}>
+          <div style={{ paddingRight: '7rem' }}>
 
-            <div className="is-flex" style={{ alignItems: 'center'}}>
-              <div className="c-label-margin-btm-phone">
-                <FieldLabel field={field} block={block} align="left" colon={true} min_width={true} />
+            <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
+
+              <div className="level-left">
+                <div className="level-item">
+                  <FieldLabel field={field} block={block} align="left" colon={true} />
+                </div>
               </div>
 
-              <div>
-                <a className="button is-small" onClick={_ => this.cb_click.call(this, ctx, field)}>Select</a>
-              </div>
-            </div>
+              <div className="level-right">
+                <div className="level-item">
 
-            {field.value && (
-              <div style={{
-                     display: 'block',
-                     width: '3.5rem', height: '3.5rem',
-                     marginLeft: '1rem',
-                     textAlign: 'center',
-                     border: '1px solid rgba(0,0,0,0.1)'
-                   }}
-                   className="has-background-light">
-                <img src={field.value.thumbnail || field.value.url} alt="your preview"
-                     style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                  <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
+                    <div className="level-left">
+                      <div className="level-item">
+                        <a className="button is-small" onClick={_ => this.cb_click.call(this, ctx, field)}>Select</a>
+                      </div>
+                    </div>
+
+                    <div className="level-right">
+                      <div className="level-item">
+                        {field.value && (
+                          <div style={{
+                                 display: 'block',
+                                 minWidth: '3.5rem',
+                                 width: '3.5rem',
+                                 height: '3.5rem',
+                                 marginLeft: '1rem',
+                                 textAlign: 'center',
+                                 border: '1px solid rgba(0,0,0,0.1)'
+                               }}
+                               className="has-background-light">
+                            <img src={field.value.thumbnail || field.value.url} alt="your preview"
+                                 style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>{/* level */}
+
+                </div>
               </div>
-            )}
+
+            </div>{/* level */}
 
           </div>
         </div>

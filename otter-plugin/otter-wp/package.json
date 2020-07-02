@@ -1,6 +1,6 @@
 {
   "name": "otter-wp",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Wordpress integration for otter-editor",
   "main": "dist/otter-wp.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "@babel/preset-react": "^7.10.1"
   },
   "peerDependencies": {
-    "otter-editor": "0.0.18",
+    "otter-editor": "0.0.19",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }
