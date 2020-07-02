@@ -3,11 +3,10 @@ import FieldLabel from './FieldLabel';
 import PageDataContext from '../PageDataContext';
 
 
-export default class FileInput extends React.Component {
+export default class WPMedia extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.input_ref = React.createRef();
   }
 
@@ -18,13 +17,13 @@ export default class FileInput extends React.Component {
   }
 
 
-  image_selection__bind(ctx, block) {
+  image_selection__bind(ctx, field) {
     function cb(ev) {
       const proceed = ev.data && ev.data['otter--set-wp-media-item'];
       if (proceed) {
         ev.stopPropagation();
 
-        block.fields.image.value = ev.data['otter--set-wp-media-item'];
+        field.value = ev.data['otter--set-wp-media-item'];
         ctx.should_update();
 
         window.removeEventListener('message', cb);
@@ -35,16 +34,16 @@ export default class FileInput extends React.Component {
   }
 
 
-  open_media_browser() {
+  open_media_browser(field) {
     window.parent && window.parent.postMessage({
-      'otter--get-wp-media-item': true,
+      'otter--get-wp-media-item': field.def.media_types || [],
     });
   }
 
 
-  cb_click(ctx, block) {
-    this.image_selection__bind(ctx, block);
-    this.open_media_browser();
+  cb_click(ctx, field) {
+    this.image_selection__bind(ctx, field);
+    this.open_media_browser(field);
   }
 
 
@@ -63,14 +62,21 @@ export default class FileInput extends React.Component {
               </div>
 
               <div>
-                <a className="button is-small" onClick={_ => this.cb_click.call(this, ctx, block)}>Select</a>
+                <a className="button is-small" onClick={_ => this.cb_click.call(this, ctx, field)}>Select</a>
               </div>
             </div>
 
             {field.value && (
-              <div style={{ display: 'block', width: '5rem', height: '3rem', marginLeft: '1rem' }} className="has-background-light">
+              <div style={{
+                     display: 'block',
+                     width: '3.5rem', height: '3.5rem',
+                     marginLeft: '1rem',
+                     textAlign: 'center',
+                     border: '1px solid rgba(0,0,0,0.1)'
+                   }}
+                   className="has-background-light">
                 <img src={field.value.thumbnail || field.value.url} alt="your preview"
-							       style={{ display: 'block', width: '100%', maxWidth: '5rem', maxHeight: '3rem' }} />
+                     style={{ maxWidth: '100%', maxHeight: '100%' }} />
               </div>
             )}
 

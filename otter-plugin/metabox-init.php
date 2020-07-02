@@ -6,7 +6,7 @@
     if ($proceed) {
       \add_meta_box(
         'otter-editor-metabox',
-        'Editor',
+        'Otter Editor',
         '\Otter\Editor\render',
         null,
         'normal',

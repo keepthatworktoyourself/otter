@@ -108,8 +108,8 @@ A **block** contains one or more **fields** (see above).
 
 - A yes/no toggle.
 - Options:
-    - `text__yes: "Yes"`: label for the on state option
-    - `text__no:  "No"`: label for the off state option
+    - `text__yes: <string>` : label for yes toggle (default `"Yes"`)
+    - `text__no:  <string>` : label for no switch (default `"No"`)
 
 `Otter.Fields.Radios`
 
@@ -117,9 +117,11 @@ A **block** contains one or more **fields** (see above).
 - Options:
     - `options: { value: "Label", ... }` : the set of radios
 
-`Otter.Fields.WPImage`
+`Otter.Fields.WPMedia`
 
-- For wordpress integration: a wordpress media item. **TBD.**
+- Wordpress-specific: let the user pick an item from a wordpress media browser.
+- Options:
+    - `media_types: [ <type>, <type, ... ]` : control which file types appear in the media browser. Values: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`. If `media_types` option is omitted or an empty array, all media types will be available.
 
 `Otter.Fields.SubBlock`
 

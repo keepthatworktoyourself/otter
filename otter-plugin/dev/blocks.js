@@ -44,7 +44,13 @@ const blocks__content = Otter.Blockset([
       {
         name:        'image',
         description: 'Image',
-        type:        Otter.Fields.WPImage,
+        type:        Otter.Fields.WPMedia,
+        media_types: [
+          'png',
+          'jpg',
+          'gif',
+          'svg',
+        ],
       },
     ],
   },

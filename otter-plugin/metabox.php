@@ -103,20 +103,35 @@
     const media_handler = {
       frame: null,
 
-      open: function() {
+      open: function(allowed_types) {
         if (media_handler.frame) {
           media_handler.frame.open();
           return;
         }
 
-        media_handler.frame = wp.media({
-          title: 'Select an item',
-          // button: {
-          //   text: 'Select'
-          // },
-          // multiple: false,
-        });
+        const mimes = {
+          jpg: 'image/jpeg',
+          png: 'image/png',
+          gif: 'image/gif',
+          mov: 'video/quicktime',
+          mp4: 'video/mp4',
+          svg: 'image/svg+xml',
+          pdf: 'application/pdf',
+        };
 
+        const allowed_types__mime =
+          allowed_types.map(t => mimes[t])
+          .filter(t => t);
+
+        const modal_opts = {
+          title: 'Pick a media item',
+          // multiple: false,
+          library: {
+            type: allowed_types__mime.join(', '),
+          },
+        };
+
+        media_handler.frame = wp.media(modal_opts);
         media_handler.frame.on('select', media_handler.select);
         media_handler.frame.open();
       },
@@ -144,7 +159,8 @@
     window.addEventListener('message', function(ev) {
       const proceed = ev.data && ev.data['otter--get-wp-media-item'];
       if (proceed) {
-        media_handler.open();
+        const media_types = ev.data['otter--get-wp-media-item'];
+        media_handler.open(media_types);
       }
     });
   })();
