@@ -3,7 +3,7 @@ import PageDataContext from '../PageDataContext';
 import FieldLabel from './FieldLabel';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
-import {rnd_str} from '../utils';
+import Utils from '../Utils';
 
 
 export default class Select extends React.Component {
@@ -37,7 +37,7 @@ export default class Select extends React.Component {
   render() {
     const field = this.props.field;
     const block = this.props.block;
-    const input_name = 'radios-' + rnd_str(6);
+    const input_name = `radios-${Utils.rnd_str(6)}`;
 
     return (
       <PageDataContext.Consumer>{(ctx) => (

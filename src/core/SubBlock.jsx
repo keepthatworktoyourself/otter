@@ -4,7 +4,7 @@ import PageDataContext from './PageDataContext';
 import toggler from './toggler';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronDown, faTimes} from '@fortawesome/free-solid-svg-icons';
-import {rnd_str} from './utils';
+import Utils from './Utils';
 
 export default class SubBlock extends React.Component {
 
@@ -12,7 +12,7 @@ export default class SubBlock extends React.Component {
     const block = this.props.block;
     const field = this.props.field;  // Optional: the field wrapping 'block' (for title)
     const contents_hidden = !!this.props.contents_hidden;
-    const toggle_id = `toggle-${rnd_str(8)}`;
+    const toggle_id = `toggle-${Utils.rnd_str(8)}`;
 
     const title = field && (field.def.description || field.def.name);
 

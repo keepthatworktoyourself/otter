@@ -37,3 +37,8 @@ body {
   display: block;
 }
 
+
+.flex-start {
+  justify-content: flex-start !important;
+}
+

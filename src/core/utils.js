@@ -1,4 +1,45 @@
-// utils.js
+// Utils.js
+
+
+// retitle_field
+// -----------------------------------
+
+function retitle_field(field, name, description) {
+  const f = Object.assign({}, field);
+  f.name = name || f.name;
+  f.description = description || f.description;
+
+  return f;
+}
+
+
+// recursive_find
+// -----------------------------------
+
+function recursive_find(obj, f) {
+  if (f(obj)) {
+    return obj;
+  }
+
+  else {
+    if (typeof obj === 'object') {
+      for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+          const result = recursive_find(obj[prop], f);
+          if (result) {
+            return result;
+          }
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+
+// rnd_str
+// -----------------------------------
 
 function rnd_str(length) {
   function rnd_chr() {
@@ -22,7 +63,7 @@ function Err__BlockNoType() {
   return `Error: block without __type property!`;
 }
 function Err__FieldNoType() {
-  return `Error: field definition without type property!`;
+  return `Error: field definition with missing or invalid type property!`;
 }
 function Err__FieldNoName() {
   return `Error: field definition without name property!`;
@@ -35,7 +76,9 @@ function Err__InvalidComponentDef(block_type) {
 }
 
 
-export {
+export default {
+  retitle_field,
+  recursive_find,
   rnd_str,
   Err__BlockNoType,
   Err__FieldNoType,

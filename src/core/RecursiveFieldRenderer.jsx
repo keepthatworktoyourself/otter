@@ -2,7 +2,7 @@ import React from 'react';
 import Repeater from './Repeater';
 import Fields from './fields';
 import SubBlock from './SubBlock';
-import * as utils from './utils';
+import Utils from './Utils';
 
 
 export default function RecursiveFieldRenderer(props) {
@@ -11,8 +11,8 @@ export default function RecursiveFieldRenderer(props) {
   return Object.keys(block.fields).map(field_name => {
     const field = block.fields[field_name];
 
-    if (!field.def.type) { throw Error(utils.Err__FieldNoType()); }
-    if (!field.def.name) { throw Error(utils.Err__FieldNoName()); }
+    if (!field.def.type) { throw Error(Utils.Err__FieldNoType()); }
+    if (!field.def.name) { throw Error(Utils.Err__FieldNoName()); }
 
     // Conditional rendering
     if (field.def.display_if && field.def.display_if.constructor === Array) {

@@ -5,7 +5,7 @@ import PageDataContext from './PageDataContext';
 import toggler from './toggler';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronDown, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
-import {rnd_str} from './utils';
+import Utils from './Utils';
 
 
 export default class Repeater extends React.Component {
@@ -36,7 +36,7 @@ export default class Repeater extends React.Component {
     const block = this.props.block;
     const field = this.props.field;
     const show_add_item_dialogue = this.state && this.state.show_dialogue;
-    const toggle_id = `repeater-${rnd_str(8)}`;
+    const toggle_id = `repeater-${Utils.rnd_str(8)}`;
 
     const repeater_title = field.def.description || field.def.name;
     const arr = field.value;
