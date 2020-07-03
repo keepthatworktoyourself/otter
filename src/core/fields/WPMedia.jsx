@@ -1,6 +1,8 @@
 import React from 'react';
 import FieldLabel from './FieldLabel';
 import PageDataContext from '../PageDataContext';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faTimes} from '@fortawesome/free-solid-svg-icons';
 
 
 export default class WPMedia extends React.Component {
@@ -8,6 +10,9 @@ export default class WPMedia extends React.Component {
   constructor(props) {
     super(props);
     this.input_ref = React.createRef();
+
+    this.cb_click = this.cb_click.bind(this);
+    this.cb_clear = this.cb_clear.bind(this);
   }
 
 
@@ -41,9 +46,15 @@ export default class WPMedia extends React.Component {
   }
 
 
-  cb_click(ctx, field) {
-    this.image_selection__bind(ctx, field);
-    this.open_media_browser(field);
+  cb_click(ev) {
+    this.image_selection__bind(this.ctx, this.props.field);
+    this.open_media_browser(this.props.field);
+  }
+
+
+  cb_clear() {
+    this.props.field.value = null;
+    this.ctx.should_update();
   }
 
 
@@ -54,49 +65,47 @@ export default class WPMedia extends React.Component {
     return (
       <PageDataContext.Consumer>{ctx => (
         <div className="field">
+          {(this.ctx = ctx) && ''}
           <div style={{ paddingRight: '7rem' }}>
 
             <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
 
-              <div className="level-left">
-                <div className="level-item">
-                  <FieldLabel field={field} block={block} align="left" colon={true} />
+              <div className="level-item flex-start">
+                <FieldLabel field={field} block={block} align="left" colon={true} />
+              </div>
+
+              <div className="level-item flex-start">
+                <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
+                  <div className="level-item flex-start">
+                    <a className="button is-small" onClick={this.cb_click}>Select</a>
+                  </div>
+
+                  <div className="level-item flex-start">
+                    {field.value && (
+                      <div style={{
+                             display: 'block',
+                             minWidth: '3.5rem',
+                             width: '3.5rem',
+                             height: '3.5rem',
+                             textAlign: 'center',
+                             border: '1px solid rgba(0,0,0,0.1)'
+                           }}
+                           className="has-background-light">
+                        <img src={field.value.thumbnail || field.value.url} alt="your preview"
+                             style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div className="level-right">
-                <div className="level-item">
-
-                  <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
-                    <div className="level-left">
-                      <div className="level-item">
-                        <a className="button is-small" onClick={_ => this.cb_click.call(this, ctx, field)}>Select</a>
-                      </div>
-                    </div>
-
-                    <div className="level-right">
-                      <div className="level-item">
-                        {field.value && (
-                          <div style={{
-                                 display: 'block',
-                                 minWidth: '3.5rem',
-                                 width: '3.5rem',
-                                 height: '3.5rem',
-                                 marginLeft: '1rem',
-                                 textAlign: 'center',
-                                 border: '1px solid rgba(0,0,0,0.1)'
-                               }}
-                               className="has-background-light">
-                            <img src={field.value.thumbnail || field.value.url} alt="your preview"
-                                 style={{ maxWidth: '100%', maxHeight: '100%' }} />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>{/* level */}
-
+              {field.value && (
+                <div className="level-item flex-start">
+                  <a className="button is-rounded is-small is-light has-text-grey-light" onClick={this.cb_clear}>
+                    <FontAwesomeIcon icon={faTimes} />
+                  </a>
                 </div>
-              </div>
+              )}
 
             </div>{/* level */}
 
