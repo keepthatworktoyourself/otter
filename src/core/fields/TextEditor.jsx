@@ -30,8 +30,9 @@ export default class TextEditor extends React.Component {
         <div className="field" key={field.uid}>
 
           <FieldLabel field={field} block={block} />
-          <ReactQuill defaultValue={field.value} onChange={this.cb_change} />
-
+          <div style={{ backgroundColor: 'white' }}>
+            <ReactQuill defaultValue={field.value} onChange={this.cb_change} theme="snow" />
+          </div>
         </div>
       )}</PageDataContext.Consumer>
     );

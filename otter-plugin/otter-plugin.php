@@ -38,19 +38,11 @@
   class OtterPlugin { }
 
 
-  // serialize()
-  // -----------------------------------
-
-  function serialize($data) {
-    return json_encode($data, JSON_UNESCAPED_SLASHES);
-  }
-
-
   // save()
   // -----------------------------------
 
   function save($post_id, array $data) {
-    return update_post_meta($post_id, 'otter-content', \Otter\serialize($data));
+    return update_post_meta($post_id, 'otter-content', $data);
   }
 
 
@@ -58,16 +50,7 @@
   // -----------------------------------
 
   function load($post_id) {
-    $result = get_post_meta($post_id, 'otter-content', true);
-    try {
-      $result = json_decode($result, true);
-    }
-    catch (\Throwable $exc) {
-      error_log("otter could not decode data for post $post_id");
-    }
-    finally {
-      return $result;
-    }
+    return get_post_meta($post_id, 'otter-content', true);
   }
 
 
@@ -115,10 +98,10 @@
   // -----------------------------------
 
   add_action('save_post', function($post_id) {
-    $data = $_POST['otter-data'] ?? null;
-    if ($data) {
-      $data = preg_replace('/\\\"/', '"', $data);
-      $arr = json_decode($data, true);
+    preg_match('/otter-data=([^&]+)/', file_get_contents('php://input'), $m);
+
+    if ($m) {
+      $arr = json_decode(urldecode($m[1]), true);
       if ($arr) {
         save($post_id, $arr);
       }

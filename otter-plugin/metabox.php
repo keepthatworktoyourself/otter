@@ -1,6 +1,5 @@
 <?php
   $data = \Otter\load($post->ID);
-  $data = \Otter\serialize($data ? $data : []);
 
   $js_bundle = \Otter\otter_for_post_type($post->post_type);
   $css_bundle = \Otter\css_bundle();
@@ -12,7 +11,6 @@
 
 <iframe class="otter-container" style="display: block; width: 100%;"
         src="<?= $iframe_url ?>"
-        data-otter-initial-data="<?= base64_encode($data) ?>"
         data-otter-js-bundle="<?= base64_encode($js_bundle) ?>"
         data-otter-css-bundle="<?= base64_encode($css_bundle) ?>">
 </iframe>
@@ -32,6 +30,7 @@
   (function() {
     const iframe = document.querySelector('.otter-container');
     const input = document.querySelector('#otter-data');
+    const initial_data = <?= json_encode($data, JSON_UNESCAPED_UNICODE) ?>;
 
 
     // Provide user-bundled otter file
@@ -86,12 +85,8 @@
     window.addEventListener('message', function(ev) {
       const proceed = ev.data['otter--get-initial-data'];
       if (proceed) {
-        const data = JSON.parse(atob(
-          iframe.getAttribute('data-otter-initial-data')
-        ));
-
         iframe.contentWindow.postMessage({
-          'otter--set-initial-data': data,
+          'otter--set-initial-data': initial_data,
         });
       }
     });
