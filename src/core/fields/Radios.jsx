@@ -40,9 +40,8 @@ export default class Select extends React.Component {
     const input_name = `radios-${Utils.rnd_str(6)}`;
 
     return (
-      <PageDataContext.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div className="field">
-          {(this.ctx = ctx) && ''}
           <div className="is-flex-tablet" style={{ alignItems: 'center' }}>
 
             <div className="c-label-margin-btm-phone">

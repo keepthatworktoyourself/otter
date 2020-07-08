@@ -28,7 +28,7 @@ export default class AddBlockBtn extends React.Component {
     const popup_dir = this.props.popup_direction === 'up' ? 'is-up' : '';
 
     return (
-      <PageDataContext.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{ctx => (
         <div className={`dropdown ${popup_dir} ${active}`}>
 
           <div className="dropdown-trigger">

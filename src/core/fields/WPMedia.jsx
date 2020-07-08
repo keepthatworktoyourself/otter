@@ -63,9 +63,8 @@ export default class WPMedia extends React.Component {
     const field = this.props.field;
 
     return (
-      <PageDataContext.Consumer>{ctx => (
+      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div className="field">
-          {(this.ctx = ctx) && ''}
           <div style={{ paddingRight: '7rem' }}>
 
             <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>

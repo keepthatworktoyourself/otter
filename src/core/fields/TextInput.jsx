@@ -22,10 +22,9 @@ export default class TextInput extends React.Component {
 
   render() {
     return (
-      <PageDataContext.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div className="field" key={this.props.field.uid}>
 
-          {(this.ctx = ctx) && ''}
           <FieldLabel field={this.props.field} block={this.props.block} />
           <div className="control">
             <input type="text" className="input" value={this.state.value} onChange={this.cb_change} />

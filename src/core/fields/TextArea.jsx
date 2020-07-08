@@ -22,10 +22,9 @@ export default class TextArea extends React.Component {
 
   render() {
     return (
-      <PageDataContext.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div className="field">
 
-          {(this.ctx = ctx) && ''}
           <FieldLabel field={this.props.field} block={this.props.block} />
           <textarea className="textarea" ref={this.textarea_ref} value={this.props.field.value || ''} onChange={this.cb_change} />
 

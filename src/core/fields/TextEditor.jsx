@@ -8,7 +8,6 @@ export default class TextEditor extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.cb_change = this.cb_change.bind(this);
   }
 
@@ -26,7 +25,7 @@ export default class TextEditor extends React.Component {
     const field = this.props.field;
 
     return (
-      <PageDataContext.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div className="field" key={field.uid}>
 
           <FieldLabel field={field} block={block} />

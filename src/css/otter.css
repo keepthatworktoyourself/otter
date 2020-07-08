@@ -16,6 +16,9 @@ body {
   margin-left: 0.3rem;
 
   transition: transform 0.15s ease-in-out;
+
+  width: 1em !important;
+  height: 1em !important;
 }
 [data-toggle-open] .c-toggler-icon {
   transform: rotate(-180deg);
@@ -40,5 +43,26 @@ body {
 
 .flex-start {
   justify-content: flex-start !important;
+}
+
+
+
+.react-toggle {
+  line-height: 1em !important;
+  height: 1em !important;
+}
+.react-toggle-track {
+  width: 24px !important;
+  height: 15px !important;
+}
+.react-toggle-thumb {
+  width: 13px !important;
+  height: 13px !important;
+}
+.react-toggle--checked .react-toggle-track {
+  background-color: #3a98e4 !important;
+}
+.react-toggle--checked .react-toggle-thumb {
+  left: 9px !important;
 }
 

@@ -139,6 +139,7 @@ A **block** contains one or more **fields** (see above).
 - Options:
     - `description: <string>` : if supplied, used to title the wrapped subblock in the editor
     - `subblock_type: MyTextBlock` : a block object (previously created with `Otter.Blockset()`) defining which subblock to embed.
+    - `optional: <bool>` : add a toggle to enable or disable the subblock. Generally a simpler optional than e.g. creating a SubBlockArray with `max: 1`.
 
 ```js
 Otter.Blockset([
