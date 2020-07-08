@@ -76,36 +76,36 @@ export default class WPMedia extends React.Component {
 
               <div className="level-item flex-start">
                 <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
+                  {field.value && (
+                    <div className="level-item flex-start">
+                        <div style={{
+                               display: 'block',
+                               minWidth: '3.5rem',
+                               width: '3.5rem',
+                               height: '3.5rem',
+                               textAlign: 'center',
+                               border: '1px solid rgba(0,0,0,0.1)'
+                             }}
+                             className="has-background-light">
+                          <img src={field.value.thumbnail || field.value.url} alt="your preview"
+                               style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                        </div>
+                    </div>
+                  )}
+
                   <div className="level-item flex-start">
                     <a className="button is-small" onClick={this.cb_click}>Select</a>
                   </div>
 
-                  <div className="level-item flex-start">
-                    {field.value && (
-                      <div style={{
-                             display: 'block',
-                             minWidth: '3.5rem',
-                             width: '3.5rem',
-                             height: '3.5rem',
-                             textAlign: 'center',
-                             border: '1px solid rgba(0,0,0,0.1)'
-                           }}
-                           className="has-background-light">
-                        <img src={field.value.thumbnail || field.value.url} alt="your preview"
-                             style={{ maxWidth: '100%', maxHeight: '100%' }} />
-                      </div>
-                    )}
-                  </div>
+                  {field.value && (
+                    <div className="level-item flex-start">
+                      <a className="button is-rounded is-small is-light has-text-grey-light" onClick={this.cb_clear}>
+                        <FontAwesomeIcon icon={faTimes} />
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
-
-              {field.value && (
-                <div className="level-item flex-start">
-                  <a className="button is-rounded is-small is-light has-text-grey-light" onClick={this.cb_clear}>
-                    <FontAwesomeIcon icon={faTimes} />
-                  </a>
-                </div>
-              )}
 
             </div>{/* level */}
 

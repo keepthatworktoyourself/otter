@@ -47,7 +47,8 @@ export default class Repeater extends React.Component {
 
           <div style={{ paddingBottom: '0.5rem' }}>
             {repeater_title && (
-              <h4 style={{ cursor: 'pointer' }} className="title is-6 is-marginless" onClick={ev => toggler(ev, ctx)} data-toggler-target={toggle_id}>
+              <h4 style={{ cursor: 'pointer' }} className="title is-7 is-marginless"
+                  onClick={ev => toggler(ev, ctx)} data-toggler-target={toggle_id}>
                 {repeater_title}
                 <span className="icon c-toggler-icon"><FontAwesomeIcon icon={faChevronDown} /></span>
               </h4>
@@ -84,7 +85,8 @@ export default class Repeater extends React.Component {
                 <div className={`dropdown ${show_add_item_dialogue ? 'is-active' : ''}`}>
 
                   <div className="dropdown-trigger">
-                    <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.cb_toggle_additem_dialogue.bind(this)}>
+                    <button className="button is-small" aria-haspopup="true" aria-controls="dropdown-menu"
+                            onClick={this.cb_toggle_additem_dialogue.bind(this)}>
                       <span className="icon is-small has-text-grey">
                         <FontAwesomeIcon icon={faPlusCircle} />
                       </span>

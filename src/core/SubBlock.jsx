@@ -22,7 +22,7 @@ export default class SubBlock extends React.Component {
 
           {title && (
             <div>
-              <h4 style={{ cursor: 'pointer', paddingBottom: '0.5rem' }} className="title is-6 is-marginless"
+              <h4 style={{ cursor: 'pointer', paddingBottom: '0.5rem' }} className="title is-7 is-marginless"
                   onClick={ev => toggler(ev, ctx)} data-toggler-target={toggle_id}>
                 {title}
                 <span className="icon c-toggler-icon"><FontAwesomeIcon icon={faChevronDown} /></span>

@@ -32,7 +32,8 @@ export default class AddBlockBtn extends React.Component {
         <div className={`dropdown ${popup_dir} ${active}`}>
 
           <div className="dropdown-trigger">
-            <button className="button is-rounded" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.cb_toggle.bind(this)}>
+            <button className="button is-rounded" aria-haspopup="true" aria-controls="dropdown-menu"
+                    onClick={this.cb_toggle.bind(this)}>
               <span className="icon is-small has-text-grey">
                 <FontAwesomeIcon icon={faPlusCircle} />
               </span>
