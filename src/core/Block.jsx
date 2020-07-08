@@ -1,7 +1,7 @@
 import React from 'react';
 import RecursiveFieldRenderer from './RecursiveFieldRenderer';
 import PageDataContext from './PageDataContext';
-import AddBlockBtn from './AddBlockBtn';
+import AddBlockBtn from './other/AddBlockBtn';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 

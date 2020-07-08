@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
 import PageDataContext from '../PageDataContext';
-import FieldLabel from './FieldLabel';
+import FieldLabel from '../other/FieldLabel';
 
 
 export default class TextEditor extends React.Component {

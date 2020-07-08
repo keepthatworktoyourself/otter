@@ -1,6 +1,6 @@
 import React from 'react';
-import FieldLabel from './FieldLabel';
 import PageDataContext from '../PageDataContext';
+import FieldLabel from '../other/FieldLabel';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 

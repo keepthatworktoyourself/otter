@@ -1,33 +1,54 @@
 import React from 'react';
 import RecursiveFieldRenderer from './RecursiveFieldRenderer';
 import PageDataContext from './PageDataContext';
-import toggler from './toggler';
-import Utils from './Utils';
+import Utils from './definitions/utils';
+import DDToggle from './other/DDToggle';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faChevronDown, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {faTimes} from '@fortawesome/free-solid-svg-icons';
 import Toggle from 'react-toggle';
+
 
 export default class SubBlock extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      contents_hidden: true,
+    };
     this.cb__optional_block_toggle = this.cb__optional_block_toggle.bind(this);
+    this.cb__showhide = this.cb__showhide.bind(this);
   }
 
+
   cb__optional_block_toggle(ev) {
-    this.props.field.enabled = ev.target.checked;
-    this.ctx.should_update();
     ev.target.blur();
+    this.props.field.enabled = ev.target.checked;
+
+    if (!this.state.contents_hidden) {
+      this.setState({
+        contents_hidden: true,
+      });
+    }
+
+    this.ctx.should_update();
   }
+
+
+  cb__showhide(ev) {
+    this.setState({
+      contents_hidden: !this.state.contents_hidden,
+    });
+    this.ctx.should_update();
+  }
+
 
   render() {
     const block = this.props.block;
-    const field = this.props.field;  // Optional: the field wrapping 'block' (for title)
-    const toggle_id = `toggle-${Utils.rnd_str(8)}`;
+    const field = this.props.field;
 
-    const contents_hidden = !!this.props.contents_hidden;
+    const contents_hidden = this.state.contents_hidden && this.props.contents_hidden;
 
-    const is_optional = field.def.optional;
+    const is_optional = field && field.def.optional;
     const is_optional__enabled = is_optional && field.enabled;
     const contents_enabled = !is_optional || is_optional__enabled;
 
@@ -39,9 +60,10 @@ export default class SubBlock extends React.Component {
 
           {title && (
             <div>
-              <h4 style={{ cursor: 'pointer', paddingBottom: '0.5rem' }} className="title is-7 is-marginless"
-                  onClick={ev => toggler(ev, ctx)} data-toggler-target={toggle_id}>
-                {title}
+              <h4 style={{ cursor: 'pointer', paddingBottom: '0.5rem' }} className="title is-7 is-marginless">
+                <span onClick={this.cb__showhide}>
+                  {title}
+                </span>
 
                 {is_optional && (
                   <span style={{ paddingLeft: '0.3rem', position: 'relative', top: '1px' }}>
@@ -50,16 +72,14 @@ export default class SubBlock extends React.Component {
                 )}
 
                 {contents_enabled && (
-                  <span className="icon c-toggler-icon" style={{ marginLeft: '0.25rem'}}>
-                    <FontAwesomeIcon icon={faChevronDown} />
-                  </span>
+                  <DDToggle is_open={!contents_hidden} cb={this.cb__showhide} />
                 )}
               </h4>
             </div>
           )}
 
-          {contents_enabled && (
-            <div className="toggle" id={toggle_id} style={{ display: contents_hidden ? 'none' : 'block', paddingBottom: '0.5rem' }}>
+          {contents_enabled && !contents_hidden && (
+            <div style={{ paddingBottom: '0.5rem' }}>
               <div className="bg" style={{ padding: '1rem', borderRadius: '1rem' }}>
                 <div style={{ position: 'relative', paddingTop: this.props.cb_delete ? '0.75rem' : 0 }}>
 

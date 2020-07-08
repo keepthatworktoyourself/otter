@@ -1,11 +1,11 @@
 import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
 import Block from './Block';
-import AddBlockBtn from './AddBlockBtn';
+import AddBlockBtn from './other/AddBlockBtn';
 import PageDataContext from './PageDataContext';
 import Fields from './fields';
-import State from './state';
-import Save from './save';
+import State from './definitions/state';
+import Save from './definitions/save';
 
 
 function block_drag_styles(snapshot, provided) {

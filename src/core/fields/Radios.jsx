@@ -1,9 +1,9 @@
 import React from 'react';
 import PageDataContext from '../PageDataContext';
-import FieldLabel from './FieldLabel';
+import FieldLabel from '../other/FieldLabel';
+import Utils from '../definitions/utils';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
-import Utils from '../Utils';
 
 
 export default class Select extends React.Component {

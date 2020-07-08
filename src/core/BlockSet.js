@@ -1,4 +1,4 @@
-import Utils from './Utils';
+import Utils from './definitions/utils';
 
 export default function Blockset(definitions_array) {
   definitions_array.get = function(type) {

@@ -20,9 +20,6 @@ body {
   width: 1em !important;
   height: 1em !important;
 }
-[data-toggle-open] .c-toggler-icon {
-  transform: rotate(-180deg);
-}
 
 
 @media screen and (max-width: 767px) {
@@ -63,6 +60,6 @@ body {
   background-color: #3a98e4 !important;
 }
 .react-toggle--checked .react-toggle-thumb {
-  left: 9px !important;
+  left: 10px !important;
 }
 
