@@ -37,9 +37,10 @@ export default class Repeater extends React.Component {
     const field = this.props.field;
     const show_add_item_dialogue = this.state && this.state.show_dialogue;
     const toggle_id = `repeater-${Utils.rnd_str(8)}`;
+    const max = field.def.max || -1;
 
     const repeater_title = field.def.description || field.def.name;
-    const arr = field.value;
+    const subblocks = field.value || [ ];
 
     return (
       <PageDataContext.Consumer>{ctx => (
@@ -62,7 +63,7 @@ export default class Repeater extends React.Component {
               <DnD.Droppable droppableId={field.uid} type={field.uid}>{(prov, snap) => (
                 <div ref={prov.innerRef} {...prov.droppableProps}>
 
-                  {(arr || [ ]).map((subblock, i) => (
+                  {subblocks.map((subblock, i) => (
                     <DnD.Draggable key={subblock.uid} draggableId={subblock.uid} index={i} type={field.uid}>{(prov, snap) => (
                       <div className="repeater-item-wrapper" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps}>
 
@@ -81,32 +82,33 @@ export default class Repeater extends React.Component {
               {/* End repeater items */}
 
               {/* 'Add' button */}
-              <div>
-                <div className={`dropdown ${show_add_item_dialogue ? 'is-active' : ''}`}>
+              {(max === -1 || subblocks.length < max) && (
+                <div>
+                  <div className={`dropdown ${show_add_item_dialogue ? 'is-active' : ''}`}>
 
-                  <div className="dropdown-trigger">
-                    <button className="button is-small" aria-haspopup="true" aria-controls="dropdown-menu"
-                            onClick={this.cb_toggle_additem_dialogue.bind(this)}>
-                      <span className="icon is-small has-text-grey">
-                        <FontAwesomeIcon icon={faPlusCircle} />
-                      </span>
-                      <span>Add</span>
-                    </button>
-                  </div>
-
-                  <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                    <div className="dropdown-content">
-                      {(field.def.subblock_types || [ ]).map((t, i) => (
-                        <a className="dropdown-item" onClick={ev => this.cb_add.call(this, ctx, ev, t)} key={i}>
-                          {t.description}
-                        </a>
-                      ))}
+                    <div className="dropdown-trigger">
+                      <button className="button is-small" aria-haspopup="true" aria-controls="dropdown-menu"
+                              onClick={this.cb_toggle_additem_dialogue.bind(this)}>
+                        <span className="icon is-small has-text-grey">
+                          <FontAwesomeIcon icon={faPlusCircle} />
+                        </span>
+                        <span>Add</span>
+                      </button>
                     </div>
-                  </div>
 
+                    <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                      <div className="dropdown-content">
+                        {(field.def.subblock_types || [ ]).map((t, i) => (
+                          <a className="dropdown-item" onClick={ev => this.cb_add.call(this, ctx, ev, t)} key={i}>
+                            {t.description}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
-              </div>
-              {/* End 'add' button */}
+              )}{/* End 'add' button */}
 
             </div>
           </div>{/* End toggle */}

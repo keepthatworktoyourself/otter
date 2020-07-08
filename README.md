@@ -137,7 +137,7 @@ A **block** contains one or more **fields** (see above).
 
 - Embed another block into this block. Otter can compose blocks together recursively, allowing for complex content types, and aiding re-use of block definitions.
 - Options:
-    - `description` : if supplied, used to title the wrapped subblock in the editor
+    - `description: <string>` : if supplied, used to title the wrapped subblock in the editor
     - `subblock_type: MyTextBlock` : a block object (previously created with `Otter.Blockset()`) defining which subblock to embed.
 
 ```js
@@ -167,6 +167,7 @@ Otter.Blockset([
 - Options:
     - `description` : if suppied, used to title the wrapped subblock array in the editor
     - `subblock_types: [ <block1>, <block2>, ... ]` : an array of block objects (previously created with `Otter.Blockset()`) defining what types of subblock the user can add to this subblock array.
+    - `max: <number>` : optionally limit the number of subblocks the user can add
 
 ```js
 Otter.Blockset([
