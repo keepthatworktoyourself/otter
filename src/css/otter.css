@@ -2,11 +2,17 @@
 body {
   background-color: #3e4246;
 }
-.bg {
-  background-color: rgba(0, 0, 0, 0.035);
-}
 .bg-solid {
-  background-color: #f7f7f7;
+  background-color: #fdfefe;
+}
+
+
+.otter-box {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 5px;
+}
+.otter-box--bordered {
+  border: 1px solid rgba(0,0,0,0.15);
 }
 
 

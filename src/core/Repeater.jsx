@@ -83,8 +83,8 @@ export default class Repeater extends React.Component {
           </div>
 
           {!this.state.contents_hidden && (
-            <div>
-              <div style={{ padding: '1rem', border: '2px dotted rgba(0,0,0, 0.15)', borderRadius: '1.3rem' }}>
+            <div style={{ paddingBottom: '0.5rem' }}>
+              <div className="otter-box" style={{ padding: '1rem' }}>
 
                 {/* Repeater items */}
                 <DnD.Droppable droppableId={field.uid} type={field.uid}>{(prov, snap) => (
@@ -95,7 +95,10 @@ export default class Repeater extends React.Component {
                         <div className="repeater-item-wrapper" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps}>
 
                           <div style={{ paddingBottom: '0.5rem' }}>
-                            <SubBlock block={subblock} contents_hidden={false} cb_delete={ev => this.cb_delete.call(this, ctx, ev, subblock)} />
+                            <SubBlock block={subblock}
+                                      contents_hidden={false}
+                                      border={true}
+                                      cb_delete={ev => this.cb_delete.call(this, ctx, ev, subblock)} />
                           </div>
 
                         </div>

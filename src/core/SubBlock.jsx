@@ -80,7 +80,8 @@ export default class SubBlock extends React.Component {
 
           {contents_enabled && !contents_hidden && (
             <div style={{ paddingBottom: '0.5rem' }}>
-              <div className="bg" style={{ padding: '1rem', borderRadius: '1rem' }}>
+              <div className={`otter-box ${this.props.border ? 'otter-box--bordered' : ''}`}
+                   style={{ padding: '1rem' }}>
                 <div style={{ position: 'relative', paddingTop: this.props.cb_delete ? '0.75rem' : 0 }}>
 
                   {this.props.cb_delete && (
