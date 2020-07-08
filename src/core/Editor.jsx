@@ -4,6 +4,7 @@ import Block from './Block';
 import AddBlockBtn from './other/AddBlockBtn';
 import PageDataContext from './PageDataContext';
 import Fields from './fields';
+import Utils from './definitions/utils';
 import State from './definitions/state';
 import Save from './definitions/save';
 
@@ -159,7 +160,7 @@ export default class Editor extends React.Component {
   }
 
 
-  // get_render_blocks - convert loaded data to 'render blocks' (more useful)
+  // get_render_blocks - convert loaded data to 'render blocks'
   // -----------------------------------
 
   get_render_blocks(page_data) {
@@ -185,7 +186,9 @@ export default class Editor extends React.Component {
         const field = render_block.fields[field_name];
 
         if (field.def.type === Fields.SubBlock) {
-          accum[field_name] = get_block(field.value);
+          if (Utils.subblock_is_enabled(field)) {
+            accum[field_name] = get_block(field.value);
+          }
         }
 
         else if (field.def.type === Fields.SubBlockArray) {

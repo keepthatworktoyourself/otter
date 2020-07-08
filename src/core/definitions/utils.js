@@ -38,6 +38,17 @@ function recursive_find(obj, f) {
 }
 
 
+// subblock_is_enabled
+// -----------------------------------
+// - NB non-optional fields always -> true
+
+function subblock_is_enabled(field) {
+  const is_optional = field && field.def.optional;
+  const is_optional_and_enabled = is_optional && field.enabled;
+  return !is_optional || is_optional_and_enabled;
+}
+
+
 // rnd_str
 // -----------------------------------
 
@@ -79,6 +90,7 @@ function Err__InvalidComponentDef(block_type) {
 export default {
   retitle_field,
   recursive_find,
+  subblock_is_enabled,
   rnd_str,
   Err__BlockNoType,
   Err__FieldNoType,

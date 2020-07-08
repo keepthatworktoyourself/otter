@@ -47,10 +47,8 @@ export default class SubBlock extends React.Component {
     const field = this.props.field;
 
     const contents_hidden = this.state.contents_hidden && this.props.contents_hidden;
-
     const is_optional = field && field.def.optional;
-    const is_optional__enabled = is_optional && field.enabled;
-    const contents_enabled = !is_optional || is_optional__enabled;
+    const enabled = Utils.subblock_is_enabled(field);
 
     const title = field && (field.def.description || field.def.name);
 
@@ -71,14 +69,14 @@ export default class SubBlock extends React.Component {
                   </span>
                 )}
 
-                {contents_enabled && (
+                {enabled && (
                   <DDToggle is_open={!contents_hidden} cb={this.cb__showhide} />
                 )}
               </h4>
             </div>
           )}
 
-          {contents_enabled && !contents_hidden && (
+          {enabled && !contents_hidden && (
             <div style={{ paddingBottom: '0.5rem' }}>
               <div className={`otter-box ${this.props.border ? 'otter-box--bordered' : ''}`}
                    style={{ padding: '1rem' }}>
