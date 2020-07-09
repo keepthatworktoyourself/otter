@@ -57,6 +57,7 @@ body {
 .react-toggle-track {
   width: 24px !important;
   height: 15px !important;
+  background-color: #a6a6a6 !important;
 }
 .react-toggle-thumb {
   width: 13px !important;

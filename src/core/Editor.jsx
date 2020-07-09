@@ -117,28 +117,31 @@ export default class Editor extends React.Component {
       type: definition.type,
       def: definition,
       uid: this.uid.call(this),
-      fields: definition.fields.reduce((accum, field_def) => {
+      fields: definition.fields.reduce((accum, def) => {
         const field = {
           uid: this.uid.call(this),
-          def: field_def,
           value: null,
+          def,
         };
 
-        if (!field_def) {
-          console.log('error: field_def not found', field, data_block, definition);
+        if (!def) {
+          console.log('create_render_block error: no field definition', field, data_block, definition);
           return accum;
         }
 
-        if (field_def.type === Fields.SubBlock) {
-          const sub_data_block = (data_block && data_block[field_def.name]) || null;
+        if (def.type === Fields.SubBlock) {
+          const sub_data_block = (data_block && data_block[def.name]) || null;
+          if (def.optional) {
+            field.enabled = !!sub_data_block;
+          }
           field.value = this.create_render_block(
-            field_def.subblock_type,
+            def.subblock_type,
             sub_data_block
           );
         }
 
-        else if (field_def.type === Fields.SubBlockArray) {
-          const sub_data_blocks = (data_block && data_block[field_def.name]) || [ ];
+        else if (def.type === Fields.SubBlockArray) {
+          const sub_data_blocks = (data_block && data_block[def.name]) || [ ];
           field.value = sub_data_blocks.map(block => this.create_render_block(
             this.ctx.blockset.get(block.__type),
             block
@@ -148,10 +151,10 @@ export default class Editor extends React.Component {
         }
 
         else {
-          field.value = data_block && data_block[field_def.name];
+          field.value = data_block && data_block[def.name];
         }
 
-        accum[field_def.name] = field;
+        accum[def.name] = field;
         return accum;
       }, { }),
     };

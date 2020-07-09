@@ -24,7 +24,7 @@ export default class SubBlock extends React.Component {
     ev.target.blur();
     this.props.field.enabled = ev.target.checked;
 
-    if (!this.state.contents_hidden) {
+    if (!this.props.field.enabled) {
       this.setState({
         contents_hidden: true,
       });
@@ -59,18 +59,18 @@ export default class SubBlock extends React.Component {
           {title && (
             <div>
               <h4 style={{ cursor: 'pointer', paddingBottom: '0.5rem' }} className="title is-7 is-marginless">
-                <span onClick={this.cb__showhide}>
+                <span onClick={this.cb__showhide} style={{ display: 'inline-block' }}>
                   {title}
+
+                  {enabled && (
+                    <DDToggle is_open={!contents_hidden} cb={this.cb__showhide} />
+                  )}
                 </span>
 
                 {is_optional && (
                   <span style={{ paddingLeft: '0.3rem', position: 'relative', top: '1px' }}>
-                    <Toggle icons={false} onChange={this.cb__optional_block_toggle} />
+                    <Toggle checked={enabled} icons={false} onChange={this.cb__optional_block_toggle} />
                   </span>
-                )}
-
-                {enabled && (
-                  <DDToggle is_open={!contents_hidden} cb={this.cb__showhide} />
                 )}
               </h4>
             </div>

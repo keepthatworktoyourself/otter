@@ -55,6 +55,7 @@ export default class Repeater extends React.Component {
     this.setState({
       contents_hidden: !this.state.contents_hidden,
     });
+    this.ctx.block_toggled();
   }
 
 
@@ -67,17 +68,17 @@ export default class Repeater extends React.Component {
     const subblocks = field.value || [ ];
 
     return (
-      <PageDataContext.Consumer>{ctx => (
+      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div className="repeater" data-id={block.uid}>
 
           <div style={{ paddingBottom: '0.5rem' }}>
             {repeater_title && (
-              <h4 style={{ cursor: 'pointer' }} className="title is-7 is-marginless" onClick={this.cb_showhide}>
-                <span>
+              <h4 style={{ cursor: 'pointer' }} className="title is-7 is-marginless">
+                <span onClick={this.cb_showhide} style={{ display: 'inline-block' }}>
                   {repeater_title}
-                </span>
 
-                <DDToggle is_open={!this.state.contents_hidden} cb={this.cb_showhide} />
+                  <DDToggle is_open={!this.state.contents_hidden} cb={this.cb_showhide} />
+                </span>
               </h4>
             )}
           </div>
