@@ -70,10 +70,16 @@ function rnd_str(length) {
 // Some errors
 // -----------------------------------
 
-function Err__BlockNoType() {
+function Err__BlockNoType(def) {
+  console.log('Err__BlockNoType', def);
   return `Error: block without __type property!`;
 }
-function Err__FieldNoType() {
+function Err__InvalidBlockType(type) {
+  console.log(Err__InvalidBlockType, `${type}`);
+  return `Error: invalid block type`;
+}
+function Err__FieldNoType(def) {
+  console.log('Err__FieldNoType', def);
   return `Error: field definition with missing or invalid type property!`;
 }
 function Err__FieldNoName() {
@@ -93,6 +99,7 @@ export default {
   subblock_is_enabled,
   rnd_str,
   Err__BlockNoType,
+  Err__InvalidBlockType,
   Err__FieldNoType,
   Err__FieldNoName,
   Err__NoComponentDef,

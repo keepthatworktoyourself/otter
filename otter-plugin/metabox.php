@@ -99,11 +99,6 @@
       frame: null,
 
       open: function(allowed_types) {
-        if (media_handler.frame) {
-          media_handler.frame.open();
-          return;
-        }
-
         const mimes = {
           jpg: 'image/jpeg',
           png: 'image/png',
@@ -112,6 +107,7 @@
           mp4: 'video/mp4',
           svg: 'image/svg+xml',
           pdf: 'application/pdf',
+          csv: 'text/csv',
         };
 
         const allowed_types__mime =
@@ -119,7 +115,7 @@
           .filter(t => t);
 
         const modal_opts = {
-          title: 'Pick a media item',
+          title: 'Pick a media item (' + allowed_types.join(', ') + ')',
           // multiple: false,
           library: {
             type: allowed_types__mime.join(', '),
@@ -140,7 +136,9 @@
         media_handler.send({
           id: item.id,
           url: item.url,
-          thumbnail: item.sizes && item.sizes.thumbnail && item.sizes.thumbnail.url,
+          thumbnail:
+            (item.sizes && item.sizes.thumbnail && item.sizes.thumbnail.url) ||
+            (item.icon),
         });
       },
 

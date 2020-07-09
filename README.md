@@ -131,7 +131,7 @@ A **block** contains one or more **fields** (see above).
 
 - Wordpress-specific: let the user pick an item from a wordpress media browser.
 - Options:
-    - `media_types: [ <type>, <type, ... ]` : control which file types appear in the media browser. Values: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`. If `media_types` option is omitted or an empty array, all media types will be available.
+    - `media_types: [ <type>, <type, ... ]` : control which file types appear in the media browser. Values: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If `media_types` option is omitted or an empty array, the items are not constrained by type.
 
 `Otter.Fields.SubBlock`
 

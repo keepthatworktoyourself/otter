@@ -3,7 +3,7 @@ import Utils from './definitions/utils';
 export default function Blockset(definitions_array) {
   definitions_array.get = function(type) {
     if (!type) {
-      throw Error(Utils.Err__BlockNoType());
+      throw Error(Utils.Err__InvalidBlockType(type));
     }
 
     const def = Utils.recursive_find(definitions_array, item => (

@@ -107,7 +107,7 @@ export default class Editor extends React.Component {
   //           uid:    a unique ID,
   //           def:    field definition from component definition
   //           value:  field value - may be a normal value, a subblock, or an array of subblocks
-  //         }
+  //         },
   //         ...
   //       }
   //     }

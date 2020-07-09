@@ -50,7 +50,8 @@
   // -----------------------------------
 
   function load($post_id) {
-    return get_post_meta($post_id, 'otter-content', true);
+    $result = get_post_meta($post_id, 'otter-content', true);
+    return $result ? $result : [ ];
   }
 
 

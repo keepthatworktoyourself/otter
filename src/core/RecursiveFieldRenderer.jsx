@@ -11,8 +11,12 @@ export default function RecursiveFieldRenderer(props) {
   return Object.keys(block.fields).map(field_name => {
     const field = block.fields[field_name];
 
-    if (!field.def.type) { throw Error(Utils.Err__FieldNoType()); }
-    if (!field.def.name) { throw Error(Utils.Err__FieldNoName()); }
+    if (!field.def.type) {
+      throw Error(Utils.Err__FieldNoType(field.def));
+    }
+    if (!field.def.name) {
+      throw Error(Utils.Err__FieldNoName(field.def));
+    }
 
     // Conditional rendering
     if (field.def.display_if && field.def.display_if.constructor === Array) {
