@@ -19,7 +19,11 @@ A content editor, with declaratively defined content blocks. Easily imports as a
 ## Otter element
 
 ```jsx
-<Otter.Editor data={data} load_state={Otter.State.Loaded} delegate={my_delegate} blocks={blockset} />,
+<Otter.Editor
+  data={data}
+  load_state={Otter.State.Loaded}
+  delegate={my_delegate}
+  blocks={blockset} />
 ```
 
 Renders an Otter editor.
