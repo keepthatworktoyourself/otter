@@ -89,15 +89,18 @@ A **block** contains one or more **fields** (see above).
   name: 'content',
   description: 'Content',
   type: Otter.Fields.Textarea,
-  display_if: [{                  // To display this field only if a sibling has a value
+  display_if: {
     sibling: <sibling_name>,
-    equal_to: <value>,            // mutually exclusive
-    not_equal_to: <value>,        //
-  }],
+    [not_]equal_to: <value>,
+  },
 }
 ```
 
-(Note that `display_if` can only operate on siblings of type Bool or Radio.)
+### display_if
+
+When using `display_if`, editor fields are hidden or shown based on the value of one or more siblings. (The siblings must be `Bool` or `Radio` fields.)
+
+`display_if` can be a single `display_if` rule or an array of these, to show/hide depending on multiple siblings.
 
 
 ### Field types:
@@ -139,7 +142,7 @@ A **block** contains one or more **fields** (see above).
 - Options:
     - `description: <string>` : if supplied, used to title the wrapped subblock in the editor
     - `subblock_type: MyTextBlock` : a block object (previously created with `Otter.Blockset()`) defining which subblock to embed.
-    - `optional: <bool>` : add a toggle to enable or disable the subblock. Generally a simpler optional than e.g. creating a SubBlockArray with `max: 1`.
+    - `optional: <bool>` : add a toggle to enable or disable the subblock. Sometimes you want to enable or disable an entire subblock — this feature prevents you from needing to add an extra field and a lot of `display_if`s to that subblock.
 
 ```js
 Otter.Blockset([

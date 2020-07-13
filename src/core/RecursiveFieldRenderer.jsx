@@ -19,24 +19,30 @@ export default function RecursiveFieldRenderer(props) {
     }
 
     // Conditional rendering
-    if (field.def.display_if && field.def.display_if.constructor === Array) {
-      field.should_display = field.def.display_if.reduce((carry, rule) => {
-        const sibling = block.fields[rule.sibling] || null;
-        const rule_eq  = rule.hasOwnProperty('equal_to');
-        const rule_neq = rule.hasOwnProperty('not_equal_to');
-        if (!sibling || !(rule_eq || rule_neq)) {
-          return carry;
-        }
-        if (rule_eq) {
-          return carry && (sibling.value === rule.equal_to);
-        }
-        else {
-          return carry && (sibling.value !== rule.not_equal_to);
-        }
-      }, true);
+    if (field.def.display_if) {
+      if (field.def.display_if.constructor === Object) {
+        field.def.display_if = [field.def.display_if];
+      }
 
-      if (!field.should_display) {
-        return null;
+      if (field.def.display_if.constructor === Array) {
+        field.should_display = field.def.display_if.reduce((carry, rule) => {
+          const sibling = block.fields[rule.sibling] || null;
+          const rule_eq  = rule.hasOwnProperty('equal_to');
+          const rule_neq = rule.hasOwnProperty('not_equal_to');
+          if (!sibling || !(rule_eq || rule_neq)) {
+            return carry;
+          }
+          if (rule_eq) {
+            return carry && (sibling.value === rule.equal_to);
+          }
+          else {
+            return carry && (sibling.value !== rule.not_equal_to);
+          }
+        }, true);
+
+        if (!field.should_display) {
+          return null;
+        }
       }
     }
 

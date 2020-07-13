@@ -12,5 +12,20 @@
       'php'   => 'php',
       'init'  => 'init',
     ]);
+
+    \Otter\dynamic_data('forms', [
+      'all'   => 'all',
+      'the'   => 'the',
+      'forms' => 'forms',
+      'in'    => 'in',
+      'world' => 'world',
+    ]);
+
+    \Otter\dynamic_data('hardcoded_forms', [
+      'set'  => 'set',
+      'at'   => 'at',
+      'php'  => 'php',
+      'init' => 'init',
+    ]);
   });
 
