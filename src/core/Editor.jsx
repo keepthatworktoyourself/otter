@@ -352,7 +352,7 @@ export default class Editor extends React.Component {
       inner = (
         <PageDataContext.Provider value={this.ctx}>
 
-          <div className="container" style={{ minHeight: '10rem' }}>
+          <div className="container" style={{ minHeight: '20rem' }}>
 
             {when_to_save === Save.WhenSaveButtonClicked && (
             <div style={{ margin: '1rem' }}>
@@ -381,7 +381,7 @@ export default class Editor extends React.Component {
             </DnD.DragDropContext>
 
             <div className="is-flex" style={{ justifyContent: 'center' }}>
-              <AddBlockBtn cb_select={(ev, type) => this.ctx.add_block(type, null)} popup_direction={n_blocks ? 'up' : 'down'} />
+              <AddBlockBtn cb_select={(ev, type) => this.ctx.add_block(type, null)} suggest={n_blocks === 0} popup_direction={n_blocks ? 'up' : 'down'} />
             </div>
 
           </div>

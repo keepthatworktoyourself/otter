@@ -34,6 +34,12 @@ export default class AddBlockBtn extends React.Component {
           <div className="dropdown-trigger">
             <button className="button is-rounded" aria-haspopup="true" aria-controls="dropdown-menu"
                     onClick={this.cb_toggle.bind(this)}>
+
+              {this.props.suggest && (
+                <span>
+                  Add a block to get started
+                </span>
+              )}
               <span className="icon is-small has-text-grey">
                 <FontAwesomeIcon icon={faPlusCircle} />
               </span>
