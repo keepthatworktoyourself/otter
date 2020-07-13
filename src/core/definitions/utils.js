@@ -82,7 +82,8 @@ function Err__FieldNoType(def) {
   console.log('Err__FieldNoType', def);
   return `Error: field definition with missing or invalid type property!`;
 }
-function Err__FieldNoName() {
+function Err__FieldNoName(def) {
+  console.log('Err__FieldNoName', def);
   return `Error: field definition without name property!`;
 }
 function Err__NoComponentDef(block_type) {

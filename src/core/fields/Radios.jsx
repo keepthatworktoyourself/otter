@@ -51,7 +51,7 @@ export default class Select extends React.Component {
             <div className="is-flex" style={{ alignItems: 'center' }}>
               <div style={{ paddingRight: '0.5rem' }}>
                 <div className="buttons has-addons is-marginless">
-                  {this.radio_opts.length === 0 && `[Radio has no options]`}
+                  {this.radio_opts.length === 0 && `[Radio field has no options!]`}
                   {this.radio_opts.map((opt, i) => {
                     const input_id = `${input_name}-input-${i}`;
                     const active = opt === field.value ? 'is-selected is-link' : '';

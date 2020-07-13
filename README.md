@@ -35,7 +35,7 @@ Renders an Otter editor.
     - `block_toggled()` : called when the user expands/closes a sub-block (e.g. if your otter editor is within an iframe, you might then update the iframe height.)
 
 ```js
-const my_delagate = {
+const my_delegate = {
   save(data) {
     // Kick-off a request to update the post data
   },
