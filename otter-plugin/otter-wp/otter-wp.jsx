@@ -28,7 +28,7 @@ const state = {
 };
 
 function render() {
-  ReactDOM.render(
+  render.component = ReactDOM.render(
     <Otter.Editor data={state.data}
              load_state={state.load_state}
              blockset={state.blocks}
@@ -37,6 +37,36 @@ function render() {
     document.querySelector('.otter-container')
   );
 }
+
+
+// Dynamic data
+// -----------------------------------
+
+function dynamic_data(name) {
+  return function() {
+    if (dynamic_data.data.hasOwnProperty(name)) {
+      return dynamic_data.data[name];
+    }
+
+    window.parent.postMessage({
+      'otter--get-dynamic-data': name,
+    });
+
+    return { };
+  };
+}
+dynamic_data.data = { };
+
+window.addEventListener('message', function(ev) {
+  const proceed = ev.data && ev.data['otter--set-dynamic-data'];
+  if (proceed) {
+    const item = ev.data['otter--set-dynamic-data'];
+    dynamic_data.data[item.name] = item.value;
+    render.component.forceUpdate();
+  }
+});
+
+Otter.dynamic_data = dynamic_data;
 
 
 // Fetch & kick off

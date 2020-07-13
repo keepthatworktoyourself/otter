@@ -31,6 +31,7 @@
     const iframe = document.querySelector('.otter-container');
     const input = document.querySelector('#otter-data');
     const initial_data = <?= json_encode($data, JSON_UNESCAPED_UNICODE) ?>;
+    const dynamic_data = <?= json_encode(\Otter\dynamic_data(), JSON_UNESCAPED_UNICODE) ?>;
 
 
     // Provide user-bundled otter file
@@ -90,6 +91,23 @@
         });
       }
     });
+
+
+    // Provide dynamic data
+    // -------------------------------
+
+    window.addEventListener('message', function(ev) {
+      const proceed = ev.data['otter--get-dynamic-data'];
+      if (proceed) {
+        const item_name = ev.data['otter--get-dynamic-data'];
+        iframe.contentWindow.postMessage({
+          'otter--set-dynamic-data': {
+            name: item_name,
+            value: dynamic_data[item_name],
+          },
+        });
+      }
+    })
 
 
     // Media button

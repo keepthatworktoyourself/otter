@@ -95,6 +95,20 @@
   }
 
 
+  // dynamic_data
+  // -----------------------------------
+
+  function dynamic_data($name = null, $value = null) {
+    static $dynamic_data = [ ];
+
+    if ($name && $value) {
+      $dynamic_data[$name] = $value;
+    }
+
+    return $dynamic_data;
+  }
+
+
   // hook
   // -----------------------------------
 
