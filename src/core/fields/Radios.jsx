@@ -1,12 +1,11 @@
 import React from 'react';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
-import Utils from '../definitions/utils';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 
 
-export default class Select extends React.Component {
+export default class Radios extends React.Component {
 
   constructor(props) {
     super(props);
@@ -35,7 +34,7 @@ export default class Select extends React.Component {
   render() {
     const field = this.props.field;
     const block = this.props.block;
-    const input_name = `radios-${Utils.rnd_str(6)}`;
+    const input_name = `radios-${field.uid}`;
 
     const opts_raw = field.def.options || { };
     const opts = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { };
@@ -55,7 +54,7 @@ export default class Select extends React.Component {
                 <div className="buttons has-addons is-marginless">
                   {opt_keys.length === 0 && `[Radio field has no options!]`}
                   {opt_keys.map((opt, i) => {
-                    const input_id = `${input_name}-input-${i}`;
+                    const input_id = `${input_name}--${i}`;
                     const active = opt === field.value ? 'is-selected is-link' : '';
                     const sel = { checked: opt === field.value };
 
