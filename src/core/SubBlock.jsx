@@ -84,9 +84,12 @@ export default class SubBlock extends React.Component {
 
                   {this.props.cb_delete && (
                     <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                      <a className="button is-rounded is-small is-outlined" onClick={this.props.cb_delete}>
-                        <span style={{ paddingRight: '0.5rem' }}>Delete</span>
-                        <FontAwesomeIcon icon={faTimes} />
+                      <a className="button is-small is-outlined" onClick={this.props.cb_delete}>
+                        <span className="icon is-small has-text-grey">
+                          <FontAwesomeIcon icon={faTimes} />
+                        </span>
+
+                        <span>Delete</span>
                       </a>
                     </div>
                   )}

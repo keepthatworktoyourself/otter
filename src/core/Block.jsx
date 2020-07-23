@@ -10,16 +10,7 @@ export default class Block extends React.Component {
 
   constructor(props) {
     super(props);
-    this.cb_add = this.cb_add.bind(this);
     this.cb_delete = this.cb_delete.bind(this);
-  }
-
-
-  cb_add(ev, block_type) {
-    ev.stopPropagation();
-    ev.preventDefault();
-
-    this.ctx.add_block(block_type, this.props.block_index);
   }
 
 
@@ -54,7 +45,8 @@ export default class Block extends React.Component {
           </div>
 
           <div className="c-block-add-btn" style={{ position: 'absolute', top: '-1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 2 }}>
-            <AddBlockBtn cb_select={(ev, block_type) => this.cb_add(ev, block_type)} />
+            <AddBlockBtn cb_select={(ev, type) => ctx.add_block(type, this.props.block_index)}
+                         blocks={ctx.blockset} />
           </div>
 
         </div>

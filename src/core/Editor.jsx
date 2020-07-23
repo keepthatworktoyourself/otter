@@ -298,7 +298,7 @@ export default class Editor extends React.Component {
       if (repeater_field) {
         const arr = repeater_field.value;
         const [item] = arr.splice(drag_result.source.index, 1);
-        arr.splice(drag_result.destination.idnex, 0, item);
+        arr.splice(drag_result.destination.index, 0, item);
 
         this.setState({ render_blocks: this.state.render_blocks });
       }
@@ -381,7 +381,10 @@ export default class Editor extends React.Component {
             </DnD.DragDropContext>
 
             <div className="is-flex" style={{ justifyContent: 'center' }}>
-              <AddBlockBtn cb_select={(ev, type) => this.ctx.add_block(type, null)} suggest={n_blocks === 0} popup_direction={n_blocks ? 'up' : 'down'} />
+              <AddBlockBtn cb_select={(ev, type) => this.ctx.add_block(type, null)}
+                           suggest={n_blocks === 0}
+                           popup_direction={n_blocks ? 'up' : 'down'}
+                           blocks={this.props.blockset} />
             </div>
 
           </div>

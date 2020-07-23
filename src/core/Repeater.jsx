@@ -18,36 +18,41 @@ export default class Repeater extends React.Component {
       show_dialogue: false,
     };
 
-    this.cb_add = this.cb_add.bind(this);
-    this.cb_delete = this.cb_delete.bind(this);
-    this.cb_toggle_dialogue = this.cb_toggle_dialogue.bind(this);
+    this.cb_add_btn  = this.cb_add_btn.bind(this);
+    this.cb_add      = this.cb_add.bind(this);
+    this.cb_delete   = this.cb_delete.bind(this);
     this.cb_showhide = this.cb_showhide.bind(this);
   }
 
-  cb_toggle_dialogue() {
-    this.setState({
-      show_dialogue: !this.state.show_dialogue
-    });
+
+  cb_add_btn(ev) {
+    const subblock_types = this.props.field.def.subblock_types;
+
+    if (subblock_types.length > 1) {
+      this.setState({
+        show_dialogue: !this.state.show_dialogue,
+      });
+    }
+    else {
+      this.cb_add(null);
+    }
   }
 
 
-  cb_add(ctx, ev, type) {
-    ev.stopPropagation();
-    ev.preventDefault();
-
+  cb_add(ev) {
     this.setState({
-      show_dialogue: false
+      show_dialogue: false,
     });
 
-    ctx.add_repeater_item(this.props.field.uid, type);
+    const type = ev ? parseInt(ev.target.getAttribute('data-subblock-type')) : 0;
+    const def = this.props.field.def.subblock_types[type];
+
+    this.ctx.add_repeater_item(this.props.field.uid, def);
   }
 
 
-  cb_delete(ctx, ev, subblock) {
-    ev.stopPropagation();
-    ev.preventDefault();
-
-    ctx.remove_repeater_item(this.props.field.uid, subblock.uid);
+  cb_delete(subblock) {
+    this.ctx.remove_repeater_item(this.props.field.uid, subblock.uid);
   }
 
 
@@ -65,7 +70,9 @@ export default class Repeater extends React.Component {
     const max = field.def.max || -1;
 
     const repeater_title = field.def.description || field.def.name;
-    const subblocks = field.value || [ ];
+    const subblocks      = field.value || [ ];
+    const subblock_defs  = field.def.subblock_types || [ ];
+    const multiple_types = subblock_defs.length !== 1;
 
     return (
       <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
@@ -99,7 +106,7 @@ export default class Repeater extends React.Component {
                             <SubBlock block={subblock}
                                       contents_hidden={false}
                                       border={true}
-                                      cb_delete={ev => this.cb_delete.call(this, ctx, ev, subblock)} />
+                                      cb_delete={ev => this.cb_delete(subblock)} />
                           </div>
 
                         </div>
@@ -112,6 +119,7 @@ export default class Repeater extends React.Component {
                 )}</DnD.Droppable>
                 {/* End repeater items */}
 
+
                 {/* 'Add' button */}
                 {(max === -1 || subblocks.length < max) && (
                   <div>
@@ -119,7 +127,7 @@ export default class Repeater extends React.Component {
 
                       <div className="dropdown-trigger">
                         <button className="button is-small" aria-haspopup="true" aria-controls="dropdown-menu"
-                                onClick={this.cb_toggle_dialogue.bind(this)}>
+                                onClick={this.cb_add_btn}>
                           <span className="icon is-small has-text-grey">
                             <FontAwesomeIcon icon={faPlusCircle} />
                           </span>
@@ -127,19 +135,22 @@ export default class Repeater extends React.Component {
                         </button>
                       </div>
 
-                      <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                        <div className="dropdown-content">
-                          {(field.def.subblock_types || [ ]).map((t, i) => (
-                            <a className="dropdown-item" onClick={ev => this.cb_add.call(this, ctx, ev, t)} key={i}>
-                              {t.description}
-                            </a>
-                          ))}
+                      {multiple_types && (
+                        <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                          <div className="dropdown-content">
+                            {subblock_defs.map((t, i) => (
+                              <a className="dropdown-item" onClick={this.cb_add} key={i} data-subblock-type={i}>
+                                {t.description}
+                              </a>
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                     </div>
                   </div>
-                )}{/* End 'add' button */}
+                )}
+                {/* End 'add' button */}
 
               </div>
             </div>
