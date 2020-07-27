@@ -49,6 +49,14 @@ function subblock_is_enabled(field) {
 }
 
 
+// blocks_are_grouped
+// -----------------------------------
+
+function blocks_are_grouped(blocks) {
+  return !(blocks.length === 0 || blocks[0].hasOwnProperty('type'));
+}
+
+
 // rnd_str
 // -----------------------------------
 
@@ -98,6 +106,7 @@ export default {
   retitle_field,
   recursive_find,
   subblock_is_enabled,
+  blocks_are_grouped,
   rnd_str,
   Err__BlockNoType,
   Err__InvalidBlockType,

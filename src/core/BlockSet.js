@@ -1,14 +1,14 @@
 import Utils from './definitions/utils';
 
-export default function Blockset(definitions_array) {
-  definitions_array.get = function(type) {
-    if (!type) {
-      throw Error(Utils.Err__InvalidBlockType(type));
-    }
+export default function Blockset(blocks) {
+  const defs = blocks.constructor === Array ? blocks : [ blocks ];
 
-    const def = Utils.recursive_find(definitions_array, item => (
-      item.hasOwnProperty('type') && item.type === type
-    ));
+  defs.get = (type) => {
+    const def = Utils.recursive_find(
+      defs,
+      item => item.hasOwnProperty('type') && item.type === type
+    );
+
     if (def === null) {
       throw Error(Utils.Err__NoComponentDef(type));
     }
@@ -16,6 +16,6 @@ export default function Blockset(definitions_array) {
     return def;
   };
 
-  return definitions_array;
+  return defs;
 };
 

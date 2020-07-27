@@ -1,4 +1,4 @@
-# Otter, a block-based content editor <img align="right" src="src/ice.png" width=40 height=40>
+# Otter, a block-based content editor <img align="right" src="files/ice.png" width=40 height=40>
 
 A content editor, with declaratively defined content blocks. Easily imports as a react component. Generates data in a simple JSON format.
 
@@ -20,15 +20,15 @@ A content editor, with declaratively defined content blocks. Easily imports as a
 
 ```jsx
 <Otter.Editor
+  blocks={blocks}
   data={data}
   load_state={Otter.State.Loaded}
-  delegate={my_delegate}
-  blocks={blockset} />
+  delegate={my_delegate} />
 ```
 
 Renders an Otter editor.
 
-- `blocks` : the set of editor blocks available in this editor (see [Block API](#block-api))
+- `blocks` : array of editor blocks available in this editor (see [Block API](#block-api))
 - `data` : initialize the editor with some content
 - `load_state` : one of the loading states (`Loading` and `Error` are useful when loading content data asynchronously):
     - `Otter.State.Loading`
@@ -59,26 +59,67 @@ const my_delegate = {
 
 `Otter.Blockset([ <block>, <block>, ... ]) -> blockset`
 
-- Define a blockset (a set of content blocks) for use in the editor.
+- Define a blockset: a set of content block definitions. Otter are the definitions Otter use to render a block-based editor.
 - Returns the blockset object.
 - Arguments:
     - `[ <block>, <block>, ... ]`: an array of content block definitions
 
 ```js
-const text_blocks = Otter.Blockset([{
-  type: 'MyTextBlock',
-  description: 'Text block',
-  fields: [ <field>, <field>, ... ],
-}]);
+const text_blocks = Otter.Blockset([
+  {
+    type: 'MyTextBlock',
+    description: 'Text block',
+    thumbnail: '/path/to/block-thumbnail.png',
+    fields: [
+      <field>, ...
+    ],
+  },
+]);
 ```
 
+`thumbnail` is optional and only used by Otter when initialized with *grouped content blocks*.
 
-### Methods
+
+### Grouped content blocks
+
+`Otter.Blockset()` can be passed a flat array of block definitions, or you can group them together like so.
+
+When you pass grouped blocks, Otter renders a more graphical block picker UI.
+
+
+```js
+const blocks = Otter.Blockset({
+  text: {
+    name: 'Text blocks',
+    blocks: [ <block>, <block>, ... ],
+  },
+  media: {
+    name: 'Media blocks',
+    blocks: [ <block>, <block>, ... ],
+  },
+});
+```
+
+*Block picker for flat blockset:*
+
+![Block picker using flat blockset](files/picker--simple.png)
+
+
+*Block picker for grouped blockset:*
+
+![Block picker using flat blockset](files/picker--grouped.png)
+
+
+
+### Blockset methods
 
 `get(block_type) -> block`
 
-- Defined on a blockset created with `Otter.blockset()`.
 - Returns the requested block object from the blockset array.
+
+```js
+const text = text_blocks.get('MyTextBlock');
+```
 
 
 

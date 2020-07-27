@@ -2,6 +2,7 @@ import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
 import Block from './Block';
 import AddBlockBtn from './other/AddBlockBtn';
+import BlockPicker from './other/BlockPicker';
 import PageDataContext from './PageDataContext';
 import Fields from './fields';
 import Utils from './definitions/utils';
@@ -51,6 +52,14 @@ function ctx(pb_instance) {
       pb_instance.block_toggled();
     },
 
+    open_block_picker(block_index) {
+      pb_instance.set_block_picker(block_index);
+    },
+
+    close_block_picker() {
+      pb_instance.set_block_picker(false);
+    },
+
     blockset: { },
   };
 }
@@ -66,6 +75,7 @@ export default class Editor extends React.Component {
 
     this.state = {
       render_blocks: null,
+      block_picker: false,
     };
 
     this.i = 0;
@@ -306,6 +316,14 @@ export default class Editor extends React.Component {
   }
 
 
+  // block picker
+  // -----------------------------------
+
+  set_block_picker(open) {
+    this.setState({ block_picker: open });
+  }
+
+
   // save
   // -----------------------------------
 
@@ -321,7 +339,9 @@ export default class Editor extends React.Component {
   // -----------------------------------
 
   render() {
-    let inner;
+    let content__main;
+    let content__picker;
+
     const load_state = this.props.load_state;
     const when_to_save = this.props.save;
     this.ctx.blockset = this.props.blockset;
@@ -331,11 +351,11 @@ export default class Editor extends React.Component {
     }
 
     if (load_state === State.Error) {
-      inner = msg_div(`Couldn’t load post data`);
+      content__main = msg_div(`Couldn’t load post data`);
     }
 
     else if (load_state === State.Loading) {
-      inner = msg_div(`Loading...`);
+      content__main = msg_div(`Loading...`);
     }
 
     else if (load_state === State.Loaded) {
@@ -349,57 +369,63 @@ export default class Editor extends React.Component {
       }
 
       const n_blocks = render_blocks.length;
-      inner = (
-        <PageDataContext.Provider value={this.ctx}>
+      content__main = (
+        <div className="container" style={{ minHeight: '20rem' }}>
 
-          <div className="container" style={{ minHeight: '20rem' }}>
-
-            {when_to_save === Save.WhenSaveButtonClicked && (
+          {when_to_save === Save.WhenSaveButtonClicked && (
             <div style={{ margin: '1rem' }}>
               <a className="button" onClick={_ => this.save.call(this)}>Save</a>
             </div>
-            )}
+          )}
 
-            <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
-              <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
-                <div ref={prov.innerRef} {...prov.droppableProps}>
+          <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
+            <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
+              <div ref={prov.innerRef} {...prov.droppableProps}>
 
-                  {render_blocks.map((block, index) => (
-                    <DnD.Draggable key={`block-${block.uid}`} draggableId={`block-${block.uid}`} index={index} type="block">{(prov, snap) => (
+                {render_blocks.map((block, index) => (
+                  <DnD.Draggable key={`block-${block.uid}`} draggableId={`block-${block.uid}`} index={index} type="block">{(prov, snap) => (
 
-                      <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
-                        <Block block={block} block_index={index} ctx={this.ctx} />
-                      </div>
+                    <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
+                      <Block block={block} block_index={index} ctx={this.ctx} />
+                    </div>
 
-                    )}</DnD.Draggable>
-                  ))}
+                  )}</DnD.Draggable>
+                ))}
 
-                  {prov.placeholder}
+                {prov.placeholder}
 
-                </div>
-              )}</DnD.Droppable>
-            </DnD.DragDropContext>
+              </div>
+            )}</DnD.Droppable>
+          </DnD.DragDropContext>
 
-            <div className="is-flex" style={{ justifyContent: 'center' }}>
-              <AddBlockBtn cb_select={(ev, type) => this.ctx.add_block(type, null)}
-                           suggest={n_blocks === 0}
-                           popup_direction={n_blocks ? 'up' : 'down'}
-                           blocks={this.props.blockset} />
-            </div>
-
+          <div className="is-flex" style={{ justifyContent: 'center' }}>
+            <AddBlockBtn blocks={this.props.blockset}
+                         block_index={render_blocks.length}
+                         cb_select={(ev, type) => this.ctx.add_block(type, null)}
+                         suggest={n_blocks === 0}
+                         popup_direction={n_blocks ? 'up' : 'down'} />
           </div>
-        </PageDataContext.Provider>
+
+        </div>
       );
     }
 
     else {
-      inner = msg_div(`Unknown load state: ${load_state}`);
+      content__main = msg_div(`Unknown load state: ${load_state}`);
     }
 
     return (
-      <div className="post-builder" style={{ padding: '2rem' }}>
-        {inner}
-      </div>
+      <PageDataContext.Provider value={this.ctx}>
+        <div className="post-builder" style={{ padding: '2rem' }}>
+          {content__main}
+          {
+            load_state === State.Loaded &&
+            this.state.block_picker !== false &&
+            Utils.blocks_are_grouped(this.ctx.blockset) &&
+            <BlockPicker blocks={this.props.blockset} block_index={this.state.block_picker} />
+          }
+        </div>
+      </PageDataContext.Provider>
     );
   }
 
