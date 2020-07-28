@@ -1,0 +1,6 @@
+dbhost=127.0.0.1
+dbuser=root
+dbpassword=root
+db=my_db
+select_query=select post_id, uncompress(data) as data from pb_blocks order by id asc
+insert_query=insert into wp_postmeta (post_id, meta_key, meta_value) values (?, 'otter-content', ?)

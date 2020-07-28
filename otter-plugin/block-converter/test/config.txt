@@ -1,0 +1,6 @@
+dbhost=127.0.0.1
+dbuser=block_converter
+dbpassword=block_converter
+db=temp__block_converter
+select_query=select post_id, data from data_before
+insert_query=insert into data_after (post_id, data) values (?, ?)

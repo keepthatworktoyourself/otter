@@ -4,7 +4,7 @@
  *
  * Plugin Name: Otter Editor
  * Plugin URI:  https://wordpress.org/plugins/classic-editor/
- * Description: Otter: a declarative block-based editor
+ * Description: Otter Editor: Declarative. Easy. Fast.
  * Version:     0.1
  * Author:      Ben Hallstein
  * Author URI:  https://ben.am/
