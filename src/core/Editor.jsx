@@ -401,7 +401,7 @@ export default class Editor extends React.Component {
           <div className="is-flex" style={{ justifyContent: 'center' }}>
             <AddBlockBtn blocks={this.props.blockset}
                          block_index={render_blocks.length}
-                         cb_select={(ev, type) => this.ctx.add_block(type, null)}
+                         cb_select={block_type => this.ctx.add_block(block_type, null)}
                          suggest={n_blocks === 0}
                          popup_direction={n_blocks ? 'up' : 'down'} />
           </div>

@@ -25,9 +25,9 @@ export default class AddBlockBtn extends React.Component {
   }
 
 
-  cb_select(ev, type) {
+  cb_select(ev) {
     this.setState({ open: false });
-    this.props.cb_select(ev.target.getAttribute('data-block-type'));
+    this.props.cb_select(ev.currentTarget.getAttribute('data-block-type'));
   }
 
 

@@ -20,7 +20,7 @@ export default class BlockPicker extends React.Component {
 
   cb_select(ev) {
     this.close();
-    this.ctx.add_block(ev.target.getAttribute('data-block-type'), this.props.block_index);
+    this.ctx.add_block(ev.currentTarget.getAttribute('data-block-type'), this.props.block_index);
   }
 
 

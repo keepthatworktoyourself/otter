@@ -44,7 +44,7 @@ export default class Repeater extends React.Component {
       show_dialogue: false,
     });
 
-    const type = ev ? parseInt(ev.target.getAttribute('data-subblock-type')) : 0;
+    const type = ev ? parseInt(ev.currentTarget.getAttribute('data-subblock-type')) : 0;
     const def = this.props.field.def.subblock_types[type];
 
     this.ctx.add_repeater_item(this.props.field.uid, def);

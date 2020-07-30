@@ -21,8 +21,8 @@ export default class SubBlock extends React.Component {
 
 
   cb__optional_block_toggle(ev) {
-    ev.target.blur();
-    this.props.field.enabled = ev.target.checked;
+    ev.currentTarget.blur();
+    this.props.field.enabled = ev.currentTarget.checked;
 
     if (!this.props.field.enabled) {
       this.setState({
