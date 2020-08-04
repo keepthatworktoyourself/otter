@@ -3,7 +3,8 @@
   // block-converter/run.php
   //
   // - edit config.txt
-  // - run `php /path/to/run.php` from a directory containing a folder of 'converters' and a config.txt file
+  // - run `php /path/to/run.php` from a directory containing a folder of 'converters'
+  //   and a config.txt file
   // - see test/config.txt and test/converters
   //
 
@@ -15,7 +16,7 @@
 
   $config = @file_get_contents('./config.txt');
   if (!is_string($config)) {
-    exit('config.txt not found');
+    exit("config.txt not found\n");
   }
 
   $config = explode("\n", $config);
@@ -39,7 +40,7 @@
     );
   }
   catch (PDOException $exc) {
-    exit('error connecting to database');
+    exit("error connecting to database\n");
   }
 
 
@@ -49,7 +50,7 @@
   $st = $pdo->prepare($config['select_query']);
   $r = $st->execute();
   if (!$r) {
-    exit('error running select_query as defined in config.txt');
+    exit("error running select_query as defined in config.txt\n");
   }
   $data = $st->fetchAll(PDO::FETCH_ASSOC);
 

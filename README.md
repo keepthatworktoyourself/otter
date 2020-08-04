@@ -23,6 +23,7 @@ A content editor, with declaratively defined content blocks. Easily imports as a
   blocks={blocks}
   data={data}
   load_state={Otter.State.Loaded}
+  save={Otter.Save.OnInput}
   delegate={my_delegate} />
 ```
 
@@ -34,6 +35,9 @@ Renders an Otter editor.
     - `Otter.State.Loading`
     - `Otter.State.Loaded`
     - `Otter.State.Error`
+- `save` : specify when `save()` is called on the delegate:
+    - `Otter.Save.OnInput` : call `save()` whenever the user makes a change
+    - `Otter.Save.WhenSaveButtonClicked` : render a save button, and call `save()` only when this is clicked
 - `delegate` :
     - `save()` : Otter calls this method of your delegate object when data is saved in the editor.
     - `block_toggled()` : called when the user expands/closes a sub-block (e.g. if your otter editor is within an iframe, you might then update the iframe height.)
@@ -49,18 +53,14 @@ const my_delegate = {
 };
 ```
 
-- `save` : control when to call `save()` on your delegate:
-    - `Otter.Save.OnInput` : whenever the user makes a change
-    - `Otter.Save.WhenSaveButtonClicked` : render a save button and call `save()` only when this is clicked
-
 
 
 ## Block API
 
 `Otter.Blockset([ <block>, <block>, ... ]) -> blockset`
 
-- Define a blockset: a set of content block definitions. Otter are the definitions Otter use to render a block-based editor.
-- Returns the blockset object.
+- Define a Blockset: a set of content block definitions: the definitions used by Otter to initialize and render the block-based editor.
+- Returns a Blockset object.
 - Arguments:
     - `[ <block>, <block>, ... ]`: an array of content block definitions
 
@@ -84,9 +84,6 @@ const text_blocks = Otter.Blockset([
 
 `Otter.Blockset()` can be passed a flat array of block definitions, or you can group them together like so.
 
-When you pass grouped blocks, Otter renders a more graphical block picker UI.
-
-
 ```js
 const blocks = Otter.Blockset({
   text: {
@@ -99,6 +96,9 @@ const blocks = Otter.Blockset({
   },
 });
 ```
+
+When passed a flat array Blockset, the Otter block picker is a simple dropdown. When passed a Blockset of grouped blocks, the block picker is a large popup, organised by group, and including block thumbnails.
+
 
 *Block picker for flat blockset:*
 
@@ -115,7 +115,7 @@ const blocks = Otter.Blockset({
 
 `get(block_type) -> block`
 
-- Returns the requested block object from the blockset array.
+- Returns the requested block object from the Blockset.
 
 ```js
 const text = text_blocks.get('MyTextBlock');
@@ -143,7 +143,7 @@ A **block** contains one or more **fields** (see above).
 
 ### display_if
 
-When using `display_if`, editor fields are hidden or shown based on the value of one or more siblings. (The siblings must be `Bool` or `Radio` fields.)
+When using `display_if`, the editor field is displayed/hidden based on the value of one or more siblings. (The siblings must be `Bool` or `Radio` fields.)
 
 `display_if` can be a single `display_if` rule or an array of these, to show/hide depending on multiple siblings.
 
@@ -214,7 +214,7 @@ Otter.Blockset([
 
 - Create a picker where the user can manage an array of subblocks, picking from types you predefine.
 - Options:
-    - `description` : if suppied, used to title the wrapped subblock array in the editor
+    - `description` : if supplied, used to title the wrapped subblock array in the editor
     - `subblock_types: [ <block1>, <block2>, ... ]` : an array of block objects (previously created with `Otter.Blockset()`) defining what types of subblock the user can add to this subblock array.
     - `max: <number>` : optionally limit the number of subblocks the user can add
 
