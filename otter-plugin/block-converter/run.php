@@ -11,6 +11,18 @@
   require_once('convert.php');
 
 
+  // Dynamically create stdclass models during
+  // unserialize
+  // ---------------------------------
+
+  function unserialize_helper($class) {
+    if (!class_exists($class)) {
+      eval("class $class extends stdClass { }");
+    }
+  }
+  ini_set('unserialize_callback_func', 'unserialize_helper');
+
+
   // Get config
   // ---------------------------------
 
@@ -22,7 +34,11 @@
   $config = explode("\n", $config);
   $config = array_reduce($config, function($carry, $item) {
     $item = explode('=', $item);
-    if (is_array($item) && count($item) === 2) {
+
+    if (is_array($item) && count($item) > 1) {
+      if (count($item) > 2) {
+        $item[1] = implode('=', array_slice($item, 1));
+      }
       $carry[$item[0]] = $item[1];
     }
     return $carry;
@@ -36,7 +52,8 @@
     $pdo = new PDO(
       "mysql:dbname={$config['db']};host={$config['dbhost']}",
       $config['dbuser'],
-      $config['dbpassword']
+      $config['dbpassword'],
+      [ PDO::MYSQL_ATTR_FOUND_ROWS => true ]
     );
   }
   catch (PDOException $exc) {
@@ -59,14 +76,14 @@
   // ---------------------------------
 
   $converters = [ ];
-  $converters_files = array_diff(scandir('converters'), ['.', '..']);
+  $converter_files = array_diff(scandir('converters'), ['.', '..', '.DS_Store']);
 
-  function define_converters($type, $f) {
+  function define_converter($type, $f) {
     global $converters;
     $converters[$type] = $f;
   }
 
-  foreach ($converters_files as $f) {
+  foreach ($converter_files as $f) {
     require("converters/$f");
   }
 
@@ -83,16 +100,29 @@
 
   // Save
   // ---------------------------------
-  $st = $pdo->prepare($config['insert_query']);
+
+  $st__update = $pdo->prepare($config['update_query']);
+  $st__insert = $pdo->prepare($config['insert_query']);
+
+  function save_warning_if_failure($result, $row, $type) {
+    if (!$result) {
+      echo "WARNING: failed to $type row ";
+      var_dump($row);
+    }
+  }
+
   foreach ($data__converted as $row) {
-    $r = $st->execute([
+    $params = [
       $row['post_id'],
       serialize($row['data'])
-    ]);
+    ];
 
-    if (!$r) {
-      echo 'WARNING: failed to insert row ';
-      var_dump($row);
+    $r = $st__update->execute(array_reverse($params));
+    save_warning_if_failure($r, $row, 'update');
+
+    if ($r && $st__update->rowCount() === 0) {
+      $r = $st__insert->execute($params);
+      save_warning_if_failure($r, $row, 'insert');
     }
   }
 

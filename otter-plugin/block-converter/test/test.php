@@ -4,33 +4,45 @@
   passthru('docker exec -i mysql mysql -uroot -proot -e \'create database if not exists temp__block_converter\'');
   passthru('docker exec -i mysql mysql -uroot -proot temp__block_converter < db/create.sql');
 
+  class MyBlock extends stdClass { };
+  class Muffins extends stdClass { };
+  class Recipe extends stdClass { };
+  class ZooInventory extends stdClass { };
+  class Penguin extends stdClass { };
+  class Weasel extends stdClass { };
+
+
+  function mk($class, $props) {
+    $o = new $class;
+    $o->__type = $class;
+
+    foreach ($props as $k => $v) {
+      $o->$k = $v;
+    }
+
+    return $o;
+  }
+
+
   $input_data = [
-    [
-      '__type' => 'MyBlock',
-      'text' => 'Hello there',
-    ],
-    [
-      '__type' => 'Muffins',
+    mk('MyBlock', [ 'text' => 'Hello there' ]),
+    mk('Muffins', [
       'number_of_muffins' => 7,
-      'recipe' => [
-        '__type' => 'Recipe',
+      'recipe' => mk('Recipe', [
         'ingredients' => [ 'lemon', 'muffin dough' ],
         'instructions' => 'Put all in mouth',
-      ],
-    ],
-    [
-      '__type' => 'ZooInventory',
+      ]),
+    ]),
+    mk('ZooInventory', [
       'animals' => [
-        [
-          '__type' => 'Penguin',
+        mk('Penguin', [
           'name' => 'Herbert Skinnyflippers',
-        ],
-        [
-          '__type' => 'Weasel',
+        ]),
+        mk('Weasel', [
           'name' => 'Gerontius McMustelid'
-        ],
+        ]),
       ],
-    ],
+    ]),
   ];
 
   $expected = [
