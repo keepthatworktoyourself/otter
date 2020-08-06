@@ -8,6 +8,7 @@
   // - see test/config.txt and test/converters
   //
 
+  require_once('helpers.php');
   require_once('convert.php');
 
 

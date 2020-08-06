@@ -321,6 +321,7 @@ export default class Editor extends React.Component {
 
   set_block_picker(open) {
     this.setState({ block_picker: open });
+    this.block_toggled();
   }
 
 
@@ -369,8 +370,9 @@ export default class Editor extends React.Component {
       }
 
       const n_blocks = render_blocks.length;
+      const min_height = this.state.block_picker ? '50rem' : '20rem';
       content__main = (
-        <div className="container" style={{ minHeight: '20rem' }}>
+        <div className="container" style={{ minHeight: min_height }}>
 
           {when_to_save === Save.WhenSaveButtonClicked && (
             <div style={{ margin: '1rem' }}>
