@@ -22,14 +22,24 @@
 
   function media_from_url($item_url) {
     global $pdo;
+    if (!$item_url) {
+      return null;
+    }
 
-    $st = $pdo->prepare('select ID from wp_posts where guid = ?');
-    $r = $st->execute([$item_url]);
+    // Calculate the expected _wp_attached_file meta-value
+    preg_match('/wp-content\/uploads\/(.+)/', $item_url, $m);
+    $attachment_meta = $m[1] ?? null;
+    if (!$attachment_meta) {
+      return null;
+    }
+
+    $st = $pdo->prepare('select post_id from wp_postmeta where meta_key = "_wp_attached_file" && meta_value = ?');
+    $r = $st->execute([$attachment_meta]);
     if (!$r) {
       return null;
     }
 
-    $item_id = $st->fetchAll(PDO::FETCH_ASSOC)[0]['ID'] ?? null;
+    $item_id = $st->fetchAll(PDO::FETCH_ASSOC)[0]['post_id'] ?? null;
     return $item_id ? [
       'id'  => $item_id,
       'url' => $item_url,
