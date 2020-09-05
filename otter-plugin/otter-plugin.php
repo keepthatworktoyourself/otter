@@ -33,7 +33,7 @@
 
   require_once('classic-editor/classic-editor.php');
   require_once('metabox-init.php');
-  require_once('dev/init.php');
+  // require_once('dev/init.php');
 
   class OtterPlugin { }
 
@@ -41,50 +41,61 @@
   // save()
   // -----------------------------------
 
-  function save($post_id, array $data) {
-    return update_post_meta($post_id, 'otter-content', $data);
+  function save($post_id, $meta_key, array $data) {
+    return update_post_meta($post_id, $meta_key, $data);
   }
 
 
   // load()
   // -----------------------------------
 
-  function load($post_id) {
-    $result = get_post_meta($post_id, 'otter-content', true);
+  function load($post_id, $meta_key) {
+    $result = get_post_meta($post_id, $meta_key, true);
     return $result ? $result : [ ];
   }
 
 
-  // otter_for_post_type
+  // mk_editor - call on wp init
   // -----------------------------------
-  // - must be called on wp init with priority < 100
+  // - call on wp init
+  // - priority must be < 100
+  // - editor_info: [  bundle_path => '...', meta_key => '...' ]
   // - $post_type can be a single type or an array
 
-  function otter_for_post_type($post_type, $bundle_path = null) {
+  function mk_editor($post_type, $editor_info = null) {
     static $otters = [ ];
 
-    if ($bundle_path) {
-      if (is_array($post_type)) {
-        foreach ($post_type as $p) {
-          $otters[$p] = $bundle_path;
-        }
+    if ($editor_info) {
+      if (!isset($editor_info['bundle_path']) || !isset($editor_info['meta_key'])) {
+        throw new \RuntimeException(
+          "\Otter\mk_editor($post_type, $editor_info):\n" .
+          "\$post_type: string or array\n" .
+          "\$editor_info requires: [\n" .
+          "  'bundle_path'   => '...',\n" .
+          "  'meta_key'      => '...',\n" .
+          "  'metabox_title' => '...',  (optional)\n" .
+          "]"
+        );
       }
-      else {
-        $otters[$post_type] = $bundle_path;
+
+      $post_types = is_array($post_type) ? $post_type : [$post_type];
+      foreach ($post_types as $p) {
+        $otters[$p] []= $editor_info;
       }
     }
 
     if (is_string($post_type)) {
       return $otters[$post_type] ?? null;
     }
+
     return null;
   }
 
 
-  // set_css_bundle
+  // set_css_bundle_path
   // -----------------------------------
 
-  function css_bundle($_bundle_path = null) {
+  function set_css_bundle_path($_bundle_path = null) {
     static $bundle_path = null;
 
     if ($_bundle_path) {
@@ -113,12 +124,23 @@
   // -----------------------------------
 
   add_action('save_post', function($post_id) {
-    preg_match('/otter-data=([^&]+)/', file_get_contents('php://input'), $m);
+    $input = file_get_contents('php://input');
 
-    if ($m) {
-      $arr = json_decode(urldecode($m[1]), true);
+    preg_match_all('/otter-data--[^&]+/', $input, $m, PREG_PATTERN_ORDER);
+
+    if (!$m) {
+      return;
+    }
+
+    foreach ($m[0] as $match) {
+      preg_match('/^otter-data--([^=]+)=([^&]+)/', $match, $mm);
+
+      $meta_key = $mm[1];
+      $data     = $mm[2];
+
+      $arr = json_decode(urldecode($data), true);
       if ($arr) {
-        save($post_id, $arr);
+        save($post_id, $meta_key, $arr);
       }
     }
   });

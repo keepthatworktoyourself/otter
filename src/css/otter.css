@@ -1,7 +1,6 @@
 
 body {
   background-color: #3e4246;
-  transition: background-color 0.2s linear;
 }
 .bg-solid {
   background-color: #fdfefe;
@@ -69,5 +68,10 @@ body {
 }
 .react-toggle--checked .react-toggle-thumb {
   left: 10px !important;
+}
+
+
+.ql-container, .ql-editor {
+  height: auto !important;
 }
 

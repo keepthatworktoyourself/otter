@@ -1,16 +1,18 @@
 <?php
-  $data = \Otter\load($post->ID);
+  $data = \Otter\load($post->ID, $editor_info['meta_key']);
 
-  $js_bundle = \Otter\otter_for_post_type($post->post_type);
-  $css_bundle = \Otter\css_bundle();
-
-  $iframe_url = '../wp-content/plugins/otter-plugin/editor/editor.html';
+  $css_bundle = \Otter\set_css_bundle_path();
+  $input_name = "otter-data--{$editor_info['meta_key']}";
+  $iframe_id = "otter-container--{$editor_info['meta_key']}";
 ?>
 
-<input type="text" name="otter-data" id="otter-data" style="display: none;" />
+<input type="text" name="<?= $input_name ?>" style="display: none;" />
+
+<iframe id="<?= $iframe_id ?>"
+        style="display: block; width: 100%;"></iframe>
 
 <style>
-  #otter-editor-metabox .inside {
+  #otter-editor-metabox--<?= $editor_info['meta_key'] ?> .inside {
     margin: 0;
     padding: 0;
   }
@@ -22,45 +24,42 @@
 
 <script>
   (function() {
-    function iframe() {
-      return document.querySelector('.otter-container');
-    }
-    const input = document.querySelector('#otter-data');
+    const iframe = document.getElementById('<?= $iframe_id ?>');
+    const input = document.querySelector('input[name="<?= $input_name ?>"]');
     const initial_data = <?= json_encode($data, JSON_UNESCAPED_UNICODE) ?>;
     const dynamic_data = <?= json_encode(\Otter\dynamic_data(), JSON_UNESCAPED_UNICODE) ?>;
 
 
-    // Provide user-bundled otter file
+    // Initialize iframe
     // -------------------------------
-    // - Unlike the other messages, this comes from index.js, which
-    //   discovers the otter js bundle to load
 
-    window.addEventListener('message', function(ev) {
-      const js  = ev.data && ev.data['otter--get-js-bundle'];
-      const css = ev.data && ev.data['otter--get-css-bundle'];
+    function iframe_init() {
+      const iframe_doc = iframe.contentWindow.document;
 
-      if (js) {
-        const bundle_file = atob(iframe().getAttribute('data-otter-js-bundle'));
-        iframe().contentWindow.postMessage({
-          'otter--set-js-bundle': bundle_file,
-        });
-      }
-      else if (css) {
-        const bundle_file = atob(iframe().getAttribute('data-otter-css-bundle'));
-        iframe().contentWindow.postMessage({
-          'otter--set-css-bundle': bundle_file,
-        });
-      }
-    });
+      const link = iframe_doc.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '<?= $css_bundle ?>';
+
+      const div = iframe_doc.createElement('div');
+      div.className = 'otter-container';
+
+      const script = iframe_doc.createElement('script');
+      script.src = '<?= $editor_info['bundle_path'] ?>';
+
+      iframe_doc.head.appendChild(link);
+      iframe_doc.body.appendChild(div);
+      iframe_doc.body.appendChild(script);
+    }
+    iframe_init();
 
 
     // Update height
     // -------------------------------
 
     window.addEventListener('message', function(ev) {
-      const proceed = ev.data && ev.data['otter--set-height'];
+      const proceed = ev.data && ev.data['otter--set-height'] && ev.source === iframe.contentWindow;
       if (proceed) {
-        iframe().style.height = ev.data['otter--set-height'];
+        iframe.style.height = ev.data['otter--set-height'];
       }
     });
 
@@ -69,7 +68,7 @@
     // -------------------------------
 
     window.addEventListener('message', function(ev) {
-      const proceed = ev.data && ev.data['otter--set-data'];
+      const proceed = ev.data && ev.data['otter--set-data'] && ev.source === iframe.contentWindow;
       if (proceed) {
         input.value = JSON.stringify(ev.data['otter--set-data']);
       }
@@ -80,9 +79,9 @@
     // -------------------------------
 
     window.addEventListener('message', function(ev) {
-      const proceed = ev.data['otter--get-initial-data'];
+      const proceed = ev.data['otter--get-initial-data'] && ev.source === iframe.contentWindow;
       if (proceed) {
-        iframe().contentWindow.postMessage({
+        iframe.contentWindow.postMessage({
           'otter--set-initial-data': initial_data,
         });
       }
@@ -93,17 +92,17 @@
     // -------------------------------
 
     window.addEventListener('message', function(ev) {
-      const proceed = ev.data['otter--get-dynamic-data'];
+      const proceed = ev.data['otter--get-dynamic-data'] && ev.source === iframe.contentWindow;
       if (proceed) {
         const item_name = ev.data['otter--get-dynamic-data'];
-        iframe().contentWindow.postMessage({
+        iframe.contentWindow.postMessage({
           'otter--set-dynamic-data': {
             name: item_name,
             value: dynamic_data[item_name],
           },
         });
       }
-    })
+    });
 
 
     // Media button
@@ -157,14 +156,14 @@
       },
 
       send: function(item) {
-        iframe().contentWindow.postMessage({
+        iframe.contentWindow.postMessage({
           'otter--set-wp-media-item': item,
         });
       },
     };
 
     window.addEventListener('message', function(ev) {
-      const proceed = ev.data && ev.data['otter--get-wp-media-item'];
+      const proceed = ev.data && ev.data['otter--get-wp-media-item'] && ev.source === iframe.contentWindow;
       if (proceed) {
         const media_types = ev.data['otter--get-wp-media-item'];
         media_handler.open(media_types);
@@ -172,10 +171,4 @@
     });
   })();
 </script>
-
-<iframe class="otter-container" style="display: block; width: 100%;"
-        src="<?= $iframe_url ?>"
-        data-otter-js-bundle="<?= base64_encode($js_bundle) ?>"
-        data-otter-css-bundle="<?= base64_encode($css_bundle) ?>">
-</iframe>
 

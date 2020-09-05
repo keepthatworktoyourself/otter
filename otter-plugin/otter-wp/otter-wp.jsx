@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom';
 import Otter from 'otter-editor';
 
 
+function container() {
+  return document.querySelector('.otter-container');
+}
+
+
 // Update
 // -----------------------------------
 
@@ -34,7 +39,7 @@ function render() {
              blockset={state.blocks}
              delegate={delegate}
              save={Otter.Save.OnInput} />,
-    document.querySelector('.otter-container')
+    container()
   );
 }
 
@@ -96,7 +101,7 @@ function load() {
 
 function send_height_update() {
   window.parent.postMessage({
-    'otter--set-height': getComputedStyle(document.body).height,
+    'otter--set-height': getComputedStyle(container()).height,
   });
 }
 

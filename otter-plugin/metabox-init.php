@@ -2,21 +2,26 @@
   namespace Otter\Editor;
 
   function init() {
-    $proceed = is_admin() && \Otter\otter_for_post_type(get_post_type());
+    $editors = \Otter\mk_editor(get_post_type());
+    $proceed = is_admin() && $editors;
+
     if ($proceed) {
-      \add_meta_box(
-        'otter-editor-metabox',
-        'Otter Editor',
-        '\Otter\Editor\render',
-        null,
-        'normal',
-        'high',
-        null
-      );
+      foreach ($editors as $editor_info) {
+        \add_meta_box(
+          "otter-editor-metabox--{$editor_info['meta_key']}",
+          $editor_info['metabox_title'] ?? 'Otter Editor',
+          '\Otter\Editor\render',
+          null,
+          'normal',
+          'high',
+          ['editor_info' => $editor_info]
+        );
+      }
     }
   }
 
-  function render($post) {
+  function render($post, $box) {
+    $editor_info = $box['args']['editor_info'];
     require('metabox.php');
   }
 
