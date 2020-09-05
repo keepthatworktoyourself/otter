@@ -8,10 +8,16 @@
   //  | bash
   //
 
-  require_once('/var/www/html/wp-config.php');
+  $path_wpconfig = getenv('WPCONFIG');
+  if (!$path_wpconfig) {
+    echo "Please define WPCONFIG as the path to wp-config.php\n";
+    exit;
+  }
+
+  require_once($path_wpconfig);
 
   $q = new WP_Query([
-    'post_type' => 'bw_landing_page',
+    'post_type'      => 'bw_landing_page',
     'posts_per_page' => -1,
   ]);
 
@@ -30,7 +36,7 @@
 
   $cmds = array_map(function($url) {
     $fn = preg_replace('/[^a-zA-Z0-9]/', '-', $url);
-    return "curl -L $url > $fn.html";
+    return "echo '$fn' && curl -sL $url > $fn.html";
   }, $urls);
 
   echo implode($cmds, " && "), "\n";

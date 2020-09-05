@@ -175,6 +175,12 @@ When using `display_if`, the editor field is displayed/hidden based on the value
 - Options:
     - `options: { value: "Label", ... }` : the set of radios
 
+`Otter.Fields.Select`
+
+- A select dropdown
+- Options:
+    - `options: { value: "Label", ... }` : the select values
+
 `Otter.Fields.WPMedia`
 
 - Wordpress-specific: let the user pick an item from a wordpress media browser.

@@ -5,23 +5,11 @@
   // - edit config.txt
   // - run `php /path/to/run.php` from a directory containing a folder of 'converters'
   //   and a config.txt file
-  // - see test/config.txt and test/converters
+  // - see test/config.txt for config and test/converters for writing converters
   //
 
   require_once('helpers.php');
   require_once('convert.php');
-
-
-  // Dynamically create stdclass models during
-  // unserialize
-  // ---------------------------------
-
-  function unserialize_helper($class) {
-    if (!class_exists($class)) {
-      eval("class $class extends stdClass { }");
-    }
-  }
-  ini_set('unserialize_callback_func', 'unserialize_helper');
 
 
   // Get config
@@ -46,16 +34,31 @@
   }, [ ]);
 
 
+  // Load wp
+  // ---------------------------------
+
+  require_once($config['wp_config']);
+
+
   // Connect
   // ---------------------------------
 
   try {
+    $db   = DB_NAME;
+    $host = DB_HOST;
+    $user = DB_USER;
+    $pwd  = DB_PASSWORD;
+
     $pdo = new PDO(
-      "mysql:dbname={$config['db']};host={$config['dbhost']}",
-      $config['dbuser'],
-      $config['dbpassword'],
+      "mysql:dbname=$db;host=$host;charset=utf8",
+      $user,
+      $pwd,
       [ PDO::MYSQL_ATTR_FOUND_ROWS => true ]
     );
+    if ($config['exception_on_db_error'] === 'true') {
+      $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+    $pdo->exec('set names utf8mb4 collate utf8mb4_unicode_ci');
   }
   catch (PDOException $exc) {
     exit("error connecting to database\n");
@@ -71,6 +74,15 @@
     exit("error running select_query as defined in config.txt\n");
   }
   $data = $st->fetchAll(PDO::FETCH_ASSOC);
+
+  // Optionally pass data through load function
+  if ($config['load_function']) {
+    $data = array_map(function($row) use ($config) {
+      $load = $config['load_function'];
+      $row['data'] = $load($row['post_id']);
+      return $row;
+    }, $data);
+  }
 
 
   // Load converters
@@ -93,11 +105,9 @@
   // ---------------------------------
 
   $data__converted = array_map(function($row) use ($converters) {
-    $item_data = unserialize($row['data']);
-    $row['data'] = convert($item_data, $converters);
+    $row['data'] = convert($row['data'], $converters);
     return $row;
   }, $data);
-
 
   // Save
   // ---------------------------------
@@ -105,10 +115,12 @@
   $st__update = $pdo->prepare($config['update_query']);
   $st__insert = $pdo->prepare($config['insert_query']);
 
-  function save_warning_if_failure($result, $row, $type) {
+  function save_warning_if_failure($st, $result, $params, $type) {
     if (!$result) {
-      echo "WARNING: failed to $type row ";
-      var_dump($row);
+      echo "WARNING: failed to $type row, post_id ";
+      var_dump($row['post_id']);
+      var_dump($st->errorInfo());
+      var_dump($params);
     }
   }
 
@@ -119,11 +131,11 @@
     ];
 
     $r = $st__update->execute(array_reverse($params));
-    save_warning_if_failure($r, $row, 'update');
+    save_warning_if_failure($st, $r, $row, 'update');
 
     if ($r && $st__update->rowCount() === 0) {
       $r = $st__insert->execute($params);
-      save_warning_if_failure($r, $row, 'insert');
+      save_warning_if_failure($st, $r, $params, 'insert');
     }
   }
 

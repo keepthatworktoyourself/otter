@@ -3,19 +3,31 @@
   // helpers.php - some helpers for converters to use
   //
 
+
+  // Dynamically create stdclass models during
+  // unserialization
+  // ---------------------------------
+
+  function unserialize_helper($class) {
+    if (!class_exists($class)) {
+      eval("class $class extends stdClass { }");
+    }
+  }
+  ini_set('unserialize_callback_func', 'unserialize_helper');
+
+
+  function post_url($id) {
+    return get_permalink($id);
+  }
+
+
   function image($image_id) {
     global $pdo;
 
-    $st = $pdo->prepare("select guid from wp_posts where ID = ?");
-    $r = $st->execute([$image_id]);
-    if (!$r) {
-      return null;
-    }
-
-    $guid = $st->fetchAll(PDO::FETCH_ASSOC)[0]['guid'] ?? null;
-    return $guid ? [
+    $url = get_permalink($image_id);
+    return $url ? [
       'id'  => $image_id,
-      'url' => $guid,
+      'url' => $url,
     ] : null;
   }
 

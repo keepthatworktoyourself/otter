@@ -75,6 +75,30 @@ function rnd_str(length) {
 }
 
 
+// bright_col
+// -----------------------------------
+
+function bright_col() {
+  function col_component() {
+    return Math.random() * 255;
+  }
+
+  const c = {
+    r: col_component(),
+    g: col_component(),
+    b: col_component(),
+  };
+
+  const max_component = Math.max(c.r, c.g, c.b);
+  const normalise = 255 / max_component;
+  c.r *= normalise;
+  c.g *= normalise;
+  c.b *= normalise;
+
+  return `rgba(${c.r}, ${c.g}, ${c.b}, 1)`;
+}
+
+
 // Some errors
 // -----------------------------------
 
@@ -108,6 +132,7 @@ export default {
   subblock_is_enabled,
   blocks_are_grouped,
   rnd_str,
+  bright_col,
   Err__BlockNoType,
   Err__InvalidBlockType,
   Err__FieldNoType,

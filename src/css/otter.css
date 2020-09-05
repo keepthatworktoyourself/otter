@@ -1,6 +1,7 @@
 
 body {
   background-color: #3e4246;
+  transition: background-color 0.2s linear;
 }
 .bg-solid {
   background-color: #fdfefe;
