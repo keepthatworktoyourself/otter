@@ -16,7 +16,7 @@ export default class TextInput extends React.Component {
   cb_change(ev) {
     this.props.field.value = ev.currentTarget.value;
     this.setState({ value: ev.currentTarget.value });
-    this.ctx.should_update();
+    this.ctx.value_updated();
   }
 
 

@@ -33,7 +33,7 @@ const blocks__content = Otter.Blockset([
       {
         name:        'content',
         description: 'Content',
-        type:        Otter.Fields.TextArea,
+        type:        Otter.Fields.TextEditor,
       },
     ],
   },
@@ -144,7 +144,7 @@ function cb_load(data) {
 // Render
 
 const delegate = {
-  on_update(data) {
+  save(data) {
     console.log('on_update', data);
   },
 };
@@ -185,7 +185,7 @@ else {
 
 function render() {
   ReactDOM.render(
-    <Otter.Editor data={state.data} load_state={state.load_state} delegate={delegate} blockset={blocks__all} />,
+    <Otter.Editor data={state.data} load_state={state.load_state} delegate={delegate} blockset={blocks__all} save={Otter.Save.OnInput} />,
     document.getElementById('otter-container')
   );
 }

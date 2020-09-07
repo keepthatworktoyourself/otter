@@ -28,6 +28,10 @@ function block_drag_styles(snapshot, provided) {
 
 function ctx(pb_instance) {
   return {
+    value_updated() {
+      pb_instance.do_save_on_input();
+    },
+
     should_update() {
       setTimeout(() => pb_instance.setState({ }), 10);
     },
@@ -82,6 +86,7 @@ export default class Editor extends React.Component {
     this.i = 0;
     this.ctx = ctx(this);
     this.repeaters = { };
+    this.do_save_on_input = this.do_save_on_input.bind(this);
   }
 
 
@@ -329,6 +334,12 @@ export default class Editor extends React.Component {
   // save
   // -----------------------------------
 
+  do_save_on_input() {
+    if (this.props.save === Save.OnInput) {
+      this.save.call(this);
+    }
+  }
+
   save() {
     const data = this.get_plain_data();
     this.props.delegate &&
@@ -370,9 +381,7 @@ export default class Editor extends React.Component {
         this.state.render_blocks = render_blocks = this.get_render_blocks(this.props.data);
       }
 
-      if (when_to_save === Save.OnInput) {
-        this.save.call(this);
-      }
+      this.do_save_on_input();
 
       const n_blocks = render_blocks.length;
       const min_height = this.state.block_picker ? '50rem' : '20rem';
