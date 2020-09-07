@@ -54,11 +54,23 @@ const blocks__other = Otter.Blockset([
   },
 ]);
 
-const blocks__all = Otter.Blockset([].concat(
+const blocks__flat = Otter.Blockset([].concat(
   blocks__header,
   blocks__content,
-  blocks__other
+  blocks__other,
 ));
+
+const block__nested = Otter.Blockset({
+  simple: {
+    name: 'Simple blocks',
+    blocks: blocks__header.concat(blocks__content),
+  },
+  complex: {
+    name: 'Complicated blocks',
+    blocks: blocks__other,
+  },
+});
+
 
 // function get_query_data() {
 //   const q = window.location.search;
@@ -118,30 +130,8 @@ function cb_load(data) {
 }
 
 
-// // save
-// // -----------------------------------
-//
-// function save() {
-//   const url = `http://localhost/wp-content/themes/brandwatch/temp-backend--save.php`;
-//   const data = this.get_plain_data();
-//   console.log(data);
-//   console.log(JSON.stringify(data));
-//   const post_content = (
-//     `post_id=${post_id}&` +
-//     `data=${encodeURIComponent(JSON.stringify(data))}`
-//   );
-//
-//   fetch(url, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-//     },
-//     body: post_content,
-//   }).then(response => console.log(response.json()));
-// }
-
-
 // Render
+// -----------------------------------
 
 const delegate = {
   save(data) {
@@ -151,17 +141,14 @@ const delegate = {
 
 
 const state = {
-  // post_id: get_post_id(),
   load_state: null,
   data: [ ],
+  post_parameter_supplied: true,   // Toggle to simulate error
 };
 
 
-const post_parameter_supplied = true;
-
-
-if (!post_parameter_supplied) {
-  state.load_state = 'no post';
+if (!state.post_parameter_supplied) {
+  state.load_state = Otter.State.Error;
   render();
 }
 else {
@@ -185,7 +172,7 @@ else {
 
 function render() {
   ReactDOM.render(
-    <Otter.Editor data={state.data} load_state={state.load_state} delegate={delegate} blockset={blocks__all} save={Otter.Save.OnInput} />,
+    <Otter.Editor data={state.data} load_state={state.load_state} delegate={delegate} blockset={blocks__flat} save={Otter.Save.OnInput} />,
     document.getElementById('otter-container')
   );
 }

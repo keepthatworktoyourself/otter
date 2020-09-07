@@ -384,7 +384,7 @@ export default class Editor extends React.Component {
       this.do_save_on_input();
 
       const n_blocks = render_blocks.length;
-      const min_height = this.state.block_picker ? '50rem' : '20rem';
+      const min_height = this.state.block_picker === false ? '20rem' : '50rem';
       content__main = (
         <div className="container" style={{ minHeight: min_height }}>
 
