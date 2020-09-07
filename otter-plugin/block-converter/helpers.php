@@ -60,12 +60,11 @@
 
 
   function find_oembed_src($data) {
-    if (strpos($data, 'https://twitter')) {
-      $src = substr($data, strpos($data, 'https://twitter.'));
+    if (preg_match_all('/https:\/\/twitter.com\/[^\/]+\/status\/[^\/? "]+/', $data, $m)) {
+      return end($m[0]);
     }
-    else {
-      $src = substr($data, strpos($data, 'https'));
-    }
+
+    $src = substr($data, strpos($data, 'https'));
     return substr($src, 0, strpos($src, '"'));
   }
 

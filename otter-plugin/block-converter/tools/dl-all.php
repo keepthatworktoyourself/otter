@@ -34,10 +34,13 @@
     return $out;
   });
 
-  $cmds = array_map(function($url) {
+  $cmds = [ ];
+  $n = count($urls);
+  foreach ($urls as $i => $url) {
+    $j = $i + 1;
     $fn = preg_replace('/[^a-zA-Z0-9]/', '-', $url);
-    return "echo '$fn' && curl -sL $url > $fn.html";
-  }, $urls);
+    $cmds []= "echo -n '$j of $n  ' && echo '$fn' && curl -sL $url > $fn.html";
+  }
 
   echo implode($cmds, " && "), "\n";
 
