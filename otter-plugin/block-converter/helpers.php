@@ -24,7 +24,7 @@
   function image($image_id) {
     global $pdo;
 
-    $url = get_permalink($image_id);
+    $url = wp_get_attachment_url($image_id);
     return $url ? [
       'id'  => $image_id,
       'url' => $url,

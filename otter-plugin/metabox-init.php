@@ -2,7 +2,7 @@
   namespace Otter\Editor;
 
   function init() {
-    $editors = \Otter\mk_editor(get_post_type());
+    $editors = \Otter\editor(get_post_type());
     $proceed = is_admin() && $editors;
 
     if ($proceed) {

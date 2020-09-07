@@ -55,20 +55,20 @@
   }
 
 
-  // mk_editor - call on wp init
+  // editor - call on wp init
   // -----------------------------------
   // - call on wp init
   // - priority must be < 100
   // - editor_info: [  bundle_path => '...', meta_key => '...' ]
   // - $post_type can be a single type or an array
 
-  function mk_editor($post_type, $editor_info = null) {
+  function editor($post_type, $editor_info = null) {
     static $otters = [ ];
 
     if ($editor_info) {
       if (!isset($editor_info['bundle_path']) || !isset($editor_info['meta_key'])) {
         throw new \RuntimeException(
-          "\Otter\mk_editor($post_type, $editor_info):\n" .
+          "\Otter\editor($post_type, $editor_info):\n" .
           "\$post_type: string or array\n" .
           "\$editor_info requires: [\n" .
           "  'bundle_path'   => '...',\n" .
