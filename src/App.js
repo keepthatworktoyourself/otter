@@ -8,7 +8,7 @@ import 'otter-editor/dist/otter.css';
 
 
 const delegate = {
-  on_update: (data) => console.log('new data!', data),
+  save: (data) => console.log('new data!', data),
 };
 
 

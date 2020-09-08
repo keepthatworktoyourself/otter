@@ -1,13 +1,13 @@
 {
   "name": "otter-editor",
-  "description": "Content editor react component, with declaratively defined content blocks.",
-  "version": "0.0.18",
+  "description": "Content editor with declaratively defined content blocks.",
+  "version": "0.0.32",
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
-  "homepage": "https://github.com/keepthatworktoyourself/otter",
+  "homepage": "https://github.com/bhallstein/otter",
   "repository": {
     "type": "git",
-    "url": "https://github.com/keepthatworktoyourself/otter.git"
+    "url": "https://github.com/bhallstein/otter.git"
   },
   "files": [
     "README.md",
@@ -20,9 +20,10 @@
   "scripts": {
     "clean": "rm -rf dist && rm -rf demo/dist",
     "build": "npm run clean && webpack --env prod",
+    "build--npm": "npm run clean && npm run build && mkdir -p dist && cp -R demo/dist/*.css dist && babel src/index.js -d dist && babel src/core -d dist/core",
+    "prepublishOnly": "npm run build--npm",
     "dev": "webpack-dev-server --mode development",
-    "build-for-publish": "npm run clean && npm run build && mkdir -p dist && cp -R demo/dist/*.css dist && babel src/index.js -d dist && babel src/core -d dist/core",
-    "prepublishOnly": "npm run build-for-publish",
+    "dev--plugin": "babel -w src/index.js -d otter-plugin/dev/deps/otter-editor & babel -w src/core -d otter-plugin/dev/deps/otter-editor/core",
     "i": "rm -rf node_modules && npm install"
   },
   "dependencies": {
@@ -31,7 +32,8 @@
     "@fortawesome/react-fontawesome": "^0.1.11",
     "bulma": "^0.9.0",
     "react-beautiful-dnd": "^13.0.0",
-    "react-quill": "^1.3.5"
+    "react-quill": "^2.0.0-beta.2",
+    "react-toggle": "^4.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",

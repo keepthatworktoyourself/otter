@@ -2,7 +2,7 @@ import React from 'react';
 import Repeater from './Repeater';
 import Fields from './fields';
 import SubBlock from './SubBlock';
-import * as utils from './utils';
+import Utils from './definitions/utils';
 
 
 export default function RecursiveFieldRenderer(props) {
@@ -11,28 +11,38 @@ export default function RecursiveFieldRenderer(props) {
   return Object.keys(block.fields).map(field_name => {
     const field = block.fields[field_name];
 
-    if (!field.def.type) { throw Error(utils.Err__FieldNoType()); }
-    if (!field.def.name) { throw Error(utils.Err__FieldNoName()); }
+    if (!field.def.type) {
+      throw Error(Utils.Err__FieldNoType(field.def));
+    }
+    if (!field.def.name) {
+      throw Error(Utils.Err__FieldNoName(field.def));
+    }
 
     // Conditional rendering
-    if (field.def.display_if && field.def.display_if.constructor === Array) {
-      field.should_display = field.def.display_if.reduce((carry, rule) => {
-        const sibling = block.fields[rule.sibling] || null;
-        const rule_eq  = rule.hasOwnProperty('equal_to');
-        const rule_neq = rule.hasOwnProperty('not_equal_to');
-        if (!sibling || !(rule_eq || rule_neq)) {
-          return carry;
-        }
-        if (rule_eq) {
-          return carry && (sibling.value === rule.equal_to);
-        }
-        else {
-          return carry && (sibling.value !== rule.not_equal_to);
-        }
-      }, true);
+    if (field.def.display_if) {
+      if (field.def.display_if.constructor === Object) {
+        field.def.display_if = [field.def.display_if];
+      }
 
-      if (!field.should_display) {
-        return null;
+      if (field.def.display_if.constructor === Array) {
+        field.should_display = field.def.display_if.reduce((carry, rule) => {
+          const sibling = block.fields[rule.sibling] || null;
+          const rule_eq  = rule.hasOwnProperty('equal_to');
+          const rule_neq = rule.hasOwnProperty('not_equal_to');
+          if (!sibling || !(rule_eq || rule_neq)) {
+            return carry;
+          }
+          if (rule_eq) {
+            return carry && (sibling.value === rule.equal_to);
+          }
+          else {
+            return carry && (sibling.value !== rule.not_equal_to);
+          }
+        }, true);
+
+        if (!field.should_display) {
+          return null;
+        }
       }
     }
 

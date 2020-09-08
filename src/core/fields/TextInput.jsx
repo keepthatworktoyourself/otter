@@ -1,6 +1,6 @@
 import React from 'react';
 import PageDataContext from '../PageDataContext';
-import FieldLabel from './FieldLabel';
+import FieldLabel from '../other/FieldLabel';
 
 
 export default class TextInput extends React.Component {
@@ -16,16 +16,15 @@ export default class TextInput extends React.Component {
   cb_change(ev) {
     this.props.field.value = ev.currentTarget.value;
     this.setState({ value: ev.currentTarget.value });
-    this.ctx.should_update();
+    this.ctx.value_updated();
   }
 
 
   render() {
     return (
-      <PageDataContext.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div className="field" key={this.props.field.uid}>
 
-          {(this.ctx = ctx) && ''}
           <FieldLabel field={this.props.field} block={this.props.block} />
           <div className="control">
             <input type="text" className="input" value={this.state.value} onChange={this.cb_change} />

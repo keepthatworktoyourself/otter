@@ -1,4 +1,4 @@
-# Otter, a block-based content editor <img align="right" src="src/ice.png" width=40 height=40>
+# Otter, a block-based content editor <img align="right" src="files/ice.png" width=40 height=40>
 
 A content editor, with declaratively defined content blocks. Easily imports as a react component. Generates data in a simple JSON format.
 
@@ -19,52 +19,107 @@ A content editor, with declaratively defined content blocks. Easily imports as a
 ## Otter element
 
 ```jsx
-<Otter.Editor data={data} load_state={Otter.State.Loaded} delegate={my_delegate} blocks={blockset} />,
+<Otter.Editor
+  blocks={blocks}
+  data={data}
+  load_state={Otter.State.Loaded}
+  save={Otter.Save.OnInput}
+  delegate={my_delegate} />
 ```
 
 Renders an Otter editor.
 
-- `blocks` : the set of editor blocks available in this editor (see [Block API](#block-api))
+- `blocks` : array of editor blocks available in this editor (see [Block API](#block-api))
 - `data` : initialize the editor with some content
 - `load_state` : one of the loading states (`Loading` and `Error` are useful when loading content data asynchronously):
     - `Otter.State.Loading`
     - `Otter.State.Loaded`
     - `Otter.State.Error`
-- `delegate` : Otter calls the `on_update()` method of your delegate object when data is saved:
+- `save` : specify when `save()` is called on the delegate:
+    - `Otter.Save.OnInput` : call `save()` whenever the user makes a change
+    - `Otter.Save.WhenSaveButtonClicked` : render a save button, and call `save()` only when this is clicked
+- `delegate` :
+    - `save()` : Otter calls this method of your delegate object when data is saved in the editor.
+    - `block_toggled()` : called when the user expands/closes a sub-block (e.g. if your otter editor is within an iframe, you might then update the iframe height.)
 
 ```js
-const my_delagate = {
-  on_update(data) {
+const my_delegate = {
+  save(data) {
     // Kick-off a request to update the post data
+  },
+  block_toggled() {
+    // set iframe height
   },
 };
 ```
+
 
 
 ## Block API
 
 `Otter.Blockset([ <block>, <block>, ... ]) -> blockset`
 
-- Define a blockset (a set of content blocks) for use in the editor.
-- Returns the blockset object.
+- Define a Blockset: a set of content block definitions: the definitions used by Otter to initialize and render the block-based editor.
+- Returns a Blockset object.
 - Arguments:
     - `[ <block>, <block>, ... ]`: an array of content block definitions
 
 ```js
-const text_blocks = Otter.Blockset([{
-  type: 'MyTextBlock',
-  description: 'Text block',
-  fields: [ <field>, <field>, ... ],
-}]);
+const text_blocks = Otter.Blockset([
+  {
+    type: 'MyTextBlock',
+    description: 'Text block',
+    thumbnail: '/path/to/block-thumbnail.png',
+    fields: [
+      <field>, ...
+    ],
+  },
+]);
 ```
 
+`thumbnail` is optional and only used by Otter when initialized with *grouped content blocks*.
 
-### Methods
+
+### Grouped content blocks
+
+`Otter.Blockset()` can be passed a flat array of block definitions, or you can group them together like so.
+
+```js
+const blocks = Otter.Blockset({
+  text: {
+    name: 'Text blocks',
+    blocks: [ <block>, <block>, ... ],
+  },
+  media: {
+    name: 'Media blocks',
+    blocks: [ <block>, <block>, ... ],
+  },
+});
+```
+
+When passed a flat array Blockset, the Otter block picker is a simple dropdown. When passed a Blockset of grouped blocks, the block picker is a large popup, organised by group, and including block thumbnails.
+
+
+*Block picker for flat blockset:*
+
+![Block picker using flat blockset](files/picker--simple.png)
+
+
+*Block picker for grouped blockset:*
+
+![Block picker using flat blockset](files/picker--grouped.png)
+
+
+
+### Blockset methods
 
 `get(block_type) -> block`
 
-- Defined on a blockset created with `Otter.blockset()`.
-- Returns the requested block object from the blockset array.
+- Returns the requested block object from the Blockset.
+
+```js
+const text = text_blocks.get('MyTextBlock');
+```
 
 
 
@@ -79,15 +134,18 @@ A **block** contains one or more **fields** (see above).
   name: 'content',
   description: 'Content',
   type: Otter.Fields.Textarea,
-  display_if: [{                  // To display this field only if a sibling has a value
+  display_if: {
     sibling: <sibling_name>,
-    equal_to: <value>,            // mutually exclusive
-    not_equal_to: <value>,        //
-  }],
+    [not_]equal_to: <value>,
+  },
 }
 ```
 
-(Note that `display_if` can only operate on siblings of type Bool or Radio.)
+### display_if
+
+When using `display_if`, the editor field is displayed/hidden based on the value of one or more siblings. (The siblings must be `Bool` or `Radio` fields.)
+
+`display_if` can be a single `display_if` rule or an array of these, to show/hide depending on multiple siblings.
 
 
 ### Field types:
@@ -108,8 +166,8 @@ A **block** contains one or more **fields** (see above).
 
 - A yes/no toggle.
 - Options:
-    - `text__yes: "Yes"`: label for the on state option
-    - `text__no:  "No"`: label for the off state option
+    - `text__yes: <string>` : label for yes toggle (default `"Yes"`)
+    - `text__no:  <string>` : label for no switch (default `"No"`)
 
 `Otter.Fields.Radios`
 
@@ -117,16 +175,25 @@ A **block** contains one or more **fields** (see above).
 - Options:
     - `options: { value: "Label", ... }` : the set of radios
 
-`Otter.Fields.WPImage`
+`Otter.Fields.Select`
 
-- For wordpress integration: a wordpress media item. **TBD.**
+- A select dropdown
+- Options:
+    - `options: { value: "Label", ... }` : the select values
+
+`Otter.Fields.WPMedia`
+
+- Wordpress-specific: let the user pick an item from a wordpress media browser.
+- Options:
+    - `media_types: [ <type>, <type, ... ]` : control which file types appear in the media browser. Values: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If `media_types` option is omitted or an empty array, the items are not constrained by type.
 
 `Otter.Fields.SubBlock`
 
 - Embed another block into this block. Otter can compose blocks together recursively, allowing for complex content types, and aiding re-use of block definitions.
 - Options:
-    - `description` : if supplied, used to title the wrapped subblock in the editor
+    - `description: <string>` : if supplied, used to title the wrapped subblock in the editor
     - `subblock_type: MyTextBlock` : a block object (previously created with `Otter.Blockset()`) defining which subblock to embed.
+    - `optional: <bool>` : add a toggle to enable or disable the subblock. Sometimes you want to enable or disable an entire subblock — this feature prevents you from needing to add an extra field and a lot of `display_if`s to that subblock.
 
 ```js
 Otter.Blockset([
@@ -153,8 +220,9 @@ Otter.Blockset([
 
 - Create a picker where the user can manage an array of subblocks, picking from types you predefine.
 - Options:
-    - `description` : if suppied, used to title the wrapped subblock array in the editor
+    - `description` : if supplied, used to title the wrapped subblock array in the editor
     - `subblock_types: [ <block1>, <block2>, ... ]` : an array of block objects (previously created with `Otter.Blockset()`) defining what types of subblock the user can add to this subblock array.
+    - `max: <number>` : optionally limit the number of subblocks the user can add
 
 ```js
 Otter.Blockset([
@@ -189,6 +257,7 @@ To start:
 - replace src/App.js with the [demo App.js file](src/App.js)
 - run `npm run start`
 - visit `localhost:3000`
+
 
 
 ## Basic full example

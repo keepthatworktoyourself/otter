@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "i": "rm -rf node_modules && npm i",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && parcel build blocks.js",
+    "build-dev": "npm run clean && NODE_ENV=development parcel build --no-minify blocks.js",
+    "dev": "npm run clean && parcel watch blocks.js --no-hmr"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.3"
+  }
+}

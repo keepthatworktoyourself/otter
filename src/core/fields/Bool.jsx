@@ -1,6 +1,6 @@
 import React from 'react';
 import PageDataContext from '../PageDataContext';
-import FieldLabel from './FieldLabel';
+import FieldLabel from '../other/FieldLabel';
 
 
 export default class Bool extends React.Component {
@@ -33,9 +33,8 @@ export default class Bool extends React.Component {
     const text__no  = this.props.field.def.text__no || 'No';
 
     return (
-      <PageDataContext.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div className="field">
-          {(this.ctx = ctx) && ''}
           <div className="is-flex-tablet" style={{ alignItems: 'center' }}>
 
             <div className="c-label-margin-btm-phone">

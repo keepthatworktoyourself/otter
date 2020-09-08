@@ -1,0 +1,6 @@
+wp_config=wp-config.php
+select_query=select post_id, data from data_before
+update_query=update data_after set data = ? where post_id = ?
+insert_query=insert into data_after (post_id, data) values (?, ?)
+load_function=test_load_function
+exception_on_db_error=true

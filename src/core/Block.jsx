@@ -1,23 +1,27 @@
 import React from 'react';
 import RecursiveFieldRenderer from './RecursiveFieldRenderer';
 import PageDataContext from './PageDataContext';
-import AddBlockBtn from './AddBlockBtn';
+import AddBlockBtn from './other/AddBlockBtn';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 
 
 export default class Block extends React.Component {
 
-  cb_delete(ctx, ev) {
-    ctx.remove_block(this.props.block.uid);
+  constructor(props) {
+    super(props);
+    this.cb_select = this.cb_select.bind(this);
+    this.cb_delete = this.cb_delete.bind(this);
   }
 
 
-  cb_add(ctx, ev, block_type) {
-    ev.stopPropagation();
-    ev.preventDefault();
+  cb_select(block_type) {
+    this.ctx.add_block(block_type, this.props.block_index);
+  }
 
-    ctx.add_block(block_type, this.props.block_index);
+
+  cb_delete(ev) {
+    this.ctx.remove_block(this.props.block.uid);
   }
 
 
@@ -25,14 +29,14 @@ export default class Block extends React.Component {
     const block = this.props.block;
 
     return (
-      <PageDataContext.Consumer>{(ctx) => (
+      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div className="c-block" style={{ position: 'relative', paddingBottom: '1rem' }} data-blocktype={block.type}>
 
           <div className="bg-solid" style={{ padding: '1rem' }}>
             <div style={{ position: 'relative' }}>
 
               <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                <a className="button is-rounded is-small is-outlined" onClick={ev => this.cb_delete.call(this, ctx, ev)}>
+                <a className="button is-rounded is-small is-outlined" onClick={this.cb_delete}>
                   <span style={{ marginRight: '0.5rem' }}>Delete block</span>
                   <FontAwesomeIcon icon={faTimes} />
                 </a>
@@ -47,7 +51,7 @@ export default class Block extends React.Component {
           </div>
 
           <div className="c-block-add-btn" style={{ position: 'absolute', top: '-1.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 2 }}>
-            <AddBlockBtn cb_select={(ev, block_type) => this.cb_add.call(this, ctx, ev, block_type)} />
+            <AddBlockBtn blocks={ctx.blockset} block_index={this.props.block_index} cb_select={this.cb_select} />
           </div>
 
         </div>

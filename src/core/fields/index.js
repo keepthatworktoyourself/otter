@@ -3,7 +3,8 @@ import TextInput  from './TextInput';
 import TextEditor from './TextEditor';
 import Bool       from './Bool';
 import Radios     from './Radios';
-import WPImage    from './WPImage';
+import Select     from './Select';
+import WPMedia    from './WPMedia';
 
 const fields = {
   TextArea,
@@ -11,7 +12,8 @@ const fields = {
   TextEditor,
   Bool,
   Radios,
-  WPImage,
+  Select,
+  WPMedia,
   SubBlock: 'SubBlock',
   SubBlockArray: 'SubBlockArray',
 };

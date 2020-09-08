@@ -1,6 +1,14 @@
 .DS_Store
+
 node_modules
 package-lock.json
 dist
 demo/dist
 .cache
+
+otter-plugin/dev/dist
+otter-plugin/dev/deps
+otter-plugin/dev/node_modules
+otter-plugin/dev/package-lock.json
+otter-plugin/dev/.cache
+

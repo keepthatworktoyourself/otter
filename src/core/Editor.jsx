@@ -1,11 +1,13 @@
 import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
 import Block from './Block';
-import AddBlockBtn from './AddBlockBtn';
+import AddBlockBtn from './other/AddBlockBtn';
+import BlockPicker from './other/BlockPicker';
 import PageDataContext from './PageDataContext';
 import Fields from './fields';
-import State from './state';
-import Save from './save';
+import Utils from './definitions/utils';
+import State from './definitions/state';
+import Save from './definitions/save';
 
 
 function block_drag_styles(snapshot, provided) {
@@ -26,6 +28,10 @@ function block_drag_styles(snapshot, provided) {
 
 function ctx(pb_instance) {
   return {
+    value_updated() {
+      pb_instance.do_save_on_input();
+    },
+
     should_update() {
       setTimeout(() => pb_instance.setState({ }), 10);
     },
@@ -46,6 +52,18 @@ function ctx(pb_instance) {
       pb_instance.remove_block(block_uid);
     },
 
+    block_toggled() {
+      pb_instance.block_toggled();
+    },
+
+    open_block_picker(block_index) {
+      pb_instance.set_block_picker(block_index);
+    },
+
+    close_block_picker() {
+      pb_instance.set_block_picker(false);
+    },
+
     blockset: { },
   };
 }
@@ -61,11 +79,14 @@ export default class Editor extends React.Component {
 
     this.state = {
       render_blocks: null,
+      block_picker: false,
+      previous_load_state: null,
     };
 
     this.i = 0;
     this.ctx = ctx(this);
     this.repeaters = { };
+    this.do_save_on_input = this.do_save_on_input.bind(this);
   }
 
 
@@ -77,10 +98,20 @@ export default class Editor extends React.Component {
   }
 
 
+  // block_toggled
+  // -----------------------------------
+
+  block_toggled() {
+    this.props.delegate &&
+      this.props.delegate.block_toggled &&
+      this.props.delegate.block_toggled();
+  }
+
+
   // create_render_block
   // -----------------------------------
-  // - create a 'render block' item given a block definition and an
-  //   optional data_block of existing data
+  // - create a 'render block' item from  a block definition and an optional
+  //   data_block of existing data
   // - a 'render block' is a combination of block data and component definitions
   //   that's more convenient for rendering:
   //     {
@@ -90,9 +121,9 @@ export default class Editor extends React.Component {
   //       fields: {
   //         field_name: {
   //           uid:    a unique ID,
-  //           def:    field definition withing component definition
+  //           def:    field definition from component definition
   //           value:  field value - may be a normal value, a subblock, or an array of subblocks
-  //         }
+  //         },
   //         ...
   //       }
   //     }
@@ -102,28 +133,31 @@ export default class Editor extends React.Component {
       type: definition.type,
       def: definition,
       uid: this.uid.call(this),
-      fields: definition.fields.reduce((accum, field_def) => {
+      fields: definition.fields.reduce((accum, def) => {
         const field = {
           uid: this.uid.call(this),
-          def: field_def,
           value: null,
+          def,
         };
 
-        if (!field_def) {
-          console.log('error: field_def not found', field, data_block, definition);
+        if (!def) {
+          console.log('create_render_block error: no field definition', field, data_block, definition);
           return accum;
         }
 
-        if (field_def.type === Fields.SubBlock) {
-          const sub_data_block = (data_block && data_block[field_def.name]) || null;
+        if (def.type === Fields.SubBlock) {
+          const sub_data_block = (data_block && data_block[def.name]) || null;
+          if (def.optional) {
+            field.enabled = !!sub_data_block;
+          }
           field.value = this.create_render_block(
-            field_def.subblock_type,
+            def.subblock_type,
             sub_data_block
           );
         }
 
-        else if (field_def.type === Fields.SubBlockArray) {
-          const sub_data_blocks = (data_block && data_block[field_def.name]) || [ ];
+        else if (def.type === Fields.SubBlockArray) {
+          const sub_data_blocks = (data_block && data_block[def.name]) || [ ];
           field.value = sub_data_blocks.map(block => this.create_render_block(
             this.ctx.blockset.get(block.__type),
             block
@@ -133,10 +167,10 @@ export default class Editor extends React.Component {
         }
 
         else {
-          field.value = data_block && data_block[field_def.name];
+          field.value = data_block && data_block[def.name];
         }
 
-        accum[field_def.name] = field;
+        accum[def.name] = field;
         return accum;
       }, { }),
     };
@@ -145,7 +179,7 @@ export default class Editor extends React.Component {
   }
 
 
-  // get_render_blocks - convert loaded data to 'render blocks' (more useful)
+  // get_render_blocks - convert loaded data to 'render blocks'
   // -----------------------------------
 
   get_render_blocks(page_data) {
@@ -171,7 +205,9 @@ export default class Editor extends React.Component {
         const field = render_block.fields[field_name];
 
         if (field.def.type === Fields.SubBlock) {
-          accum[field_name] = get_block(field.value);
+          if (Utils.subblock_is_enabled(field)) {
+            accum[field_name] = get_block(field.value);
+          }
         }
 
         else if (field.def.type === Fields.SubBlockArray) {
@@ -278,7 +314,7 @@ export default class Editor extends React.Component {
       if (repeater_field) {
         const arr = repeater_field.value;
         const [item] = arr.splice(drag_result.source.index, 1);
-        arr.splice(drag_result.destination.idnex, 0, item);
+        arr.splice(drag_result.destination.index, 0, item);
 
         this.setState({ render_blocks: this.state.render_blocks });
       }
@@ -286,12 +322,29 @@ export default class Editor extends React.Component {
   }
 
 
+  // block picker
+  // -----------------------------------
+
+  set_block_picker(open) {
+    this.setState({ block_picker: open });
+    this.block_toggled();
+  }
+
+
   // save
   // -----------------------------------
 
+  do_save_on_input() {
+    if (this.props.save === Save.OnInput) {
+      this.save.call(this);
+    }
+  }
+
   save() {
     const data = this.get_plain_data();
-    this.props.delegate && this.props.delegate.on_update(data);
+    this.props.delegate &&
+      this.props.delegate.save &&
+      this.props.delegate.save(data);
   }
 
 
@@ -299,9 +352,11 @@ export default class Editor extends React.Component {
   // -----------------------------------
 
   render() {
-    let inner;
+    let content__main;
+    let content__picker;
+
     const load_state = this.props.load_state;
-    const call_delegate = this.props.call_delegate;
+    const when_to_save = this.props.save;
     this.ctx.blockset = this.props.blockset;
 
     function msg_div(msg) {
@@ -309,72 +364,86 @@ export default class Editor extends React.Component {
     }
 
     if (load_state === State.Error) {
-      inner = msg_div(`Couldn’t load post data`);
+      content__main = msg_div(`Couldn’t load post data`);
     }
 
     else if (load_state === State.Loading) {
-      inner = msg_div(`Loading...`);
+      content__main = msg_div(`Loading...`);
     }
 
     else if (load_state === State.Loaded) {
+      if (this.state.previous_load_state !== State.Loaded) {
+        document.body.style.backgroundColor = Utils.bright_col();
+      }
+
       let render_blocks = this.state.render_blocks;
       if (!render_blocks) {
         this.state.render_blocks = render_blocks = this.get_render_blocks(this.props.data);
       }
 
-      if (call_delegate === Save.OnInput) {
-        this.save.call(this);
-      }
+      this.do_save_on_input();
 
       const n_blocks = render_blocks.length;
-      inner = (
-        <PageDataContext.Provider value={this.ctx}>
+      const min_height = this.state.block_picker === false ? '20rem' : '50rem';
+      content__main = (
+        <div className="container" style={{ minHeight: min_height }}>
 
-          <div className="container" style={{ minHeight: '10rem' }}>
-
-            {call_delegate === Save.SaveButton && (
+          {when_to_save === Save.WhenSaveButtonClicked && (
             <div style={{ margin: '1rem' }}>
               <a className="button" onClick={_ => this.save.call(this)}>Save</a>
             </div>
-            )}
+          )}
 
-            <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
-              <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
-                <div ref={prov.innerRef} {...prov.droppableProps}>
+          <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
+            <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
+              <div ref={prov.innerRef} {...prov.droppableProps}>
 
-                  {render_blocks.map((block, index) => (
-                    <DnD.Draggable key={`block-${block.uid}`} draggableId={`block-${block.uid}`} index={index} type="block">{(prov, snap) => (
+                {render_blocks.map((block, index) => (
+                  <DnD.Draggable key={`block-${block.uid}`} draggableId={`block-${block.uid}`} index={index} type="block">{(prov, snap) => (
 
-                      <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
-                        <Block block={block} block_index={index} ctx={this.ctx} />
-                      </div>
+                    <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
+                      <Block block={block} block_index={index} ctx={this.ctx} />
+                    </div>
 
-                    )}</DnD.Draggable>
-                  ))}
+                  )}</DnD.Draggable>
+                ))}
 
-                  {prov.placeholder}
+                {prov.placeholder}
 
-                </div>
-              )}</DnD.Droppable>
-            </DnD.DragDropContext>
+              </div>
+            )}</DnD.Droppable>
+          </DnD.DragDropContext>
 
-            <div className="is-flex" style={{ justifyContent: 'center' }}>
-              <AddBlockBtn cb_select={(ev, type) => this.ctx.add_block(type, null)} popup_direction={n_blocks ? 'up' : 'down'} />
-            </div>
-
+          <div className="is-flex" style={{ justifyContent: 'center' }}>
+            <AddBlockBtn blocks={this.props.blockset}
+                         block_index={render_blocks.length}
+                         cb_select={block_type => this.ctx.add_block(block_type, null)}
+                         suggest={n_blocks === 0}
+                         popup_direction={n_blocks ? 'up' : 'down'} />
           </div>
-        </PageDataContext.Provider>
+
+        </div>
       );
     }
 
     else {
-      inner = msg_div(`Unknown load state: ${load_state}`);
+      content__main = msg_div(`Unknown load state: ${load_state}`);
     }
 
+    this.state.previous_load_state = load_state;
+
     return (
-      <div className="post-builder" style={{ padding: '2rem' }}>
-        {inner}
-      </div>
+      <PageDataContext.Provider value={this.ctx}>
+        <div className="post-builder" style={{ padding: '2rem' }}>
+          {content__main}
+          {
+            load_state === State.Loaded &&
+            this.state.block_picker !== false &&
+            Utils.blocks_are_grouped(this.ctx.blockset) &&
+            <BlockPicker blocks={this.props.blockset} block_index={this.state.block_picker} />
+          }
+        </div>
+      </PageDataContext.Provider>
     );
   }
 

@@ -1,4 +1,5 @@
 import './otter.css';
 import 'bulma/css/bulma.min.css';
-import './quill.snow.css';
+import 'react-quill/dist/quill.snow.css';
+import 'react-toggle/style.css';
 
