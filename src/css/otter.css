@@ -75,3 +75,28 @@ body {
   height: auto !important;
 }
 
+.ql-editor h1, h2 {
+  font-weight: 700 !important;
+}
+.ql-editor p,
+.ql-editor ul,
+.ql-editor li {
+  font-size: 15px;
+}
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor p,
+.ql-editor ul,
+.ql-editor li {
+  margin-bottom: 1rem !important;
+}
+.ql-editor h1:not(:first-child) {
+  margin-top: 2.5rem;
+}
+.ql-editor h2:not(:first-child) {
+  margin-top: 1.5rem
+}
+.ql-editor h1 + h2 {
+  margin-top: 0 !important;
+}
+
