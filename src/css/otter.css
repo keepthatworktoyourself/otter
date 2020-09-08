@@ -1,6 +1,5 @@
-
 body {
-  background-color: #3e4246;
+  background-color: rgb(186, 192, 195);
 }
 .bg-solid {
   background-color: #fdfefe;
@@ -87,8 +86,11 @@ body {
 .ql-editor h2,
 .ql-editor p,
 .ql-editor ul,
+.ql-editor ol {
+  margin-bottom: 1.25rem !important;
+}
 .ql-editor li {
-  margin-bottom: 1rem !important;
+  margin-bottom: 0.75rem !important;
 }
 .ql-editor h1:not(:first-child) {
   margin-top: 2.5rem;

@@ -372,10 +372,6 @@ export default class Editor extends React.Component {
     }
 
     else if (load_state === State.Loaded) {
-      if (this.state.previous_load_state !== State.Loaded) {
-        document.body.style.backgroundColor = Utils.bright_col();
-      }
-
       let render_blocks = this.state.render_blocks;
       if (!render_blocks) {
         this.state.render_blocks = render_blocks = this.get_render_blocks(this.props.data);
