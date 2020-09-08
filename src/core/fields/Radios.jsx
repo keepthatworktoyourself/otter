@@ -20,14 +20,16 @@ export default class Radios extends React.Component {
     const input = ev.currentTarget.querySelector('input');
     this.props.field.value = input.value;
     this.setState({ value: input.value });
-    this.ctx.should_update();
+    this.ctx.value_updated();
+    this.ctx.should_redraw();   // Required for conditional rendering
   }
 
 
   cb_clear(ev) {
     this.props.field.value = null;
     this.setState({ value: null });
-    this.ctx.should_update();
+    this.ctx.value_updated();
+    this.ctx.should_redraw();   // Required for conditional rendering
   }
 
 

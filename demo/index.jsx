@@ -4,7 +4,8 @@ import Otter from '../src/index';
 import '../src/css';
 
 
-// Define the blockset for the content editor
+// Define blocks
+// -----------------------------------
 
 const blocks__header = Otter.Blockset([
   {
@@ -12,14 +13,23 @@ const blocks__header = Otter.Blockset([
     description: 'Header',
     fields: [
       {
-        name:        'title',
-        description: 'Title',
+        name:        'heading',
+        description: 'Heading',
         type:        Otter.Fields.TextInput,
       },
       {
-        name:        'author',
-        description: 'Author',
+        name:        'subheading',
+        description: 'Catchy subtitle',
         type:        Otter.Fields.TextInput,
+      },
+      {
+        name: 'theme',
+        description: 'Theme',
+        type: Otter.Fields.Radios,
+        options: {
+          light: 'Light',
+          dark: 'Dark',
+        },
       },
     ],
   },
@@ -35,9 +45,38 @@ const blocks__content = Otter.Blockset([
         description: 'Content',
         type:        Otter.Fields.TextEditor,
       },
+      {
+        name:        'fancy',
+        description: 'Fancy lettering',
+        type:        Otter.Fields.Bool,
+        text__yes:   'Sure',
+        text__no:    'No, plain',
+      },
+      {
+        name:        'align',
+        description: 'Align',
+        type:        Otter.Fields.Select,
+        options: {
+          left:   'Left',
+          right:  'Right',
+          center: 'Center',
+        },
+      },
+    ],
+  },
+  {
+    type: 'HTML',
+    description: 'Raw HTML',
+    fields: [
+      {
+        name:        'html',
+        description: 'HTML',
+        type:        Otter.Fields.TextArea,
+      },
     ],
   },
 ]);
+
 
 const blocks__other = Otter.Blockset([
   {
@@ -52,6 +91,25 @@ const blocks__other = Otter.Blockset([
       },
     ],
   },
+  {
+    type: 'HeadingWithText',
+    description: 'Heading with text',
+    fields: [
+      {
+        name:          'heading',
+        description:   'Heading',
+        type:          Otter.Fields.SubBlock,
+        subblock_type: blocks__header.get('Header'),
+      },
+      {
+        name:          'text_content',
+        description:   'Content',
+        type:          Otter.Fields.SubBlock,
+        subblock_type: blocks__content.get('Text'),
+        optional:      true,
+      },
+    ],
+  },
 ]);
 
 const blocks__flat = Otter.Blockset([].concat(
@@ -60,38 +118,16 @@ const blocks__flat = Otter.Blockset([].concat(
   blocks__other,
 ));
 
-const block__nested = Otter.Blockset({
+const blocks__nested = Otter.Blockset({
   simple: {
-    name: 'Simple blocks',
-    blocks: blocks__header.concat(blocks__content),
+    name:   'Headers',
+    blocks: blocks__header,
   },
   complex: {
-    name: 'Complicated blocks',
+    name:   'Content',
     blocks: blocks__other,
   },
 });
-
-
-// function get_query_data() {
-//   const q = window.location.search;
-//   if (!q || !q.length) {
-//     return null;
-//   }
-//
-//   return q.substr(1)
-//     .split('&')
-//     .reduce(function(accum, item) {
-//       const parts = item.split('=');
-//       accum[parts[0]] = parts[1];
-//       return accum;
-//     }, { });
-// }
-//
-//
-// function get_post_id() {
-//   const data = get_query_data();
-//   return data ? (data.post_id || null) : null;
-// }
 
 
 // load
@@ -104,9 +140,9 @@ function load(post_id) {
   return Promise.resolve({
     json: () => [
       {
-        __type: 'Header',
-        title: 'Concerning the spiritual in art',
-        author: 'Wassily Kandinsky',
+        __type:     'Header',
+        heading:    'Concerning the spiritual in art',
+        subheading: 'Wassily Kandinsky',
       },
       {
         __type: 'Text',
@@ -135,7 +171,7 @@ function cb_load(data) {
 
 const delegate = {
   save(data) {
-    console.log('on_update', data);
+    console.log('save()', data);
   },
 };
 

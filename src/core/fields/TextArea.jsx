@@ -16,7 +16,7 @@ export default class TextArea extends React.Component {
   cb_change() {
     this.props.field.value = this.textarea_ref.current.value;
     this.setState({ value: this.textarea_ref.current.value });
-    this.ctx.should_update();
+    this.ctx.value_updated();
   }
 
 

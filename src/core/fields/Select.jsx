@@ -16,7 +16,8 @@ export default class Select extends React.Component {
   cb_change(ev) {
     this.props.field.value = ev.currentTarget.value
     this.setState({ value: ev.currentTarget.value });
-    this.ctx.should_update();
+    this.ctx.value_updated();
+    this.ctx.should_redraw();   // Required for conditional rendering
   }
 
 
@@ -41,7 +42,7 @@ export default class Select extends React.Component {
               <div style={{ paddingRight: '0.5rem' }}>
 
                 <div className="select is-small">
-                  <select value={field.value} onChange={this.cb_change}>
+                  <select value={field.value || ''} onChange={this.cb_change}>
                     {opt_keys.length === 0 && `[Select field has no options!]`}
                     {opt_keys.map((opt, i) => (
                       <option value={opt} key={`f${field.uid}--${i}`}>{opts[opt]}</option>

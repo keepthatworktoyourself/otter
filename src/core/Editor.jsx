@@ -32,7 +32,7 @@ function ctx(pb_instance) {
       pb_instance.do_save_on_input();
     },
 
-    should_update() {
+    should_redraw() {
       setTimeout(() => pb_instance.setState({ }), 10);
     },
 
@@ -87,6 +87,7 @@ export default class Editor extends React.Component {
     this.ctx = ctx(this);
     this.repeaters = { };
     this.do_save_on_input = this.do_save_on_input.bind(this);
+    this.previous_load_state = null;
   }
 
 
@@ -241,7 +242,8 @@ export default class Editor extends React.Component {
     if (repeater) {
       const item = this.create_render_block(type, null);
       repeater.value.push(item);
-      this.ctx.should_update();
+      this.ctx.value_updated();
+      this.ctx.should_redraw();
     }
   }
 
@@ -253,7 +255,8 @@ export default class Editor extends React.Component {
     const repeater = this.repeaters[repeater_uid];
     if (repeater) {
       repeater.value = repeater.value.filter(item => item.uid !== item_uid);
-      this.ctx.should_update();
+      this.ctx.value_updated();
+      this.ctx.should_redraw();
     }
   }
 
@@ -271,7 +274,8 @@ export default class Editor extends React.Component {
       this.state.render_blocks.push(b);
     }
 
-    this.ctx.should_update();
+    this.ctx.value_updated();
+    this.ctx.should_redraw();
   }
 
 
@@ -279,7 +283,9 @@ export default class Editor extends React.Component {
   // -----------------------------------
 
   remove_block(block_uid) {
-    this.setState({ render_blocks: this.state.render_blocks.filter(block => block.uid !== block_uid) });
+    this.setState({
+      render_blocks: this.state.render_blocks.filter(block => block.uid !== block_uid),
+    });
   }
 
 
@@ -326,7 +332,10 @@ export default class Editor extends React.Component {
   // -----------------------------------
 
   set_block_picker(open) {
-    this.setState({ block_picker: open });
+    this.setState({
+      block_picker: open,
+      block_picker_offset: window.scrollY,
+    });
     this.block_toggled();
   }
 
@@ -377,7 +386,9 @@ export default class Editor extends React.Component {
         this.state.render_blocks = render_blocks = this.get_render_blocks(this.props.data);
       }
 
-      this.do_save_on_input();
+      if (this.previous_load_state !== State.Loaded) {
+        this.block_toggled();
+      }
 
       const n_blocks = render_blocks.length;
       const min_height = this.state.block_picker === false ? '20rem' : '50rem';
@@ -426,17 +437,19 @@ export default class Editor extends React.Component {
       content__main = msg_div(`Unknown load state: ${load_state}`);
     }
 
-    this.state.previous_load_state = load_state;
+    this.previous_load_state = load_state;
 
     return (
       <PageDataContext.Provider value={this.ctx}>
-        <div className="post-builder" style={{ padding: '2rem' }}>
+        <div className="post-builder" style={{ padding: '2rem', position: 'relative' }}>
           {content__main}
           {
             load_state === State.Loaded &&
             this.state.block_picker !== false &&
             Utils.blocks_are_grouped(this.ctx.blockset) &&
-            <BlockPicker blocks={this.props.blockset} block_index={this.state.block_picker} />
+            <BlockPicker blocks={this.props.blockset}
+                         block_index={this.state.block_picker}
+                         offset={this.state.block_picker_offset + (this.props.iframe_container_position || 0)} />
           }
         </div>
       </PageDataContext.Provider>

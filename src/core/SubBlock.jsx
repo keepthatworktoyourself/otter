@@ -30,15 +30,18 @@ export default class SubBlock extends React.Component {
       });
     }
 
-    this.ctx.should_update();
+    this.ctx.value_updated();
+    this.ctx.should_redraw();
   }
 
 
   cb__showhide(ev) {
-    this.setState({
-      contents_hidden: !this.state.contents_hidden,
-    });
-    this.ctx.should_update();
+    if (Utils.subblock_is_enabled(this.props.field)) {
+      this.setState({
+        contents_hidden: !this.state.contents_hidden,
+      });
+      this.ctx.should_redraw();
+    }
   }
 
 

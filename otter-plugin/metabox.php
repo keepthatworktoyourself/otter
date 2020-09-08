@@ -28,6 +28,9 @@
     const input = document.querySelector('input[name="<?= $input_name ?>"]');
     const initial_data = <?= json_encode($data, JSON_UNESCAPED_UNICODE) ?>;
     const dynamic_data = <?= json_encode(\Otter\dynamic_data(), JSON_UNESCAPED_UNICODE) ?>;
+    let times_updated = 0;
+
+    set_input_value(initial_data);
 
 
     // Initialize iframe
@@ -64,13 +67,67 @@
     });
 
 
-    // Update content data
+    // Update iframe position for block-picker
     // -------------------------------
+
+    function send_iframe_position() {
+      const scr = window.scrollY;
+      const y = iframe.getBoundingClientRect().y + scr;
+
+      iframe.contentWindow.postMessage({
+        'otter--set-iframe-container-position': scr > y ? scr - y + 20: 0,
+      });
+    }
+    function limit(f, t) {
+      return function() {
+        clearTimeout(limit.timeout);
+        limit.timeout = setTimeout(f, t);
+      }
+    }
+    document.addEventListener('DOMContentLoaded', send_iframe_position);
+    window.addEventListener('scroll', limit(send_iframe_position, 500));
+
+
+    // Warn on navigation
+    // -------------------------------
+
+    function bind_navigation_warning() {
+      function is_submitting() {
+        return document.querySelector('#publishing-action .spinner').classList.contains('is-active');
+      }
+
+      window.addEventListener('beforeunload', function(ev) {
+        if (is_submitting()) {
+          return null;
+        }
+
+        const msg =
+          "Sure you want to navigate away?\n" +
+          "It looks like you've edited things on the page!";
+
+        (ev || window.event).returnValue = msg;
+        return msg;
+          // NB the message contents is ignored in modern browsers
+      });
+    }
+
+
+    // Content update
+    // -------------------------------
+
+    function set_input_value(data) {
+      input.value = JSON.stringify(data);
+
+      if (times_updated > 0) {
+        bind_navigation_warning();
+      }
+      times_updated += 1;
+    }
 
     window.addEventListener('message', function(ev) {
       const proceed = ev.data && ev.data['otter--set-data'] && ev.source === iframe.contentWindow;
       if (proceed) {
-        input.value = JSON.stringify(ev.data['otter--set-data']);
+        set_input_value(ev.data['otter--set-data']);
       }
     });
 

@@ -22,7 +22,8 @@ export default class Bool extends React.Component {
     }
 
     this.setState({ value: this.props.field.value });
-    this.ctx.should_update();
+    this.ctx.value_updated();
+    this.ctx.should_redraw();   // Required for conditional rendering
   }
 
 

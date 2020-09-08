@@ -31,8 +31,14 @@ export default class BlockPicker extends React.Component {
     return (
       <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div className="is-overlay" style={{ zIndex: 10, backgroundColor: 'rgba(0,0,0,0.3)', padding: '1rem' }}>
-          <div style={{ position: 'relative', maxHeight: '100%', overflowY: 'scroll' }}>
-            <div className="box" style={{ paddingTop: '2rem', borderRadius: 0 }}>
+          <div className="wrapper" style={{
+            transform: `translateY(${this.props.offset}px`,
+            transition: 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
+            maxHeight: 'calc(100vh - 2rem)',
+            overflowY: 'auto' }}>
+
+            <div className="box" style={{
+              position: 'relative', paddingTop: '2rem', borderRadius: 0 }}>
 
               <div style={{ position: 'absolute', top: '1rem', right: '1.2rem', }}>
                 <span style={{ cursor: 'pointer' }} onClick={this.close}>
@@ -48,7 +54,7 @@ export default class BlockPicker extends React.Component {
 
                   <div className="columns is-mobile is-multiline">
                     {blocks[k].blocks.map(block => (
-                      <div className="column is-6-mobile is-4-tablet is-3-desktop">
+                      <div className="column is-4-mobile is-3-tablet is-3-desktop is-2-widescreen">
 
                         <div className="card">
                           <div className="card-content" style={{ padding: '1rem' }}>
@@ -77,8 +83,8 @@ export default class BlockPicker extends React.Component {
 
                 </div>
               ))}
-
             </div>
+
           </div>
         </div>
       )}</PageDataContext.Consumer>

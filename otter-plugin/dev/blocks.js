@@ -56,27 +56,22 @@ const blocks__content = Otter.Blockset([
   },
 ]);
 
-const blocks__other = Otter.Blockset([
-  {
-    type: 'MultiContent',
-    description: 'Multiple content items',
-    fields: [
-      {
-        name:           'content_items',
-        description:    'Content:',
-        type:           Otter.Fields.SubBlockArray,
-        subblock_types: [ blocks__content.get('Text'), blocks__content.get('Image') ],
-      },
-    ],
-  },
-]);
-
-const blocks__all = Otter.Blockset([].concat(
+const blocks__flat = Otter.Blockset([].concat(
   blocks__header,
   blocks__content,
-  blocks__other,
 ));
 
+const blocks__nested = Otter.Blockset({
+  simple: {
+    name: 'Headers',
+    blocks: blocks__header,
+  },
+  complex: {
+    name: 'Content',
+    blocks: blocks__content,
+  },
+});
 
-OtterWP.init(blocks__all);
+
+OtterWP.init(blocks__nested);
 

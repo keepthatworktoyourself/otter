@@ -14,7 +14,6 @@ function container() {
 const delegate = {
   save(data) {
     window.parent.postMessage({ 'otter--set-data': data });
-    setTimeout(send_height_update, 10);
   },
 
   block_toggled() {
@@ -30,6 +29,7 @@ const state = {
   load_state: Otter.State.Loading,
   data: [ ],
   blocks: null,
+  iframe_container_position: 0,
 };
 
 function render() {
@@ -38,7 +38,8 @@ function render() {
              load_state={state.load_state}
              blockset={state.blocks}
              delegate={delegate}
-             save={Otter.Save.OnInput} />,
+             save={Otter.Save.OnInput}
+             iframe_container_position={state.iframe_container_position} />,
     container()
   );
 }
@@ -96,7 +97,7 @@ function load() {
 }
 
 
-// Check height of iframe matches content
+// Set height of iframe
 // -----------------------------------
 
 function send_height_update() {
@@ -104,6 +105,18 @@ function send_height_update() {
     'otter--set-height': getComputedStyle(container()).height,
   });
 }
+
+
+// Update y offset for block picker
+// -----------------------------------
+
+window.addEventListener('message', function(ev) {
+  const proceed = ev.data && ev.data.hasOwnProperty('otter--set-iframe-container-position');
+  if (proceed) {
+    state.iframe_container_position = ev.data['otter--set-iframe-container-position'];
+    render();
+  }
+});
 
 
 // Run

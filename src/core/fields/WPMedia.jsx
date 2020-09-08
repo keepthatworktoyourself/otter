@@ -9,16 +9,9 @@ export default class WPMedia extends React.Component {
 
   constructor(props) {
     super(props);
-    this.input_ref = React.createRef();
 
     this.cb_click = this.cb_click.bind(this);
     this.cb_clear = this.cb_clear.bind(this);
-  }
-
-
-  update(ctx) {
-    this.props.field.value = this.input_ref.current.value;
-    ctx.should_update();
   }
 
 
@@ -29,7 +22,8 @@ export default class WPMedia extends React.Component {
         ev.stopPropagation();
 
         field.value = ev.data['otter--set-wp-media-item'];
-        ctx.should_update();
+        ctx.value_updated();
+        ctx.should_redraw();
 
         window.removeEventListener('message', cb);
       }
@@ -54,7 +48,8 @@ export default class WPMedia extends React.Component {
 
   cb_clear() {
     this.props.field.value = null;
-    this.ctx.should_update();
+    this.ctx.value_updated();
+    this.ctx.should_redraw();
   }
 
 
