@@ -1,6 +1,11 @@
-# Otter, a block-based content editor <img align="right" src="files/ice.png" width=40 height=40>
+# Otter <img align="right" src="files/otter.png" width=60 height=60>
 
-A content editor, with declaratively defined content blocks. Easily imports as a react component. Generates data in a simple JSON format.
+### A declarative, embeddable content block editor
+
+- Create an editor by defining content blocks 🐟
+- Simple, declarative syntax 💦
+- Easily integrates as a React component 🌿
+- Generates post data in a simple JSON format 🏞
 
 
 ### Contents
