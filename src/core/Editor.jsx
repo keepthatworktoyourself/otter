@@ -449,7 +449,8 @@ export default class Editor extends React.Component {
             Utils.blocks_are_grouped(this.ctx.blockset) &&
             <BlockPicker blocks={this.props.blockset}
                          block_index={this.state.block_picker}
-                         offset={this.state.block_picker_offset + (this.props.iframe_container_position || 0)} />
+                         scroll_offset={this.state.block_picker_offset}
+                         iframe_container_info={this.props.iframe_container_info || { }} />
           }
         </div>
       </PageDataContext.Provider>

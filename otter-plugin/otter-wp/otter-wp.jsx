@@ -29,7 +29,7 @@ const state = {
   load_state: Otter.State.Loading,
   data: [ ],
   blocks: null,
-  iframe_container_position: 0,
+  iframe_container_info: { },
 };
 
 function render() {
@@ -39,7 +39,7 @@ function render() {
              blockset={state.blocks}
              delegate={delegate}
              save={Otter.Save.OnInput}
-             iframe_container_position={state.iframe_container_position} />,
+             iframe_container_info={state.iframe_container_info} />,
     container()
   );
 }
@@ -97,7 +97,7 @@ function load() {
 }
 
 
-// Set height of iframe
+// Send iframe height
 // -----------------------------------
 
 function send_height_update() {
@@ -111,9 +111,9 @@ function send_height_update() {
 // -----------------------------------
 
 window.addEventListener('message', function(ev) {
-  const proceed = ev.data && ev.data.hasOwnProperty('otter--set-iframe-container-position');
+  const proceed = ev.data && ev.data.hasOwnProperty('otter--set-iframe-container-info');
   if (proceed) {
-    state.iframe_container_position = ev.data['otter--set-iframe-container-position'];
+    state.iframe_container_info = ev.data['otter--set-iframe-container-info'];
     render();
   }
 });

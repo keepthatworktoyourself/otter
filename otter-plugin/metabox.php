@@ -67,15 +67,18 @@
     });
 
 
-    // Update iframe position for block-picker
+    // Update window info for block-picker
     // -------------------------------
 
-    function send_iframe_position() {
+    function send_window_info() {
       const scr = window.scrollY;
       const y = iframe.getBoundingClientRect().y + scr;
 
       iframe.contentWindow.postMessage({
-        'otter--set-iframe-container-position': scr > y ? scr - y + 20: 0,
+        'otter--set-iframe-container-info': {
+          y:      scr > y ? scr - y + 25: 0,
+          height: window.innerHeight - 60,
+        }
       });
     }
     function limit(f, t) {
@@ -84,8 +87,9 @@
         limit.timeout = setTimeout(f, t);
       }
     }
-    document.addEventListener('DOMContentLoaded', send_iframe_position);
-    window.addEventListener('scroll', limit(send_iframe_position, 500));
+    document.addEventListener('DOMContentLoaded', send_window_info);
+    window.addEventListener('scroll', limit(send_window_info, 500));
+    window.addEventListener('resize', limit(send_window_info, 500));
 
 
     // Warn on navigation

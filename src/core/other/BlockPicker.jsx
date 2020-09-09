@@ -28,14 +28,23 @@ export default class BlockPicker extends React.Component {
     const blocks = (this.props.blocks && this.props.blocks[0]) || { };
     const block_keys = Object.keys(blocks);
 
+    const container = this.props.iframe_container_info || {
+      y: 0,
+      height: 0,
+    };
+
+    const offset = (this.props.scroll_offset || 0) + container.y;
+    const outer_max_height = container.height;
+
     return (
       <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div className="is-overlay" style={{ zIndex: 10, backgroundColor: 'rgba(0,0,0,0.3)', padding: '1rem' }}>
           <div className="wrapper" style={{
-            transform: `translateY(${this.props.offset}px`,
+            transform: `translateY(${offset}px`,
             transition: 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
             maxHeight: 'calc(100vh - 2rem)',
             overflowY: 'auto' }}>
+            <div style={{ maxHeight: outer_max_height || 'none' }}>
 
             <div className="box" style={{
               position: 'relative', paddingTop: '2rem', borderRadius: 0 }}>
@@ -85,6 +94,7 @@ export default class BlockPicker extends React.Component {
               ))}
             </div>
 
+            </div>
           </div>
         </div>
       )}</PageDataContext.Consumer>
