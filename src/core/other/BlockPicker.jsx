@@ -72,7 +72,7 @@ export default class BlockPicker extends React.Component {
                             </h3>
                           </div>
 
-                          <figure className="image is-3by2 has-background-light">
+                          <figure className="image is-5by3 has-background-light">
                             {block.thumbnail && (
                               <img src={block.thumbnail} />
                             )}

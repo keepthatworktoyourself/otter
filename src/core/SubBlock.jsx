@@ -41,6 +41,7 @@ export default class SubBlock extends React.Component {
         contents_hidden: !this.state.contents_hidden,
       });
       this.ctx.should_redraw();
+      this.ctx.block_toggled();
     }
   }
 

@@ -173,6 +173,9 @@ const delegate = {
   save(data) {
     console.log('save()', data);
   },
+  block_toggled() {
+    console.log('toggled');
+  }
 };
 
 

@@ -244,6 +244,7 @@ export default class Editor extends React.Component {
       repeater.value.push(item);
       this.ctx.value_updated();
       this.ctx.should_redraw();
+      this.ctx.block_toggled();
     }
   }
 
@@ -257,6 +258,7 @@ export default class Editor extends React.Component {
       repeater.value = repeater.value.filter(item => item.uid !== item_uid);
       this.ctx.value_updated();
       this.ctx.should_redraw();
+      this.ctx.block_toggled();
     }
   }
 
@@ -265,17 +267,22 @@ export default class Editor extends React.Component {
   // -----------------------------------
 
   add_block(type, index) {
+    const render_blocks = this.state.render_blocks;
     const b = this.create_render_block(this.ctx.blockset.get(type));
     b.is_top_level = true;
     if (typeof index === 'number') {
-      this.state.render_blocks.splice(index, 0, b);
+      render_blocks.splice(index, 0, b);
     }
     else {
-      this.state.render_blocks.push(b);
+      render_blocks.push(b);
     }
 
-    this.ctx.value_updated();
-    this.ctx.should_redraw();
+    this.setState({ render_blocks });
+    setTimeout(() => {
+      this.ctx.value_updated();
+      this.ctx.should_redraw();
+      this.ctx.block_toggled();
+    });
   }
 
 
@@ -283,8 +290,14 @@ export default class Editor extends React.Component {
   // -----------------------------------
 
   remove_block(block_uid) {
-    this.setState({
-      render_blocks: this.state.render_blocks.filter(block => block.uid !== block_uid),
+    const render_blocks = this.state.render_blocks.filter(
+      block => block.uid !== block_uid
+    );
+    this.setState({ render_blocks });
+    setTimeout(() => {
+      this.ctx.value_updated();
+      this.ctx.should_redraw();
+      this.ctx.block_toggled();
     });
   }
 
@@ -325,6 +338,8 @@ export default class Editor extends React.Component {
         this.setState({ render_blocks: this.state.render_blocks });
       }
     }
+
+    this.do_save_on_input();
   }
 
 

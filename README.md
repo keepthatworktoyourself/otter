@@ -1,8 +1,7 @@
 # Otter <img align="right" src="files/otter.png" width=60 height=60>
 
-### A declarative, embeddable content block editor
 
-- Create an editor by defining content blocks 🐟
+- Create rich content editors by composing content blocks from built-in fields 🐟
 - Simple, declarative syntax 💦
 - Easily integrates as a React component 🌿
 - Generates post data in a simple JSON format 🏞
@@ -138,7 +137,7 @@ A **block** contains one or more **fields** (see above).
 {
   name: 'content',
   description: 'Content',
-  type: Otter.Fields.Textarea,
+  type: Otter.Fields.TextArea,
   display_if: {
     sibling: <sibling_name>,
     [not_]equal_to: <value>,
@@ -150,7 +149,7 @@ A **block** contains one or more **fields** (see above).
 
 When using `display_if`, the editor field is displayed/hidden based on the value of one or more siblings. (The siblings must be `Bool` or `Radio` fields.)
 
-`display_if` can be a single `display_if` rule or an array of these, to show/hide depending on multiple siblings.
+`display_if` can take a single rule object, or an array of objects referring to multiple siblings.
 
 
 ### Field types:
@@ -169,10 +168,10 @@ When using `display_if`, the editor field is displayed/hidden based on the value
 
 `Otter.Fields.Bool`
 
-- A yes/no toggle.
+- A true/false toggle.
 - Options:
-    - `text__yes: <string>` : label for yes toggle (default `"Yes"`)
-    - `text__no:  <string>` : label for no switch (default `"No"`)
+    - `text__yes: <string>` : label for true option (default `"Yes"`)
+    - `text__no:  <string>` : label for false option (default `"No"`)
 
 `Otter.Fields.Radios`
 
@@ -197,8 +196,8 @@ When using `display_if`, the editor field is displayed/hidden based on the value
 - Embed another block into this block. Otter can compose blocks together recursively, allowing for complex content types, and aiding re-use of block definitions.
 - Options:
     - `description: <string>` : if supplied, used to title the wrapped subblock in the editor
-    - `subblock_type: MyTextBlock` : a block object (previously created with `Otter.Blockset()`) defining which subblock to embed.
-    - `optional: <bool>` : add a toggle to enable or disable the subblock. Sometimes you want to enable or disable an entire subblock — this feature prevents you from needing to add an extra field and a lot of `display_if`s to that subblock.
+    - `subblock_type: MyTextBlock` : the block object to be embedded as a subblock
+    - `optional: <bool>` : add a toggle to enable or disable the subblock
 
 ```js
 Otter.Blockset([
@@ -223,10 +222,10 @@ Otter.Blockset([
 
 `Otter.Fields.SubBlockArray`
 
-- Create a picker where the user can manage an array of subblocks, picking from types you predefine.
+- A repeater of subblocks, where the user picks blocks from one or more predefined types.
 - Options:
     - `description` : if supplied, used to title the wrapped subblock array in the editor
-    - `subblock_types: [ <block1>, <block2>, ... ]` : an array of block objects (previously created with `Otter.Blockset()`) defining what types of subblock the user can add to this subblock array.
+    - `subblock_types: [ <block1>, <block2>, ... ]` : an array of block objects defining which types of block the user will be able to pick from
     - `max: <number>` : optionally limit the number of subblocks the user can add
 
 ```js
