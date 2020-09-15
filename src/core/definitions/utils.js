@@ -13,6 +13,14 @@ function retitle_field(field, name, description) {
 }
 
 
+// copy
+// -----------------------------------
+
+function copy(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+
 // recursive_find
 // -----------------------------------
 
@@ -104,6 +112,7 @@ function Err__InvalidComponentDef(block_type) {
 
 export default {
   retitle_field,
+  copy,
   recursive_find,
   subblock_is_enabled,
   blocks_are_grouped,
