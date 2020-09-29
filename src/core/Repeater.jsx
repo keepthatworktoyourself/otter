@@ -26,7 +26,7 @@ export default class Repeater extends React.Component {
 
 
   cb_add_btn(ev) {
-    const subblock_types = this.props.field.def.subblock_types;
+    const subblock_types = this.props.field.field_def.subblock_types;
 
     if (subblock_types.length > 1) {
       this.setState({
@@ -44,15 +44,15 @@ export default class Repeater extends React.Component {
       show_dialogue: false,
     });
 
-    const type = ev ? parseInt(ev.currentTarget.getAttribute('data-subblock-type')) : 0;
-    const def = this.props.field.def.subblock_types[type];
+    const type  = ev ? parseInt(ev.currentTarget.getAttribute('data-subblock-type')) : 0;
+    const block = this.props.field.field_def.subblock_types[type];
 
-    this.ctx.add_repeater_item(this.props.field.uid, def);
+    this.ctx.add_repeater_item(this.props.field.__uid, block);
   }
 
 
   cb_delete(subblock) {
-    this.ctx.remove_repeater_item(this.props.field.uid, subblock.uid);
+    this.ctx.remove_repeater_item(this.props.field.__uid, subblock.__uid);
   }
 
 
@@ -65,18 +65,17 @@ export default class Repeater extends React.Component {
 
 
   render() {
-    const block = this.props.block;
     const field = this.props.field;
-    const max = field.def.max || -1;
+    const max   = field.field_def.max || -1;
 
-    const repeater_title = field.def.description || field.def.name;
+    const repeater_title = field.field_def.description || field.field_def.name;
     const subblocks      = field.value || [ ];
-    const subblock_defs  = field.def.subblock_types || [ ];
+    const subblock_defs  = field.field_def.subblock_types || [ ];
     const multiple_types = subblock_defs.length !== 1;
 
     return (
       <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
-        <div className="repeater" data-id={block.uid}>
+        <div className="repeater" data-id={field.__uid}>
 
           <div style={{ paddingBottom: '0.5rem' }}>
             {repeater_title && (
@@ -95,15 +94,15 @@ export default class Repeater extends React.Component {
               <div className="otter-box" style={{ padding: '1rem' }}>
 
                 {/* Repeater items */}
-                <DnD.Droppable droppableId={field.uid} type={field.uid}>{(prov, snap) => (
+                <DnD.Droppable droppableId={field.__uid} type={field.__uid}>{(prov, snap) => (
                   <div ref={prov.innerRef} {...prov.droppableProps}>
 
                     {subblocks.map((subblock, i) => (
-                      <DnD.Draggable key={subblock.uid} draggableId={subblock.uid} index={i} type={field.uid}>{(prov, snap) => (
+                      <DnD.Draggable key={`repeater-${subblock.__uid}`} draggableId={subblock.__uid} index={i} type={field.__uid}>{(prov, snap) => (
                         <div className="repeater-item-wrapper" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps}>
 
                           <div style={{ paddingBottom: '0.5rem' }}>
-                            <SubBlock block={subblock}
+                            <SubBlock field={subblock}
                                       contents_hidden={false}
                                       border={true}
                                       cb_delete={ev => this.cb_delete(subblock)} />

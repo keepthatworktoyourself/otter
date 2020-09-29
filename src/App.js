@@ -12,7 +12,7 @@ const delegate = {
 };
 
 
-const blockset = Otter.Blockset([
+const blocks = [
   {
     type: 'HeaderBlock',
     description: 'Heading',
@@ -28,7 +28,7 @@ const blockset = Otter.Blockset([
       { name: 'content', description: 'Content', type: Otter.Fields.TextArea },
     ],
   },
-]);
+];
 
 
 const dummy_data = [
@@ -48,7 +48,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
-        <Otter.Editor data={dummy_data} load_state={Otter.State.Loaded} delegate={delegate} blocks={blockset} />
+        <Otter.Editor data={dummy_data} load_state={Otter.State.Loaded} delegate={delegate} blocks={blocks} />
       </div>
     );
   }

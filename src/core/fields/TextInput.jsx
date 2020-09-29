@@ -7,31 +7,36 @@ export default class TextInput extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = { value: props.field.value || '' };
     this.cb_change = this.cb_change.bind(this);
   }
 
 
   cb_change(ev) {
-    this.props.field.value = ev.currentTarget.value;
-    this.setState({ value: ev.currentTarget.value });
+    this.props.containing_data_item[this.props.field_def.name] = ev.target.value;
+    this.setState({});
     this.ctx.value_updated();
   }
 
 
   render() {
-    return (
-      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
-        <div className="field" key={this.props.field.uid}>
+    const field_def            = this.props.field_def;
+    const containing_data_item = this.props.containing_data_item;
+    const is_top_level         = this.props.is_top_level;
+    const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
+    const value                = containing_data_item[field_def.name];
 
-          <FieldLabel field={this.props.field} block={this.props.block} />
+    return (
+      <ContextConsumer>{ctx => (this.ctx = ctx) && (
+        <div className="field">
+
+          <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level} />
+
           <div className="control">
-            <input type="text" className="input" value={this.state.value} onChange={this.cb_change} />
+            <input type="text" className="input" value={value} onChange={this.cb_change} />
           </div>
 
         </div>
-      )}</PageDataContext.Consumer>
+      )}</ContextConsumer>
     );
   }
 

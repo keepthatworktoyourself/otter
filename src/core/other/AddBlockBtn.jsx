@@ -27,18 +27,19 @@ export default class AddBlockBtn extends React.Component {
 
   cb_select(ev) {
     this.setState({ open: false });
-    this.props.cb_select(ev.currentTarget.getAttribute('data-block-type'));
+
+    const block_type = ev.currentTarget.getAttribute('data-block-type');
+    this.ctx.add_block(block_type, this.props.index);
   }
 
 
   render() {
-    const blocks = this.props.blocks || [ ];
-    this.is_simple = !Utils.blocks_are_grouped(blocks);
-
-    const active = this.state.open ? 'is-active' : '';
-    const popup_dir = this.props.popup_direction === 'up' ? 'is-up' : '';
-
-    const c__dropdown = this.is_simple ? `dropdown ${popup_dir} ${active}` : '';
+    const blocks      = this.props.blocks || [ ];
+    const active      = this.state.open ? 'is-active' : '';
+    const popup_dir   = this.props.popup_direction === 'up' ? 'is-up' : '';
+    const is_simple   = !Utils.blocks_are_grouped(blocks);
+    const c__dropdown = is_simple ? `dropdown ${popup_dir} ${active}` : '';
+    this.is_simple    = is_simple;
 
     return (
       <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
@@ -59,12 +60,12 @@ export default class AddBlockBtn extends React.Component {
             </button>
           </div>
 
-          {this.is_simple && (
+          {is_simple && (
             <div className="dropdown-menu" style={{ left: '50%', transform: 'translateX(-50%)' }} id="dropdown-menu" role="menu">
               <div className="dropdown-content" style={{ maxHeight: '12rem', overflowY: 'scroll' }}>
-                {blocks.map((block_def, i) => (
-                  <a className="dropdown-item" onClick={this.cb_select} key={i} data-block-type={block_def.type}>
-                    {block_def.description}
+                {blocks.map((block, i) => (
+                  <a className="dropdown-item" onClick={this.cb_select} key={i} data-block-type={block.type}>
+                    {block.description}
                   </a>
                 ))}
               </div>

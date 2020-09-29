@@ -7,29 +7,33 @@ export default class TextArea extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = { value: props.field.value || '' };
     this.cb_change = this.cb_change.bind(this);
-    this.textarea_ref = React.createRef();
   }
 
-  cb_change() {
-    this.props.field.value = this.textarea_ref.current.value;
-    this.setState({ value: this.textarea_ref.current.value });
+  cb_change(ev) {
+    this.props.containing_data_item[this.props.field_def.name] = ev.target.value;
+    this.setState({});
     this.ctx.value_updated();
   }
 
 
   render() {
+    const field_def            = this.props.field_def;
+    const containing_data_item = this.props.containing_data_item;
+    const is_top_level         = this.props.is_top_level;
+    const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
+    const value                = containing_data_item[field_def.name];
+
     return (
-      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
+      <ContextConsumer>{ctx => (this.ctx = ctx) && (
         <div className="field">
 
-          <FieldLabel field={this.props.field} block={this.props.block} />
-          <textarea className="textarea" ref={this.textarea_ref} value={this.props.field.value || ''} onChange={this.cb_change} />
+          <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level} />
+
+          <textarea className="textarea" ref={this.textarea_ref} value={value || ''} onChange={this.cb_change} />
 
         </div>
-      )}</PageDataContext.Consumer>
+      )}</ContextConsumer>
     );
   }
 

@@ -7,46 +7,55 @@ export default class Select extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = { value: props.field.value || null };
     this.cb_change = this.cb_change.bind(this);
   }
 
 
   cb_change(ev) {
-    this.props.field.value = ev.currentTarget.value
-    this.setState({ value: ev.currentTarget.value });
+    this.props.containing_data_item[this.props.field_def.name] = ev.target.value;
+    this.setState({});
     this.ctx.value_updated();
     this.ctx.should_redraw();   // Required for conditional rendering
   }
 
 
   render() {
-    const field = this.props.field;
-    const block = this.props.block;
+    const field_def            = this.props.field_def;
+    const containing_data_item = this.props.containing_data_item;
+    const is_top_level         = this.props.is_top_level;
+    const uid                  = containing_data_item.__uid;
+    const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
+    const value                = containing_data_item[field_def.name];
 
-    const opts_raw = field.def.options || { };
-    const opts = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { };
+    const opts_raw = field_def.options || { };
+    const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { };
     const opt_keys = Object.keys(opts);
 
     return (
-      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
+      <ContextConsumer>{ctx => (this.ctx = ctx) && (
         <div className="field">
           <div className="is-flex-tablet" style={{ alignItems: 'center' }}>
 
             <div className="c-label-margin-btm-phone">
-              <FieldLabel field={field} block={block} align="left" colon={true} min_width={true} />
+              <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level}
+                          align="left" colon={true} min_width={true} />
             </div>
 
             <div className="is-flex" style={{ alignItems: 'center' }}>
               <div style={{ paddingRight: '0.5rem' }}>
 
                 <div className="select is-small">
-                  <select value={field.value || ''} onChange={this.cb_change}>
+                  <select value={value || ''} onChange={this.cb_change}>
+
                     {opt_keys.length === 0 && `[Select field has no options!]`}
-                    {opt_keys.map((opt, i) => (
-                      <option value={opt} key={`f${field.uid}--${i}`}>{opts[opt]}</option>
-                    ))}
+
+                    {opt_keys.length !== 0 && [
+                      <option disabled key={`f${uid}--null-value`}>Select an option</option>,
+                      ...opt_keys.map((opt, i) => (
+                        <option value={opt} key={`f${uid}--${i}`}>{opts[opt]}</option>
+                      )),
+                    ]}
+
                   </select>
                 </div>
 
@@ -55,7 +64,7 @@ export default class Select extends React.Component {
 
           </div>
         </div>
-      )}</PageDataContext.Consumer>
+      )}</ContextConsumer>
     );
   }
 }

@@ -10,16 +10,6 @@ import State from './definitions/state';
 import Save from './definitions/save';
 
 
-function block_drag_styles(snapshot, provided) {
-  const custom_styles = snapshot.isDragging ? {
-    backgroundColor: 'rgba(0,0,255, 0.06)',
-    border: '3px solid rgba(0,0,255, 0.12)',
-  } : { };
-
-  return { ...custom_styles, ...provided.draggableProps.style };
-}
-
-
 // PageDataContext object
 // -----------------------------------
 // - provides back-communication interface
@@ -64,7 +54,7 @@ function ctx(pb_instance) {
       pb_instance.set_block_picker(false);
     },
 
-    blockset: { },
+    blocks: { },
   };
 }
 
@@ -83,19 +73,13 @@ export default class Editor extends React.Component {
       previous_load_state: null,
     };
 
-    this.i = 0;
     this.ctx = ctx(this);
     this.repeaters = { };
-    this.do_save_on_input = this.do_save_on_input.bind(this);
     this.previous_load_state = null;
-  }
 
-
-  // uid()
-  // -----------------------------------
-
-  uid() {
-    return `uid-${this.i++}`;
+    this.save             = this.save.bind(this);
+    this.do_save_on_input = this.do_save_on_input.bind(this);
+    this.cb_reorder       = this.cb_reorder.bind(this);
   }
 
 
@@ -109,139 +93,53 @@ export default class Editor extends React.Component {
   }
 
 
-  // create_render_block
+  // to_data_blocks - convert render blocks back to data blocks, for save
   // -----------------------------------
-  // - create a 'render block' item from  a block definition and an optional
-  //   data_block of existing data
-  // - a 'render block' is a combination of block data and component definitions
-  //   that's more convenient for rendering:
-  //     {
-  //       type: type name,
-  //       def:  component definition for block
-  //       uid:  a unique ID
-  //       fields: {
-  //         field_name: {
-  //           uid:    a unique ID,
-  //           def:    field definition from component definition
-  //           value:  field value - may be a normal value, a subblock, or an array of subblocks
-  //         },
-  //         ...
-  //       }
-  //     }
 
-  create_render_block(definition, data_block) {
-    const render_block = {
-      type: definition.type,
-      def: definition,
-      uid: this.uid.call(this),
-      fields: definition.fields.reduce((accum, def) => {
-        const field = {
-          uid: this.uid.call(this),
-          value: null,
-          def,
-        };
+  to_data_blocks() {
+    function get_block(render_block) {
+      const field_names = Object.keys(render_block.field_data)
+        .filter(f => render_block.field_data[f].__display !== false);
 
-        if (!def) {
-          console.log('create_render_block error: no field definition', field, data_block, definition);
-          return accum;
-        }
+      return field_names.reduce((carry, field_name) => {
+        const item = render_block.field_data[field_name];
+        const def = item.field_def;
 
         if (def.type === Fields.SubBlock) {
-          const sub_data_block = (data_block && data_block[def.name]) || null;
-          if (def.optional) {
-            field.enabled = !!sub_data_block;
+          if (Utils.subblock_is_enabled(item)) {
+            carry[field_name] = get_block(item.value);
           }
-          field.value = this.create_render_block(
-            def.subblock_type,
-            sub_data_block
-          );
         }
 
         else if (def.type === Fields.SubBlockArray) {
-          const sub_data_blocks = (data_block && data_block[def.name]) || [ ];
-          field.value = sub_data_blocks.map(block => this.create_render_block(
-            this.ctx.blockset.get(block.__type),
-            block
-          ));
-
-          this.repeaters[field.uid] = field;
+          carry[field_name] = (item.value || [ ]).map(get_block);
         }
 
         else {
-          field.value = data_block && data_block[def.name];
+          carry[field_name] = item.value;
         }
 
-        accum[def.name] = field;
-        return accum;
-      }, { }),
-    };
-
-    return render_block;
-  }
-
-
-  // get_render_blocks - convert loaded data to 'render blocks'
-  // -----------------------------------
-
-  get_render_blocks(page_data) {
-    const render_blocks = page_data.map(block => this.create_render_block(
-      this.ctx.blockset.get(block.__type),
-      block
-    ));
-
-    render_blocks.forEach(b => b.is_top_level = true);
-
-    return render_blocks;
-  }
-
-
-  // get_plain_data - convert render blocks back to block data, for export
-  // -----------------------------------
-
-  get_plain_data() {
-    function get_block(render_block) {
-      const fields = Object.keys(render_block.fields).filter(f => render_block.fields[f].should_display !== false);
-
-      const block = fields.reduce((accum, field_name) => {
-        const field = render_block.fields[field_name];
-
-        if (field.def.type === Fields.SubBlock) {
-          if (Utils.subblock_is_enabled(field)) {
-            accum[field_name] = get_block(field.value);
-          }
+        if (carry[field_name] === '' || carry[field_name] === null || carry[field_name] === undefined) {
+          delete carry[field_name];
         }
 
-        else if (field.def.type === Fields.SubBlockArray) {
-          accum[field_name] = field.value.map(get_block);
-        }
-
-        else {
-          accum[field_name] = field.value;
-        }
-
-        if (accum[field_name] === '' || accum[field_name] === null || accum[field_name] === undefined) {
-          delete accum[field_name];
-        }
-
-        return accum;
-      }, { });
-
-      block.__type = render_block.def.type;
-      return block;
+        return carry;
+      }, { __type: render_block.block.type });
     }
 
-    return this.state.render_blocks.map(get_block);
+    return (this.state.render_blocks || []).map(get_block);
   }
 
 
   // add_repeater_item()
   // -----------------------------------
 
-  add_repeater_item(repeater_uid, type) {
+  add_repeater_item(repeater_uid, block) {
     const repeater = this.repeaters[repeater_uid];
     if (repeater) {
-      const item = this.create_render_block(type, null);
-      repeater.value.push(item);
+      const render_block = this.create_render_block(block, [ ]);
+      console.log('add_repeater_item created render_block:', render_block);
+      repeater.value.push(render_block);
       this.ctx.value_updated();
       this.ctx.should_redraw();
       this.ctx.block_toggled();
@@ -255,7 +153,7 @@ export default class Editor extends React.Component {
   remove_repeater_item(repeater_uid, item_uid) {
     const repeater = this.repeaters[repeater_uid];
     if (repeater) {
-      repeater.value = repeater.value.filter(item => item.uid !== item_uid);
+      repeater.value = repeater.value.filter(item => item.__uid !== item_uid);
       this.ctx.value_updated();
       this.ctx.should_redraw();
       this.ctx.block_toggled();
@@ -266,12 +164,17 @@ export default class Editor extends React.Component {
   // add_block()
   // -----------------------------------
 
-  add_block(type, index) {
+  add_block(type, at_index) {
     const render_blocks = this.state.render_blocks;
-    const b = this.create_render_block(this.ctx.blockset.get(type));
-    b.is_top_level = true;
-    if (typeof index === 'number') {
-      render_blocks.splice(index, 0, b);
+    const block = Utils.find_block(this.ctx.blocks, type);
+    if (!block) {
+      throw Error(Utils.Err__BlockTypeNotFound(type));
+    }
+
+    const b = this.create_render_block(block, [ ], true);
+
+    if (typeof at_index === 'number') {
+      render_blocks.splice(at_index, 0, b);
     }
     else {
       render_blocks.push(b);
@@ -291,7 +194,7 @@ export default class Editor extends React.Component {
 
   remove_block(block_uid) {
     const render_blocks = this.state.render_blocks.filter(
-      block => block.uid !== block_uid
+      render_block => render_block.__uid !== block_uid
     );
     this.setState({ render_blocks });
     setTimeout(() => {
@@ -320,12 +223,11 @@ export default class Editor extends React.Component {
     const is_repeater_reorder = !is_block_reorder;  // Condition may need tightening
 
     if (is_block_reorder) {
-      const d = this.state.render_blocks;
+      const render_blocks = this.state.render_blocks;
+      const [item] = render_blocks.splice(drag_result.source.index, 1);
+      render_blocks.splice(drag_result.destination.index, 0, item);
 
-      const [item] = d.splice(drag_result.source.index, 1);
-      d.splice(drag_result.destination.index, 0, item);
-
-      this.setState({ render_blocks: d });
+      this.setState({ });
     }
 
     else if (is_repeater_reorder) {
@@ -335,7 +237,7 @@ export default class Editor extends React.Component {
         const [item] = arr.splice(drag_result.source.index, 1);
         arr.splice(drag_result.destination.index, 0, item);
 
-        this.setState({ render_blocks: this.state.render_blocks });
+        this.setState({ });
       }
     }
 
@@ -348,7 +250,7 @@ export default class Editor extends React.Component {
 
   set_block_picker(open) {
     this.setState({
-      block_picker: open,
+      block_picker:        open,
       block_picker_offset: window.scrollY,
     });
     this.block_toggled();
@@ -360,12 +262,12 @@ export default class Editor extends React.Component {
 
   do_save_on_input() {
     if (this.props.save === Save.OnInput) {
-      this.save.call(this);
+      this.save();
     }
   }
 
   save() {
-    const data = this.get_plain_data();
+    const data = this.to_data_blocks();
     this.props.delegate &&
       this.props.delegate.save &&
       this.props.delegate.save(data);
@@ -379,16 +281,24 @@ export default class Editor extends React.Component {
     let content__main;
     let content__picker;
 
-    const load_state = this.props.load_state;
-    const when_to_save = this.props.save;
-    this.ctx.blockset = this.props.blockset;
+    const load_state   = this.props.load_state;
+    const when_to_save = this.props.save   || Save.WhenSaveButtonClicked;
+    const data         = this.props.data   || [ ];
+    this.ctx.blocks    = this.props.blocks || [ ];
+    Utils.set_uids(data);
+
+    const show_block_picker = (
+      load_state === State.Loaded &&
+      this.state.block_picker !== false &&
+      Utils.blocks_are_grouped(this.ctx.blocks)
+    );
 
     function msg_div(msg) {
       return <div className="bg-solid has-text-centered" style={{ padding: '1rem' }}>{msg}</div>;
     }
 
-    if (load_state === State.Error) {
-      content__main = msg_div(`Couldn’t load post data`);
+    if (load_state === State.Error || !load_state) {
+      content__main = msg_div(`Error loading post data`);
     }
 
     else if (load_state === State.Loading) {
@@ -396,49 +306,34 @@ export default class Editor extends React.Component {
     }
 
     else if (load_state === State.Loaded) {
-      let render_blocks = this.state.render_blocks;
-      if (!render_blocks) {
-        this.state.render_blocks = render_blocks = this.get_render_blocks(this.props.data);
-      }
+      const n_blocks   = data.length;
+      const min_height = this.state.block_picker === false ? '20rem' : '50rem';
 
       if (this.previous_load_state !== State.Loaded) {
         this.block_toggled();
       }
 
-      const n_blocks = render_blocks.length;
-      const min_height = this.state.block_picker === false ? '20rem' : '50rem';
       content__main = (
         <div className="container" style={{ minHeight: min_height }}>
 
           {when_to_save === Save.WhenSaveButtonClicked && (
-            <div style={{ margin: '1rem' }}>
-              <a className="button" onClick={_ => this.save.call(this)}>Save</a>
+            <div className="save-button" style={{ margin: '1rem' }}>
+              <a className="button" onClick={this.save}>Save</a>
             </div>
           )}
 
-          <DnD.DragDropContext onDragEnd={this.cb_reorder.bind(this)}>
+          <DnD.DragDropContext onDragEnd={this.cb_reorder}>
             <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
-
-                {render_blocks.map((block, index) => (
-                  <DnD.Draggable key={`block-${block.uid}`} draggableId={`block-${block.uid}`} index={index} type="block">{(prov, snap) => (
-
-                    <div className="block-list-item" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={block_drag_styles(snap, prov)}>
-                      <Block block={block} block_index={index} ctx={this.ctx} />
-                    </div>
-
-                  )}</DnD.Draggable>
-                ))}
-
+                {data.map((data_item, index) => <Block data_item={data_item} index={index} />)}
                 {prov.placeholder}
-
               </div>
             )}</DnD.Droppable>
           </DnD.DragDropContext>
 
           <div className="is-flex" style={{ justifyContent: 'center' }}>
-            <AddBlockBtn blocks={this.props.blockset}
-                         block_index={render_blocks.length}
+            <AddBlockBtn blocks={this.props.blocks}
+                         block_index={data.length}
                          cb_select={block_type => this.ctx.add_block(block_type, null)}
                          suggest={n_blocks === 0}
                          popup_direction={n_blocks ? 'up' : 'down'} />
@@ -452,21 +347,15 @@ export default class Editor extends React.Component {
       content__main = msg_div(`Unknown load state: ${load_state}`);
     }
 
-    this.previous_load_state = load_state;
-
     return (
       <PageDataContext.Provider value={this.ctx}>
         <div className="post-builder" style={{ padding: '2rem', position: 'relative' }}>
           {content__main}
-          {
-            load_state === State.Loaded &&
-            this.state.block_picker !== false &&
-            Utils.blocks_are_grouped(this.ctx.blockset) &&
-            <BlockPicker blocks={this.props.blockset}
-                         block_index={this.state.block_picker}
-                         scroll_offset={this.state.block_picker_offset}
-                         iframe_container_info={this.props.iframe_container_info || { }} />
-          }
+
+          {show_block_picker && <BlockPicker blocks={this.props.blocks}
+                                             block_index={this.state.block_picker}
+                                             scroll_offset={this.state.block_picker_offset}
+                                             iframe_container_info={this.props.iframe_container_info || { }} />}
         </div>
       </PageDataContext.Provider>
     );
