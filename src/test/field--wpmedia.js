@@ -3,7 +3,6 @@ import React from 'react';
 import { shallow, mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import sinon from 'sinon';
-import RecursiveBlockRenderer from '../core/RecursiveBlockRenderer';
 import test_blocks from './_test-blocks';
 import test_data from './_test-data';
 import stubs from './_stubs';
@@ -89,7 +88,7 @@ test('WPMedia: renders image thumbnail', t => {
 });
 
 
-test('WPMedia: clear btn sets value to null, called ctx update methods', t => {
+test('WPMedia: clear btn sets value to null, calls ctx update methods', t => {
   const ctx = {
     value_updated() { ctx.value_updated.called = true; },
     should_redraw() { ctx.should_redraw.called = true; },
@@ -98,7 +97,7 @@ test('WPMedia: clear btn sets value to null, called ctx update methods', t => {
   const wrapper = mk_stubbed(block.fields[0], d, ctx);
   const clearbtn = wrapper.find('.wpmedia-clear-btn');
 
-  clearbtn.simulate('click');
+  clearbtn.prop('onClick')({});
   t.is(null, d.image);
   t.is(true, ctx.value_updated.called);
   t.is(true, ctx.should_redraw.called);

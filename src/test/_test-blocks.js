@@ -42,10 +42,13 @@ const blocks = [
       },
     ],
   },
+  { type: 'AContentItem' },
+  { type: 'AnotherContentItem' },
+  { type: 'OneMoreContentItem' },
 ];
 
 
-blocks.with_invalid_field_type = [
+const blocks_with_invalid_field_type = [
   {
     type: 'BlockWithInvalidFieldType',
     fields: [
@@ -57,6 +60,16 @@ blocks.with_invalid_field_type = [
   },
 ];
 
+function get_blocks() {
+  return Otter.Utils.copy(blocks);
+}
 
-export default blocks;
+function get_blocks_with_invalid_field_type() {
+  return Otter.Utils.copy(blocks_with_invalid_field_type);
+}
+
+get_blocks.with_invalid_field_type = get_blocks_with_invalid_field_type;
+
+
+export default get_blocks;
 

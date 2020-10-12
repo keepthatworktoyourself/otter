@@ -73,8 +73,10 @@ test('Select: renders options, initial item or null item selected', t => {
   t.is(n_opts + 1, opts__not_set.length);
 
   t.deepEqual(['Select an option', 'A', 'B', 'C'], opts.map(item => item.text()));
-  t.is('b', select.get(0).props.value);
-  t.is('', select__not_set.get(0).props.value);
+  t.deepEqual(['', ...Object.keys(block.fields[0].options)], opts.map(opt => opt.prop('value')));
+  t.is('b', select.prop('value'));
+  t.is('', select__not_set.prop('value'));
+  t.is('', opts.first().prop('value'));
 });
 
 
@@ -88,7 +90,7 @@ test('Select: option change updates state, calls ctx update methods', t => {
   const wrapper = mk_stubbed(block.fields[0], d, ctx);
   const select = wrapper.find('select');
 
-  select.simulate('change', {target: {value: 'c'}});
+  select.prop('onChange')({ target: { value: 'c' } });
   t.is(true, ctx.value_updated.called);
   t.is(true, ctx.should_redraw.called);
   t.is('c', d.select_field);

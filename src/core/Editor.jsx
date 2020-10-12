@@ -21,38 +21,26 @@ function ctx(pb_instance) {
     value_updated() {
       pb_instance.do_save_on_input();
     },
-
     should_redraw() {
       setTimeout(() => pb_instance.setState({ }), 10);
     },
-
-    add_repeater_item(repeater_uid, type) {
-      pb_instance.add_repeater_item(repeater_uid, type);
-    },
-
-    remove_repeater_item(repeater_uid, item_uid) {
-      pb_instance.remove_repeater_item(repeater_uid, item_uid);
-    },
-
-    add_block(type, index) {
-      pb_instance.add_block(type, index);
-    },
-
-    remove_block(block_uid) {
-      pb_instance.remove_block(block_uid);
-    },
-
     block_toggled() {
       pb_instance.block_toggled();
     },
 
+
+    add_item(type, index) {
+      pb_instance.add_item(type, index);
+    },
+
+
     open_block_picker(block_index) {
       pb_instance.set_block_picker(block_index);
     },
-
     close_block_picker() {
       pb_instance.set_block_picker(false);
     },
+
 
     blocks: { },
   };
@@ -68,9 +56,7 @@ export default class Editor extends React.Component {
     super(props);
 
     this.state = {
-      render_blocks: null,
       block_picker: false,
-      previous_load_state: null,
     };
 
     this.ctx = ctx(this);
@@ -79,7 +65,10 @@ export default class Editor extends React.Component {
 
     this.save             = this.save.bind(this);
     this.do_save_on_input = this.do_save_on_input.bind(this);
-    this.cb_reorder       = this.cb_reorder.bind(this);
+    this.get_data         = this.get_data.bind(this);
+    this.add_item         = this.add_item.bind(this);
+    this.delete_item      = this.delete_item.bind(this);
+    this.cb__reorder      = this.cb__reorder.bind(this);
   }
 
 
@@ -87,161 +76,114 @@ export default class Editor extends React.Component {
   // -----------------------------------
 
   block_toggled() {
-    this.props.delegate &&
-      this.props.delegate.block_toggled &&
-      this.props.delegate.block_toggled();
+    this.props.delegate && this.props.delegate.block_toggled && this.props.delegate.block_toggled();
   }
 
 
-  // to_data_blocks - convert render blocks back to data blocks, for save
+  // get_data - export data for save
   // -----------------------------------
 
-  to_data_blocks() {
-    function get_block(render_block) {
-      const field_names = Object.keys(render_block.field_data)
-        .filter(f => render_block.field_data[f].__display !== false);
+  get_data() {
+    function export_data_item(data_item, blocks) {
+      if (!data_item) {
+        return null;
+      }
 
-      return field_names.reduce((carry, field_name) => {
-        const item = render_block.field_data[field_name];
-        const def = item.field_def;
+      const block = Utils.find_block(blocks, data_item.__type);
+      if (!block) {
+        return null;
+      }
 
-        if (def.type === Fields.SubBlock) {
-          if (Utils.subblock_is_enabled(item)) {
-            carry[field_name] = get_block(item.value);
+      const fields__displayed = (block.fields || []).filter(field_def => {
+        const di = Utils.display_if(block, field_def.name, data_item);
+        return di.display === true;
+      });
+
+      return fields__displayed.reduce((carry, field_def) => {
+        const field_name  = field_def.name;
+        const field_type  = field_def.type;
+        const field_value = data_item[field_name];
+
+        if (field_type === Fields.SubBlock || field_type === Fields.SubBlockArray) {
+          if (!field_def.optional || Utils.optional_subblock__is_enabled(field_name, data_item)) {
+            carry[field_name] = field_type === Fields.SubBlock ?
+              export_data_item(field_value, blocks) :
+              (field_value || [ ]).map(item => export_data_item(item, blocks));
           }
         }
 
-        else if (def.type === Fields.SubBlockArray) {
-          carry[field_name] = (item.value || [ ]).map(get_block);
-        }
-
         else {
-          carry[field_name] = item.value;
+          carry[field_name] = field_value;
         }
 
-        if (carry[field_name] === '' || carry[field_name] === null || carry[field_name] === undefined) {
+        const remove = (
+          carry[field_name] === '' || carry[field_name] === null || carry[field_name] === undefined ||
+          field_name.match(/^__/)
+        );
+        if (remove) {
           delete carry[field_name];
         }
 
         return carry;
-      }, { __type: render_block.block.type });
+      }, { __type: block.type });
     }
 
-    return (this.state.render_blocks || []).map(get_block);
+    return (this.props.data || []).map(item => export_data_item(item, this.props.blocks));
   }
 
 
-  // add_repeater_item()
+  // add_item()
   // -----------------------------------
 
-  add_repeater_item(repeater_uid, block) {
-    const repeater = this.repeaters[repeater_uid];
-    if (repeater) {
-      const render_block = this.create_render_block(block, [ ]);
-      console.log('add_repeater_item created render_block:', render_block);
-      repeater.value.push(render_block);
-      this.ctx.value_updated();
-      this.ctx.should_redraw();
-      this.ctx.block_toggled();
-    }
-  }
+  add_item(type, index) {
+    const data_item = { __type: type };
 
-
-  // remove_repeater_item()
-  // -----------------------------------
-
-  remove_repeater_item(repeater_uid, item_uid) {
-    const repeater = this.repeaters[repeater_uid];
-    if (repeater) {
-      repeater.value = repeater.value.filter(item => item.__uid !== item_uid);
-      this.ctx.value_updated();
-      this.ctx.should_redraw();
-      this.ctx.block_toggled();
-    }
-  }
-
-
-  // add_block()
-  // -----------------------------------
-
-  add_block(type, at_index) {
-    const render_blocks = this.state.render_blocks;
-    const block = Utils.find_block(this.ctx.blocks, type);
-    if (!block) {
-      throw Error(Utils.Err__BlockTypeNotFound(type));
-    }
-
-    const b = this.create_render_block(block, [ ], true);
-
-    if (typeof at_index === 'number') {
-      render_blocks.splice(at_index, 0, b);
+    if (typeof index === 'number') {
+      this.props.data.splice(index, 0, data_item);
     }
     else {
-      render_blocks.push(b);
+      this.props.data.push(data_item);
     }
 
-    this.setState({ render_blocks });
-    setTimeout(() => {
-      this.ctx.value_updated();
-      this.ctx.should_redraw();
-      this.ctx.block_toggled();
-    });
+    this.setState({ });
+
+    this.ctx.value_updated();
+    this.ctx.should_redraw();
+    this.ctx.block_toggled();
   }
 
 
-  // remove_block()
+  // delete_item
   // -----------------------------------
 
-  remove_block(block_uid) {
-    const render_blocks = this.state.render_blocks.filter(
-      render_block => render_block.__uid !== block_uid
-    );
-    this.setState({ render_blocks });
-    setTimeout(() => {
-      this.ctx.value_updated();
-      this.ctx.should_redraw();
-      this.ctx.block_toggled();
-    });
+  delete_item(index) {
+    this.props.data.splice(index, 1);
+
+    this.setState({ });
+
+    this.ctx.value_updated();
+    this.ctx.should_redraw();
+    this.ctx.block_toggled();
   }
 
 
-  // cb_drag_end()
+  // cb__reorder
   // -----------------------------------
 
-  cb_reorder(drag_result) {
-    if (!drag_result.destination) {
+  cb__reorder(drag_result) {
+    if (!drag_result.destination || !drag_result.source) {
       return;
     }
     if (drag_result.source.index === drag_result.destination.index) {
       return;
     }
 
-    const is_block_reorder = (
-      drag_result.destination.droppableId === 'd-blocks' &&
-      drag_result.source.droppableId === 'd-blocks'
-    );
-    const is_repeater_reorder = !is_block_reorder;  // Condition may need tightening
+    const data_items = this.props.data;
+    const [item] = data_items.splice(drag_result.source.index, 1);
+    data_items.splice(drag_result.destination.index, 0, item);
 
-    if (is_block_reorder) {
-      const render_blocks = this.state.render_blocks;
-      const [item] = render_blocks.splice(drag_result.source.index, 1);
-      render_blocks.splice(drag_result.destination.index, 0, item);
-
-      this.setState({ });
-    }
-
-    else if (is_repeater_reorder) {
-      const repeater_field = this.repeaters[drag_result.source.droppableId];
-      if (repeater_field) {
-        const arr = repeater_field.value;
-        const [item] = arr.splice(drag_result.source.index, 1);
-        arr.splice(drag_result.destination.index, 0, item);
-
-        this.setState({ });
-      }
-    }
-
-    this.do_save_on_input();
+    this.setState({ });
+    this.ctx.value_updated();
   }
 
 
@@ -267,7 +209,7 @@ export default class Editor extends React.Component {
   }
 
   save() {
-    const data = this.to_data_blocks();
+    const data = this.get_data();
     this.props.delegate &&
       this.props.delegate.save &&
       this.props.delegate.save(data);
@@ -278,24 +220,29 @@ export default class Editor extends React.Component {
   // -----------------------------------
 
   render() {
-    let content__main;
-    let content__picker;
-
-    const load_state   = this.props.load_state;
-    const when_to_save = this.props.save   || Save.WhenSaveButtonClicked;
-    const data         = this.props.data   || [ ];
-    this.ctx.blocks    = this.props.blocks || [ ];
-    Utils.set_uids(data);
-
+    const data_items      = this.props.data || [ ];
+    const blocks          = this.props.blocks || [ ];
+    const load_state      = this.props.load_state;
+    const when_to_save    = this.props.save || Save.WhenSaveButtonClicked;
+    const DragDropContext = this.props.drag_context_component || DnD.DragDropContext;
+    const Droppable       = this.props.droppable_component    || DnD.Droppable;
+    const ContextProvider = this.props.provider_component     || PageDataContext.Provider;
     const show_block_picker = (
       load_state === State.Loaded &&
       this.state.block_picker !== false &&
-      Utils.blocks_are_grouped(this.ctx.blocks)
+      Utils.blocks_are_grouped(blocks)
     );
 
+    let content__main;
+    let content__picker;
+
+    this.ctx.blocks = blocks;
+
+
     function msg_div(msg) {
-      return <div className="bg-solid has-text-centered" style={{ padding: '1rem' }}>{msg}</div>;
+      return <div className="otter-load-error bg-solid has-text-centered" style={{ padding: '1rem' }}>{msg}</div>;
     }
+
 
     if (load_state === State.Error || !load_state) {
       content__main = msg_div(`Error loading post data`);
@@ -306,7 +253,6 @@ export default class Editor extends React.Component {
     }
 
     else if (load_state === State.Loaded) {
-      const n_blocks   = data.length;
       const min_height = this.state.block_picker === false ? '20rem' : '50rem';
 
       if (this.previous_load_state !== State.Loaded) {
@@ -322,21 +268,25 @@ export default class Editor extends React.Component {
             </div>
           )}
 
-          <DnD.DragDropContext onDragEnd={this.cb_reorder}>
-            <DnD.Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
+          <DragDropContext onDragEnd={this.cb__reorder} stub="DragDropContext">
+            <Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
-                {data.map((data_item, index) => <Block data_item={data_item} index={index} />)}
+
+                {data_items.map((data_item, index) => (
+                  <Block key={index} data_item={data_item} index={index} cb__delete={this.delete_item} />
+                ))}
+
                 {prov.placeholder}
+
               </div>
-            )}</DnD.Droppable>
-          </DnD.DragDropContext>
+            )}</Droppable>
+          </DragDropContext>
 
           <div className="is-flex" style={{ justifyContent: 'center' }}>
-            <AddBlockBtn blocks={this.props.blocks}
-                         block_index={data.length}
-                         cb_select={block_type => this.ctx.add_block(block_type, null)}
-                         suggest={n_blocks === 0}
-                         popup_direction={n_blocks ? 'up' : 'down'} />
+            <AddBlockBtn blocks={blocks}
+                         index={data_items.length}
+                         suggest={data_items.length === 0}
+                         popup_direction={data_items.length ? 'up' : 'down'} />
           </div>
 
         </div>
@@ -347,8 +297,10 @@ export default class Editor extends React.Component {
       content__main = msg_div(`Unknown load state: ${load_state}`);
     }
 
+    this.previous_load_state = load_state;
+
     return (
-      <PageDataContext.Provider value={this.ctx}>
+      <ContextProvider value={this.ctx} stub="ContextProvider">
         <div className="post-builder" style={{ padding: '2rem', position: 'relative' }}>
           {content__main}
 
@@ -357,7 +309,7 @@ export default class Editor extends React.Component {
                                              scroll_offset={this.state.block_picker_offset}
                                              iframe_container_info={this.props.iframe_container_info || { }} />}
         </div>
-      </PageDataContext.Provider>
+      </ContextProvider>
     );
   }
 

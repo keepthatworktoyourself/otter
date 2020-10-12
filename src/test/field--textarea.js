@@ -57,7 +57,7 @@ test('TextArea: value change updates state, calls ctx value_updated only', t => 
   const textarea = wrapper.find('textarea');
   const new_value = '...that is the question.';
 
-  textarea.simulate('change', {target: {value: new_value}});
+  textarea.prop('onChange')({ target: { value: new_value } });
   t.is(true,      ctx.value_updated.called);
   t.is(undefined, ctx.should_redraw.called);
   t.is(new_value, d.textarea_field);

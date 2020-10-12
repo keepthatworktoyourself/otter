@@ -1,6 +1,7 @@
 import React from 'react';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
+import Utils from '../definitions/utils';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 
@@ -9,6 +10,8 @@ export default class Radios extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.uid      = Utils.uid();
     this.cb_click = this.cb_click.bind(this);
     this.cb_clear = this.cb_clear.bind(this);
   }
@@ -35,9 +38,8 @@ export default class Radios extends React.Component {
     const field_def            = this.props.field_def;
     const containing_data_item = this.props.containing_data_item;
     const is_top_level         = this.props.is_top_level;
-    const uid                  = containing_data_item.__uid;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
-    const input_name           = `radios-${uid}`;
+    const input_name           = `radios-${this.uid}`;
     const value                = containing_data_item[field_def.name];
 
     const opts_raw = field_def.options || { };

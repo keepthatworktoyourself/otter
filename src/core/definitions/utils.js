@@ -10,19 +10,6 @@ function uid() {
 uid.i = 0;
 
 
-// set_uids
-// -----------------------------------
-
-function set_uids(page_data) {
-  iterate_data(page_data, item => {
-    if (!item.__uid) {
-      item.__uid = uid();
-    }
-    return item;
-  });
-}
-
-
 // retitle_field
 // -----------------------------------
 
@@ -213,15 +200,36 @@ function display_if(block, field_name, data_item) {
 }
 
 
-// subblock_is_enabled
+// optional_subblock__is_enabled
 // -----------------------------------
-// - takes a field_data item from a render_block
-// - NB non-optional fields always -> true
 
-function subblock_is_enabled(field) {
-  const is_optional = field && field.field_def.optional;
-  const is_optional_and_enabled = is_optional && field.enabled;
-  return !is_optional || is_optional_and_enabled;
+function optional_subblock__is_enabled(field_name, data_item) {
+  const es = data_item.__enabled_subblocks;
+
+  if (es && es.hasOwnProperty(field_name)) {
+    return es[field_name];
+  }
+
+  else {
+    return !!data_item[field_name];
+  }
+}
+
+
+// optional_subblock__set_enabled
+// -----------------------------------
+
+function optional_subblock__set_enabled(field_name, data_item, enabled) {
+  if (!data_item.__enabled_subblocks) {
+    data_item.__enabled_subblocks = { };
+  }
+
+  if (enabled) {
+    data_item.__enabled_subblocks[field_name] = true;
+  }
+  else {
+    data_item.__enabled_subblocks[field_name] = false;
+  }
 }
 
 
@@ -229,7 +237,16 @@ function subblock_is_enabled(field) {
 // -----------------------------------
 
 function blocks_are_grouped(blocks) {
-  return !(blocks.length === 0 || blocks[0].hasOwnProperty('type'));
+  if (blocks.length === 0) {
+    return false;
+  }
+
+  const b = blocks[0];
+  if (b.hasOwnProperty('type')) {
+    return false;
+  }
+
+  return b.hasOwnProperty('name') && b.hasOwnProperty('blocks');
 }
 
 
@@ -248,6 +265,14 @@ function rnd_str(length) {
   }
 
   return s;
+}
+
+
+// upto
+// -----------------------------------
+
+function upto(n) {
+  return Array.apply(null, {length: n}).map((_, i) => i);
 }
 
 
@@ -282,7 +307,6 @@ function Err__FieldTypeNotFound(def) {
 
 export default {
   uid,
-  set_uids,
   find_field,
   retitle_field,
   copy,
@@ -292,9 +316,11 @@ export default {
   iterate_data,
   check_display_if,
   display_if,
-  subblock_is_enabled,
+  optional_subblock__is_enabled,
+  optional_subblock__set_enabled,
   blocks_are_grouped,
   rnd_str,
+  upto,
   Err__BlockNoType,
   Err__BlockTypeNotFound,
   Err__FieldNoType,

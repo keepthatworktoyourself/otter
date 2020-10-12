@@ -2,7 +2,7 @@ import React from 'react';
 
 
 function Stub(props) {
-	Stub.last_props = props;
+  Stub.last_props = props;
   return (
     <div>
       {props.children}

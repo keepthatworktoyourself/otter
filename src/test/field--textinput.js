@@ -57,7 +57,7 @@ test('TextInput: value change updates state, calls ctx value_updated only', t =>
   const textinput = wrapper.find('input');
   const new_value = 'Clever girl';
 
-  textinput.simulate('change', {target: {value: new_value}});
+  textinput.prop('onChange')({ target: { value: new_value } });
   t.is(true,      ctx.value_updated.called);
   t.is(undefined, ctx.should_redraw.called);
   t.is(new_value, d.title);

@@ -1,6 +1,7 @@
 import test from 'ava';
 import React from 'react';
 import { shallow, mount, configure } from 'enzyme';
+import sinon from 'sinon';
 import Adapter from 'enzyme-adapter-react-16';
 import Block from '../core/Block';
 import test_blocks from './_test-blocks';
@@ -11,23 +12,25 @@ import Otter from '..';
 
 configure({ adapter: new Adapter() });
 
+
 const provided = {
   innerRef: null,
   draggableProps: {
     style: { color: 'yellow' },
   },
 };
-
 const snapshot = {
   isDragging: false,
 };
 
 
-function mk_stubbed_block(data_item, blocks, extra_ctx_props) {
+function mk_stubbed_block(blocks, data_item, index, cb__delete, extra_ctx_props) {
   return mount(<Block data_item={data_item} index={0}
+                      index={index}
+                      cb__delete={cb__delete}
                       draggable_component={stubs.func_stub([provided, snapshot])}
                       consumer_component={stubs.func_stub([{ blocks, ...extra_ctx_props }])}
-                      field_renderer_component={stubs.Stub} />);
+                      recursive_renderer_component={stubs.Stub} />);
 }
 
 
@@ -41,55 +44,51 @@ test('Block: get_drag_styles', t => {
 
 
 test('Block: warning if invalid block type', t => {
-  const wrapper = mk_stubbed_block(test_data(true)[0], [ ]);
-  const exp = <h3 className='title is-4'>{`Unknown block type: '${test_data(true)[0].__type}'`}</h3>;
-  t.is(true, wrapper.contains(exp));
+  const wrapper = mk_stubbed_block([ ], test_data()[0]);
+  t.truthy(wrapper.find('.title').text().match(/Unknown block type/));
 });
 
 
-test('Block: title is description or type', t => {
-  const blocks_with_description = Otter.Utils.copy(test_blocks);
-  blocks_with_description[0].description = 'A block';
+test('Block: renders', t => {
+  const blocks = test_blocks();
+  const blocks__with_descr = Object.assign(Otter.Utils.copy(blocks), {
+    description: 'A block',
+  });
 
-  const block__type_title  = mk_stubbed_block(test_data(true)[0], test_blocks);
-  const block__descr_title = mk_stubbed_block(test_data(true)[0], blocks_with_description);
+  const block__with_type_only = mk_stubbed_block(blocks, test_data()[0]);
+  const block__with_descr     = mk_stubbed_block(blocks__with_descr, test_data()[0]);
 
-  const has_type_title  = block__type_title.contains(<h3 className='title is-4'>{test_blocks[0].type}</h3>);
-  const has_descr_title = block__descr_title.contains(<h3 className='title is-4'>{blocks_with_description[0].description}</h3>);
-
-  t.is(true, has_type_title);
-  t.is(true, has_descr_title);
+  t.truthy(block__with_type_only.find('h3.title').text().match(test_blocks()[0].type));
+  t.truthy(block__with_descr.find('h3.title').text().match(blocks__with_descr[0].description));
 });
 
 
 test('Block: creates AddBlockBtn', t => {
-  const block = mk_stubbed_block(test_data(true)[0], test_blocks);
+  const block = mk_stubbed_block(test_blocks(), test_data()[0]);
   t.is(1, block.find('AddBlockBtn').length);
 });
 
 
 test('Block: delete btn calls ctx.remove_block(uid)', t => {
-  let calls = [ ]
-  const data = test_data(true);
-  const block = mk_stubbed_block(data[0], test_blocks, {
-    remove_block(uid) {
-      calls.push(uid);
-    },
-  });
+  const cb__delete = sinon.spy();
+  const block = mk_stubbed_block(test_blocks(), test_data()[0], 67, cb__delete, { });
 
-  block.find('.block-delete-btn').simulate('click');
-  t.deepEqual([ data[0].__uid ], calls);
+  block.find('.block-delete-btn').prop('onClick')();
+  t.deepEqual([67], cb__delete.lastCall.args);
 });
 
 
 test('Block: passes data_item, ctx.blocks, is_top_level to RecursiveBlockRenderer', t => {
-  const data  = test_data(true);
-  const block = mk_stubbed_block(data[0], test_blocks);
+  const data  = test_data();
+  const block = mk_stubbed_block(test_blocks(), data[0]);
 
-  t.deepEqual({
-    data_item:    data[0],
-    block:        Otter.Utils.find_block(test_blocks, data[0].__type),
-    is_top_level: true,
-  }, stubs.Stub.last_props);
+  t.deepEqual(
+    {
+      data_item:    data[0],
+      blocks:       test_blocks(),
+      is_top_level: true,
+    },
+    stubs.Stub.last_props
+  );
 });
 

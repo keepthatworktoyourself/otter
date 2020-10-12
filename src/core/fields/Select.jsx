@@ -1,12 +1,14 @@
 import React from 'react';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
+import Utils from '../definitions/utils';
 
 
 export default class Select extends React.Component {
 
   constructor(props) {
     super(props);
+    this.uid       = Utils.uid();
     this.cb_change = this.cb_change.bind(this);
   }
 
@@ -23,7 +25,6 @@ export default class Select extends React.Component {
     const field_def            = this.props.field_def;
     const containing_data_item = this.props.containing_data_item;
     const is_top_level         = this.props.is_top_level;
-    const uid                  = containing_data_item.__uid;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
     const value                = containing_data_item[field_def.name];
 
@@ -50,9 +51,9 @@ export default class Select extends React.Component {
                     {opt_keys.length === 0 && `[Select field has no options!]`}
 
                     {opt_keys.length !== 0 && [
-                      <option disabled key={`f${uid}--null-value`}>Select an option</option>,
+                      <option disabled key={`f${this.uid}--null-value`} value="">Select an option</option>,
                       ...opt_keys.map((opt, i) => (
-                        <option value={opt} key={`f${uid}--${i}`}>{opts[opt]}</option>
+                        <option value={opt} key={`f${this.uid}--${i}`}>{opts[opt]}</option>
                       )),
                     ]}
 

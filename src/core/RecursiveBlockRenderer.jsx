@@ -1,7 +1,7 @@
 import React from 'react';
-import Repeater from './Repeater';
 import Fields from './fields';
-import SubBlock from './SubBlock';
+import SubBlockWrapper from './SubBlockWrapper';
+import Repeater from './Repeater';
 import Utils from './definitions/utils';
 
 
@@ -28,13 +28,16 @@ function error_text__invalid_field_type_in_field_definition(field_name, field_ty
 
 export default function RecursiveBlockRenderer(props) {
   const data_item    = props.data_item;
-  const block        = props.block;
-  const is_top_level = props.is_top_level || false;
+  const is_top_level = props.is_top_level;
+  const blocks       = props.blocks;
+  const block        = Utils.find_block(blocks, data_item.__type);
 
-  return (block.fields || []).map(field_def => {
+  return (block.fields || []).map((field_def, index) => {
     const field_name = field_def.name;
     const field_type = field_def.type;
     const field_value = data_item[field_name];
+    let out = null;
+
 
     // Check required field properties
     const errors = [ ];
@@ -57,26 +60,33 @@ export default function RecursiveBlockRenderer(props) {
     }
 
 
+    // Render SubBlocks / Repeaters
+    if (field_type === Fields.SubBlock || field_type === Fields.SubBlockArray) {
+      out = (
+        <SubBlockWrapper field_def={field_def} containing_data_item={data_item}>
+          {field_type === Fields.SubBlock && (
+            <RecursiveBlockRenderer data_item={field_value} blocks={blocks} />
+          )}
+
+          {field_type === Fields.SubBlockArray && (
+            <Repeater field_def={field_def} containing_data_item={data_item} />
+          )}
+        </SubBlockWrapper>
+      );
+    }
+
+
     // Render fields
-    let out = null;
-
-    if (field_def.type === Fields.SubBlock) {
-      out = <SubBlock field_def={field_def} containing_block={block} containing_data_item={data_item} />;
-    }
-
-    else if (field_def.type === Fields.SubBlockArray) {
-      out = <Repeater field_def={field_def} containing_block={block} containing_data_item={data_item} />;
-    }
-
     else {
-      const Field = Fields.components[field_def.type];
+      const Field = Fields.components[field_type];
       if (Field) {
         out = <Field field_def={field_def}
                      containing_data_item={data_item}
-                     is_top_level={is_top_level} />;
+                     is_top_level={is_top_level}
+                     key={index} />;
       }
       else {
-        out = <Fields.components.ErrorField text={error_text__invalid_field_type_in_field_definition(field_name, field_def.type)}
+        out = <Fields.components.ErrorField text={error_text__invalid_field_type_in_field_definition(field_name, field_type)}
                                             is_top_level={is_top_level} />;
       }
     }

@@ -79,8 +79,15 @@ test('Radios: click updates state, calls ctx update methods', t => {
   const opt__c = wrapper.find('.radio-option[data-value="c"]');
   t.is(1, opt__c.length);
 
-  opt__c.simulate('click');
+  opt__c.prop('onClick')({
+    currentTarget: {
+      querySelector() {
+        return { value: 'c' };
+      },
+    },
+  });
 
+  wrapper.update();
   const selected_opt = wrapper.find('input[checked=true]');
   t.is(true, ctx.value_updated.called);
   t.is(true, ctx.should_redraw.called);

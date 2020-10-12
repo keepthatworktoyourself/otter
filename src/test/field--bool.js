@@ -62,8 +62,10 @@ test('Bool: renders input with toggles, initial value', t => {
 
 test('Bool: renders text__yes and text__no', t => {
   const b = Otter.Utils.copy(block);
-  b.fields[0].text__yes = 'Certainly';
-  b.fields[0].text__no  = 'Absolutely not';
+  Object.assign(b.fields[0], {
+    text__yes: 'Certainly',
+    text__no:  'Absolutely not',
+  });
 
   const wrapper__false = mk_stubbed(b.fields[0], data_item__false);
   const btn__yes = wrapper__false.find('a[data-value="yes"]');
@@ -84,7 +86,12 @@ test('Bool: click updates state and calls ctx updated methods', t => {
   const btn__yes = wrapper.find('a[data-value="yes"]');
   t.is(false, wrapper.find('input').get(0).props.checked);
 
-  btn__yes.simulate('click');
+  btn__yes.prop('onClick')({
+    currentTarget: {
+      getAttribute() { return 'yes' },
+    },
+  });
+  wrapper.update();
   t.is(true, ctx.value_updated.called);
   t.is(true, ctx.should_redraw.called);
   t.is(true, wrapper.find('input').get(0).props.checked);
