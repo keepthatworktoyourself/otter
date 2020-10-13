@@ -318,20 +318,14 @@ test('utils: optional_subblock__set_enabled -> deletes entry if value false', t 
 // blocks_are_grouped
 // ------------------------------------
 
-test('utils: blocks_are_grouped -> false if no blocks', t => {
+test('utils: blocks_are_simple -> true if array', t => {
+  t.is(false, Otter.Utils.blocks_are_simple({ }));
+  t.is(true,  Otter.Utils.blocks_are_simple([ ]));
+});
+
+test('utils: blocks_are_grouped -> true if object', t => {
   t.is(false, Otter.Utils.blocks_are_grouped([ ]));
-});
-
-test('utils: blocks_are_grouped -> false if top-level items have type prop', t => {
-  t.is(false, Otter.Utils.blocks_are_grouped([{ type: 'ABlock' }]));
-});
-
-test('utils: blocks_are_grouped -> false if top-level items missing name or blocks props', t => {
-  t.is(false, Otter.Utils.blocks_are_grouped([{ property: 'irrelevant' }]));
-});
-
-test('utils: blocks_are_grouped -> true if top-level items has name and blocks props', t => {
-  t.is(true, Otter.Utils.blocks_are_grouped([{ name: 'Headers', blocks: [ ] }]));
+  t.is(true,  Otter.Utils.blocks_are_grouped({ }));
 });
 
 

@@ -108,7 +108,7 @@ const block_with_subblock_array = {
 };
 
 
-// Blocks can be passed as flat array or nested in groups
+// Blocks can be a flat array or nested in groups
 const blocks__flat = [
   header_block,
   text_block,

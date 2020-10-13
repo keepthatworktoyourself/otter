@@ -236,17 +236,12 @@ function optional_subblock__set_enabled(field_name, data_item, enabled) {
 // blocks_are_grouped
 // -----------------------------------
 
+function blocks_are_simple(blocks) {
+  return blocks && blocks.constructor === Array;
+}
+
 function blocks_are_grouped(blocks) {
-  if (blocks.length === 0) {
-    return false;
-  }
-
-  const b = blocks[0];
-  if (b.hasOwnProperty('type')) {
-    return false;
-  }
-
-  return b.hasOwnProperty('name') && b.hasOwnProperty('blocks');
+  return blocks && blocks.constructor === Object;
 }
 
 
@@ -318,6 +313,7 @@ export default {
   display_if,
   optional_subblock__is_enabled,
   optional_subblock__set_enabled,
+  blocks_are_simple,
   blocks_are_grouped,
   rnd_str,
   upto,

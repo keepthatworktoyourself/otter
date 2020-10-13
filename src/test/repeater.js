@@ -97,6 +97,15 @@ test('Repeater: does not render Add btn if has max children', t => {
 });
 
 
+test('Repeater: Add btn renders dropdown item for each subblock type', t => {
+  const f = Otter.Utils.copy(test_blocks()[3].fields[0]);
+  const wrapper = mk_stubbed(f, test_data()[3], ctx());
+  const items = wrapper.find('.dropdown-item');
+  t.deepEqual(f.subblock_types, items.map(item => item.prop('data-subblock-type')));
+  t.is(wrapper.instance().cb__add, items.first().prop('onClick'));
+});
+
+
 test('Repeater: on Add btn click, if only 1 subblock_type, immediately add it', t => {
   const data_item = { __type: 'B4' };
   const f = Otter.Utils.copy(test_blocks()[3].fields[0]);

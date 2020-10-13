@@ -34,16 +34,17 @@ export default class AddBlockBtn extends React.Component {
 
 
   render() {
-    const blocks      = this.props.blocks || [ ];
-    const active      = this.state.open ? 'is-active' : '';
-    const popup_dir   = this.props.popup_direction === 'up' ? 'is-up' : '';
-    const suggest     = this.props.suggest;
-    const is_simple   = !Utils.blocks_are_grouped(blocks);
-    const c__dropdown = is_simple ? `dropdown ${popup_dir} ${active}` : '';
-    this.is_simple    = is_simple;
+    const blocks           = this.props.blocks || [ ];
+    const active           = this.state.open ? 'is-active' : '';
+    const popup_dir        = this.props.popup_direction === 'up' ? 'is-up' : '';
+    const suggest          = this.props.suggest;
+    const ContextConsumer  = this.props.consumer_component || PageDataContext.Consumer;
+    this.is_simple         = Utils.blocks_are_simple(blocks);
+    const c__dropdown      = `dropdown ${this.is_simple ? `${popup_dir} ${active}` : ''}`;
+    const displayed_blocks = this.is_simple && blocks.filter(b => b && b.hidden !== true);
 
     return (
-      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
+      <ContextConsumer>{ctx => (this.ctx = ctx) && (
         <div className={c__dropdown}>
 
           <div className="dropdown-trigger">
@@ -51,20 +52,19 @@ export default class AddBlockBtn extends React.Component {
                     onClick={this.cb__toggle}>
 
               {suggest && (
-                <span>
-                  Add a block to get started
-                </span>
+                <span>Add a block to get started</span>
               )}
+
               <span className="icon is-small has-text-grey">
                 <FontAwesomeIcon icon={faPlusCircle} />
               </span>
             </button>
           </div>
 
-          {is_simple && (
+          {this.is_simple && (
             <div className="dropdown-menu" style={{ left: '50%', transform: 'translateX(-50%)' }} id="dropdown-menu" role="menu">
               <div className="dropdown-content" style={{ maxHeight: '12rem', overflowY: 'scroll' }}>
-                {blocks.map((block, i) => (
+                {displayed_blocks.map((block, i) => (
                   <a className="dropdown-item" onClick={this.cb__select} key={i} data-block-type={block.type}>
                     {block.description}
                   </a>
@@ -74,7 +74,7 @@ export default class AddBlockBtn extends React.Component {
           )}
 
         </div>
-      )}</PageDataContext.Consumer>
+      )}</ContextConsumer>
     );
   }
 

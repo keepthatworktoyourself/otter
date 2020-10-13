@@ -77,11 +77,13 @@ const text_blocks = Otter.Blockset([
     fields: [
       <field>, ...
     ],
+    hidden: true,
   },
 ]);
 ```
 
-`thumbnail` is optional and only used by Otter when initialized with *grouped content blocks*.
+- `thumbnail` is optional and only used by Otter when initialized with *grouped content blocks*.
+- `hidden` is optional, default `false`. Set this to true if this block is to be used in a Repeater or SubBlock, so shouldn't be picked by the user as a top level block.
 
 
 ### Grouped content blocks
