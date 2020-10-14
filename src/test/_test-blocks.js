@@ -42,9 +42,9 @@ const blocks = [
       },
     ],
   },
-  { type: 'AContentItem' },
-  { type: 'AnotherContentItem' },
-  { type: 'OneMoreContentItem' },
+  { type: 'AContentItem',       fields: [{ name: 'f', type: Otter.Fields.TextInput }] },
+  { type: 'AnotherContentItem', fields: [{ name: 'f', type: Otter.Fields.TextInput }] },
+  { type: 'OneMoreContentItem', fields: [{ name: 'f', type: Otter.Fields.TextInput }] },
 ];
 
 

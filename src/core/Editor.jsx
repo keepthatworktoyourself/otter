@@ -105,7 +105,8 @@ export default class Editor extends React.Component {
         const field_value = data_item[field_name];
 
         if (field_type === Fields.SubBlock || field_type === Fields.SubBlockArray) {
-          if (!field_def.optional || Utils.optional_subblock__is_enabled(field_name, data_item)) {
+          const include = !field_def.optional || Utils.optional_subblock__is_enabled(field_name, data_item);
+          if (include) {
             carry[field_name] = field_type === Fields.SubBlock ?
               export_data_item(field_value, blocks) :
               (field_value || [ ]).map(item => export_data_item(item, blocks));
@@ -118,6 +119,8 @@ export default class Editor extends React.Component {
 
         const remove = (
           carry[field_name] === '' || carry[field_name] === null || carry[field_name] === undefined ||
+          (carry[field_name].constructor === Array && carry[field_name].length === 0) ||
+          (Utils.is_data_item(carry[field_name]) && !Utils.item_has_data(carry[field_name])) ||
           field_name.match(/^__/)
         );
         if (remove) {

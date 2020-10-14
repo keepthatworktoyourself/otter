@@ -243,19 +243,41 @@ test('utils: display_if not set -> positive', t => {
 });
 
 
+// item_has_data
+// ------------------------------------
+
+test('utils: item_has_data: true if the item has more than just a __type property', t => {
+  const item__null = null;
+  const item__string = 'string';
+  const item__empty_obj = { };
+  const item__only_type = { __type: 'X' };
+  const item__with_data = { __type: 'X', x: 'y' };
+
+  t.falsy(Otter.Utils.item_has_data(item__null));
+  t.falsy(Otter.Utils.item_has_data(item__string));
+  t.falsy(Otter.Utils.item_has_data(item__empty_obj));
+  t.falsy(Otter.Utils.item_has_data(item__only_type));
+  t.truthy(Otter.Utils.item_has_data(item__with_data));
+});
+
+
 // optional_subblock__is_enabled
 // ------------------------------------
 
 test('utils: optional_subblock__is_enabled: returns presence of field data, if not present in __enabled_subblocks', t => {
-  const data_item__no_enabled_subblocks__field_null = { my_subblock: null };
-  const data_item__no_enabled_subblocks__field_data = { my_subblock: { __type: 'X' } };
-  const data_item__not_set_in_enabled_subblocks__field_null = { __enabled_subblocks: { }, my_subblock: null };
-  const data_item__not_set_in_enabled_subblocks__field_data = { __enabled_subblocks: { }, my_subblock: { __type: 'X' } };
+  const data_item__no_enabled_subblocks__field_null      = { my_subblock: null };
+  const data_item__no_enabled_subblocks__field_only_type = { my_subblock: { __type: 'X' } };
+  const data_item__no_enabled_subblocks__field_data      = { my_subblock: { __type: 'X', x: 'y' } };
+  const data_item__not_set_in_enabled_subblocks__field_null      = { __enabled_subblocks: { }, my_subblock: null };
+  const data_item__not_set_in_enabled_subblocks__field_only_type = { __enabled_subblocks: { }, my_subblock: { __type: 'X' } };
+  const data_item__not_set_in_enabled_subblocks__field_data      = { __enabled_subblocks: { }, my_subblock: { __type: 'X', x: 'y' } };
 
-  t.falsy(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__no_enabled_subblocks__field_null));
-  t.truthy(Otter.Utils.optional_subblock__is_enabled('my_subblock', data_item__no_enabled_subblocks__field_data));
-  t.falsy(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__not_set_in_enabled_subblocks__field_null));
-  t.truthy(Otter.Utils.optional_subblock__is_enabled('my_subblock', data_item__not_set_in_enabled_subblocks__field_data));
+  t.false(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__no_enabled_subblocks__field_null));
+  t.false(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__no_enabled_subblocks__field_only_type));
+  t.true(Otter.Utils.optional_subblock__is_enabled('my_subblock', data_item__no_enabled_subblocks__field_data));
+  t.false(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__not_set_in_enabled_subblocks__field_null));
+  t.false(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__not_set_in_enabled_subblocks__field_only_type));
+  t.true(Otter.Utils.optional_subblock__is_enabled('my_subblock', data_item__not_set_in_enabled_subblocks__field_data));
 });
 
 test('utils: optional_subblock__is_enabled: returns value from __enabled_subblocks if present', t => {
@@ -268,8 +290,8 @@ test('utils: optional_subblock__is_enabled: returns value from __enabled_subbloc
     my_subblock: { },
   };
 
-  t.truthy(Otter.Utils.optional_subblock__is_enabled('my_subblock', data_item__enabled_true));
-  t.falsy(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__enabled_false));
+  t.true(Otter.Utils.optional_subblock__is_enabled('my_subblock', data_item__enabled_true));
+  t.false(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__enabled_false));
 });
 
 

@@ -31,6 +31,14 @@ function copy(obj) {
 }
 
 
+// deep_equal
+// -----------------------------------
+
+function deep_equal(o1, o2) {
+  return JSON.stringify(o1) === JSON.stringify(o2);
+}
+
+
 // recursive_find
 // -----------------------------------
 
@@ -200,6 +208,19 @@ function display_if(block, field_name, data_item) {
 }
 
 
+// item_has_data
+// -----------------------------------
+
+function item_has_data(item) {
+  return (
+    item &&
+    item.constructor === Object &&
+    item.hasOwnProperty('__type') &&
+    !deep_equal(Object.keys(item), [ '__type' ])
+  );
+}
+
+
 // optional_subblock__is_enabled
 // -----------------------------------
 
@@ -207,11 +228,12 @@ function optional_subblock__is_enabled(field_name, data_item) {
   const es = data_item.__enabled_subblocks;
 
   if (es && es.hasOwnProperty(field_name)) {
-    return es[field_name];
+    return !!es[field_name];
   }
 
   else {
-    return !!data_item[field_name];
+    const sub_data_item = data_item[field_name];
+    return !!item_has_data(sub_data_item);
   }
 }
 
@@ -305,12 +327,14 @@ export default {
   find_field,
   retitle_field,
   copy,
+  deep_equal,
   recursive_find,
   find_block,
   is_data_item,
   iterate_data,
   check_display_if,
   display_if,
+  item_has_data,
   optional_subblock__is_enabled,
   optional_subblock__set_enabled,
   blocks_are_simple,

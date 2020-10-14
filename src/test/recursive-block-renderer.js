@@ -89,8 +89,9 @@ test('RBR: subblock field: renders SubBlockWrapper with RecursiveBlockRenderer',
 
   const inner_renderer = subblock_wrapper.find('RecursiveBlockRenderer');
   t.is(1, inner_renderer.length);
-  t.deepEqual(data_item['content_item'], inner_renderer.prop('data_item'));
-  t.deepEqual(test_blocks(),             inner_renderer.prop('blocks'));
+  t.deepEqual(data_item,     inner_renderer.prop('containing_data_item'));
+  t.is('content_item',       inner_renderer.prop('field_name'));
+  t.deepEqual(test_blocks(), inner_renderer.prop('blocks'));
 });
 
 
@@ -118,5 +119,22 @@ test('RBR: has field with invalid field name -> ErrorField', t => {
 
   const error_wrapper = error_field.dive();
   t.truthy(error_wrapper.text().match(/has an invalid field type/));
+});
+
+
+test('RBR: passed data_item containing empty subblock/repeater: creates the data item', t => {
+  const item__subblock_missing = { __type: 'B3' };
+  const item__subblock_null = { __type: 'B3', content_item: null };
+
+  const wrapper__subblock_missing = mount(<RecursiveBlockRenderer data_item={item__subblock_missing} blocks={test_blocks()} />);
+  const wrapper__subblock_null    = mount(<RecursiveBlockRenderer data_item={item__subblock_null}    blocks={test_blocks()} />);
+  const exp = {
+    __type: 'B3',
+    content_item: {
+      __type: 'AContentItem',
+    },
+  };
+  t.deepEqual(exp, item__subblock_missing);
+  t.deepEqual(exp, item__subblock_null);
 });
 

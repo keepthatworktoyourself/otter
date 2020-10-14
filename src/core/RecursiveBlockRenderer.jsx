@@ -26,8 +26,17 @@ function error_text__invalid_field_type_in_field_definition(field_name, field_ty
 }
 
 
+function ensure_subblock_data(containing_data_item, field_def) {
+  if (!containing_data_item[field_def.name]) {
+    containing_data_item[field_def.name] = field_def.type === Fields.SubBlock ?
+      { __type: field_def.subblock_type } :
+      [ ];
+  }
+}
+
+
 export default function RecursiveBlockRenderer(props) {
-  const data_item    = props.data_item;
+  const data_item    = props.data_item || props.containing_data_item[props.field_name];
   const is_top_level = props.is_top_level;
   const blocks       = props.blocks;
   const block        = Utils.find_block(blocks, data_item.__type);
@@ -45,7 +54,8 @@ export default function RecursiveBlockRenderer(props) {
     if (!field_name) { errors.push('name'); }
     if (errors.length) {
       return <Fields.components.ErrorField text={error_text__missing_field_props(field_name, errors)}
-                                           is_top_level={is_top_level} />;
+                                           is_top_level={is_top_level}
+                                           key={index} />;
     }
 
 
@@ -53,7 +63,8 @@ export default function RecursiveBlockRenderer(props) {
     const di = Utils.display_if(block, field_name, data_item);
     if (di.errors.length) {
       return <Fields.components.ErrorField text={error_text__invalid_display_if(field_name, di.errors)}
-                                           is_top_level={is_top_level} />;
+                                           is_top_level={is_top_level}
+                                           key={index} />;
     }
     if (!di.display) {
       return null;
@@ -62,10 +73,11 @@ export default function RecursiveBlockRenderer(props) {
 
     // Render SubBlocks / Repeaters
     if (field_type === Fields.SubBlock || field_type === Fields.SubBlockArray) {
+      ensure_subblock_data(data_item, field_def);
       out = (
-        <SubBlockWrapper field_def={field_def} containing_data_item={data_item}>
+        <SubBlockWrapper field_def={field_def} containing_data_item={data_item} key={index}>
           {field_type === Fields.SubBlock && (
-            <RecursiveBlockRenderer data_item={field_value} blocks={blocks} />
+            <RecursiveBlockRenderer containing_data_item={data_item} field_name={field_name} blocks={blocks} />
           )}
 
           {field_type === Fields.SubBlockArray && (
@@ -87,7 +99,8 @@ export default function RecursiveBlockRenderer(props) {
       }
       else {
         out = <Fields.components.ErrorField text={error_text__invalid_field_type_in_field_definition(field_name, field_type)}
-                                            is_top_level={is_top_level} />;
+                                            is_top_level={is_top_level}
+                                            key={index} />;
       }
     }
 

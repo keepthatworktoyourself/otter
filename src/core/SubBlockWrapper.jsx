@@ -13,8 +13,8 @@ export default class SubBlockWrapper extends React.Component {
     this.state = {
       collapsed: true,
     };
-    this.cb__toggle_enabled  = this.cb__toggle_enabled.bind(this);
-    this.cb__toggle_collapse = this.cb__toggle_collapse.bind(this);
+    this.cb__toggle_enabled   = this.cb__toggle_enabled.bind(this);
+    this.cb__toggle_collapse  = this.cb__toggle_collapse.bind(this);
   }
 
 
@@ -70,7 +70,7 @@ export default class SubBlockWrapper extends React.Component {
         <div className="subblock-wrapper">
 
           <div>
-            <h4 style={{ paddingBottom: '0.5rem' }} className="title is-7 is-marginless">
+            <h4 style={{ paddingBottom: '0.5rem' }} className="is-clickable title is-7 is-marginless">
               <span onClick={this.cb__toggle_collapse} className="subblock-wrapper-toggle is-inline-block">
                 {title}
 

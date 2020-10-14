@@ -10,7 +10,7 @@ const test_data = [
   },
   {
     __type: 'B3',
-    content_item: { __type: 'AContentItem' },
+    content_item: { __type: 'AContentItem', f: 'F' },
   },
   {
     __type: 'B4',

@@ -249,25 +249,31 @@ test('Editor: get_data exports data', t => {
 });
 
 
-test('Editor: get_data removes null, undefined, empty string items', t => {
+test('Editor: get_data strips out null, undefined, empty string, empty array field values', t => {
   [null, undefined, ''].forEach(value_should_be_removed => {
     const data_items = test_data();
-    data_items[1].text = value_should_be_removed;
+    data_items[1].test_remove_item = value_should_be_removed;
 
-    const e = new Editor({
+    t.deepEqual(test_data(), new Editor({
       blocks: test_blocks(),
       data:   data_items,
-    });
-
-    const exp = test_data();
-    delete exp[1].text;
-
-    t.deepEqual(exp, e.get_data());
+    }).get_data());
   });
+
+  const data_items = test_data();
+  data_items[3].content_items = [ ];
+
+  const exp = test_data();
+  delete exp[3].content_items;
+
+  t.deepEqual(exp, new Editor({
+    blocks: test_blocks(),
+    data:   data_items,
+  }).get_data());
 });
 
 
-test('Editor: get_data removes items prefixed with __ (except __type)', t => {
+test('Editor: get_data removes fields prefixed with __ (except __type)', t => {
   const blocks = [{
     type: 'MyBlock',
     description: 'My block',
@@ -289,6 +295,30 @@ test('Editor: get_data removes items prefixed with __ (except __type)', t => {
 });
 
 
+test('Editor: get_data removes non-top-level items that have only __type', t => {
+  const data_items = [
+    { __type: 'B1' },
+    { __type: 'B2', text: 'hello' },
+    { __type: 'B3', content_item: { __type: 'AContentItem' } },
+    { __type: 'B3', content_item: { __type: 'AContentItem', f: 'x' } },
+    { __type: 'B4', content_items: [{ __type: 'AnotherContentItem' }] },
+    { __type: 'B4', content_items: [{ __type: 'AnotherContentItem', f: 'x' }] },
+  ];
+  const exp = [
+    { __type: 'B1' },
+    { __type: 'B2', text: 'hello' },
+    { __type: 'B3' },
+    { __type: 'B3', content_item: { __type: 'AContentItem', f: 'x' } },
+    { __type: 'B4', content_items: [{ __type: 'AnotherContentItem' }] },    // Items in repeaters are kept
+    { __type: 'B4', content_items: [{ __type: 'AnotherContentItem', f: 'x' }] },
+  ];
+  t.deepEqual(exp, new Editor({
+    blocks: test_blocks(),
+    data: data_items,
+  }).get_data());
+});
+
+
 test('Editor: get_data respects optional/__enabled_subblocks', t => {
   const blocks = test_blocks();
   const block__subblock = blocks[2];
@@ -300,12 +330,12 @@ test('Editor: get_data respects optional/__enabled_subblocks', t => {
   const data__subblock__disabled = [{
     __type: 'B3',
     __enabled_subblocks: { content_item: false },
-    content_item: { __type: 'AContentItem' },
+    content_item: { __type: 'AContentItem', f: 'F' },
   }];
   const data__repeater__disabled = [{
     __type: 'B4',
     __enabled_subblocks: { content_items: false },
-    content_items: [{ __type: 'AnotherContentItem' }],
+    content_items: [{ __type: 'AnotherContentItem', f: 'F' }],
   }];
 
   const data__subblock__enabled = Otter.Utils.copy(data__subblock__disabled);

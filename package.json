@@ -25,7 +25,8 @@
     "dev": "webpack-dev-server --mode development",
     "dev--plugin": "babel -w src/index.js -d otter-plugin/dev/deps/otter-editor & babel -w src/core -d otter-plugin/dev/deps/otter-editor/core",
     "t": "ava -c 1 --verbose src/test/*",
-    "wt": "ava -c 1 --watch src/test/*",
+    "tw": "ava -c 1 --watch src/test/*",
+    "ts": "ava -c 1 --watch",
     "i": "rm -rf node_modules && npm install"
   },
   "dependencies": {
