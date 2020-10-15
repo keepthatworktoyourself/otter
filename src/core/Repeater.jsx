@@ -102,7 +102,6 @@ export default class Repeater extends React.Component {
     const Droppable                  = this.props.droppable_component     || DnD.Droppable;
     const Draggable                  = this.props.draggable_component     || DnD.Draggable;
     const ContextConsumer            = this.props.consumer_component      || PageDataContext.Consumer;
-    const SubBlockWrapperStub        = this.props.sbw_component           || SubBlockWrapper;
     const RepeaterItemStub           = this.props.repeater_item_component || RepeaterItem;
     const RecursiveBlockRendererStub = this.props.rbr_component           || RecursiveBlockRenderer;
     const data_items                 = containing_data_item[field_def.name] || [ ];
@@ -114,14 +113,16 @@ export default class Repeater extends React.Component {
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
-        <SubBlockWrapperStub field_def={field_def} containing_data_item={containing_data_item}>
-
+        <>
           <DragDropContext onDragEnd={this.cb__reorder} stub="DragDropContext">
             <Droppable droppableId={dnd_context_id} type={dnd_context_id}>{(prov, snap) => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
 
                 {data_items.map((data_item, index) => (
-                  <RepeaterItemStub stub="RepeaterItem" index={index} dnd_context_id={dnd_context_id} key={index}
+                  <RepeaterItemStub stub="RepeaterItem"
+                                    index={index}
+                                    dnd_context_id={dnd_context_id}
+                                    key={index}
                                     cb__delete={this.cb__delete}>
 
                     <RecursiveBlockRendererStub stub="RBR" data_item={data_item} blocks={ctx.blocks} />
@@ -134,7 +135,6 @@ export default class Repeater extends React.Component {
               </div>
             )}</Droppable>
           </DragDropContext>
-
 
           {show_add_button && (
             <div className="repeater-add-btn">
@@ -168,8 +168,7 @@ export default class Repeater extends React.Component {
               </div>
             </div>
           )}
-
-        </SubBlockWrapperStub>
+        </>
       )}</ContextConsumer>
     );
   }

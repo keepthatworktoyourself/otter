@@ -38,8 +38,9 @@ test('Block: get_drag_styles', t => {
   const while_dragging     = (new Block()).get_drag_styles(provided, { isDragging: true  });
   const while_not_dragging = (new Block()).get_drag_styles(provided, snapshot);
 
-  t.deepEqual(['border', 'backgroundColor', 'color'], Object.keys(while_dragging));
-  t.deepEqual(['color'], Object.keys(while_not_dragging));
+  t.deepEqual(Object.keys(provided.draggableProps.style), Object.keys(while_dragging));
+  t.deepEqual(Object.keys(provided.draggableProps.style), Object.keys(while_not_dragging));
+  // Block doesn't currently use any custom drag styles
 });
 
 

@@ -14,10 +14,7 @@ export default class Block extends React.Component {
     super(props);
 
     this.uid         = Utils.uid();
-    this.drag_styles = {
-      border:          '3px solid rgba(0,0,255, 0.12)',
-      backgroundColor: 'rgba(0,0,255, 0.06)',
-    };
+    this.drag_styles = { };
   }
 
 

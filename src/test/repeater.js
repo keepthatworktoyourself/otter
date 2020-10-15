@@ -41,7 +41,6 @@ function mk_stubbed(field_def, containing_data_item, ctx_methods) {
   return mount(<Repeater field_def={field_def}
                          containing_data_item={containing_data_item}
                          consumer_component={stubs.func_stub([{...ctx_methods}])}
-                         sbw_component={stubs.Stub}
                          repeater_item_component={stubs.Stub}
                          rbr_component={stubs.Stub}
                          drag_context_component={stubs.Stub}

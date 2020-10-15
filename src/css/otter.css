@@ -1,5 +1,5 @@
 body {
-  background-color: rgb(186, 192, 195);
+  background-color: rgb(183, 190, 199);
 }
 .bg-solid {
   background-color: #fdfefe;
@@ -7,11 +7,12 @@ body {
 
 
 .otter-box {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(25, 33, 40, 0.06);
   border-radius: 5px;
+  padding: 1rem;
 }
 .otter-box--bordered {
-  border: 1px solid rgba(0,0,0,0.15);
+  border: 1px solid rgba(25, 33, 40, 0.06);
 }
 
 
