@@ -221,11 +221,11 @@ function item_has_data(item) {
 }
 
 
-// optional_subblock__is_enabled
+// optional_nested_block__is_enabled
 // -----------------------------------
 
-function optional_subblock__is_enabled(field_name, data_item) {
-  const es = data_item.__enabled_subblocks;
+function optional_nested_block__is_enabled(field_name, data_item) {
+  const es = data_item.__enabled_nested_blocks;
 
   if (es && es.hasOwnProperty(field_name)) {
     return !!es[field_name];
@@ -238,19 +238,19 @@ function optional_subblock__is_enabled(field_name, data_item) {
 }
 
 
-// optional_subblock__set_enabled
+// optional_nested_block__set_enabled
 // -----------------------------------
 
-function optional_subblock__set_enabled(field_name, data_item, enabled) {
-  if (!data_item.__enabled_subblocks) {
-    data_item.__enabled_subblocks = { };
+function optional_nested_block__set_enabled(field_name, data_item, enabled) {
+  if (!data_item.__enabled_nested_blocks) {
+    data_item.__enabled_nested_blocks = { };
   }
 
   if (enabled) {
-    data_item.__enabled_subblocks[field_name] = true;
+    data_item.__enabled_nested_blocks[field_name] = true;
   }
   else {
-    data_item.__enabled_subblocks[field_name] = false;
+    data_item.__enabled_nested_blocks[field_name] = false;
   }
 }
 
@@ -335,8 +335,8 @@ export default {
   check_display_if,
   display_if,
   item_has_data,
-  optional_subblock__is_enabled,
-  optional_subblock__set_enabled,
+  optional_nested_block__is_enabled,
+  optional_nested_block__set_enabled,
   blocks_are_simple,
   blocks_are_grouped,
   rnd_str,

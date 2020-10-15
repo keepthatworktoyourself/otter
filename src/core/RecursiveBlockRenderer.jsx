@@ -1,6 +1,6 @@
 import React from 'react';
 import Fields from './fields';
-import SubBlockWrapper from './SubBlockWrapper';
+import NestedBlockWrapper from './NestedBlockWrapper';
 import Repeater from './Repeater';
 import Utils from './definitions/utils';
 
@@ -26,10 +26,10 @@ function error_text__invalid_field_type_in_field_definition(field_name, field_ty
 }
 
 
-function ensure_subblock_data(containing_data_item, field_def) {
+function ensure_nested_block_data(containing_data_item, field_def) {
   if (!containing_data_item[field_def.name]) {
-    containing_data_item[field_def.name] = field_def.type === Fields.SubBlock ?
-      { __type: field_def.subblock_type } :
+    containing_data_item[field_def.name] = field_def.type === Fields.NestedBlock ?
+      { __type: field_def.nested_block_type } :
       [ ];
   }
 }
@@ -71,19 +71,19 @@ export default function RecursiveBlockRenderer(props) {
     }
 
 
-    // Render SubBlocks / Repeaters
-    if (field_type === Fields.SubBlock || field_type === Fields.SubBlockArray) {
-      ensure_subblock_data(data_item, field_def);
+    // Render NestedBlocks / Repeaters
+    if (field_type === Fields.NestedBlock || field_type === Fields.Repeater) {
+      ensure_nested_block_data(data_item, field_def);
       out = (
-        <SubBlockWrapper field_def={field_def} containing_data_item={data_item} key={index}>
-          {field_type === Fields.SubBlock && (
+        <NestedBlockWrapper field_def={field_def} containing_data_item={data_item} key={index}>
+          {field_type === Fields.NestedBlock && (
             <RecursiveBlockRenderer containing_data_item={data_item} field_name={field_name} blocks={blocks} />
           )}
 
-          {field_type === Fields.SubBlockArray && (
+          {field_type === Fields.Repeater && (
             <Repeater field_def={field_def} containing_data_item={data_item} />
           )}
-        </SubBlockWrapper>
+        </NestedBlockWrapper>
       );
     }
 

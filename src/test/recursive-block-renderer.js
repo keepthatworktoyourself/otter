@@ -76,18 +76,18 @@ test('RBR: field with display_if true or not set: renders field, props passed', 
 });
 
 
-test('RBR: subblock field: renders SubBlockWrapper with RecursiveBlockRenderer', t => {
+test('RBR: nested_block field: renders NestedBlockWrapper with RecursiveBlockRenderer', t => {
   const block     = test_blocks()[2];
   const data_item = test_data()[2];
 
   const wrapper = shallow(<RecursiveBlockRenderer data_item={data_item} blocks={test_blocks()} />);
-  const subblock_wrapper = wrapper.find('SubBlockWrapper');
-  t.is(1, subblock_wrapper.length);
-  t.is(block.fields[0].optional, subblock_wrapper.prop('is_optional'));
-  t.deepEqual(block.fields[0],   subblock_wrapper.prop('field_def'));
-  t.deepEqual(data_item,         subblock_wrapper.prop('containing_data_item'));
+  const nested_block_wrapper = wrapper.find('NestedBlockWrapper');
+  t.is(1, nested_block_wrapper.length);
+  t.is(block.fields[0].optional, nested_block_wrapper.prop('is_optional'));
+  t.deepEqual(block.fields[0],   nested_block_wrapper.prop('field_def'));
+  t.deepEqual(data_item,         nested_block_wrapper.prop('containing_data_item'));
 
-  const inner_renderer = subblock_wrapper.find('RecursiveBlockRenderer');
+  const inner_renderer = nested_block_wrapper.find('RecursiveBlockRenderer');
   t.is(1, inner_renderer.length);
   t.deepEqual(data_item,     inner_renderer.prop('containing_data_item'));
   t.is('content_item',       inner_renderer.prop('field_name'));
@@ -95,14 +95,14 @@ test('RBR: subblock field: renders SubBlockWrapper with RecursiveBlockRenderer',
 });
 
 
-test('RBR: repeater field: renders SubBlockWrapper with Repeater component', t => {
+test('RBR: repeater field: renders NestedBlockWrapper with Repeater component', t => {
   const block     = test_blocks()[3];
   const data_item = test_data()[3];
 
   const wrapper = shallow(<RecursiveBlockRenderer data_item={data_item} blocks={test_blocks()} />);
-  const subblock_wrapper = wrapper.find('SubBlockWrapper');
-  const repeater = subblock_wrapper.find('Repeater');
-  t.is(1, subblock_wrapper.length);
+  const nested_block_wrapper = wrapper.find('NestedBlockWrapper');
+  const repeater = nested_block_wrapper.find('Repeater');
+  t.is(1, nested_block_wrapper.length);
   t.is(1, repeater.length);
   t.deepEqual(block.fields[0], repeater.prop('field_def'));
   t.deepEqual(data_item,       repeater.prop('containing_data_item'));
@@ -122,19 +122,19 @@ test('RBR: has field with invalid field name -> ErrorField', t => {
 });
 
 
-test('RBR: passed data_item containing empty subblock/repeater: creates the data item', t => {
-  const item__subblock_missing = { __type: 'B3' };
-  const item__subblock_null = { __type: 'B3', content_item: null };
+test('RBR: passed data_item containing empty nested_block/repeater: creates the data item', t => {
+  const item__nested_block_missing = { __type: 'B3' };
+  const item__nested_block_null = { __type: 'B3', content_item: null };
 
-  const wrapper__subblock_missing = mount(<RecursiveBlockRenderer data_item={item__subblock_missing} blocks={test_blocks()} />);
-  const wrapper__subblock_null    = mount(<RecursiveBlockRenderer data_item={item__subblock_null}    blocks={test_blocks()} />);
+  const wrapper__nested_block_missing = mount(<RecursiveBlockRenderer data_item={item__nested_block_missing} blocks={test_blocks()} />);
+  const wrapper__nested_block_null    = mount(<RecursiveBlockRenderer data_item={item__nested_block_null}    blocks={test_blocks()} />);
   const exp = {
     __type: 'B3',
     content_item: {
       __type: 'AContentItem',
     },
   };
-  t.deepEqual(exp, item__subblock_missing);
-  t.deepEqual(exp, item__subblock_null);
+  t.deepEqual(exp, item__nested_block_missing);
+  t.deepEqual(exp, item__nested_block_null);
 });
 

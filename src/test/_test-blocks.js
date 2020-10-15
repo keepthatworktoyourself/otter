@@ -24,8 +24,8 @@ const blocks = [
     fields: [
       {
         name: 'content_item',
-        type: Otter.Fields.SubBlock,
-        subblock_type: 'AContentItem',
+        type: Otter.Fields.NestedBlock,
+        nested_block_type: 'AContentItem',
       },
     ],
   },
@@ -34,8 +34,8 @@ const blocks = [
     fields: [
       {
         name: 'content_items',
-        type: Otter.Fields.SubBlockArray,
-        subblock_types: [
+        type: Otter.Fields.Repeater,
+        nested_block_types: [
           'AnotherContentItem',
           'OneMoreContentItem',
         ],

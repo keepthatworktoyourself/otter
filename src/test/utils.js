@@ -261,78 +261,78 @@ test('utils: item_has_data: true if the item has more than just a __type propert
 });
 
 
-// optional_subblock__is_enabled
+// optional_nested_block__is_enabled
 // ------------------------------------
 
-test('utils: optional_subblock__is_enabled: returns presence of field data, if not present in __enabled_subblocks', t => {
-  const data_item__no_enabled_subblocks__field_null      = { my_subblock: null };
-  const data_item__no_enabled_subblocks__field_only_type = { my_subblock: { __type: 'X' } };
-  const data_item__no_enabled_subblocks__field_data      = { my_subblock: { __type: 'X', x: 'y' } };
-  const data_item__not_set_in_enabled_subblocks__field_null      = { __enabled_subblocks: { }, my_subblock: null };
-  const data_item__not_set_in_enabled_subblocks__field_only_type = { __enabled_subblocks: { }, my_subblock: { __type: 'X' } };
-  const data_item__not_set_in_enabled_subblocks__field_data      = { __enabled_subblocks: { }, my_subblock: { __type: 'X', x: 'y' } };
+test('utils: optional_nested_block__is_enabled: returns presence of field data, if not present in __enabled_nested_blocks', t => {
+  const data_item__no_enabled_nested_blocks__field_null      = { my_nested_block: null };
+  const data_item__no_enabled_nested_blocks__field_only_type = { my_nested_block: { __type: 'X' } };
+  const data_item__no_enabled_nested_blocks__field_data      = { my_nested_block: { __type: 'X', x: 'y' } };
+  const data_item__not_set_in_enabled_nested_blocks__field_null      = { __enabled_nested_blocks: { }, my_nested_block: null };
+  const data_item__not_set_in_enabled_nested_blocks__field_only_type = { __enabled_nested_blocks: { }, my_nested_block: { __type: 'X' } };
+  const data_item__not_set_in_enabled_nested_blocks__field_data      = { __enabled_nested_blocks: { }, my_nested_block: { __type: 'X', x: 'y' } };
 
-  t.false(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__no_enabled_subblocks__field_null));
-  t.false(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__no_enabled_subblocks__field_only_type));
-  t.true(Otter.Utils.optional_subblock__is_enabled('my_subblock', data_item__no_enabled_subblocks__field_data));
-  t.false(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__not_set_in_enabled_subblocks__field_null));
-  t.false(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__not_set_in_enabled_subblocks__field_only_type));
-  t.true(Otter.Utils.optional_subblock__is_enabled('my_subblock', data_item__not_set_in_enabled_subblocks__field_data));
+  t.false(Otter.Utils.optional_nested_block__is_enabled('my_nested_block',  data_item__no_enabled_nested_blocks__field_null));
+  t.false(Otter.Utils.optional_nested_block__is_enabled('my_nested_block',  data_item__no_enabled_nested_blocks__field_only_type));
+  t.true(Otter.Utils.optional_nested_block__is_enabled('my_nested_block', data_item__no_enabled_nested_blocks__field_data));
+  t.false(Otter.Utils.optional_nested_block__is_enabled('my_nested_block',  data_item__not_set_in_enabled_nested_blocks__field_null));
+  t.false(Otter.Utils.optional_nested_block__is_enabled('my_nested_block',  data_item__not_set_in_enabled_nested_blocks__field_only_type));
+  t.true(Otter.Utils.optional_nested_block__is_enabled('my_nested_block', data_item__not_set_in_enabled_nested_blocks__field_data));
 });
 
-test('utils: optional_subblock__is_enabled: returns value from __enabled_subblocks if present', t => {
+test('utils: optional_nested_block__is_enabled: returns value from __enabled_nested_blocks if present', t => {
   const data_item__enabled_true = {
-    __enabled_subblocks: { my_subblock: true },
-    my_subblock: { },
+    __enabled_nested_blocks: { my_nested_block: true },
+    my_nested_block: { },
   };
   const data_item__enabled_false = {
-    __enabled_subblocks: { my_subblock: false },
-    my_subblock: { },
+    __enabled_nested_blocks: { my_nested_block: false },
+    my_nested_block: { },
   };
 
-  t.true(Otter.Utils.optional_subblock__is_enabled('my_subblock', data_item__enabled_true));
-  t.false(Otter.Utils.optional_subblock__is_enabled('my_subblock',  data_item__enabled_false));
+  t.true(Otter.Utils.optional_nested_block__is_enabled('my_nested_block', data_item__enabled_true));
+  t.false(Otter.Utils.optional_nested_block__is_enabled('my_nested_block',  data_item__enabled_false));
 });
 
 
-// optional_subblock__set_enabled
+// optional_nested_block__set_enabled
 // ------------------------------------
 
-test('utils: optional_subblock__set_enabled -> sets entry if value true', t => {
+test('utils: optional_nested_block__set_enabled -> sets entry if value true', t => {
   const data_item = {
-    __enabled_subblocks: {
-      subblock1: true,
+    __enabled_nested_blocks: {
+      nested_block1: true,
     },
   };
   const exp = Otter.Utils.copy(data_item);
-  exp.__enabled_subblocks.subblock2 = true;
-  Otter.Utils.optional_subblock__set_enabled('subblock2', data_item, true);
+  exp.__enabled_nested_blocks.nested_block2 = true;
+  Otter.Utils.optional_nested_block__set_enabled('nested_block2', data_item, true);
   t.deepEqual(exp, data_item);
 });
 
-test('utils: optional_subblock__set_enabled -> creates __enabled_subblocks if not present', t => {
+test('utils: optional_nested_block__set_enabled -> creates __enabled_nested_blocks if not present', t => {
   const data_item = { };
   const exp = {
-    __enabled_subblocks: {
-      subblock1: true,
+    __enabled_nested_blocks: {
+      nested_block1: true,
     },
   };
-  Otter.Utils.optional_subblock__set_enabled('subblock1', data_item, true)
+  Otter.Utils.optional_nested_block__set_enabled('nested_block1', data_item, true)
   t.deepEqual(exp, data_item);
 });
 
-test('utils: optional_subblock__set_enabled -> deletes entry if value false', t => {
+test('utils: optional_nested_block__set_enabled -> deletes entry if value false', t => {
   const data_item = {
-    __enabled_subblocks: {
-      subblock1: true,
+    __enabled_nested_blocks: {
+      nested_block1: true,
     },
   };
   const exp = {
-    __enabled_subblocks: {
-      subblock1: false,
+    __enabled_nested_blocks: {
+      nested_block1: false,
     },
   };
-  Otter.Utils.optional_subblock__set_enabled('subblock1', data_item, false)
+  Otter.Utils.optional_nested_block__set_enabled('nested_block1', data_item, false)
   t.deepEqual(exp, data_item);
 });
 

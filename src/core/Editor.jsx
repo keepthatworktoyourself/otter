@@ -104,10 +104,10 @@ export default class Editor extends React.Component {
         const field_type  = field_def.type;
         const field_value = data_item[field_name];
 
-        if (field_type === Fields.SubBlock || field_type === Fields.SubBlockArray) {
-          const include = !field_def.optional || Utils.optional_subblock__is_enabled(field_name, data_item);
+        if (field_type === Fields.NestedBlock || field_type === Fields.Repeater) {
+          const include = !field_def.optional || Utils.optional_nested_block__is_enabled(field_name, data_item);
           if (include) {
-            carry[field_name] = field_type === Fields.SubBlock ?
+            carry[field_name] = field_type === Fields.NestedBlock ?
               export_data_item(field_value, blocks) :
               (field_value || [ ]).map(item => export_data_item(item, blocks));
           }

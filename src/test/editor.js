@@ -319,45 +319,45 @@ test('Editor: get_data removes non-top-level items that have only __type', t => 
 });
 
 
-test('Editor: get_data respects optional/__enabled_subblocks', t => {
+test('Editor: get_data respects optional/__enabled_nested_blocks', t => {
   const blocks = test_blocks();
-  const block__subblock = blocks[2];
+  const block__nested_block = blocks[2];
   const block__repeater = blocks[3];
 
-  block__subblock.fields[0].optional = true;
+  block__nested_block.fields[0].optional = true;
   block__repeater.fields[0].optional = true;
 
-  const data__subblock__disabled = [{
+  const data__nested_block__disabled = [{
     __type: 'B3',
-    __enabled_subblocks: { content_item: false },
+    __enabled_nested_blocks: { content_item: false },
     content_item: { __type: 'AContentItem', f: 'F' },
   }];
   const data__repeater__disabled = [{
     __type: 'B4',
-    __enabled_subblocks: { content_items: false },
+    __enabled_nested_blocks: { content_items: false },
     content_items: [{ __type: 'AnotherContentItem', f: 'F' }],
   }];
 
-  const data__subblock__enabled = Otter.Utils.copy(data__subblock__disabled);
+  const data__nested_block__enabled = Otter.Utils.copy(data__nested_block__disabled);
   const data__repeater__enabled = Otter.Utils.copy(data__repeater__disabled);
-  data__subblock__enabled[0].__enabled_subblocks = { content_item: true };
-  data__repeater__enabled[0].__enabled_subblocks = { content_items: true };
+  data__nested_block__enabled[0].__enabled_nested_blocks = { content_item: true };
+  data__repeater__enabled[0].__enabled_nested_blocks = { content_items: true };
 
-  const exp__subblock__disabled = [{ __type: 'B3' }];
+  const exp__nested_block__disabled = [{ __type: 'B3' }];
   const exp__repeater__disabled = [{ __type: 'B4' }];
-  const exp__subblock__enabled  = Otter.Utils.copy(data__subblock__enabled);
+  const exp__nested_block__enabled  = Otter.Utils.copy(data__nested_block__enabled);
   const exp__repeater__enabled  = Otter.Utils.copy(data__repeater__enabled);
-  delete exp__subblock__enabled[0].__enabled_subblocks;
-  delete exp__repeater__enabled[0].__enabled_subblocks;
+  delete exp__nested_block__enabled[0].__enabled_nested_blocks;
+  delete exp__repeater__enabled[0].__enabled_nested_blocks;
 
-  const e__subblock__disabled = new Editor({ blocks, data: data__subblock__disabled });
+  const e__nested_block__disabled = new Editor({ blocks, data: data__nested_block__disabled });
   const e__repeater__disabled = new Editor({ blocks, data: data__repeater__disabled });
-  const e__subblock__enabled  = new Editor({ blocks, data: data__subblock__enabled });
+  const e__nested_block__enabled  = new Editor({ blocks, data: data__nested_block__enabled });
   const e__repeater__enabled  = new Editor({ blocks, data: data__repeater__enabled });
 
-  t.deepEqual(exp__subblock__disabled, e__subblock__disabled.get_data());
+  t.deepEqual(exp__nested_block__disabled, e__nested_block__disabled.get_data());
   t.deepEqual(exp__repeater__disabled, e__repeater__disabled.get_data());
-  t.deepEqual(exp__subblock__enabled,  e__subblock__enabled.get_data());
+  t.deepEqual(exp__nested_block__enabled,  e__nested_block__enabled.get_data());
   t.deepEqual(exp__repeater__enabled,  e__repeater__enabled.get_data());
 });
 

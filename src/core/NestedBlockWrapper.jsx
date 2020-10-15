@@ -5,7 +5,7 @@ import DDToggle from './other/DDToggle';
 import Toggle from 'react-toggle';
 
 
-export default class SubBlockWrapper extends React.Component {
+export default class NestedBlockWrapper extends React.Component {
 
   constructor(props) {
     super(props);
@@ -22,7 +22,7 @@ export default class SubBlockWrapper extends React.Component {
     ev.currentTarget.blur();
 
     if (this.props.field_def.optional) {
-      Utils.optional_subblock__set_enabled(
+      Utils.optional_nested_block__set_enabled(
         this.props.field_def.name,
         this.props.containing_data_item,
         ev.currentTarget.checked
@@ -44,7 +44,7 @@ export default class SubBlockWrapper extends React.Component {
   cb__toggle_collapse(ev) {
     const is_enabled = (
       !this.props.field_def.optional ||
-      Utils.optional_subblock__is_enabled(this.props.field_def.name, this.props.containing_data_item)
+      Utils.optional_nested_block__is_enabled(this.props.field_def.name, this.props.containing_data_item)
     );
 
     if (is_enabled) {
@@ -63,15 +63,15 @@ export default class SubBlockWrapper extends React.Component {
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
     const title                = field_def.description || field_def.name;
     const is_optional          = field_def.optional;
-    const is_enabled           = !is_optional || Utils.optional_subblock__is_enabled(field_def.name, containing_data_item);
+    const is_enabled           = !is_optional || Utils.optional_nested_block__is_enabled(field_def.name, containing_data_item);
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
-        <div className="subblock-wrapper">
+        <div className="nested_block-wrapper">
 
           <div>
             <h4 style={{ paddingBottom: '0.5rem' }} className="is-clickable title is-7 is-marginless">
-              <span onClick={this.cb__toggle_collapse} className="subblock-wrapper-toggle is-inline-block">
+              <span onClick={this.cb__toggle_collapse} className="nested_block-wrapper-toggle is-inline-block">
                 {title}
 
                 {is_enabled && <DDToggle is_open={!this.state.collapsed} cb={this.cb__toggle_collapse} />}

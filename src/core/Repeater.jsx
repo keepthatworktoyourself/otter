@@ -2,7 +2,7 @@ import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
 import PageDataContext from './PageDataContext';
 import Utils from './definitions/utils';
-import SubBlockWrapper from './SubBlockWrapper';
+import NestedBlockWrapper from './NestedBlockWrapper';
 import RepeaterItem from './RepeaterItem';
 import RecursiveBlockRenderer from './RecursiveBlockRenderer';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -28,15 +28,15 @@ export default class Repeater extends React.Component {
 
 
   cb__add_btn(ev) {
-    const subblock_types = this.props.field_def.subblock_types;
+    const nested_block_types = this.props.field_def.nested_block_types;
 
-    if (subblock_types.length > 1) {
+    if (nested_block_types.length > 1) {
       this.setState({
         show_dialogue: !this.state.show_dialogue,
       });
     }
 
-    else if (subblock_types.length === 1) {
+    else if (nested_block_types.length === 1) {
       this.cb__add();
     }
   }
@@ -46,8 +46,8 @@ export default class Repeater extends React.Component {
     const containing_data_item = this.props.containing_data_item;
     const field_def = this.props.field_def;
     const block_type = ev ?
-      ev.currentTarget.getAttribute('data-subblock-type') :
-      this.props.field_def.subblock_types[0];
+      ev.currentTarget.getAttribute('data-nested_block-type') :
+      this.props.field_def.nested_block_types[0];
 
     if (!containing_data_item[field_def.name]) {
       containing_data_item[field_def.name] = [ ];
@@ -105,9 +105,9 @@ export default class Repeater extends React.Component {
     const RepeaterItemStub           = this.props.repeater_item_component || RepeaterItem;
     const RecursiveBlockRendererStub = this.props.rbr_component           || RecursiveBlockRenderer;
     const data_items                 = containing_data_item[field_def.name] || [ ];
-    const subblock_types             = field_def.subblock_types || [ ];
+    const nested_block_types             = field_def.nested_block_types || [ ];
     const max                        = field_def.max || -1;
-    const multiple_types             = subblock_types.length !== 1;
+    const multiple_types             = nested_block_types.length !== 1;
     const dnd_context_id             = `d-${this.uid}`;
     const show_add_button            = max === -1 || data_items.length < max;
 
@@ -153,10 +153,10 @@ export default class Repeater extends React.Component {
                 {multiple_types && (
                   <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content">
-                      {subblock_types.map((block_type, i) => {
+                      {nested_block_types.map((block_type, i) => {
                         const block = Utils.find_block(ctx.blocks, block_type);
                         return (
-                          <a className="dropdown-item" onClick={this.cb__add} key={i} data-subblock-type={block_type}>
+                          <a className="dropdown-item" onClick={this.cb__add} key={i} data-nested_block-type={block_type}>
                             {block.description || block.type}
                           </a>
                         );

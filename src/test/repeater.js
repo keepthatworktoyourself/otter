@@ -96,19 +96,19 @@ test('Repeater: does not render Add btn if has max children', t => {
 });
 
 
-test('Repeater: Add btn renders dropdown item for each subblock type', t => {
+test('Repeater: Add btn renders dropdown item for each nested_block type', t => {
   const f = Otter.Utils.copy(test_blocks()[3].fields[0]);
   const wrapper = mk_stubbed(f, test_data()[3], ctx());
   const items = wrapper.find('.dropdown-item');
-  t.deepEqual(f.subblock_types, items.map(item => item.prop('data-subblock-type')));
+  t.deepEqual(f.nested_block_types, items.map(item => item.prop('data-nested_block-type')));
   t.is(wrapper.instance().cb__add, items.first().prop('onClick'));
 });
 
 
-test('Repeater: on Add btn click, if only 1 subblock_type, immediately add it', t => {
+test('Repeater: on Add btn click, if only 1 nested_block_type, immediately add it', t => {
   const data_item = { __type: 'B4' };
   const f = Otter.Utils.copy(test_blocks()[3].fields[0]);
-  f.subblock_types = [ 'AContentItem' ];
+  f.nested_block_types = [ 'AContentItem' ];
   const wrapper = mk_stubbed(f, data_item, ctx());
   const add_btn = wrapper.find('.repeater-add-btn button');
 
@@ -120,7 +120,7 @@ test('Repeater: on Add btn click, if only 1 subblock_type, immediately add it', 
 });
 
 
-test('Repeater: on Add btn click, if >1 subblock_type, open submenu', t => {
+test('Repeater: on Add btn click, if >1 nested_block_type, open submenu', t => {
   const data_item = { __type: 'B4' };
   const wrapper = mk_stubbed(test_blocks()[3].fields[0], data_item, ctx());
   const add_btn = wrapper.find('.repeater-add-btn button');
@@ -142,7 +142,7 @@ test('Repeater: when an add menu item is clicked, the item is added', t => {
   t.is(0, wrapper.find(RepeaterItem).length);
 
   const add_menu_items = wrapper.find('.dropdown-item');
-  t.is(test_blocks()[3].fields[0].subblock_types.length, add_menu_items.length);
+  t.is(test_blocks()[3].fields[0].nested_block_types.length, add_menu_items.length);
 
   add_menu_items.first().prop('onClick')({
     currentTarget: {

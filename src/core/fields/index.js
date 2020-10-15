@@ -8,15 +8,15 @@ import WPMedia    from './WPMedia';
 import ErrorField from './ErrorField';
 
 const fields = {
-  TextInput:     'TextInput',
-  TextArea:      'TextArea',
-  TextEditor:    'TextEditor',
-  Bool:          'Bool',
-  Radios:        'Radios',
-  Select:        'Select',
-  WPMedia:       'WPMedia',
-  SubBlock:      'SubBlock',
-  SubBlockArray: 'SubBlockArray',
+  TextInput:        'TextInput',
+  TextArea:         'TextArea',
+  TextEditor:       'TextEditor',
+  Bool:             'Bool',
+  Radios:           'Radios',
+  Select:           'Select',
+  WPMedia:          'WPMedia',
+  NestedBlock:      'NestedBlock',
+  Repeater: 'Repeater',
 
   components: {
     TextInput,

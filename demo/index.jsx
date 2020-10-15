@@ -74,35 +74,35 @@ const html_block = {
   ],
 };
 
-const block_with_subblock = {
-  type: 'SubBlockDemo',
-  description: 'Block with subblocks',
+const block_with_nested_block = {
+  type: 'NestedBlockDemo',
+  description: 'Block with nested_blocks',
   fields: [
     {
       name:          'heading',
       description:   'Heading',
-      type:          Otter.Fields.SubBlock,
-      subblock_type: 'Header',
+      type:          Otter.Fields.NestedBlock,
+      nested_block_type: 'Header',
     },
     {
       name:          'text_content',
       description:   'Content',
-      type:          Otter.Fields.SubBlock,
-      subblock_type: 'Text',
+      type:          Otter.Fields.NestedBlock,
+      nested_block_type: 'Text',
       optional:      true,
     },
   ],
 };
 
-const block_with_subblock_array = {
-  type: 'SubBlockArrayDemo',
-  description: 'Block with subblock array',
+const block_with_repeater = {
+  type: 'RepeaterDemo',
+  description: 'Block with nested_block array',
   fields: [
     {
       name:           'content_items',
       description:    'Content:',
-      type:           Otter.Fields.SubBlockArray,
-      subblock_types: [ 'Text', 'HTML' ],
+      type:           Otter.Fields.Repeater,
+      nested_block_types: [ 'Text', 'HTML' ],
     },
   ],
 };
@@ -113,8 +113,8 @@ const blocks__flat = [
   header_block,
   text_block,
   html_block,
-  block_with_subblock,
-  block_with_subblock_array,
+  block_with_nested_block,
+  block_with_repeater,
 ];
 
 const blocks__nested = {
@@ -124,7 +124,7 @@ const blocks__nested = {
   },
   complex: {
     name:   'Content',
-    blocks: [ block_with_subblock, block_with_subblock_array ],
+    blocks: [ block_with_nested_block, block_with_repeater ],
   },
 };
 

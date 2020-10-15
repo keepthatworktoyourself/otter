@@ -3,8 +3,8 @@ import React from 'react';
 
 export default function FieldLabel(props) {
   const align = props.is_top_level ? (props.align || 'right') : 'left';
-    // In subblocks, field labels are always left-aligned, to make room
-    // for subblock's Delete button
+    // In nested_blocks, field labels are always left-aligned, to make room
+    // for nested_block's Delete button
 
   const class_align = {
     left:  'has-text-left',
