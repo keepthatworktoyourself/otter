@@ -1,9 +1,10 @@
 import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
-import SubBlock from './SubBlock';
 import PageDataContext from './PageDataContext';
 import Utils from './definitions/utils';
-import DDToggle from './other/DDToggle';
+import NestedBlockWrapper from './NestedBlockWrapper';
+import RepeaterItem from './RepeaterItem';
+import RecursiveBlockRenderer from './RecursiveBlockRenderer';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faPlusCircle} from '@fortawesome/free-solid-svg-icons';
 
@@ -14,150 +15,161 @@ export default class Repeater extends React.Component {
     super(props);
 
     this.state = {
-      contents_hidden: true,
+      collapsed: true,
       show_dialogue: false,
     };
 
-    this.cb_add_btn  = this.cb_add_btn.bind(this);
-    this.cb_add      = this.cb_add.bind(this);
-    this.cb_delete   = this.cb_delete.bind(this);
-    this.cb_showhide = this.cb_showhide.bind(this);
+    this.uid         = Utils.uid();
+    this.cb__add_btn = this.cb__add_btn.bind(this);
+    this.cb__add     = this.cb__add.bind(this);
+    this.cb__delete  = this.cb__delete.bind(this);
+    this.cb__reorder = this.cb__reorder.bind(this);
   }
 
 
-  cb_add_btn(ev) {
-    const subblock_types = this.props.field.def.subblock_types;
+  cb__add_btn(ev) {
+    const nested_block_types = this.props.field_def.nested_block_types;
 
-    if (subblock_types.length > 1) {
+    if (nested_block_types.length > 1) {
       this.setState({
         show_dialogue: !this.state.show_dialogue,
       });
     }
-    else {
-      this.cb_add(null);
+
+    else if (nested_block_types.length === 1) {
+      this.cb__add();
     }
   }
 
 
-  cb_add(ev) {
+  cb__add(ev) {
+    const containing_data_item = this.props.containing_data_item;
+    const field_def = this.props.field_def;
+    const block_type = ev ?
+      ev.currentTarget.getAttribute('data-nested_block-type') :
+      this.props.field_def.nested_block_types[0];
+
+    if (!containing_data_item[field_def.name]) {
+      containing_data_item[field_def.name] = [ ];
+    }
+    containing_data_item[field_def.name].push({ __type: block_type });
+
     this.setState({
       show_dialogue: false,
     });
 
-    const type = ev ? parseInt(ev.currentTarget.getAttribute('data-subblock-type')) : 0;
-    const def = this.props.field.def.subblock_types[type];
-
-    this.ctx.add_repeater_item(this.props.field.uid, def);
+    this.ctx.value_updated();
+    this.ctx.should_redraw();
+    this.ctx.block_toggled();
   }
 
 
-  cb_delete(subblock) {
-    this.ctx.remove_repeater_item(this.props.field.uid, subblock.uid);
+  cb__delete(i) {
+    const data_items = this.props.containing_data_item[this.props.field_def.name];
+    data_items.splice(i, 1);
+
+    this.setState({ });
+
+    this.ctx.value_updated();
+    this.ctx.should_redraw();
+    this.ctx.block_toggled();
   }
 
 
-  cb_showhide(ev) {
-    this.setState({
-      contents_hidden: !this.state.contents_hidden,
-    });
+  cb__reorder(drag_result) {
+    if (!drag_result.destination || !drag_result.source) {
+      return;
+    }
+    if (drag_result.source.index === drag_result.destination.index) {
+      return;
+    }
+
+    const data_items = this.props.containing_data_item[this.props.field_def.name];
+    const [item] = data_items.splice(drag_result.source.index, 1);
+    data_items.splice(drag_result.destination.index, 0, item);
+
+    this.setState({ });
+    this.ctx.value_updated();
+    this.ctx.should_redraw();
     this.ctx.block_toggled();
   }
 
 
   render() {
-    const block = this.props.block;
-    const field = this.props.field;
-    const max = field.def.max || -1;
-
-    const repeater_title = field.def.description || field.def.name;
-    const subblocks      = field.value || [ ];
-    const subblock_defs  = field.def.subblock_types || [ ];
-    const multiple_types = subblock_defs.length !== 1;
+    const field_def                  = this.props.field_def;
+    const containing_data_item       = this.props.containing_data_item;
+    const DragDropContext            = this.props.drag_context_component  || DnD.DragDropContext;
+    const Droppable                  = this.props.droppable_component     || DnD.Droppable;
+    const Draggable                  = this.props.draggable_component     || DnD.Draggable;
+    const ContextConsumer            = this.props.consumer_component      || PageDataContext.Consumer;
+    const RepeaterItemStub           = this.props.repeater_item_component || RepeaterItem;
+    const RecursiveBlockRendererStub = this.props.rbr_component           || RecursiveBlockRenderer;
+    const data_items                 = containing_data_item[field_def.name] || [ ];
+    const nested_block_types             = field_def.nested_block_types || [ ];
+    const max                        = field_def.max || -1;
+    const multiple_types             = nested_block_types.length !== 1;
+    const dnd_context_id             = `d-${this.uid}`;
+    const show_add_button            = max === -1 || data_items.length < max;
 
     return (
-      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
-        <div className="repeater" data-id={block.uid}>
+      <ContextConsumer>{ctx => (this.ctx = ctx) && (
+        <>
+          <DragDropContext onDragEnd={this.cb__reorder} stub="DragDropContext">
+            <Droppable droppableId={dnd_context_id} type={dnd_context_id}>{(prov, snap) => (
+              <div ref={prov.innerRef} {...prov.droppableProps}>
 
-          <div style={{ paddingBottom: '0.5rem' }}>
-            {repeater_title && (
-              <h4 style={{ cursor: 'pointer' }} className="title is-7 is-marginless">
-                <span onClick={this.cb_showhide} style={{ display: 'inline-block' }}>
-                  {repeater_title}
+                {data_items.map((data_item, index) => (
+                  <RepeaterItemStub stub="RepeaterItem"
+                                    index={index}
+                                    dnd_context_id={dnd_context_id}
+                                    key={index}
+                                    cb__delete={this.cb__delete}>
 
-                  <DDToggle is_open={!this.state.contents_hidden} cb={this.cb_showhide} />
-                </span>
-              </h4>
-            )}
-          </div>
+                    <RecursiveBlockRendererStub stub="RBR" data_item={data_item} blocks={ctx.blocks} />
 
-          {!this.state.contents_hidden && (
-            <div style={{ paddingBottom: '0.5rem' }}>
-              <div className="otter-box" style={{ padding: '1rem' }}>
+                  </RepeaterItemStub>
+                ))}
 
-                {/* Repeater items */}
-                <DnD.Droppable droppableId={field.uid} type={field.uid}>{(prov, snap) => (
-                  <div ref={prov.innerRef} {...prov.droppableProps}>
+                {prov.placeholder}
 
-                    {subblocks.map((subblock, i) => (
-                      <DnD.Draggable key={subblock.uid} draggableId={subblock.uid} index={i} type={field.uid}>{(prov, snap) => (
-                        <div className="repeater-item-wrapper" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps}>
+              </div>
+            )}</Droppable>
+          </DragDropContext>
 
-                          <div style={{ paddingBottom: '0.5rem' }}>
-                            <SubBlock block={subblock}
-                                      contents_hidden={false}
-                                      border={true}
-                                      cb_delete={ev => this.cb_delete(subblock)} />
-                          </div>
+          {show_add_button && (
+            <div className="repeater-add-btn">
+              <div className={`dropdown ${this.state.show_dialogue ? 'is-active' : ''}`}>
 
-                        </div>
-                      )}</DnD.Draggable>
-                    ))}
+                <div className="dropdown-trigger">
+                  <button className="button is-small" aria-haspopup="true" aria-controls="dropdown-menu"
+                          onClick={this.cb__add_btn}>
+                    <span className="icon is-small has-text-grey">
+                      <FontAwesomeIcon icon={faPlusCircle} />
+                    </span>
+                    <span>Add</span>
+                  </button>
+                </div>
 
-                    {prov.placeholder}
-
-                  </div>
-                )}</DnD.Droppable>
-                {/* End repeater items */}
-
-
-                {/* 'Add' button */}
-                {(max === -1 || subblocks.length < max) && (
-                  <div>
-                    <div className={`dropdown ${this.state.show_dialogue ? 'is-active' : ''}`}>
-
-                      <div className="dropdown-trigger">
-                        <button className="button is-small" aria-haspopup="true" aria-controls="dropdown-menu"
-                                onClick={this.cb_add_btn}>
-                          <span className="icon is-small has-text-grey">
-                            <FontAwesomeIcon icon={faPlusCircle} />
-                          </span>
-                          <span>Add</span>
-                        </button>
-                      </div>
-
-                      {multiple_types && (
-                        <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                          <div className="dropdown-content">
-                            {subblock_defs.map((t, i) => (
-                              <a className="dropdown-item" onClick={this.cb_add} key={i} data-subblock-type={i}>
-                                {t.description}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
+                {multiple_types && (
+                  <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div className="dropdown-content">
+                      {nested_block_types.map((block_type, i) => {
+                        const block = Utils.find_block(ctx.blocks, block_type);
+                        return (
+                          <a className="dropdown-item" onClick={this.cb__add} key={i} data-nested_block-type={block_type}>
+                            {block.description || block.type}
+                          </a>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
-                {/* End 'add' button */}
 
               </div>
             </div>
           )}
-
-        </div>
-      )}</PageDataContext.Consumer>
+        </>
+      )}</ContextConsumer>
     );
   }
 

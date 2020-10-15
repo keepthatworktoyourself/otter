@@ -46,8 +46,7 @@ export default class BlockPicker extends React.Component {
             overflowY: 'auto' }}>
             <div style={{ maxHeight: outer_max_height || 'none' }}>
 
-            <div className="box" style={{
-              position: 'relative', paddingTop: '2rem', borderRadius: 0 }}>
+            <div className="box" style={{ position: 'relative', paddingTop: '2rem', borderRadius: 0 }}>
 
               <div style={{ position: 'absolute', top: '1rem', right: '1.2rem', }}>
                 <span style={{ cursor: 'pointer' }} onClick={this.close}>

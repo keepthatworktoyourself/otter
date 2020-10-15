@@ -10,49 +10,51 @@ export default class AddBlockBtn extends React.Component {
   constructor(props) {
     super(props);
     this.state = { open: false };
-    this.cb_toggle = this.cb_toggle.bind(this);
-    this.cb_select = this.cb_select.bind(this);
+    this.cb__toggle = this.cb__toggle.bind(this);
+    this.cb__select = this.cb__select.bind(this);
   }
 
 
-  cb_toggle() {
+  cb__toggle() {
     if (this.is_simple) {
       this.setState({ open: !this.state.open });
     }
     else {
-      this.ctx.open_block_picker(this.props.block_index);
+      this.ctx.open_block_picker(this.props.index);
     }
   }
 
 
-  cb_select(ev) {
+  cb__select(ev) {
     this.setState({ open: false });
-    this.props.cb_select(ev.currentTarget.getAttribute('data-block-type'));
+
+    const block_type = ev.currentTarget.getAttribute('data-block-type');
+    this.ctx.add_item(block_type, this.props.index);
   }
 
 
   render() {
-    const blocks = this.props.blocks || [ ];
-    this.is_simple = !Utils.blocks_are_grouped(blocks);
-
-    const active = this.state.open ? 'is-active' : '';
-    const popup_dir = this.props.popup_direction === 'up' ? 'is-up' : '';
-
-    const c__dropdown = this.is_simple ? `dropdown ${popup_dir} ${active}` : '';
+    const blocks           = this.props.blocks || [ ];
+    const active           = this.state.open ? 'is-active' : '';
+    const popup_dir        = this.props.popup_direction === 'up' ? 'is-up' : '';
+    const suggest          = this.props.suggest;
+    const ContextConsumer  = this.props.consumer_component || PageDataContext.Consumer;
+    this.is_simple         = Utils.blocks_are_simple(blocks);
+    const c__dropdown      = `dropdown ${this.is_simple ? `${popup_dir} ${active}` : ''}`;
+    const displayed_blocks = this.is_simple && blocks.filter(b => b && b.hidden !== true);
 
     return (
-      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
+      <ContextConsumer>{ctx => (this.ctx = ctx) && (
         <div className={c__dropdown}>
 
           <div className="dropdown-trigger">
             <button className="button is-rounded" aria-haspopup="true" aria-controls="dropdown-menu"
-                    onClick={this.cb_toggle}>
+                    onClick={this.cb__toggle}>
 
-              {this.props.suggest && (
-                <span>
-                  Add a block to get started
-                </span>
+              {suggest && (
+                <span>Add a block to get started</span>
               )}
+
               <span className="icon is-small has-text-grey">
                 <FontAwesomeIcon icon={faPlusCircle} />
               </span>
@@ -62,9 +64,9 @@ export default class AddBlockBtn extends React.Component {
           {this.is_simple && (
             <div className="dropdown-menu" style={{ left: '50%', transform: 'translateX(-50%)' }} id="dropdown-menu" role="menu">
               <div className="dropdown-content" style={{ maxHeight: '12rem', overflowY: 'scroll' }}>
-                {blocks.map((block_def, i) => (
-                  <a className="dropdown-item" onClick={this.cb_select} key={i} data-block-type={block_def.type}>
-                    {block_def.description}
+                {displayed_blocks.map((block, i) => (
+                  <a className="dropdown-item" onClick={this.cb__select} key={i} data-block-type={block.type}>
+                    {block.description}
                   </a>
                 ))}
               </div>
@@ -72,7 +74,7 @@ export default class AddBlockBtn extends React.Component {
           )}
 
         </div>
-      )}</PageDataContext.Consumer>
+      )}</ContextConsumer>
     );
   }
 

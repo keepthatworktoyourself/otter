@@ -15,13 +15,13 @@ export default class WPMedia extends React.Component {
   }
 
 
-  image_selection__bind(ctx, field) {
+  image_selection__bind(ctx, containing_data_item, field_def) {
     function cb(ev) {
       const proceed = ev.data && ev.data['otter--set-wp-media-item'];
       if (proceed) {
         ev.stopPropagation();
 
-        field.value = ev.data['otter--set-wp-media-item'];
+        containing_data_item[field_def.name] = ev.data['otter--set-wp-media-item'];
         ctx.value_updated();
         ctx.should_redraw();
 
@@ -33,44 +33,48 @@ export default class WPMedia extends React.Component {
   }
 
 
-  open_media_browser(field) {
+  open_media_browser(field_def) {
     window.parent && window.parent.postMessage({
-      'otter--get-wp-media-item': field.def.media_types || [],
-    });
+      'otter--get-wp-media-item': field_def.media_types || [],
+    }, '*');
   }
 
 
   cb_click(ev) {
-    this.image_selection__bind(this.ctx, this.props.field);
-    this.open_media_browser(this.props.field);
+    this.image_selection__bind(this.ctx, this.props.containing_data_item, this.props.field_def);
+    this.open_media_browser(this.props.field_def);
   }
 
 
   cb_clear() {
-    this.props.field.value = null;
+    this.props.containing_data_item[this.props.field_def.name] = null;
     this.ctx.value_updated();
     this.ctx.should_redraw();
   }
 
 
   render() {
-    const block = this.props.block;
-    const field = this.props.field;
+    const field_def            = this.props.field_def;
+    const containing_data_item = this.props.containing_data_item;
+    const is_top_level         = this.props.is_top_level;
+    const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
+    const value                = containing_data_item[field_def.name];
 
     return (
-      <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
+      <ContextConsumer>{ctx => (this.ctx = ctx) && (
         <div className="field">
           <div style={{ paddingRight: '7rem' }}>
 
             <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
 
               <div className="level-item flex-start">
-                <FieldLabel field={field} block={block} align="left" colon={true} />
+                <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level}
+                            align="left" colon={true} />
               </div>
 
               <div className="level-item flex-start">
                 <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
-                  {field.value && (
+                  {value && (
                     <div className="level-item flex-start">
                         <div style={{
                                display: 'block',
@@ -81,19 +85,20 @@ export default class WPMedia extends React.Component {
                                border: '1px solid rgba(0,0,0,0.1)'
                              }}
                              className="has-background-light">
-                          <img src={field.value.thumbnail || field.value.url} alt="your preview"
+                          <img src={value.thumbnail || value.url} alt="WPMedia image preview"
                                style={{ maxWidth: '100%', maxHeight: '100%' }} />
                         </div>
                     </div>
                   )}
 
                   <div className="level-item flex-start">
-                    <a className="button is-small" onClick={this.cb_click}>Select</a>
+                    <a className="wpmedia-select-btn button is-small" onClick={this.cb_click}>Select</a>
                   </div>
 
-                  {field.value && (
+                  {value && (
                     <div className="level-item flex-start">
-                      <a className="button is-rounded is-small is-light has-text-grey-light" onClick={this.cb_clear}>
+                      <a className="wpmedia-clear-btn button is-rounded is-small is-light has-text-grey-light"
+                         onClick={this.cb_clear}>
                         <FontAwesomeIcon icon={faTimes} />
                       </a>
                     </div>
@@ -105,7 +110,7 @@ export default class WPMedia extends React.Component {
 
           </div>
         </div>
-      )}</PageDataContext.Consumer>
+      )}</ContextConsumer>
     );
   }
 }

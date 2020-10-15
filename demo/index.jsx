@@ -7,127 +7,126 @@ import '../src/css';
 // Define blocks
 // -----------------------------------
 
-const blocks__header = Otter.Blockset([
-  {
-    type: 'Header',
-    description: 'Header',
-    fields: [
-      {
-        name:        'heading',
-        description: 'Heading',
-        type:        Otter.Fields.TextInput,
+const header_block = {
+  type: 'Header',
+  description: 'Header',
+  fields: [
+    {
+      name:        'heading',
+      description: 'Heading',
+      type:        Otter.Fields.TextInput,
+    },
+    {
+      name:        'subheading',
+      description: 'Catchy subtitle',
+      type:        Otter.Fields.TextInput,
+    },
+    {
+      name:        'theme',
+      description: 'Theme',
+      type:        Otter.Fields.Radios,
+      options: {
+        light: 'Light',
+        dark:  'Dark',
       },
-      {
-        name:        'subheading',
-        description: 'Catchy subtitle',
-        type:        Otter.Fields.TextInput,
-      },
-      {
-        name: 'theme',
-        description: 'Theme',
-        type: Otter.Fields.Radios,
-        options: {
-          light: 'Light',
-          dark: 'Dark',
-        },
-      },
-    ],
-  },
-]);
+    },
+  ],
+};
 
-const blocks__content = Otter.Blockset([
-  {
-    type: 'Text',
-    description: 'Text content',
-    fields: [
-      {
-        name:        'content',
-        description: 'Content',
-        type:        Otter.Fields.TextEditor,
+const text_block = {
+  type: 'Text',
+  description: 'Text content',
+  fields: [
+    {
+      name:        'content',
+      description: 'Content',
+      type:        Otter.Fields.TextEditor,
+    },
+    {
+      name:        'fancy',
+      description: 'Fancy lettering',
+      type:        Otter.Fields.Bool,
+      text__yes:   'Sure',
+      text__no:    'No, plain',
+    },
+    {
+      name:        'align',
+      description: 'Align',
+      type:        Otter.Fields.Select,
+      options: {
+        left:   'Left',
+        right:  'Right',
+        center: 'Center',
       },
-      {
-        name:        'fancy',
-        description: 'Fancy lettering',
-        type:        Otter.Fields.Bool,
-        text__yes:   'Sure',
-        text__no:    'No, plain',
-      },
-      {
-        name:        'align',
-        description: 'Align',
-        type:        Otter.Fields.Select,
-        options: {
-          left:   'Left',
-          right:  'Right',
-          center: 'Center',
-        },
-      },
-    ],
-  },
-  {
-    type: 'HTML',
-    description: 'Raw HTML',
-    fields: [
-      {
-        name:        'html',
-        description: 'HTML',
-        type:        Otter.Fields.TextArea,
-      },
-    ],
-  },
-]);
+    },
+  ],
+};
+
+const html_block = {
+  type: 'HTML',
+  description: 'Raw HTML',
+  fields: [
+    {
+      name:        'html',
+      description: 'HTML',
+      type:        Otter.Fields.TextArea,
+    },
+  ],
+};
+
+const block_with_nested_block = {
+  type: 'NestedBlockDemo',
+  description: 'Block with nested_blocks',
+  fields: [
+    {
+      name:          'heading',
+      description:   'Heading',
+      type:          Otter.Fields.NestedBlock,
+      nested_block_type: 'Header',
+    },
+    {
+      name:          'text_content',
+      description:   'Content',
+      type:          Otter.Fields.NestedBlock,
+      nested_block_type: 'Text',
+      optional:      true,
+    },
+  ],
+};
+
+const block_with_repeater = {
+  type: 'RepeaterDemo',
+  description: 'Block with nested_block array',
+  fields: [
+    {
+      name:           'content_items',
+      description:    'Content:',
+      type:           Otter.Fields.Repeater,
+      nested_block_types: [ 'Text', 'HTML' ],
+    },
+  ],
+};
 
 
-const blocks__other = Otter.Blockset([
-  {
-    type: 'MultiContent',
-    description: 'Multiple content items',
-    fields: [
-      {
-        name:           'content_items',
-        description:    'Content:',
-        type:           Otter.Fields.SubBlockArray,
-        subblock_types: [ blocks__content.get('Text') ],
-      },
-    ],
-  },
-  {
-    type: 'HeadingWithText',
-    description: 'Heading with text',
-    fields: [
-      {
-        name:          'heading',
-        description:   'Heading',
-        type:          Otter.Fields.SubBlock,
-        subblock_type: blocks__header.get('Header'),
-      },
-      {
-        name:          'text_content',
-        description:   'Content',
-        type:          Otter.Fields.SubBlock,
-        subblock_type: blocks__content.get('Text'),
-        optional:      true,
-      },
-    ],
-  },
-]);
+// Blocks can be a flat array or nested in groups
+const blocks__flat = [
+  header_block,
+  text_block,
+  html_block,
+  block_with_nested_block,
+  block_with_repeater,
+];
 
-const blocks__flat = Otter.Blockset([].concat(
-  blocks__header,
-  blocks__content,
-  blocks__other,
-));
-
-const blocks__nested = Otter.Blockset({
+const blocks__nested = {
   simple: {
     name:   'Headers',
-    blocks: blocks__header,
+    blocks: [ header_block ],
   },
   complex: {
     name:   'Content',
-    blocks: blocks__other,
+    blocks: [ block_with_nested_block, block_with_repeater ],
   },
-});
+};
 
 
 // load
@@ -143,10 +142,13 @@ function load(post_id) {
         __type:     'Header',
         heading:    'Concerning the spiritual in art',
         subheading: 'Wassily Kandinsky',
+        theme:      'light',
       },
       {
         __type: 'Text',
         content: 'Every work of art is the child of its age and, in many cases, the mother of our emotions...',
+        fancy:   true,
+        align:   'center',
       },
     ],
   });
@@ -174,7 +176,7 @@ const delegate = {
     console.log('save()', data);
   },
   block_toggled() {
-    console.log('toggled');
+    console.log('block toggled');
   }
 };
 
@@ -211,7 +213,7 @@ else {
 
 function render() {
   ReactDOM.render(
-    <Otter.Editor data={state.data} load_state={state.load_state} delegate={delegate} blockset={blocks__flat} save={Otter.Save.OnInput} />,
+    <Otter.Editor blocks={blocks__flat} data={state.data} load_state={state.load_state} delegate={delegate} save={Otter.Save.OnInput} />,
     document.getElementById('otter-container')
   );
 }

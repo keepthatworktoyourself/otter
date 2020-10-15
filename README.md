@@ -1,5 +1,6 @@
 # Otter <img align="right" src="files/otter.png" width=60 height=60>
 
+[![Build Status](https://travis-ci.com/bhallstein/otter.svg?branch=int)](https://travis-ci.com/bhallstein/otter)
 
 - Create rich content editors by composing content blocks from built-in fields 🐟
 - Simple, declarative syntax 💦
@@ -77,11 +78,13 @@ const text_blocks = Otter.Blockset([
     fields: [
       <field>, ...
     ],
+    hidden: true,
   },
 ]);
 ```
 
-`thumbnail` is optional and only used by Otter when initialized with *grouped content blocks*.
+- `thumbnail` is optional and only used by Otter when initialized with *grouped content blocks*.
+- `hidden` is optional, default `false`. Set to `true` if the block is not to be picked as a top-level block, but instead is to be used in a NestedBlock or Repeater.
 
 
 ### Grouped content blocks
@@ -191,13 +194,13 @@ When using `display_if`, the editor field is displayed/hidden based on the value
 - Options:
     - `media_types: [ <type>, <type, ... ]` : control which file types appear in the media browser. Values: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If `media_types` option is omitted or an empty array, the items are not constrained by type.
 
-`Otter.Fields.SubBlock`
+`Otter.Fields.NestedBlock`
 
 - Embed another block into this block. Otter can compose blocks together recursively, allowing for complex content types, and aiding re-use of block definitions.
 - Options:
-    - `description: <string>` : if supplied, used to title the wrapped subblock in the editor
-    - `subblock_type: MyTextBlock` : the block object to be embedded as a subblock
-    - `optional: <bool>` : add a toggle to enable or disable the subblock
+    - `description: <string>` : if supplied, used to title the wrapped nested_block in the editor
+    - `nested_block_type: MyTextBlock` : the block object to be embedded as a nested_block
+    - `optional: <bool>` : add a toggle to enable or disable the nested_block
 
 ```js
 Otter.Blockset([
@@ -212,21 +215,21 @@ Otter.Blockset([
       {
         name: 'content',
         description: 'Content',
-        type: Otter.Fields.SubBlock,
-        subblock_type: text_blocks.get('MyTextBlock'),
+        type: Otter.Fields.NestedBlock,
+        nested_block_type: text_blocks.get('MyTextBlock'),
       },
     ],
   }
 ]);
 ```
 
-`Otter.Fields.SubBlockArray`
+`Otter.Fields.Repeater`
 
-- A repeater of subblocks, where the user picks blocks from one or more predefined types.
+- A repeater of nested_blocks, where the user picks blocks from one or more predefined types.
 - Options:
-    - `description` : if supplied, used to title the wrapped subblock array in the editor
-    - `subblock_types: [ <block1>, <block2>, ... ]` : an array of block objects defining which types of block the user will be able to pick from
-    - `max: <number>` : optionally limit the number of subblocks the user can add
+    - `description` : if supplied, used to title the wrapped nested_block array in the editor
+    - `nested_block_types: [ <block1>, <block2>, ... ]` : an array of block objects defining which types of block the user will be able to pick from
+    - `max: <number>` : optionally limit the number of nested_blocks the user can add
 
 ```js
 Otter.Blockset([
@@ -235,8 +238,8 @@ Otter.Blockset([
     fields: [
       {
         name: 'content',
-        type: Otter.Fields.SubBlockArray,
-        subblock_types: [
+        type: Otter.Fields.Repeater,
+        nested_block_types: [
           my_blocks.get('MyContentBlock__1'),
           my_blocks.get('MyContentBlock__2'),
         ],
