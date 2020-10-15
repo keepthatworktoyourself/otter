@@ -1,5 +1,6 @@
 # Otter <img align="right" src="files/otter.png" width=60 height=60>
 
+[![Build Status](https://travis-ci.com/bhallstein/otter.svg?branch=int)](https://travis-ci.com/bhallstein/otter)
 
 - Create rich content editors by composing content blocks from built-in fields 🐟
 - Simple, declarative syntax 💦

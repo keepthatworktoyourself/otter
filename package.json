@@ -27,6 +27,7 @@
     "t": "ava -c 1 --verbose src/test/*",
     "tw": "ava -c 1 --watch src/test/*",
     "ts": "ava -c 1 --watch",
+    "test": "npm run t",
     "i": "rm -rf node_modules && npm install"
   },
   "dependencies": {
