@@ -55,7 +55,7 @@
   }
 
 
-  // editor - call on wp init
+  // editor
   // -----------------------------------
   // - call on wp init
   // - priority must be < 100

@@ -16,7 +16,7 @@ const fields = {
   Select:           'Select',
   WPMedia:          'WPMedia',
   NestedBlock:      'NestedBlock',
-  Repeater: 'Repeater',
+  Repeater:         'Repeater',
 
   components: {
     TextInput,

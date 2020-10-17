@@ -60,7 +60,7 @@ test('Editor: do_save_on_input saves if Save is OnInput', t => {
   f.save = () => f_saved = true;
 
   e.props = { save: Otter.Save.OnInput               };
-  f.props = { save: Otter.Save.WhenSaveButtonClicked };
+  f.props = { save: Otter.Save.OnClick };
 
   e.do_save_on_input();
   f.do_save_on_input();
@@ -118,9 +118,9 @@ test('Editor: creates a DnD context', t => {
 });
 
 
-test('Editor: renders save button when Save is WhenSaveButtonClicked (also by default)', t => {
+test('Editor: renders save button when Save is OnClick (also by default)', t => {
   const e0 = shallow(<Editor load_state={Otter.State.Loaded} />);
-  const e1 = shallow(<Editor load_state={Otter.State.Loaded} save={Otter.Save.WhenSaveButtonClicked} />);
+  const e1 = shallow(<Editor load_state={Otter.State.Loaded} save={Otter.Save.OnClick} />);
   const e2 = shallow(<Editor load_state={Otter.State.Loaded} save={Otter.Save.OnInput} />);
   t.is(true, e0.exists('.save-button'));
   t.is(true, e1.exists('.save-button'));

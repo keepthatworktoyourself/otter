@@ -29,8 +29,8 @@ export default class Bool extends React.Component {
     const field_def            = this.props.field_def;
     const containing_data_item = this.props.containing_data_item;
     const is_top_level         = this.props.is_top_level;
-    const text__yes            = field_def.text__yes || 'Yes';
-    const text__no             = field_def.text__no  || 'No';
+    const yes_label            = field_def.yes_label || 'Yes';
+    const no_label             = field_def.no_label  || 'No';
     const value                = containing_data_item[field_def.name];
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
 
@@ -48,11 +48,11 @@ export default class Bool extends React.Component {
               <div className="buttons has-addons is-marginless">
                 <a className={`button is-small ${value === true && 'is-selected is-link'}`} data-value="yes"
                    style={{ marginBottom: 0 }} onClick={this.cb_click}>
-                  {text__yes}
+                  {yes_label}
                 </a>
                 <a className={`button is-small ${value === false && 'is-selected is-link'}`} data-value="no"
                    style={{ marginBottom: 0 }} onClick={this.cb_click}>
-                  {text__no}
+                  {no_label}
                 </a>
               </div>
             </div>

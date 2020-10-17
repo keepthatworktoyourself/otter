@@ -226,7 +226,7 @@ export default class Editor extends React.Component {
     const data_items      = this.props.data || [ ];
     const blocks          = this.props.blocks || [ ];
     const load_state      = this.props.load_state;
-    const when_to_save    = this.props.save || Save.WhenSaveButtonClicked;
+    const when_to_save    = this.props.save || Save.OnClick;
     const DragDropContext = this.props.drag_context_component || DnD.DragDropContext;
     const Droppable       = this.props.droppable_component    || DnD.Droppable;
     const ContextProvider = this.props.provider_component     || PageDataContext.Provider;
@@ -265,7 +265,7 @@ export default class Editor extends React.Component {
       content__main = (
         <div className="container" style={{ minHeight: min_height }}>
 
-          {when_to_save === Save.WhenSaveButtonClicked && (
+          {when_to_save === Save.OnClick && (
             <div className="save-button" style={{ margin: '1rem' }}>
               <a className="button" onClick={this.save}>Save</a>
             </div>

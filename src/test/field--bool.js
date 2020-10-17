@@ -60,11 +60,11 @@ test('Bool: renders input with toggles, initial value', t => {
 });
 
 
-test('Bool: renders text__yes and text__no', t => {
+test('Bool: renders yes_label and no_label', t => {
   const b = Otter.Utils.copy(block);
   Object.assign(b.fields[0], {
-    text__yes: 'Certainly',
-    text__no:  'Absolutely not',
+    yes_label: 'Certainly',
+    no_label:  'Absolutely not',
   });
 
   const wrapper__false = mk_stubbed(b.fields[0], data_item__false);

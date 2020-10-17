@@ -46,8 +46,8 @@ const text_block = {
       name:        'fancy',
       description: 'Fancy lettering',
       type:        Otter.Fields.Bool,
-      text__yes:   'Sure',
-      text__no:    'No, plain',
+      yes_label:   'Sure',
+      no_label:    'No, plain',
     },
     {
       name:        'align',

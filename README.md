@@ -10,42 +10,158 @@
 
 ### Contents
 
-- [Otter element](#otter-element)
-- [Block API](#block-api)
-- [Field API](#field-api)
-- [Sample setup with create-react-app](#sample-setup-with-create-react-app)
-- [Basic full example](#basic-full-example)
-- [CSS](#css)
-- [Demo project](#demo-project)
-- [Development](#development)
-
-
-
-## Otter element
+- [Blocks](#blocks)
+- [Fields](#fields)
+- [Otter.Editor](#ottereditor)
+- [Demo](#demo)
+- [License](#license)
 
 ```jsx
-<Otter.Editor
-  blocks={blocks}
-  data={data}
-  load_state={Otter.State.Loaded}
-  save={Otter.Save.OnInput}
-  delegate={my_delegate} />
+// Render an otter editor
+<Otter.Editor blocks={blocks}
+              data={data}
+              load_state={Otter.State.Loaded} />
 ```
 
-Renders an Otter editor.
 
-- `blocks` : array of editor blocks available in this editor (see [Block API](#block-api))
-- `data` : initialize the editor with some content
-- `load_state` : one of the loading states (`Loading` and `Error` are useful when loading content data asynchronously):
-    - `Otter.State.Loading`
-    - `Otter.State.Loaded`
-    - `Otter.State.Error`
-- `save` : specify when `save()` is called on the delegate:
-    - `Otter.Save.OnInput` : call `save()` whenever the user makes a change
-    - `Otter.Save.WhenSaveButtonClicked` : render a save button, and call `save()` only when this is clicked
-- `delegate` :
-    - `save()` : Otter calls this method of your delegate object when data is saved in the editor.
-    - `block_toggled()` : called when the user expands/closes a sub-block (e.g. if your otter editor is within an iframe, you might then update the iframe height.)
+## Blocks
+
+Otter lets you quickly and declaratively define the available content blocks using simple Javascript object syntax.
+
+```js
+const my_block = {
+  type: 'MyBlock',
+  description: 'My block',
+  fields: [
+    <Field>,
+    <Field>,
+    ...
+  ],
+};
+```
+
+| Property      | Value              | Required | Default |                               |
+| :------------ | :----------------- | :------- | :------ | :---------------------------- |
+| `type`        | `<string>`         | Yes      |         | Unique block type identifier. Used to save the field value in exported data. |
+| `description` | `<string>`         |          |         | A human-readable name for the block to let the user identify it. |
+| `fields`      | `Array(<Field>)`   | Yes      |         | The editor fields present in this block. |
+| `thumbnail`   | `<path>`           |          |         | Optional thumbnail for use in the [graphical block picker](#blocks-optionally-categorise-in-groups). |
+| `hidden`      | `<bool>`           |          | `false` | If `true`, don't display this block in the block picker. This allows you to define blocks at the top level which can only be used in a NestedBlock or Repeater. |
+
+
+### Blocks: optionally categorise in groups
+
+When supplying your content blocks to Otter, (`<Otter.Editor blocks={blocks} />`), you can either use a **simple, flat array** of blocks, or **group them into categories**.
+
+```js
+// Simple blocks
+const blocks = [
+  <Block>,
+  <Block>,
+  ...
+];
+```
+
+```js
+// Grouped blocks
+const blocks = {
+  text: {
+    name: 'Text blocks',
+    blocks: [ <Block>, <Block>, ... ],
+  },
+  media: {
+    name: 'Media blocks',
+    blocks: [ <Block>, <Block>, ... ],
+  },
+};
+```
+
+Otter uses a different block picker depending on whether simple or grouped blocks are used. Grouped blocks can provide a much better user experience if your editor uses many types of blocks:
+
+| Simple block picker | Grouped block picker |
+| :------------------ | :------------------- |
+| <img src="files/picker--simple.png"> | <img src="files/picker--grouped.png"> |
+
+
+
+## Fields
+
+A block has one or more fields:
+
+```js
+{
+  name: 'content',
+  description: 'Content',
+  type: Otter.Fields.TextArea,
+}
+```
+
+| Property      | Value                                   | Required   |                                    |
+| :------------ | :-------------------------------------- | :--------- | :--------------------------------- |
+| `name`        | `<string>`                              | Yes        | The block data save key.           |
+| `description` | `<string>`                              |            | Field label displayed to the user. |
+| `type`        | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).    |
+| `display_if`  | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value of one or more siblings. |
+
+`DisplayRule` specifies the name of a sibling and the value that sibling must have (or not have) for this field to be shown. You can test against the value of `Bool`, `Radio`, and `Select` sibling fields. You can test against more than one sibling field using an array of multiple `DisplayRule` objects.
+
+```js
+{
+  name: 'url',
+  description: 'URL',
+  type: Otter.Fields.TextInput,
+  display_if: {
+    sibling: 'is_link',
+    equal_to: true,      // Or not_equal_to
+  },
+}
+```
+
+
+### Field types:
+
+All fields should be specified with the Otter-defined constants in the form `Otter.Fields.TextInput`.
+
+| Type          | Description                           | Options                | Default  |                                |
+| :------------ | :------------------------------------ | :--------------------- | :------- | :----------------------------- |
+| `TextInput`   | Plain text input                      |                        |          |                                |
+| `TextArea`    | Textarea (multi-line plain) text      |                        |          |                                |
+| `TextEditor`  | Rich text editor                      |                        |          |                                |
+| `Bool`        | A toggle                              |                        |          |                                |
+|               |                                       | `no_label` (string)    | `"Yes"`  | Label for `true` option        |
+|               |                                       | `yes_label` (string)   | `"No"`   | Label for `false` option       |
+| `Radios`      | Radio buttons                         |                        |          |                                |
+|               |                                       | `options` (object)     |          | Radio options. Key pairs are in the form `value: "Label"`. |
+| `Select`      | Select dropdown                       |                        |          |                                |
+|               |                                       | `options` (object)     |          | Select options. Key pairs are in the form `value: "Label"`. |
+| `WPMedia`     | Pick an item from a wordpress media browser (specific to the Wordpress plugin) | |                         |
+|               |                                       | `media_types` (array)  | `[ ]`    | File types to include in the media browser. Supported values: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If omitted or an empty array, all files are included. |
+| `NestedBlock` | Embed another block into this block.  |                        |          |                                |
+|               |                                       | `nested_block_type` (string or Block object)  | | The block to embed inside this block. Can be either a Block object reference, or a block name for a block defined elsewhere in the blockset. |
+|               |                                       | `optional` (bool)      | `false`  | If true, let the Nested Block be toggled on and off. |
+| `Repeater`    | Embed an array of blocks within this block. |                  |          |                                |
+|               |                                       | `nested_block_types` (array of strings or Block objects)  | | The blocks the user can pick from. Can be either Block object references, or block names for blocks defined elsewhere in the blockset. |
+|               |                                       | `optional` (bool)      | `false`  | If true, let the Repeater be toggled on and off. |
+|               |                                       | `max` (number)         | No limit | Optionally limit the number of nested_blocks the user can add. |
+
+
+## <Otter.Editor>
+
+The `Otter.Editor` element renders an editor, given your block definitions:
+
+```jsx
+<Otter.Editor blocks={blocks}
+              data={data}
+              load_state={Otter.State.Loaded} />
+```
+
+| Property      | Value                                      | Required | Default   |                            |
+| :------------ | :----------------------------------------- | :------- | :-------- | :------------------------- |
+| `blocks`      | `Array(<Block>)`                           | Yes      |           | The content blocks making up this editor. |
+| `data`        | Loaded data                                |          |           | The loaded page data. |
+| `load_state`  | `Otter.State.Loading`, `.Loaded`, `.Error` | Yes      |           | Set the editor state. Otter displays useful feedback to the user while asynchronously fetching content data. |
+| `save`        | `Otter.Save.OnInput`, `.OnClick`           |          | `OnClick` | Specifies when `save()` is called on the delegate: immediately when edited, or only when a save button is clicked. |
+| `delegate`    | A delegate object                          |          |           | An object Otter uses to communicate state changes back to you. May have `save` and `block_toggled` methods. |
 
 ```js
 const my_delegate = {
@@ -53,309 +169,25 @@ const my_delegate = {
     // Kick-off a request to update the post data
   },
   block_toggled() {
-    // set iframe height
+    // update container height, perhaps
   },
 };
 ```
 
 
 
-## Block API
+## Demo
 
-`Otter.Blockset([ <block>, <block>, ... ]) -> blockset`
+See [/demo](demo/) for the demo project, which renders an Otter editor with several blocks, including blocks with NestedBlock and Repeater fields.
 
-- Define a Blockset: a set of content block definitions: the definitions used by Otter to initialize and render the block-based editor.
-- Returns a Blockset object.
-- Arguments:
-    - `[ <block>, <block>, ... ]`: an array of content block definitions
+```bash
+# run the demo project
+parcel demo/index.html
+````
 
-```js
-const text_blocks = Otter.Blockset([
-  {
-    type: 'MyTextBlock',
-    description: 'Text block',
-    thumbnail: '/path/to/block-thumbnail.png',
-    fields: [
-      <field>, ...
-    ],
-    hidden: true,
-  },
-]);
-```
 
-- `thumbnail` is optional and only used by Otter when initialized with *grouped content blocks*.
-- `hidden` is optional, default `false`. Set to `true` if the block is not to be picked as a top-level block, but instead is to be used in a NestedBlock or Repeater.
 
-
-### Grouped content blocks
-
-`Otter.Blockset()` can be passed a flat array of block definitions, or you can group them together like so.
-
-```js
-const blocks = Otter.Blockset({
-  text: {
-    name: 'Text blocks',
-    blocks: [ <block>, <block>, ... ],
-  },
-  media: {
-    name: 'Media blocks',
-    blocks: [ <block>, <block>, ... ],
-  },
-});
-```
-
-When passed a flat array Blockset, the Otter block picker is a simple dropdown. When passed a Blockset of grouped blocks, the block picker is a large popup, organised by group, and including block thumbnails.
-
-
-*Block picker for flat blockset:*
-
-![Block picker using flat blockset](files/picker--simple.png)
-
-
-*Block picker for grouped blockset:*
-
-![Block picker using flat blockset](files/picker--grouped.png)
-
-
-
-### Blockset methods
-
-`get(block_type) -> block`
-
-- Returns the requested block object from the Blockset.
-
-```js
-const text = text_blocks.get('MyTextBlock');
-```
-
-
-
-## Field API
-
-A **block** contains one or more **fields** (see above).
-
-- `<field>` :
-
-```js
-{
-  name: 'content',
-  description: 'Content',
-  type: Otter.Fields.TextArea,
-  display_if: {
-    sibling: <sibling_name>,
-    [not_]equal_to: <value>,
-  },
-}
-```
-
-### display_if
-
-When using `display_if`, the editor field is displayed/hidden based on the value of one or more siblings. (The siblings must be `Bool` or `Radio` fields.)
-
-`display_if` can take a single rule object, or an array of objects referring to multiple siblings.
-
-
-### Field types:
-
-`Otter.Fields.TextInput`
-
-- A simple text input.
-
-`Otter.Fields.TextArea`
-
-- A textarea for multiline, unstyled text.
-
-`Otter.Fields.TextEditor`
-
-- Multiline rich text editor.
-
-`Otter.Fields.Bool`
-
-- A true/false toggle.
-- Options:
-    - `text__yes: <string>` : label for true option (default `"Yes"`)
-    - `text__no:  <string>` : label for false option (default `"No"`)
-
-`Otter.Fields.Radios`
-
-- A set of radio buttons
-- Options:
-    - `options: { value: "Label", ... }` : the set of radios
-
-`Otter.Fields.Select`
-
-- A select dropdown
-- Options:
-    - `options: { value: "Label", ... }` : the select values
-
-`Otter.Fields.WPMedia`
-
-- Wordpress-specific: let the user pick an item from a wordpress media browser.
-- Options:
-    - `media_types: [ <type>, <type, ... ]` : control which file types appear in the media browser. Values: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If `media_types` option is omitted or an empty array, the items are not constrained by type.
-
-`Otter.Fields.NestedBlock`
-
-- Embed another block into this block. Otter can compose blocks together recursively, allowing for complex content types, and aiding re-use of block definitions.
-- Options:
-    - `description: <string>` : if supplied, used to title the wrapped nested_block in the editor
-    - `nested_block_type: MyTextBlock` : the block object to be embedded as a nested_block
-    - `optional: <bool>` : add a toggle to enable or disable the nested_block
-
-```js
-Otter.Blockset([
-  {
-    name: 'MyHeaderAndContentBlock',
-    fields: [
-      {
-        name: 'header',
-        description: 'Header',
-        type: Otter.Fields.TextInput,
-      },
-      {
-        name: 'content',
-        description: 'Content',
-        type: Otter.Fields.NestedBlock,
-        nested_block_type: text_blocks.get('MyTextBlock'),
-      },
-    ],
-  }
-]);
-```
-
-`Otter.Fields.Repeater`
-
-- A repeater of nested_blocks, where the user picks blocks from one or more predefined types.
-- Options:
-    - `description` : if supplied, used to title the wrapped nested_block array in the editor
-    - `nested_block_types: [ <block1>, <block2>, ... ]` : an array of block objects defining which types of block the user will be able to pick from
-    - `max: <number>` : optionally limit the number of nested_blocks the user can add
-
-```js
-Otter.Blockset([
-  {
-    name: 'MyMultiContentBlock',
-    fields: [
-      {
-        name: 'content',
-        type: Otter.Fields.Repeater,
-        nested_block_types: [
-          my_blocks.get('MyContentBlock__1'),
-          my_blocks.get('MyContentBlock__2'),
-        ],
-      },
-    ],
-  }
-]);
-```
-
-
-
-## Sample setup with create-react-app
-
-```sh
-npx create-react-app my-app
-cd my-app
-npm i -P otter-editor
-```
-
-To start:
-
-- replace src/App.js with the [demo App.js file](src/App.js)
-- run `npm run start`
-- visit `localhost:3000`
-
-
-
-## Basic full example
-
-```js
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Otter from 'otter-editor';
-import 'otter-editor/dist/otter.css';
-
-
-// Define content blocks
-// -------------------------------
-
-const blockset = Otter.Blockset([
-  {
-    type: 'HeaderBlock',
-    description: 'Heading',
-    fields: [
-      { name: 'title', description: 'Title', type: Otter.Fields.TextInput },
-      { name: 'author', description: 'Author', type: Otter.Fields.TextInput },
-    ],
-  },
-  {
-    type: 'TextBlock',
-    description: 'Text content',
-    fields: [
-      { name: 'content', description: 'Content', type: Otter.Fields.TextArea },
-    ],
-  },
-]);
-
-
-// Handle updates
-// -------------------------------
-
-const delegate = {
-  on_update(data) {
-    console.log('new data:', data),
-  },
-};
-
-
-// Fetch some data & render
-// -------------------------------
-
-function render() {
-  const data = [
-    { __type: 'HeaderBlock', title: 'My article', author: 'Jane Smith' },
-  ];
-
-  ReactDOM.render(
-    <Otter.Editor data={data} load_state='loaded' delegate={delegate} blocks={blockset} />,
-    document.querySelector('.otter-container')
-  );
-}
-
-
-render();
-```
-
-
-
-## CSS
-
-The app needs to import the Otter CSS:
-
-```js
-import 'otter-editor/dist/otter.css';
-```
-
-This currently includes bulma so at present weighs ~150kB. **TBD:** move to something more lightweight.
-
-
-
-## Demo project
-
-/demo contains a sample Otter editor, including some simple predefined blocks. Run `npm run dev` to start webpack-dev-server, then visit `http://localhost:3000`.
-
-Or using [parcel](https://parceljs.org) (npm i -g parcel-bundler), instead run `parcel demo/index.html`.
-
-
-
-## Development
-
-Use the demo project and the `dev` task.
-
-To publish: `npm publish`.
-
-
-### License
+## License
 
 Otter is dual-licensed to enable Wordpress integration. The license is:
 
