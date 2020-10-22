@@ -27,10 +27,20 @@ function error_text__invalid_field_type_in_field_definition(field_name, field_ty
 
 
 function ensure_nested_block_data(containing_data_item, field_def) {
-  if (!containing_data_item[field_def.name]) {
-    containing_data_item[field_def.name] = field_def.type === Fields.NestedBlock ?
-      { __type: field_def.nested_block_type } :
-      [ ];
+  const current_nested_data = containing_data_item[field_def.name];
+  if (current_nested_data) {
+    return;
+  }
+
+  else if (field_def.type === Fields.Repeater) {
+    containing_data_item[field_def.name] = [ ];
+  }
+
+  else if (field_def.type === Fields.NestedBlock) {
+    const __type = typeof field_def.nested_block_type === 'string' ?
+      field_def.nested_block_type :
+      field_def.nested_block_type.type;
+    containing_data_item[field_def.name] = { __type };
   }
 }
 

@@ -6,7 +6,7 @@ import '../../dist/otter.css';
 // Define blocks
 // -----------------------------------
 
-const blocks__header = Otter.Blockset([
+const blocks__header = [
   {
     type: 'Header',
     description: 'Header',
@@ -23,9 +23,9 @@ const blocks__header = Otter.Blockset([
       },
     ],
   },
-]);
+];
 
-const blocks__content = Otter.Blockset([
+const blocks__content = [
   {
     type: 'Text',
     description: 'Text content',
@@ -54,14 +54,14 @@ const blocks__content = Otter.Blockset([
       },
     ],
   },
-]);
+];
 
-const blocks__flat = Otter.Blockset([].concat(
-  blocks__header,
-  blocks__content,
-));
+const blocks__flat = [
+  ...blocks__header,
+  ...blocks__content,
+];
 
-const blocks__nested = Otter.Blockset({
+const blocks__nested = {
   simple: {
     name: 'Headers',
     blocks: blocks__header,
@@ -70,7 +70,7 @@ const blocks__nested = Otter.Blockset({
     name: 'Content',
     blocks: blocks__content,
   },
-});
+};
 
 
 OtterWP.init(blocks__nested);

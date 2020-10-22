@@ -2,34 +2,61 @@
 
 [![Build Status](https://travis-ci.com/bhallstein/otter.svg?branch=int)](https://travis-ci.com/bhallstein/otter)
 
-- Create rich content editors by composing content blocks from built-in fields 🐟
+- Rapidly create rich content editors by composing content blocks 🐟
 - Simple, declarative syntax 💦
-- Easily integrates as a React component 🌿
 - Generates post data in a simple JSON format 🏞
+- Easily integrates as a React component 🌿
 
 
 ### Contents
 
+- [Otter.Editor](#ottereditor)
 - [Blocks](#blocks)
 - [Fields](#fields)
-- [Otter.Editor](#ottereditor)
 - [Demo](#demo)
 - [License](#license)
 
+
+
+## <Otter.Editor>
+
+The `<Otter.Editor />` element renders an editor.
+
 ```jsx
-// Render an otter editor
 <Otter.Editor blocks={blocks}
               data={data}
               load_state={Otter.State.Loaded} />
 ```
 
+| Property      | Value                                      | Required | Default   |                                           |
+| :------------ | :----------------------------------------- | :------- | :-------- | :---------------------------------------- |
+| `blocks`      | `Array(<Block>)`                           | Yes      |           | Defines the [blocks](#blocks) available in the editor. |
+| `data`        | Loaded data                                |          |           | The loaded page data. |
+| `load_state`  | `Otter.State.Loading`, `.Loaded`, `.Error` | Yes      |           | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data. |
+| `delegate`    | A delegate object                          |          |           | An object Otter uses to communicate state changes back to you. May have `save` and `block_toggled` methods. |
+| `save`        | `Otter.Save.OnInput`, `.OnClick`           |          | `OnClick` | Specify at what point Otter will cal `save()` is called on the delegate: on change, or only when a save button is clicked. |
+
+```js
+const my_delegate = {
+  save(data) {
+    // Kick-off a request to update the post data
+  },
+  block_toggled() {
+    // update container height, perhaps
+  },
+};
+```
+
+
 
 ## Blocks
 
-Otter lets you quickly and declaratively define the available content blocks using simple Javascript object syntax.
+Otter is based around content blocks. Declaring these blocks is succinct and declarative. Within a block, there will be one or more [Fields](#fields). This arrangement lets you rapidly create rich content editors based around custom content blocks.
+
+An example of a Block might be `PageHeader`, having the Fields: `title`, `subtitle`, and `background_image`.
 
 ```js
-const my_block = {
+{
   type: 'MyBlock',
   description: 'My block',
   fields: [
@@ -37,14 +64,14 @@ const my_block = {
     <Field>,
     ...
   ],
-};
+}
 ```
 
-| Property      | Value              | Required | Default |                               |
-| :------------ | :----------------- | :------- | :------ | :---------------------------- |
-| `type`        | `<string>`         | Yes      |         | Unique block type identifier. Used to save the field value in exported data. |
-| `description` | `<string>`         |          |         | A human-readable name for the block to let the user identify it. |
-| `fields`      | `Array(<Field>)`   | Yes      |         | The editor fields present in this block. |
+| Property      | Value              | Required | Default |                                      |
+| :------------ | :----------------- | :------- | :------ | :----------------------------------- |
+| `type`        | `<string>`         | Yes      |         | The block type identifier. Each block's `type` string must be unique within the editor. |
+| `description` | `<string>`         |          |         | A human-readable name for the block, identifying it clearly to the user. |
+| `fields`      | `Array(<Field>)`   | Yes      |         | The [fields](#fields) in this block. |
 | `thumbnail`   | `<path>`           |          |         | Optional thumbnail for use in the [graphical block picker](#blocks-optionally-categorise-in-groups). |
 | `hidden`      | `<bool>`           |          | `false` | If `true`, don't display this block in the block picker. This allows you to define blocks at the top level which can only be used in a NestedBlock or Repeater. |
 
@@ -86,7 +113,7 @@ Otter uses a different block picker depending on whether simple or grouped block
 
 ## Fields
 
-A block has one or more fields:
+Each block should contain at least one field.
 
 ```js
 {
@@ -101,11 +128,12 @@ A block has one or more fields:
 | `name`        | `<string>`                              | Yes        | The block data save key.           |
 | `description` | `<string>`                              |            | Field label displayed to the user. |
 | `type`        | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).    |
-| `display_if`  | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value of one or more siblings. |
+| `display_if`  | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s). |
 
-`DisplayRule` specifies the name of a sibling and the value that sibling must have (or not have) for this field to be shown. You can test against the value of `Bool`, `Radio`, and `Select` sibling fields. You can test against more than one sibling field using an array of multiple `DisplayRule` objects.
+With `display_if` you can show or hide the field based on the value of one or more of its siblings. Each `DisplayRule` specifies the name of the sibling and a value. `Bool`, `Radio`, and `Select` sibling fields are supported. You can test against more than one sibling field using an array of multiple `DisplayRule` objects.
 
 ```js
+// display_if example:
 {
   name: 'url',
   description: 'URL',
@@ -140,49 +168,19 @@ All fields should be specified with the Otter-defined constants in the form `Ott
 |               |                                       | `nested_block_type` (string or Block object)  | | The block to embed inside this block. Can be either a Block object reference, or a block name for a block defined elsewhere in the blockset. |
 |               |                                       | `optional` (bool)      | `false`  | If true, let the Nested Block be toggled on and off. |
 | `Repeater`    | Embed an array of blocks within this block. |                  |          |                                |
-|               |                                       | `nested_block_types` (array of strings or Block objects)  | | The blocks the user can pick from. Can be either Block object references, or block names for blocks defined elsewhere in the blockset. |
+|               |                                       | `nested_block_types` (array of strings or Block objects)  | | The blocks the user can pick from. You can fully inline Block objects here, or use type strings referring to Blocks defined anywhere in the blockset. |
 |               |                                       | `optional` (bool)      | `false`  | If true, let the Repeater be toggled on and off. |
 |               |                                       | `max` (number)         | No limit | Optionally limit the number of nested_blocks the user can add. |
-
-
-## <Otter.Editor>
-
-The `Otter.Editor` element renders an editor, given your block definitions:
-
-```jsx
-<Otter.Editor blocks={blocks}
-              data={data}
-              load_state={Otter.State.Loaded} />
-```
-
-| Property      | Value                                      | Required | Default   |                            |
-| :------------ | :----------------------------------------- | :------- | :-------- | :------------------------- |
-| `blocks`      | `Array(<Block>)`                           | Yes      |           | The content blocks making up this editor. |
-| `data`        | Loaded data                                |          |           | The loaded page data. |
-| `load_state`  | `Otter.State.Loading`, `.Loaded`, `.Error` | Yes      |           | Set the editor state. Otter displays useful feedback to the user while asynchronously fetching content data. |
-| `save`        | `Otter.Save.OnInput`, `.OnClick`           |          | `OnClick` | Specifies when `save()` is called on the delegate: immediately when edited, or only when a save button is clicked. |
-| `delegate`    | A delegate object                          |          |           | An object Otter uses to communicate state changes back to you. May have `save` and `block_toggled` methods. |
-
-```js
-const my_delegate = {
-  save(data) {
-    // Kick-off a request to update the post data
-  },
-  block_toggled() {
-    // update container height, perhaps
-  },
-};
-```
 
 
 
 ## Demo
 
-See [/demo](demo/) for the demo project, which renders an Otter editor with several blocks, including blocks with NestedBlock and Repeater fields.
+The demo project in [/demo](demo/) renders a complete Otter editor with several blocks, including blocks with NestedBlock and Repeater fields.
 
 ```bash
-# run the demo project
-parcel demo/index.html
+npm run demo
+  # or: parcel demo/index.html
 ````
 
 

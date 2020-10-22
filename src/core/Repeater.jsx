@@ -105,7 +105,7 @@ export default class Repeater extends React.Component {
     const RepeaterItemStub           = this.props.repeater_item_component || RepeaterItem;
     const RecursiveBlockRendererStub = this.props.rbr_component           || RecursiveBlockRenderer;
     const data_items                 = containing_data_item[field_def.name] || [ ];
-    const nested_block_types             = field_def.nested_block_types || [ ];
+    const nested_block_types         = field_def.nested_block_types || [ ];
     const max                        = field_def.max || -1;
     const multiple_types             = nested_block_types.length !== 1;
     const dnd_context_id             = `d-${this.uid}`;
@@ -154,9 +154,16 @@ export default class Repeater extends React.Component {
                   <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content">
                       {nested_block_types.map((block_type, i) => {
-                        const block = Utils.find_block(ctx.blocks, block_type);
+                        const type_name = typeof block_type === 'string' ?
+                          block_type :
+                          block_type.type;
+
+                        const block = typeof block_type === 'string' ?
+                          Utils.find_block(ctx.blocks, block_type) :
+                          block_type;
+
                         return (
-                          <a className="dropdown-item" onClick={this.cb__add} key={i} data-nested_block-type={block_type}>
+                          <a className="dropdown-item" onClick={this.cb__add} key={i} data-nested_block-type={type_name}>
                             {block.description || block.type}
                           </a>
                         );

@@ -95,6 +95,47 @@ test('RBR: nested_block field: renders NestedBlockWrapper with RecursiveBlockRen
 });
 
 
+test('RBR: nested_block_field: nested_block_type supports full inline definition object as well as string', t => {
+  const nested_block = {
+    type: 'MyNestedBlock',
+    fields: [
+      {
+        name: 'title',
+        type: Otter.Fields.TextInput,
+      },
+    ],
+  };
+  const blocks = [{
+    type: 'MyBlock',
+    fields: [
+      {
+        name: 'a_nested_block',
+        type: Otter.Fields.NestedBlock,
+        nested_block_type: nested_block,
+      },
+    ],
+  }];
+  const data_item = {
+    __type: 'MyBlock',
+    a_nested_block: {
+      __type: 'MyNestedBlock',
+      title: 'A nested block',
+    },
+  };
+
+  const wrapper__block = shallow(<RecursiveBlockRenderer data_item={data_item} blocks={blocks} />);
+  const wrapper__nested_block_field = shallow(<RecursiveBlockRenderer containing_data_item={data_item} field_name="a_nested_block" blocks={blocks} />);
+  t.is(1, wrapper__block.find('NestedBlockWrapper').length);
+  const text_input = wrapper__nested_block_field.find('TextInput');
+  t.is(1, text_input.length);
+  t.deepEqual({
+    field_def:            nested_block.fields[0],
+    containing_data_item: data_item.a_nested_block,
+    is_top_level:         undefined,
+  }, text_input.props());
+});
+
+
 test('RBR: repeater field: renders NestedBlockWrapper with Repeater component', t => {
   const block     = test_blocks()[3];
   const data_item = test_data()[3];
@@ -122,7 +163,7 @@ test('RBR: has field with invalid field name -> ErrorField', t => {
 });
 
 
-test('RBR: passed data_item containing empty nested_block/repeater: creates the data item', t => {
+test('RBR: ensures nested blocks and repeaters have data to operate on', t => {
   const item__nested_block_missing = { __type: 'B3' };
   const item__nested_block_null = { __type: 'B3', content_item: null };
 

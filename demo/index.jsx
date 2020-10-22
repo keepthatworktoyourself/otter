@@ -39,7 +39,7 @@ const text_block = {
   fields: [
     {
       name:        'content',
-      description: 'Content',
+      description: 'Text content',
       type:        Otter.Fields.TextEditor,
     },
     {
@@ -76,19 +76,19 @@ const html_block = {
 
 const block_with_nested_block = {
   type: 'NestedBlockDemo',
-  description: 'Block with nested_blocks',
+  description: 'Block demonstrating NestedBlock fields',
   fields: [
     {
       name:          'heading',
       description:   'Heading',
       type:          Otter.Fields.NestedBlock,
-      nested_block_type: 'Header',
+      nested_block_type: 'Header',      // Supports string block-type references
     },
     {
       name:          'text_content',
-      description:   'Content',
+      description:   'Text content',
       type:          Otter.Fields.NestedBlock,
-      nested_block_type: 'Text',
+      nested_block_type: text_block,    // Supports inline block definitions
       optional:      true,
     },
   ],
@@ -96,13 +96,16 @@ const block_with_nested_block = {
 
 const block_with_repeater = {
   type: 'RepeaterDemo',
-  description: 'Block with nested_block array',
+  description: 'Block demonstrating Repeater fields',
   fields: [
     {
       name:           'content_items',
       description:    'Content:',
       type:           Otter.Fields.Repeater,
-      nested_block_types: [ 'Text', 'HTML' ],
+      nested_block_types: [
+        'Text',            // Also supports both strings and objects
+        html_block,        //
+      ],
     },
   ],
 };

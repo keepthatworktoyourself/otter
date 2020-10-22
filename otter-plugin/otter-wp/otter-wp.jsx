@@ -36,7 +36,7 @@ function render() {
   render.component = ReactDOM.render(
     <Otter.Editor data={state.data}
              load_state={state.load_state}
-             blockset={state.blocks}
+             blocks={state.blocks}
              delegate={delegate}
              save={Otter.Save.OnInput}
              iframe_container_info={state.iframe_container_info} />,

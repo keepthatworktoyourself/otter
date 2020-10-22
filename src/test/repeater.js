@@ -24,12 +24,16 @@ const snapshot = {
 };
 
 
-const ctx = () => ({
-  value_updated: sinon.spy(),
-  should_redraw: sinon.spy(),
-  block_toggled: sinon.spy(),
-  blocks: test_blocks(),
-});
+const ctx = (overrides) => Object.assign(
+  {},
+  {
+    value_updated: sinon.spy(),
+    should_redraw: sinon.spy(),
+    block_toggled: sinon.spy(),
+    blocks: test_blocks(),
+  },
+  overrides
+);
 
 
 const DragDropContext  = 'Stub[stub="DragDropContext"]';
@@ -96,11 +100,56 @@ test('Repeater: does not render Add btn if has max children', t => {
 });
 
 
-test('Repeater: Add btn renders dropdown item for each nested_block type', t => {
+test('Repeater: Add btn renders dropdown item for each nested_block_types', t => {
   const f = Otter.Utils.copy(test_blocks()[3].fields[0]);
   const wrapper = mk_stubbed(f, test_data()[3], ctx());
   const items = wrapper.find('.dropdown-item');
   t.deepEqual(f.nested_block_types, items.map(item => item.prop('data-nested_block-type')));
+  t.is(wrapper.instance().cb__add, items.first().prop('onClick'));
+});
+
+
+const blocks__object_nested_block_types = [{
+  type: 'MyBlock',
+  fields: [
+    {
+      name: 'my_repeater',
+      type: Otter.Fields.Repeater,
+      nested_block_types: [
+        {
+          type: 'AAA',
+          fields: [{
+            name: 'aaa',
+            type: Otter.Fields.TextInput,
+          }],
+        },
+        {
+          type: 'BBB',
+          fields: [{
+            name: 'bbb',
+            type: Otter.Fields.TextArea,
+          }],
+        },
+      ],
+    },
+  ],
+}];
+const data_item__object_nested_block_types = {
+  __type: 'MyBlock',
+  my_repeater: [
+    {
+      __type: 'BBB',
+      bbb: 'A repeater entry',
+    },
+  ],
+};
+
+
+test('Repeater: Add btn supports nested_block_types objects as well as strings', t => {
+  const f = blocks__object_nested_block_types[0].fields[0];
+  const wrapper = mk_stubbed(f, data_item__object_nested_block_types, ctx({ blocks: blocks__object_nested_block_types }));
+  const items = wrapper.find('.dropdown-item');
+  t.deepEqual(['AAA', 'BBB'], items.map(item => item.prop('data-nested_block-type')));
   t.is(wrapper.instance().cb__add, items.first().prop('onClick'));
 });
 
@@ -134,11 +183,10 @@ test('Repeater: on Add btn click, if >1 nested_block_type, open submenu', t => {
 });
 
 
-test('Repeater: when an add menu item is clicked, the item is added', t => {
+test('Repeater: cb__add: add menu item click adds item', t => {
   const data_item = { __type: 'B4' };
   const wrapper = mk_stubbed(test_blocks()[3].fields[0], data_item, ctx());
-  const add_btn = wrapper.find('.repeater-add-btn button');
-  add_btn.prop('onClick')();
+  wrapper.find('.repeater-add-btn button').prop('onClick')();
   t.is(0, wrapper.find(RepeaterItem).length);
 
   const add_menu_items = wrapper.find('.dropdown-item');
@@ -154,6 +202,27 @@ test('Repeater: when an add menu item is clicked, the item is added', t => {
 
   wrapper.update();
   t.is(1, wrapper.find(RepeaterItem).length);
+});
+
+
+test('Repeater: cb__add: supports nested_block_types as objects', t => {
+  const f = blocks__object_nested_block_types[0].fields[0];
+  const wrapper = mk_stubbed(f, data_item__object_nested_block_types, ctx({ blocks: blocks__object_nested_block_types }));
+  wrapper.find('.repeater-add-btn button').prop('onClick')();
+  const add_menu_items = wrapper.find('.dropdown-item');
+  t.is(blocks__object_nested_block_types[0].fields[0].nested_block_types.length, add_menu_items.length);
+
+  add_menu_items.first().prop('onClick')({
+    currentTarget: {
+      getAttribute() {
+        return 'AAA';
+      },
+    },
+  });
+  wrapper.update();
+  const item = wrapper.find(Repeater);
+  t.is(1, item.length);
+  t.deepEqual(f, item.prop('field_def'));
 });
 
 
@@ -199,14 +268,10 @@ test('Repeater: cb__reorder: no destination or no change, does nothing', t => {
 
 
 test('Repeater: cb__reorder: reorders items', t => {
-  const context = ctx({
-    value_updated: sinon.spy(),
-    should_redraw: sinon.spy(),
-    block_toggled: sinon.spy(),
-  });
-  const data_item = test_data()[3];
+  const context     = ctx();
+  const data_item   = test_data()[3];
   const data_before = Otter.Utils.copy(data_item.content_items);
-  const wrapper = mk_stubbed(test_blocks()[3].fields[0], data_item, context);
+  const wrapper     = mk_stubbed(test_blocks()[3].fields[0], data_item, context);
 
   wrapper.instance().cb__reorder({
     source:      { index: data_item.content_items.length - 1 },
