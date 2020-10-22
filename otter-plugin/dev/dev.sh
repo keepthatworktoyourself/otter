@@ -27,7 +27,7 @@ cp ../otter-wp/otter-wp.jsx ./deps/
 sed -i '' -e 's/otter-editor/.\/otter-editor\/index.js/' deps/otter-wp.jsx
 
 
-sleep 10
+sleep 5
 npm run dev &
 
 
