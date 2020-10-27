@@ -9,7 +9,6 @@
   //
 
   require_once('helpers.php');
-  require_once('convert.php');
 
 
   // Get config
@@ -34,10 +33,14 @@
   }, [ ]);
 
 
-  // Load wp
+  // Load
   // ---------------------------------
 
   require_once($config['wp_config']);
+
+  if ($config['function_overrides']) {
+    require($config['function_overrides']);
+  }
 
 
   // Connect
@@ -88,6 +91,8 @@
   // Load converters
   // ---------------------------------
 
+  require_once('convert.php');
+
   $converters = [ ];
   $converter_files = array_diff(scandir('converters'), ['.', '..', '.DS_Store']);
 
@@ -108,6 +113,7 @@
     $row['data'] = convert($row['data'], $converters);
     return $row;
   }, $data);
+
 
   // Save
   // ---------------------------------
