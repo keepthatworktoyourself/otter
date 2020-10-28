@@ -112,6 +112,10 @@ test('Utils.find_field: returns undefined if not found', t => {
   t.is(undefined, Otter.Utils.find_field(find_field__fields, 'another_field'));
 });
 
+test('Utils.find_field: copes with nulls', t => {
+  t.is(undefined, Otter.Utils.find_field([ null ]));
+});
+
 
 // is_data_item
 // ------------------------------------

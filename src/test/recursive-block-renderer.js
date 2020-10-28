@@ -12,23 +12,36 @@ import Otter from '..';
 configure({ adapter: new Adapter() });
 
 
-test('RBR: field required properties are checked', t => {
+test('RBR: field definition errors -> ErrorFields', t => {
   const data = [
     { __type: 'BlockWithFieldWithMissingNameAndType' },
   ];
   const blocks = [
     {
       type: 'BlockWithFieldWithMissingNameAndType',
-      fields: [{
-        description: 'This field should output an error for name and type',
-      }],
+      fields: [
+        {
+          description: 'missing name and type',
+        },
+        undefined,
+        null,
+        'oops',
+      ],
     },
   ];
 
   const wrapper = shallow(<RecursiveBlockRenderer data_item={data[0]} blocks={blocks} />);
-  const error_field = wrapper.find('ErrorField');
-  const error_wrapper = error_field.dive();
-  t.truthy(error_wrapper.text().match(/missing required properties:\s+type, name/));
+  const error_fields = wrapper.find('ErrorField');
+  const err0 = error_fields.at(0).dive();
+  const err1 = error_fields.at(1).dive();
+  const err2 = error_fields.at(2).dive();
+  const err3 = error_fields.at(3).dive();
+
+  t.is(4, error_fields.length);
+  t.truthy(err0.text().match(/field at index 0 is missing required properties:\s+type, name/));
+  t.truthy(err1.text().match(/field at index 1 is undefined instead of object/));
+  t.truthy(err2.text().match(/field at index 2 is null instead of object/));
+  t.truthy(err3.text().match(/field at index 3 is string instead of object/));
 });
 
 

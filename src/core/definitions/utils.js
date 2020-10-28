@@ -81,7 +81,7 @@ function find_block(blocks, type) {
 // -----------------------------------
 
 function find_field(fields, name) {
-  return fields.find(item => item.name === name);
+  return fields.find(item => item && item.name === name);
 }
 
 

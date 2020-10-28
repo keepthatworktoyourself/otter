@@ -4,10 +4,19 @@ import NestedBlockWrapper from './NestedBlockWrapper';
 import Repeater from './Repeater';
 import Utils from './definitions/utils';
 
+function error_text__field_not_object(index, value) {
+  const value_descr = value === null ? 'null' :
+    value === undefined ? 'undefined' :
+    typeof value;
 
-function error_text__missing_field_props(field_name, errors) {
   return `
-    In block definition, field '${field_name}' is missing required properties:
+    In block definition, field at index ${index} is ${value_descr} instead of object
+  `;
+}
+
+function error_text__missing_field_props(index, errors) {
+  return `
+    In block definition, field at index ${index} is missing required properties:
     ${errors.join(', ')}
   `;
 }
@@ -52,6 +61,12 @@ export default function RecursiveBlockRenderer(props) {
   const block        = Utils.find_block(blocks, data_item.__type);
 
   return (block.fields || []).map((field_def, index) => {
+    if (!field_def || typeof field_def !== 'object') {
+      return <Fields.components.ErrorField text={error_text__field_not_object(index, field_def)}
+                                           is_top_level={is_top_level}
+                                           key={index} />;
+    }
+
     const field_name = field_def.name;
     const field_type = field_def.type;
     const field_value = data_item[field_name];
@@ -63,7 +78,7 @@ export default function RecursiveBlockRenderer(props) {
     if (!field_type) { errors.push('type'); }
     if (!field_name) { errors.push('name'); }
     if (errors.length) {
-      return <Fields.components.ErrorField text={error_text__missing_field_props(field_name, errors)}
+      return <Fields.components.ErrorField text={error_text__missing_field_props(index, errors)}
                                            is_top_level={is_top_level}
                                            key={index} />;
     }
