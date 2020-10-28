@@ -48,7 +48,7 @@ const nested_obj = {
   c: {
     x: 7,
     y: true,
-    z: { },
+    z: { muffins: 100 },
   },
 };
 
@@ -61,13 +61,19 @@ test('utils: copy: deep copies an object', t => {
 // recursive_find
 // ------------------------------------
 
-test('utils: recursive_find: -> item matching callback', t => {
-  t.is(7, Otter.Utils.recursive_find(nested_obj, item => item === 7));
-  t.is(nested_obj.c, Otter.Utils.recursive_find(nested_obj, item => item && item.y === true));
+test('utils: recursive_find: -> object matching callback', t => {
+  const result = Otter.Utils.recursive_find(nested_obj, item => item.muffins === 100);
+  t.is(nested_obj.c.z, result);
 });
 
 test('utils: recursive_find: -> null if not found', t => {
-  t.is(null, Otter.Utils.recursive_find(nested_obj, item => item && item.lemons === 6));
+  const result = Otter.Utils.recursive_find(nested_obj, item => item.muffins === 600);
+  t.is(null, result);
+});
+
+test('utils: recursive_find: can only be used to find objects', t => {
+  const result = Otter.Utils.recursive_find(nested_obj, item => item === 7);
+  t.is(null, result);
 });
 
 
