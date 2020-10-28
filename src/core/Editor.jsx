@@ -307,7 +307,7 @@ export default class Editor extends React.Component {
         <div className="post-builder" style={{ padding: '2rem', position: 'relative' }}>
           {content__main}
 
-          {show_block_picker && <BlockPicker blocks={this.props.blocks}
+          {show_block_picker && <BlockPicker blocks={blocks}
                                              block_index={this.state.block_picker}
                                              scroll_offset={this.state.block_picker_offset}
                                              iframe_container_info={this.props.iframe_container_info || { }} />}

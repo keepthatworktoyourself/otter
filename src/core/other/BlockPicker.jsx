@@ -20,19 +20,17 @@ export default class BlockPicker extends React.Component {
 
   cb_select(ev) {
     this.close();
-    this.ctx.add_block(ev.currentTarget.getAttribute('data-block-type'), this.props.block_index);
+    this.ctx.add_item(ev.currentTarget.getAttribute('data-block-type'), this.props.block_index);
   }
 
 
   render() {
-    const blocks = (this.props.blocks && this.props.blocks[0]) || { };
-    const block_keys = Object.keys(blocks);
-
-    const container = this.props.iframe_container_info || {
-      y: 0,
+    const blocks = this.props.blocks || { };
+    const block_group_keys = Object.keys(blocks);
+    const container  = this.props.iframe_container_info || {
+      y:      0,
       height: 0,
     };
-
     const offset = (this.props.scroll_offset || 0) + container.y;
     const outer_max_height = container.height;
 
@@ -54,8 +52,8 @@ export default class BlockPicker extends React.Component {
                 </span>
               </div>
 
-              {block_keys.map((k, i) => (
-                <div className={ i < block_keys.length - 1 ? 'mb-6' : 'mb-4' }>
+              {block_group_keys.map((k, i) => (
+                <div className={ i < block_group_keys.length - 1 ? 'mb-6' : 'mb-4' }>
                   <h3 className="title is-7 pl-1 pb-2" style={{ borderBottom: '1px solid #eee' }}>
                     {blocks[k].name || k}
                   </h3>

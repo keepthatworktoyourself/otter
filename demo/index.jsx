@@ -123,7 +123,7 @@ const blocks__flat = [
 const blocks__nested = {
   simple: {
     name:   'Headers',
-    blocks: [ header_block ],
+    blocks: [ header_block, text_block, html_block ],
   },
   complex: {
     name:   'Content',
@@ -216,7 +216,7 @@ else {
 
 function render() {
   ReactDOM.render(
-    <Otter.Editor blocks={blocks__flat} data={state.data} load_state={state.load_state} delegate={delegate} save={Otter.Save.OnInput} />,
+    <Otter.Editor blocks={blocks__nested} data={state.data} load_state={state.load_state} delegate={delegate} save={Otter.Save.OnInput} />,
     document.getElementById('otter-container')
   );
 }
