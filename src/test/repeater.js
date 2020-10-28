@@ -154,7 +154,7 @@ test('Repeater: Add btn supports nested_block_types objects as well as strings',
 });
 
 
-test('Repeater: on Add btn click, if only 1 nested_block_type, immediately add it', t => {
+test('Repeater: Add btn when only 1 block type: immediately adds', t => {
   const data_item = { __type: 'B4' };
   const f = Otter.Utils.copy(test_blocks()[3].fields[0]);
   f.nested_block_types = [ 'AContentItem' ];
@@ -164,6 +164,18 @@ test('Repeater: on Add btn click, if only 1 nested_block_type, immediately add i
   t.is(0, wrapper.find(RepeaterItem).length);
 
   add_btn.prop('onClick')();
+  wrapper.update();
+  t.is(1, wrapper.find(RepeaterItem).length);
+});
+
+
+test('Repeater: Add btn click when only 1 block type: supports nested_block_types objects as well as strings', t => {
+  const blocks = Otter.Utils.copy(blocks__object_nested_block_types);
+  blocks[0].fields[0].nested_block_types.splice(1);   // Only 1 nested block type
+  const data_item = { __type: 'MyBlock' };
+  const f = blocks[0].fields[0];
+  const wrapper = mk_stubbed(f, data_item, ctx({ blocks: blocks }));
+  wrapper.find('.repeater-add-btn button').prop('onClick')();
   wrapper.update();
   t.is(1, wrapper.find(RepeaterItem).length);
 });

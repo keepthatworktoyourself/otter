@@ -43,11 +43,15 @@ export default class Repeater extends React.Component {
 
 
   cb__add(ev) {
+    function get_block_type(str_or_obj) {
+      return typeof str_or_obj === 'string' ? str_or_obj : str_or_obj.type;
+    }
+
     const containing_data_item = this.props.containing_data_item;
     const field_def = this.props.field_def;
     const block_type = ev ?
       ev.currentTarget.getAttribute('data-nested_block-type') :
-      this.props.field_def.nested_block_types[0];
+      get_block_type(this.props.field_def.nested_block_types[0]);
 
     if (!containing_data_item[field_def.name]) {
       containing_data_item[field_def.name] = [ ];
