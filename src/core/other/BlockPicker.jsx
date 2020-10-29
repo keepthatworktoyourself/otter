@@ -53,14 +53,14 @@ export default class BlockPicker extends React.Component {
               </div>
 
               {block_group_keys.map((k, i) => (
-                <div className={ i < block_group_keys.length - 1 ? 'mb-6' : 'mb-4' }>
+                <div className={ i < block_group_keys.length - 1 ? 'mb-6' : 'mb-4' } key={i}>
                   <h3 className="title is-7 pl-1 pb-2" style={{ borderBottom: '1px solid #eee' }}>
                     {blocks[k].name || k}
                   </h3>
 
                   <div className="columns is-mobile is-multiline">
-                    {blocks[k].blocks.map(block => (
-                      <div className="column is-4-mobile is-3-tablet is-3-desktop is-2-widescreen">
+                    {blocks[k].blocks.map((block, j) => (
+                      <div className="column is-4-mobile is-3-tablet is-3-desktop is-2-widescreen" key={j}>
 
                         <div className="card">
                           <div className="card-content" style={{ padding: '1rem' }}>
