@@ -38,6 +38,7 @@
 
     function iframe_init() {
       const iframe_doc = iframe.contentWindow.document;
+      iframe_doc.write('<!doctype html><html></html>');
 
       const link = iframe_doc.createElement('link');
       link.rel = 'stylesheet';
