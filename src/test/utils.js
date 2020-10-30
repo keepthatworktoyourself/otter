@@ -88,6 +88,15 @@ test('utils: find_block: returns null if not found', t => {
   t.is(null, Otter.Utils.find_block(test_blocks(), 'Nonexistent'));
 });
 
+test('utils: find_block: handles nulls', t => {
+  const o = {
+    x: [
+      { },  [ 6, 7, 8 ],  null,
+    ],
+  };
+  t.is(null, Otter.Utils.find_block(o, 'X'));
+});
+
 
 // find_field
 // ------------------------------------

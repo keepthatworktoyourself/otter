@@ -2,7 +2,7 @@ path_pkg = 'package.json'
 path_pkg__otter_wp = 'otter-plugin/otter-wp/package.json'
 
 
-def inc(version)
+def increment(version)
   arr = version.split(".")
   value_to_inc = arr.pop.to_i + 1
   arr.push(value_to_inc).join(".")
@@ -30,7 +30,7 @@ end
 
 
 version = get_pkg_version(path_pkg)
-new_version = inc(version)
+new_version = increment(version)
 print "Incrementing version from #{version} to #{new_version}..."
 
 

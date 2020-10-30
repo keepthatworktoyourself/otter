@@ -50,7 +50,7 @@ function recursive_find(obj, f) {
   else {
     if (typeof obj === 'object') {
       for (var prop in obj) {
-        if (obj.hasOwnProperty(prop) && typeof obj[prop] === 'object') {
+        if (obj.hasOwnProperty(prop) && obj[prop] && typeof obj[prop] === 'object') {
           const result = recursive_find(obj[prop], f);
           if (result) {
             return result;

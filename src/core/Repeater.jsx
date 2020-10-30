@@ -116,8 +116,31 @@ export default class Repeater extends React.Component {
     const show_add_button            = max === -1 || data_items.length < max;
 
     return (
-      <ContextConsumer>{ctx => (this.ctx = ctx) && (
-        <>
+      <ContextConsumer>{ctx => {
+        this.ctx = ctx;
+
+        const block_types__objects = nested_block_types.map(t => (
+          typeof t === 'string' ? Utils.find_block(ctx.blocks, t) : t
+        ));
+
+        const invalid = block_types__objects.reduce((carry, block, index) => {
+          const is_valid = block && typeof block === 'object' && block.hasOwnProperty('type');
+          return is_valid ? carry : carry.concat(index);
+        }, [ ]);
+
+        if (invalid.length > 0) {
+          const multiple = invalid.length > 1;
+          return (
+            <p className="repeater-error">{`
+              Error: the nested_block_types ${multiple ? 'values' : 'value'} at
+              ${multiple ? 'indexes' : 'index'}
+              ${invalid.join(',')}
+              ${multiple ? 'were' : 'was'} invalid
+            `}</p>
+          )
+        }
+
+        return <>
           <DragDropContext onDragEnd={this.cb__reorder} stub="DragDropContext">
             <Droppable droppableId={dnd_context_id} type={dnd_context_id}>{(prov, snap) => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
@@ -157,17 +180,9 @@ export default class Repeater extends React.Component {
                 {multiple_types && (
                   <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content">
-                      {nested_block_types.map((block_type, i) => {
-                        const type_name = typeof block_type === 'string' ?
-                          block_type :
-                          block_type.type;
-
-                        const block = typeof block_type === 'string' ?
-                          Utils.find_block(ctx.blocks, block_type) :
-                          block_type;
-
+                      {block_types__objects.map((block, i) => {
                         return (
-                          <a className="dropdown-item" onClick={this.cb__add} key={i} data-nested_block-type={type_name}>
+                          <a className="dropdown-item" onClick={this.cb__add} key={i} data-nested_block-type={block.type}>
                             {block.description || block.type}
                           </a>
                         );
@@ -180,7 +195,7 @@ export default class Repeater extends React.Component {
             </div>
           )}
         </>
-      )}</ContextConsumer>
+      }}</ContextConsumer>
     );
   }
 

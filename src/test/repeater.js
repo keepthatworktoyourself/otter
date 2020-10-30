@@ -86,6 +86,22 @@ test('Repeater: renders RecursiveBlockRenderer inside RepeaterItems, passes prop
 });
 
 
+test('Repeater: if nested_block_types invalid, display error message', t => {
+  const field = {
+    name: 'invalid_repeater',
+    type: Otter.Fields.Repeater,
+    nested_block_types: [
+      { x: 'this is not a block' },
+      { type: 'X' },
+      null,
+    ],
+  };
+  const wrapper = mk_stubbed(field, { }, ctx());
+  const error_msg = wrapper.find('.repeater-error');
+  t.truthy(error_msg.text().match(/indexes\s+0,2\s+were invalid/));
+});
+
+
 test('Repater: renders Add btn', t => {
   const wrapper = mk_stubbed(test_blocks()[3].fields[0], test_data()[3], ctx());
   t.is(1, wrapper.find('.repeater-add-btn').length);
