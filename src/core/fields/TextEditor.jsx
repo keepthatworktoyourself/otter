@@ -1,7 +1,14 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
+import Quill from 'quill';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
+
+
+function cliphandler__clear_formatting(node, delta) {
+  const Delta = Quill.import('delta');
+  return new Delta().insert(node.innerText);
+}
 
 
 export default class TextEditor extends React.Component {
@@ -17,6 +24,11 @@ export default class TextEditor extends React.Component {
         [{ list: 'ordered'}, {list: 'bullet'}],
         ['clean'],
       ],
+      clipboard:{
+        matchers: [
+          [Node.ELEMENT_NODE, cliphandler__clear_formatting],
+        ],
+      },
     };
   }
 
@@ -34,6 +46,7 @@ export default class TextEditor extends React.Component {
     const containing_data_item = this.props.containing_data_item;
     const is_top_level         = this.props.is_top_level;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
+    const paste_as_plain_text  = field_def.paste_as_plain_text;
     const value                = containing_data_item[field_def.name];
 
     return (
