@@ -16,9 +16,13 @@ function cliphandler__clear_formatting() {
     // to the initially rendered text
 
   return function(node, delta) {
-    return clear_pastes ?
-      new Delta().insert(node.textContent) :
-      delta;
+    if (clear_pastes) {
+      const d = new Delta().insert(node.textContent);
+      return node.tagName === 'P' ? d.insert("\n") : d;
+    }
+    else {
+      return delta;
+    }
   };
 }
 
