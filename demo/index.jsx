@@ -38,9 +38,10 @@ const text_block = {
   description: 'Text content',
   fields: [
     {
-      name:        'content',
-      description: 'Text content',
-      type:        Otter.Fields.TextEditor,
+      name:                'content',
+      description:         'Text content',
+      type:                Otter.Fields.TextEditor,
+      paste_as_plain_text: true,
     },
     {
       name:        'fancy',
@@ -137,7 +138,7 @@ const blocks__nested = {
 
 function load(post_id) {
   // NB - Fake ajax request for demo purposes.
-  //    - A real application would `return fetch(url)` or similar.
+  //    - A real application would return `fetch(api_url)` or similar.
 
   return Promise.resolve({
     json: () => [
@@ -149,7 +150,7 @@ function load(post_id) {
       },
       {
         __type: 'Text',
-        content: 'Every work of art is the child of its age and, in many cases, the mother of our emotions...',
+        content: '<p>Every work of <b>art</b> is the child of its age and, in many cases, the mother of our emotions...</p>',
         fancy:   true,
         align:   'center',
       },

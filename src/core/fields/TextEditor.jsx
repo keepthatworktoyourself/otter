@@ -5,9 +5,21 @@ import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
 
 
-function cliphandler__clear_formatting(node, delta) {
+function cliphandler__clear_formatting() {
   const Delta = Quill.import('delta');
-  return new Delta().insert(node.innerText);
+  let clear_pastes = false;
+
+  setTimeout(function() {
+    clear_pastes = true;
+  }, 1000);
+    // This is a nasty workaround for a bug where quill applies clipboard matchers
+    // to the initially rendered text
+
+  return function(node, delta) {
+    return clear_pastes ?
+      new Delta().insert(node.textContent) :
+      delta;
+  };
 }
 
 
@@ -24,11 +36,6 @@ export default class TextEditor extends React.Component {
         [{ list: 'ordered'}, {list: 'bullet'}],
         ['clean'],
       ],
-      clipboard:{
-        matchers: [
-          [Node.ELEMENT_NODE, cliphandler__clear_formatting],
-        ],
-      },
     };
   }
 
@@ -48,6 +55,15 @@ export default class TextEditor extends React.Component {
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
     const paste_as_plain_text  = field_def.paste_as_plain_text;
     const value                = containing_data_item[field_def.name];
+
+    if (paste_as_plain_text) {
+      this.modules.clipboard = this.modules.clipboard || {
+        matchers: [
+          [Node.ELEMENT_NODE, cliphandler__clear_formatting()],
+        ],
+      };
+    }
+
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
