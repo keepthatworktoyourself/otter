@@ -33,9 +33,10 @@ export default class TextEditor extends React.Component {
     super(props);
 
     this.cb_change = this.cb_change.bind(this);
+    this.default_headers = [1, 2, false];
     this.modules = {
       toolbar: [
-        [{ header: [1, 2, false] }],
+        [{ header: this.default_headers }],
         ['bold', 'italic', 'underline', 'link'],
         [{ list: 'ordered'}, {list: 'bullet'}],
         ['clean'],
@@ -57,8 +58,11 @@ export default class TextEditor extends React.Component {
     const containing_data_item = this.props.containing_data_item;
     const is_top_level         = this.props.is_top_level;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
+    const heading_levels       = field_def.heading_levels;
+    const blockquote           = field_def.blockquote;
     const paste_as_plain_text  = field_def.paste_as_plain_text;
     const value                = containing_data_item[field_def.name];
+
 
     if (paste_as_plain_text) {
       this.modules.clipboard = this.modules.clipboard || {
@@ -68,6 +72,19 @@ export default class TextEditor extends React.Component {
       };
     }
 
+    if (heading_levels) {
+      this.modules.toolbar[0] = [{
+         header: [...heading_levels, false],
+      }];
+    }
+
+    if (blockquote) {
+      this.modules.toolbar.splice(
+        this.modules.toolbar.length - 2,
+        0,
+        ['blockquote'],
+      );
+    }
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (

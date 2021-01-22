@@ -41,7 +41,6 @@ const text_block = {
       name:                'content',
       description:         'Text content',
       type:                Otter.Fields.TextEditor,
-      paste_as_plain_text: true,
     },
     {
       name:        'fancy',
@@ -181,7 +180,7 @@ const delegate = {
   },
   block_toggled() {
     console.log('block toggled');
-  }
+  },
 };
 
 

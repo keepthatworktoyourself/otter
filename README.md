@@ -3,9 +3,9 @@
 [![Build Status](https://travis-ci.com/bhallstein/otter.svg?branch=int)](https://travis-ci.com/bhallstein/otter)
 
 - Rapidly create rich content editors by composing content blocks 🐟
-- Simple, declarative syntax 💦
-- Generates post data in a simple JSON format 🏞
-- Easily integrates as a React component 🌿
+- Simple, declarative syntax 🌿
+- Generates post data in a simple JSON format 💦
+- Easily integrates as a React component 🏞
 
 
 ### Contents
@@ -20,7 +20,7 @@
 
 ## <Otter.Editor>
 
-The `<Otter.Editor />` element renders an editor.
+The `<Otter.Editor />` element renders the editor.
 
 ```jsx
 <Otter.Editor blocks={blocks}
@@ -51,9 +51,9 @@ const my_delegate = {
 
 ## Blocks
 
-Otter is based around content blocks. Declaring these blocks is succinct and declarative. Within a block, there will be one or more [Fields](#fields). This arrangement lets you rapidly create rich content editors based around custom content blocks.
+The Otter editor is based on content blocks that you define. These block definitions are succinct and declarative. Within a block, there will be one or more [Fields](#fields). This system lets you rapidly arrange fields into blocks to create rich content editors.
 
-An example of a Block might be `PageHeader`, having the Fields: `title`, `subtitle`, and `background_image`.
+An example Block of type `PageHeader` might contain the Fields: `title`, `subtitle`, and `background_image`.
 
 ```js
 {
@@ -150,28 +150,30 @@ With `display_if` you can show or hide the field based on the value of one or mo
 
 All fields should be specified with the Otter-defined constants in the form `Otter.Fields.TextInput`.
 
-| Type          | Description                           | Options                | Default  |                                                                |
-| :------------ | :------------------------------------ | :--------------------- | :------- | :------------------------------------------------------------- |
-| `TextInput`   | Plain text input                      |                        |          |                                                                |
-| `TextArea`    | Textarea (multi-line plain) text      |                        |          |                                                                |
-|               |                                       | `paste_as_plain_text`  | `false`  | Clear text formatting on paste?                                |
-| `TextEditor`  | Rich text editor                      |                        |          |                                                                |
-| `Bool`        | A toggle                              |                        |          |                                                                |
-|               |                                       | `no_label` (string)    | `"Yes"`  | Label for `true` option                                        |
-|               |                                       | `yes_label` (string)   | `"No"`   | Label for `false` option                                       |
-| `Radios`      | Radio buttons                         |                        |          |                                                                |
-|               |                                       | `options` (object)     |          | Radio options. Key pairs are in the form `value: "Label"`.     |
-| `Select`      | Select dropdown                       |                        |          |                                                                |
-|               |                                       | `options` (object)     |          | Select options. Key pairs are in the form `value: "Label"`.    |
-| `WPMedia`     | Wordpress media item (Wordpress only) |                        |          |                                                                |
-|               |                                       | `media_types` (array)  | `[ ]`    | File types to include in the media browser. Supported: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If omitted or an empty array, all files are included. |
-| `NestedBlock` | Embed another block into this block.  |                        |          |                                                                |
+| Type          | Description                           | Options                  | Default  |                                                                         |
+| :------------ | :------------------------------------ | :----------------------- | :------- | :---------------------------------------------------------------------- |
+| `TextInput`   | Plain text input                      |                          |          |                                                                         |
+| `TextArea`    | Textarea (multi-line plain text)      |                          |          |                                                                         |
+| `TextEditor`  | Rich text editor                      |                          |          |                                                                         |
+|               |                                       | `heading_levels` (array) | `[1, 2]` | Set which heading types are available in the paragraph styles dropdown  |
+|               |                                       | `blockquote` (bool)      | `false`  | Render a blockquote option                                              |
+|               |                                       | `paste_as_plain_text`    | `false`  | Clear text formatting on paste?                                         |
+| `Bool`        | A toggle                              |                          |          |                                                                         |
+|               |                                       | `no_label` (string)      | `"Yes"`  | Label for `true` option                                                 |
+|               |                                       | `yes_label` (string)     | `"No"`   | Label for `false` option                                                |
+| `Radios`      | Radio buttons                         |                          |          |                                                                         |
+|               |                                       | `options` (object)       |          | Radio options. Key pairs are in the form `value: "Label"`.              |
+| `Select`      | Select dropdown                       |                          |          |                                                                         |
+|               |                                       | `options` (object)       |          | Select options. Key pairs are in the form `value: "Label"`.             |
+| `WPMedia`     | Wordpress media item (Wordpress only) |                          |          |                                                                         |
+|               |                                       | `media_types` (array)    | `[ ]`    | File types to include in the media browser. Supported: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If omitted or an empty array, all files are included. |
+| `NestedBlock` | Embed another block into this block.  |                          |          |                                                                         |
 |               |                                       | `nested_block_type` (string or Block object)  | | The block to embed inside this block. Can be either a Block object reference, or a block name for a block defined elsewhere in the blockset. |
-|               |                                       | `optional` (bool)      | `false`  | Include a switch to toggle the Nested Block be on and off?     |
-| `Repeater`    | Embed an array of blocks within this block. |                  |          |                                                                |
-|               |                                       | `nested_block_types` (array: strings or Block objects)  | | The blocks the user can pick from. You can fully inline Block objects here, or use type strings referring to Blocks defined anywhere in the blockset. |
-|               |                                       | `optional` (bool)      | `false`  | Include a switch to toggle the Repeater on and off?            |
-|               |                                       | `max` (number)         | No limit | Optionally limit the number of nested_blocks the user can add. |
+|               |                                       | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Nested Block         |
+| `Repeater`    | Embed an array of blocks within this block. |                    |          |                                                                         |
+|               |                                       | `nested_block_types` (array: strings or Block objects)  | | The blocks available in this Repeater. Can be an array of inline Block objects, or type strings referring to Blocks defined elsewhere in the editor's block definitions. |
+|               |                                       | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Repeater             |
+|               |                                       | `max` (number)           | No limit | Optionally limit the number of nested_blocks the user can add           |
 
 
 
