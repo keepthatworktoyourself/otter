@@ -36,7 +36,7 @@ const data_item__not_set = {
 };
 
 
-function mk_stubbed(field_def, containing_data_item, ctx_methods, is_top_level) {
+function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
   return mount(<Otter.Fields.components.Select field_def={field_def}
                                                containing_data_item={containing_data_item}
                                                consumer_component={stubs.func_stub([{...ctx_methods}])}
@@ -47,7 +47,7 @@ function mk_stubbed(field_def, containing_data_item, ctx_methods, is_top_level) 
 test('Select: no opts -> warning msg', t => {
   const b = Otter.Utils.copy(block);
   delete b.fields[0].options;
-  const wrapper = mk_stubbed(b.fields[0], data_item, {}, true);
+  const wrapper = mk(b.fields[0], data_item, {}, true);
   const opts_wrapper = wrapper.find('.select');
 
   t.is(1, opts_wrapper.length);
@@ -56,8 +56,8 @@ test('Select: no opts -> warning msg', t => {
 
 
 test('Select: renders options, initial item or null item selected', t => {
-  const wrapper          = mk_stubbed(block.fields[0], data_item,          {}, true);
-  const wrapper__not_set = mk_stubbed(block.fields[0], data_item__not_set, {}, true);
+  const wrapper          = mk(block.fields[0], data_item,          {}, true);
+  const wrapper__not_set = mk(block.fields[0], data_item__not_set, {}, true);
 
   const select          = wrapper.find('select');
   const select__not_set = wrapper__not_set.find('select');
@@ -87,7 +87,7 @@ test('Select: option change updates state, calls ctx update methods', t => {
   };
   const d = Otter.Utils.copy(data_item);
 
-  const wrapper = mk_stubbed(block.fields[0], d, ctx);
+  const wrapper = mk(block.fields[0], d, ctx);
   const select = wrapper.find('select');
 
   select.prop('onChange')({ target: { value: 'c' } });
@@ -98,8 +98,8 @@ test('Select: option change updates state, calls ctx update methods', t => {
 
 
 test('Select: renders label, passes through is_top_level', t => {
-  const wrapper__top    = mk_stubbed(block.fields[0], data_item, {}, true);
-  const wrapper__nested = mk_stubbed(block.fields[0], data_item, {}, false);
+  const wrapper__top    = mk(block.fields[0], data_item, {}, true);
+  const wrapper__nested = mk(block.fields[0], data_item, {}, false);
 
   const lbl__top    = wrapper__top.find('FieldLabel');
   const lbl__nested = wrapper__nested.find('FieldLabel');

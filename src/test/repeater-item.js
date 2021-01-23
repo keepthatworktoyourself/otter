@@ -32,7 +32,7 @@ const ctx = () => ({
 });
 
 
-function mk_stubbed(index, dnd_context_id, cb__delete, children) {
+function mk(index, dnd_context_id, cb__delete, children) {
   return shallow(
     <RepeaterItem index={index}
                   dnd_context_id={dnd_context_id}
@@ -45,7 +45,7 @@ function mk_stubbed(index, dnd_context_id, cb__delete, children) {
 
 
 test('RepeaterItem: renders draggable', t => {
-  const wrapper = mk_stubbed(9, 'my-draggable-context', null, [ ]);
+  const wrapper = mk(9, 'my-draggable-context', null, [ ]);
   t.truthy(wrapper.prop('draggableId'));
   t.is('my-draggable-context', wrapper.prop('type'));
   t.is(9, wrapper.prop('index'));
@@ -53,7 +53,7 @@ test('RepeaterItem: renders draggable', t => {
 
 
 test('RepeaterItem: renders child', t => {
-  const wrapper = mk_stubbed(0, 'x', null, [
+  const wrapper = mk(0, 'x', null, [
     <div className="my-child" key="x"></div>
   ]);
   t.is(1, wrapper.dive().find('.my-child').length);
@@ -61,14 +61,14 @@ test('RepeaterItem: renders child', t => {
 
 
 test('RepeaterItem: if cb__delete passed, renders delete button', t => {
-  const wrapper = mk_stubbed(0, 'x', sinon.spy(), [ ]);
+  const wrapper = mk(0, 'x', sinon.spy(), [ ]);
   t.is(1, wrapper.dive().find('.repeater-item-delete-btn').length);
 });
 
 
 test('RepeaterItem: when delete button clicked, calls cb__delete(index)', t => {
   const cb__delete = sinon.spy();
-  const wrapper = mk_stubbed(76, 'x', cb__delete, [ ]);
+  const wrapper = mk(76, 'x', cb__delete, [ ]);
   const button = wrapper.dive().find('.repeater-item-delete-btn .button');
 
   button.prop('onClick')();

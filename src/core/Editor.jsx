@@ -230,6 +230,7 @@ export default class Editor extends React.Component {
     const DragDropContext = this.props.drag_context_component || DnD.DragDropContext;
     const Droppable       = this.props.droppable_component    || DnD.Droppable;
     const ContextProvider = this.props.provider_component     || PageDataContext.Provider;
+    const BlockStub       = this.props.block_component        || Block;
     const show_block_picker = (
       load_state === State.Loaded &&
       this.state.block_picker !== false &&
@@ -271,12 +272,12 @@ export default class Editor extends React.Component {
             </div>
           )}
 
-          <DragDropContext onDragEnd={this.cb__reorder} stub="DragDropContext">
+          <DragDropContext onDragEnd={this.cb__reorder}>
             <Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
 
                 {data_items.map((data_item, index) => (
-                  <Block key={index} data_item={data_item} index={index} cb__delete={this.delete_item} />
+                  <BlockStub key={index} data_item={data_item} index={index} cb__delete={this.delete_item} />
                 ))}
 
                 {prov.placeholder}
@@ -303,7 +304,7 @@ export default class Editor extends React.Component {
     this.previous_load_state = load_state;
 
     return (
-      <ContextProvider value={this.ctx} stub="ContextProvider">
+      <ContextProvider value={this.ctx}>
         <div className="post-builder" style={{ padding: '2rem', position: 'relative' }}>
           {content__main}
 

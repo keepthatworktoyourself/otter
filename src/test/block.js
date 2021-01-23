@@ -24,13 +24,13 @@ const snapshot = {
 };
 
 
-function mk_stubbed_block(blocks, data_item, index, cb__delete, extra_ctx_props) {
+function mk(blocks, data_item, index, cb__delete, extra_ctx_props) {
   return mount(<Block data_item={data_item} index={0}
                       index={index}
                       cb__delete={cb__delete}
                       draggable_component={stubs.func_stub([provided, snapshot])}
                       consumer_component={stubs.func_stub([{ blocks, ...extra_ctx_props }])}
-                      recursive_renderer_component={stubs.Stub} />);
+                      recursive_renderer_component={stubs.mk_stub('RecursiveRenderer')} />);
 }
 
 
@@ -45,7 +45,7 @@ test('Block: get_drag_styles', t => {
 
 
 test('Block: warning if invalid block type', t => {
-  const wrapper = mk_stubbed_block([ ], test_data()[0]);
+  const wrapper = mk([ ], test_data()[0]);
   t.truthy(wrapper.find('.title').text().match(/Unknown block type/));
 });
 
@@ -56,8 +56,8 @@ test('Block: renders', t => {
     description: 'A block',
   });
 
-  const block__with_type_only = mk_stubbed_block(blocks, test_data()[0]);
-  const block__with_descr     = mk_stubbed_block(blocks__with_descr, test_data()[0]);
+  const block__with_type_only = mk(blocks, test_data()[0]);
+  const block__with_descr     = mk(blocks__with_descr, test_data()[0]);
 
   t.truthy(block__with_type_only.find('h3.title').text().match(test_blocks()[0].type));
   t.truthy(block__with_descr.find('h3.title').text().match(blocks__with_descr[0].description));
@@ -65,14 +65,14 @@ test('Block: renders', t => {
 
 
 test('Block: creates AddBlockBtn', t => {
-  const block = mk_stubbed_block(test_blocks(), test_data()[0]);
+  const block = mk(test_blocks(), test_data()[0]);
   t.is(1, block.find('AddBlockBtn').length);
 });
 
 
 test('Block: delete btn calls ctx.remove_block(uid)', t => {
   const cb__delete = sinon.spy();
-  const block = mk_stubbed_block(test_blocks(), test_data()[0], 67, cb__delete, { });
+  const block = mk(test_blocks(), test_data()[0], 67, cb__delete, { });
 
   block.find('.block-delete-btn').prop('onClick')();
   t.deepEqual([67], cb__delete.lastCall.args);
@@ -81,7 +81,8 @@ test('Block: delete btn calls ctx.remove_block(uid)', t => {
 
 test('Block: passes data_item, ctx.blocks, is_top_level to RecursiveBlockRenderer', t => {
   const data  = test_data();
-  const block = mk_stubbed_block(test_blocks(), data[0]);
+  const block = mk(test_blocks(), data[0]);
+  const recursive_renderer = block.find('[type="RecursiveRenderer"]');
 
   t.deepEqual(
     {
@@ -89,7 +90,11 @@ test('Block: passes data_item, ctx.blocks, is_top_level to RecursiveBlockRendere
       blocks:       test_blocks(),
       is_top_level: true,
     },
-    stubs.Stub.last_props
+    {
+      data_item: recursive_renderer.prop('data_item'),
+      blocks: recursive_renderer.prop('blocks'),
+      is_top_level: recursive_renderer.prop('is_top_level'),
+    }
   );
 });
 

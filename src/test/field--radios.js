@@ -36,7 +36,7 @@ const data_item__not_set = {
 };
 
 
-function mk_stubbed(field_def, containing_data_item, ctx_methods, is_top_level) {
+function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
   return mount(<Otter.Fields.components.Radios field_def={field_def}
                                                containing_data_item={containing_data_item}
                                                consumer_component={stubs.func_stub([{...ctx_methods}])}
@@ -47,7 +47,7 @@ function mk_stubbed(field_def, containing_data_item, ctx_methods, is_top_level) 
 test('Radios: no opts -> warning msg', t => {
   const b = Otter.Utils.copy(block);
   delete b.fields[0].options;
-  const wrapper = mk_stubbed(b.fields[0], data_item, {}, true);
+  const wrapper = mk(b.fields[0], data_item, {}, true);
   const opts_wrapper = wrapper.find('.buttons');
 
   t.is(1, opts_wrapper.length);
@@ -56,7 +56,7 @@ test('Radios: no opts -> warning msg', t => {
 
 
 test('Radios: renders radio options, initial value selected', t => {
-  const wrapper = mk_stubbed(block.fields[0], data_item, {}, true);
+  const wrapper = mk(block.fields[0], data_item, {}, true);
   const opts    = wrapper.find('a.radio-option');
   const n_opts  = Object.keys(block.fields[0].options).length;
 
@@ -75,7 +75,7 @@ test('Radios: click updates state, calls ctx update methods', t => {
     should_redraw() { ctx.should_redraw.called = true; },
   };
 
-  const wrapper = mk_stubbed(block.fields[0], data_item, ctx);
+  const wrapper = mk(block.fields[0], data_item, ctx);
   const opt__c = wrapper.find('.radio-option[data-value="c"]');
   t.is(1, opt__c.length);
 
@@ -102,7 +102,7 @@ test('Radios: clear button sets value to null', t => {
     should_redraw() { ctx.should_redraw.called = true; },
   };
 
-  const wrapper = mk_stubbed(block.fields[0], data_item, ctx);
+  const wrapper = mk(block.fields[0], data_item, ctx);
   const clear_btn = wrapper.find('.radio-clear-btn');
   t.is(1, clear_btn.length);
 
@@ -116,8 +116,8 @@ test('Radios: clear button sets value to null', t => {
 
 
 test('Radios: renders label, passes through is_top_level', t => {
-  const wrapper__top    = mk_stubbed(block.fields[0], data_item, {}, true);
-  const wrapper__nested = mk_stubbed(block.fields[0], data_item, {}, false);
+  const wrapper__top    = mk(block.fields[0], data_item, {}, true);
+  const wrapper__nested = mk(block.fields[0], data_item, {}, false);
 
   const lbl__top    = wrapper__top.find('FieldLabel');
   const lbl__nested = wrapper__nested.find('FieldLabel');

@@ -1,13 +1,15 @@
 import React from 'react';
 
 
-function Stub(props) {
-  Stub.last_props = props;
-  return (
-    <div>
-      {props.children}
-    </div>
-  );
+function mk_stub(type) {
+  return function s(props) {
+    s.last_props = props;
+    return (
+      <div type={type} {...props}>
+        {props.children}
+      </div>
+    );
+  };
 }
 
 
@@ -23,7 +25,7 @@ function func_stub(child_args) {
 
 
 export default {
-  Stub,
+  mk_stub,
   func_stub,
 };
 

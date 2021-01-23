@@ -25,13 +25,15 @@ const snapshot = {
 };
 
 
-function mk_stubbed(load_state, blocks, data_items, when_to_save) {
-  return shallow(<Editor load_state={load_state}
-                         data={data_items}
-                         blocks={blocks}
-                         save={when_to_save}
-                         drag_context_component={stubs.Stub}
-                         droppable_component={stubs.func_stub([provided, snapshot])} />);
+function mk(load_state, blocks, data_items, when_to_save) {
+  return mount(<Editor load_state={load_state}
+                       data={data_items}
+                       blocks={blocks}
+                       save={when_to_save}
+                       drag_context_component={stubs.mk_stub('DragContext')}
+                       provider_component={stubs.mk_stub('ContextProvider')}
+                       droppable_component={stubs.func_stub([provided, snapshot])}
+                       block_component={stubs.mk_stub('Block')} />);
 }
 
 
@@ -104,15 +106,16 @@ test('Editor: renders post data container on load_state loaded', t => {
 
 
 test('Editor: provides a context', t => {
-  const wrapper = mk_stubbed(Otter.State.Loaded, [ ], [ ], Otter.Save.OnInput);
-  t.true(wrapper.exists('[stub="ContextProvider"]'));
+  const wrapper = mk(Otter.State.Loaded, [ ], [ ], Otter.Save.OnInput);
+  const result = wrapper.find('[type="ContextProvider"]');
+  t.true(wrapper.exists('[type="ContextProvider"]'));
 });
 
 
 test('Editor: creates a DnD context', t => {
-  const wrapper = mk_stubbed(Otter.State.Loaded, [ ], [ ], Otter.Save.OnInput);
-  const dnd_context = wrapper.find('[stub="DragDropContext"]');
-  t.true(wrapper.exists('[stub="DragDropContext"]'));
+  const wrapper = mk(Otter.State.Loaded, [ ], [ ], Otter.Save.OnInput);
+  const dnd_context = wrapper.find('[type="DragContext"]');
+  t.true(wrapper.exists('[type="DragContext"]'));
   t.true(wrapper.exists('[droppableId]'));
   t.is(wrapper.instance().cb__reorder, dnd_context.prop('onDragEnd'));
 });
@@ -129,16 +132,16 @@ test('Editor: renders save button when Save is OnClick (also by default)', t => 
 
 
 test('Editor: renders a Block for each data item', t => {
-  const wrapper = mk_stubbed(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
+  const wrapper = mk(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
   const droppable = wrapper.find('[droppableId]');
-  t.is(test_data().length, droppable.dive().find('Block').length);
+  t.is(test_data().length, droppable.find('[type="Block"]').length);
 });
 
 
 test('Editor: passes props to Blocks', t => {
-  const wrapper = mk_stubbed(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
+  const wrapper = mk(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
   const droppable = wrapper.find('[droppableId]');
-  const items = droppable.dive().find('Block');
+  const items = droppable.find('[type="Block"]');
   const first = items.first();
 
   t.deepEqual(Otter.Utils.upto(test_data().length), items.map(b => b.prop('index')));
@@ -148,26 +151,26 @@ test('Editor: passes props to Blocks', t => {
 
 
 test('Editor: item is deleted when block cb__delete called', t => {
-  const wrapper = mk_stubbed(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
+  const wrapper = mk(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
   const droppable = wrapper.find('[droppableId]');
-  const block = droppable.dive().find('Block').first();
+  const block = droppable.find('[type="Block"]').first();
 
   block.prop('cb__delete')(0);
   wrapper.update();
-  t.is(test_data().length - 1, wrapper.find('[droppableId]').dive().find('Block').length);
+  t.is(test_data().length - 1, wrapper.find('[droppableId]').find('[type="Block"]').length);
 });
 
 
 test('Editor: add_item adds an item at end or specified index', t => {
-  const wrapper = mk_stubbed(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
+  const wrapper = mk(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
   const droppable = wrapper.find('[droppableId]');
-  const block = droppable.dive().find('Block').first();
+  const block = droppable.find('[type="Block"]').first();
 
   wrapper.instance().add_item('AnotherContentItem');
   wrapper.instance().add_item('OneMoreContentItem', 2);
 
   wrapper.update();
-  const blocks = wrapper.find('[droppableId]').dive().find('Block');
+  const blocks = wrapper.find('[droppableId]').find('[type="Block"]');
   t.is(test_data().length + 2, blocks.length);
   t.is('AnotherContentItem', blocks.last().prop('data_item').__type);
   t.is('OneMoreContentItem', blocks.at(2).prop('data_item').__type);
@@ -178,8 +181,8 @@ test('Editor: add_item adds an item at end or specified index', t => {
 // ------------------------------------
 
 test('Editor: renders AddBlockBtn', t => {
-  const wrapper = mk_stubbed(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
-  const wrapper__no_data = mk_stubbed(Otter.State.Loaded, test_blocks(), [ ], Otter.Save.OnInput);
+  const wrapper = mk(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
+  const wrapper__no_data = mk(Otter.State.Loaded, test_blocks(), [ ], Otter.Save.OnInput);
   const addblockbtn = wrapper.find('AddBlockBtn');
   const addblockbtn__no_data = wrapper__no_data.find('AddBlockBtn');
   t.is(1, addblockbtn.length);
@@ -202,7 +205,7 @@ test('Editor: renders AddBlockBtn', t => {
 // ------------------------------------
 
 test('Editor: cb__reorder: no destination or no change, does nothing', t => {
-  const wrapper = mk_stubbed(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
+  const wrapper = mk(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
   sinon.spy(wrapper.instance().ctx, 'value_updated');
 
   wrapper.instance().cb__reorder({ destination: false });
@@ -218,7 +221,7 @@ test('Editor: cb__reorder: no destination or no change, does nothing', t => {
 
 
 test('Editor: cb__reorder: reorders items', t => {
-  const wrapper = mk_stubbed(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
+  const wrapper = mk(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
   sinon.spy(wrapper.instance().ctx, 'value_updated');
 
   wrapper.instance().cb__reorder({
@@ -241,8 +244,8 @@ test('Editor: cb__reorder: reorders items', t => {
 
 test('Editor: get_data exports data', t => {
   const e = new Editor({
-    blocks:     test_blocks(),
-    data: test_data(),
+    blocks: test_blocks(),
+    data:   test_data(),
   });
 
   t.deepEqual(test_data(), e.get_data());
@@ -314,7 +317,7 @@ test('Editor: get_data removes non-top-level items that have only __type', t => 
   ];
   t.deepEqual(exp, new Editor({
     blocks: test_blocks(),
-    data: data_items,
+    data:   data_items,
   }).get_data());
 });
 

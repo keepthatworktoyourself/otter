@@ -29,7 +29,7 @@ const data_item = {
 };
 
 
-function mk_stubbed(field_def, containing_data_item, ctx_methods, is_top_level) {
+function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
   const wrapper = shallow(<Otter.Fields.components.TextInput field_def={field_def}
                                                              containing_data_item={containing_data_item}
                                                              consumer_component={stubs.func_stub([{...ctx_methods}])}
@@ -39,7 +39,7 @@ function mk_stubbed(field_def, containing_data_item, ctx_methods, is_top_level) 
 
 
 test('TextInput: renders textarea containing initial value', t => {
-  const wrapper = mk_stubbed(block.fields[0], data_item, {}, true);
+  const wrapper = mk(block.fields[0], data_item, {}, true);
   const textinput = wrapper.find('input');
   t.is(1, textinput.length);
   t.is(data_item.title, textinput.prop('value'));
@@ -53,7 +53,7 @@ test('TextInput: value change updates state, calls ctx value_updated only', t =>
   };
   const d = Otter.Utils.copy(data_item);
 
-  const wrapper = mk_stubbed(block.fields[0], d, ctx);
+  const wrapper = mk(block.fields[0], d, ctx);
   const textinput = wrapper.find('input');
   const new_value = 'Clever girl';
 
@@ -65,8 +65,8 @@ test('TextInput: value change updates state, calls ctx value_updated only', t =>
 
 
 test('TextInput: renders label, passes through is_top_level', t => {
-  const wrapper__top    = mk_stubbed(block.fields[0], data_item, {}, true);
-  const wrapper__nested = mk_stubbed(block.fields[0], data_item, {}, false);
+  const wrapper__top    = mk(block.fields[0], data_item, {}, true);
+  const wrapper__nested = mk(block.fields[0], data_item, {}, false);
 
   const lbl__top    = wrapper__top.find('FieldLabel');
   const lbl__nested = wrapper__nested.find('FieldLabel');

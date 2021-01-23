@@ -35,7 +35,7 @@ const data_item = {
 const spy__open_media_browser = sinon.spy(Otter.Fields.components.WPMedia.prototype, 'open_media_browser');
 
 
-function mk_stubbed(field_def, containing_data_item, ctx_methods, is_top_level) {
+function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
   const wrapper = shallow(<Otter.Fields.components.WPMedia field_def={field_def}
                                                            containing_data_item={containing_data_item}
                                                            consumer_component={stubs.func_stub([{...ctx_methods}])}
@@ -50,7 +50,7 @@ test('WPMedia: select button rendered and begins wp selection', t => {
     should_redraw() { ctx.should_redraw.called = true; },
   };
 
-  const wrapper = mk_stubbed(block.fields[0], data_item, ctx, true);
+  const wrapper = mk(block.fields[0], data_item, ctx, true);
   const btn = wrapper.find('.wpmedia-select-btn');
   t.is(1, btn.length);
 
@@ -81,7 +81,7 @@ test('WPMedia: select button rendered and begins wp selection', t => {
 
 
 test('WPMedia: renders image thumbnail', t => {
-  const wrapper = mk_stubbed(block.fields[0], data_item, {});
+  const wrapper = mk(block.fields[0], data_item, {});
   const image = wrapper.find('img');
   t.is(1, image.length);
   t.is(data_item.image.thumbnail, image.prop('src'));
@@ -94,7 +94,7 @@ test('WPMedia: clear btn sets value to null, calls ctx update methods', t => {
     should_redraw() { ctx.should_redraw.called = true; },
   };
   const d = Otter.Utils.copy(data_item);
-  const wrapper = mk_stubbed(block.fields[0], d, ctx);
+  const wrapper = mk(block.fields[0], d, ctx);
   const clearbtn = wrapper.find('.wpmedia-clear-btn');
 
   clearbtn.prop('onClick')({});
@@ -105,8 +105,8 @@ test('WPMedia: clear btn sets value to null, calls ctx update methods', t => {
 
 
 test('WPMedia: renders label, passes through is_top_level', t => {
-  const wrapper__top    = mk_stubbed(block.fields[0], data_item, {}, true);
-  const wrapper__nested = mk_stubbed(block.fields[0], data_item, {}, false);
+  const wrapper__top    = mk(block.fields[0], data_item, {}, true);
+  const wrapper__nested = mk(block.fields[0], data_item, {}, false);
 
   const lbl__top    = wrapper__top.find('FieldLabel');
   const lbl__nested = wrapper__nested.find('FieldLabel');

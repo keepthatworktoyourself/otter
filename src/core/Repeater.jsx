@@ -141,18 +141,17 @@ export default class Repeater extends React.Component {
         }
 
         return <>
-          <DragDropContext onDragEnd={this.cb__reorder} stub="DragDropContext">
+          <DragDropContext onDragEnd={this.cb__reorder}>
             <Droppable droppableId={dnd_context_id} type={dnd_context_id}>{(prov, snap) => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
 
                 {data_items.map((data_item, index) => (
-                  <RepeaterItemStub stub="RepeaterItem"
-                                    index={index}
+                  <RepeaterItemStub index={index}
                                     dnd_context_id={dnd_context_id}
                                     key={index}
                                     cb__delete={this.cb__delete}>
 
-                    <RecursiveBlockRendererStub stub="RBR" data_item={data_item} blocks={ctx.blocks} />
+                    <RecursiveBlockRendererStub data_item={data_item} blocks={ctx.blocks} />
 
                   </RepeaterItemStub>
                 ))}

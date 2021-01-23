@@ -31,7 +31,7 @@ const data_item__true = {
 };
 
 
-function mk_stubbed(field_def, containing_data_item, ctx_methods, is_top_level) {
+function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
   return mount(<Otter.Fields.components.Bool field_def={field_def}
                                              containing_data_item={containing_data_item}
                                              consumer_component={stubs.func_stub([{...ctx_methods}])}
@@ -40,8 +40,8 @@ function mk_stubbed(field_def, containing_data_item, ctx_methods, is_top_level) 
 
 
 test('Bool: renders input with toggles, initial value', t => {
-  const wrapper__false = mk_stubbed(block.fields[0], data_item__false);
-  const wrapper__true  = mk_stubbed(block.fields[0], data_item__true);
+  const wrapper__false = mk(block.fields[0], data_item__false);
+  const wrapper__true  = mk(block.fields[0], data_item__true);
 
   const btn__yes = wrapper__false.find('a[data-value="yes"]');
   const btn__no  = wrapper__false.find('a[data-value="no"]');
@@ -67,7 +67,7 @@ test('Bool: renders yes_label and no_label', t => {
     no_label:  'Absolutely not',
   });
 
-  const wrapper__false = mk_stubbed(b.fields[0], data_item__false);
+  const wrapper__false = mk(b.fields[0], data_item__false);
   const btn__yes = wrapper__false.find('a[data-value="yes"]');
   const btn__no  = wrapper__false.find('a[data-value="no"]');
 
@@ -82,7 +82,7 @@ test('Bool: click updates state and calls ctx updated methods', t => {
     should_redraw() { ctx.should_redraw.called = true; },
   };
 
-  const wrapper = mk_stubbed(block.fields[0], data_item__false, ctx);
+  const wrapper = mk(block.fields[0], data_item__false, ctx);
   const btn__yes = wrapper.find('a[data-value="yes"]');
   t.is(false, wrapper.find('input').get(0).props.checked);
 
@@ -99,8 +99,8 @@ test('Bool: click updates state and calls ctx updated methods', t => {
 
 
 test('Bool: renders label, passes through is_top_level', t => {
-  const wrapper__top    = mk_stubbed(block.fields[0], data_item__false, {}, true);
-  const wrapper__nested = mk_stubbed(block.fields[0], data_item__false, {}, false);
+  const wrapper__top    = mk(block.fields[0], data_item__false, {}, true);
+  const wrapper__nested = mk(block.fields[0], data_item__false, {}, false);
 
   const lbl__top    = wrapper__top.find('FieldLabel');
   const lbl__nested = wrapper__nested.find('FieldLabel');

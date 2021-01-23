@@ -32,19 +32,23 @@ function same(a1, a2) {
 }
 
 
+const QuillStub = stubs.mk_stub('QuillStub');
+
+
 function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
-  return shallow(<Otter.Fields.components.TextEditor field_def={field_def}
-                                                     containing_data_item={containing_data_item}
-                                                     consumer_component={stubs.func_stub([{...ctx_methods}])}
-                                                     is_top_level={is_top_level} />);
+  return mount(<Otter.Fields.components.TextEditor field_def={field_def}
+                                                   containing_data_item={containing_data_item}
+                                                   consumer_component={stubs.func_stub([{...ctx_methods}])}
+                                                   quill_component={QuillStub}
+                                                   is_top_level={is_top_level} />);
 }
 
 
-test('TextEditor: renders textarea containing initial value', t => {
-  const wrapper = mk(field, data_item, {}, true).dive();
-  const quill = wrapper.find(ReactQuill);
+test('TextEditor: renders quill editor, contains initial value', t => {
+  const wrapper = mk(field, data_item, {}, true);
+  const quill = wrapper.find('[type="QuillStub"]');
   t.is(1, quill.length);
-  t.is(data_item.content, quill.prop('defaultValue'));
+  t.is(data_item.content, quill.props().defaultValue);
 });
 
 
@@ -55,8 +59,8 @@ test('TextEditor: value change updates state, calls ctx value_updated only', t =
   };
   const d = Otter.Utils.copy(data_item);
 
-  const wrapper = mk(field, d, ctx).dive();
-  const quill = wrapper.find(ReactQuill);
+  const wrapper = mk(field, d, ctx);
+  const quill = wrapper.find('[type="QuillStub"]');
   const new_html_value = '<h2>Some wealthy text</h2>';
 
   quill.prop('onChange')(new_html_value, null, 'user');
@@ -67,8 +71,8 @@ test('TextEditor: value change updates state, calls ctx value_updated only', t =
 
 
 test('TextEditor: renders label, passes through is_top_level', t => {
-  const wrapper__top    = mk(field, data_item, {}, true).dive();
-  const wrapper__nested = mk(field, data_item, {}, false).dive();
+  const wrapper__top    = mk(field, data_item, {}, true);
+  const wrapper__nested = mk(field, data_item, {}, false);
 
   const lbl__top    = wrapper__top.find('FieldLabel');
   const lbl__nested = wrapper__nested.find('FieldLabel');
@@ -84,7 +88,6 @@ test('TextEditor: renders label, passes through is_top_level', t => {
 test('TextEditor: paste_as_plain_text sets clipboard matcher', t => {
   const f = Object.assign({}, field, { paste_as_plain_text: true });
   const wrapper = mk(f, data_item, {}, true);
-  wrapper.dive();
   const matchers = wrapper.instance().modules.clipboard.matchers;
   t.is(Node.ELEMENT_NODE, matchers[0][0]);
   t.is('function', typeof wrapper.instance().modules.clipboard.matchers[0][1]);
@@ -93,15 +96,15 @@ test('TextEditor: paste_as_plain_text sets clipboard matcher', t => {
 
 test('TextEditor: heading_levels overrides toolbar opts', t => {
   const f = Object.assign({}, field, { heading_levels: [3, 4] });
-  const wrapper__default = mk(field, data_item, {}, true);
-  const wrapper__custom  = mk(f,     data_item, {}, true);
-  wrapper__default.dive();
-  wrapper__custom.dive();
+  const wrapper__default         = mk(field, data_item, {}, true);
+  const wrapper__custom_headings = mk(f,     data_item, {}, true);
+  const tb_default         = wrapper__default.find('.editor-toolbar');
+  const tb_custom_headings = wrapper__custom_headings.find('.editor-toolbar');
+  const levels__default          = tb_default.find('.ql-header option').map(el => [el.props().value, el.text()]);
+  const levels__custom_headings  = tb_custom_headings.find('.ql-header option').map(el => [el.props().value, el.text()]);
 
-  const toolbar__default = wrapper__default.instance().modules.toolbar;
-  const toolbar__custom  = wrapper__custom.instance().modules.toolbar;
-  t.deepEqual([{ header: [1, 2, false] }], toolbar__default[0]);
-  t.deepEqual([{ header: [3, 4, false] }], toolbar__custom[0]);
+  t.deepEqual([[1, 'Heading 1'], [2, 'Heading 2'], ['', 'Paragraph']], levels__default);
+  t.deepEqual([[3, 'Heading 3'], [4, 'Heading 4'], ['', 'Paragraph']], levels__custom_headings);
 });
 
 
@@ -109,13 +112,18 @@ test('TextEditor: blockquote enables blockquote', t => {
   const f = Object.assign({}, field, { blockquote: true });
   const wrapper__default    = mk(field, data_item, {}, true);
   const wrapper__blockquote = mk(f,     data_item, {}, true);
-  wrapper__default.dive();
-  wrapper__blockquote.dive();
 
-  const toolbar__default    = wrapper__default.instance().modules.toolbar;
-  const toolbar__blockquote = wrapper__blockquote.instance().modules.toolbar;
+  t.is(0, wrapper__default.find('.ql-blockquote').length);
+  t.is(1, wrapper__blockquote.find('.ql-blockquote').length);
+});
 
-  t.is(undefined, toolbar__default.find(entry => same(entry, ['blockquote'])));
-  t.deepEqual(['blockquote'], toolbar__blockquote.find(entry => same(entry, ['blockquote'])));
+
+test('TextEditor: hr enables hr', t => {
+  const f = Object.assign({}, field, { hr: true });
+  const wrapper__default = mk(field, data_item, {}, true);
+  const wrapper__hr      = mk(f,     data_item, {}, true);
+
+  t.is(0, wrapper__default.find('.ql-insertHR').length);
+  t.is(1, wrapper__hr.find('.ql-insertHR').length);
 });
 

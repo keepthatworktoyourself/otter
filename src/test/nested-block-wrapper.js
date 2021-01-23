@@ -42,11 +42,11 @@ const data_item__no_nested_block_data = {
 };
 
 
-function mk_stubbed(field_def, containing_data_item, ctx_methods, children) {
+function mk(field_def, containing_data_item, ctx_methods, children) {
   return shallow(
     <NestedBlockWrapper field_def={field_def}
-                     containing_data_item={containing_data_item}
-                     consumer_component={stubs.func_stub([{...ctx_methods}])}>
+                        containing_data_item={containing_data_item}
+                        consumer_component={stubs.func_stub([{...ctx_methods}])}>
       {children}
     </NestedBlockWrapper>
   );
@@ -54,7 +54,7 @@ function mk_stubbed(field_def, containing_data_item, ctx_methods, children) {
 
 
 test('NestedBlock: renders title, ddtoggle', t => {
-  const wrapper = mk_stubbed(field_def, data_item, {}, []);
+  const wrapper = mk(field_def, data_item, {}, []);
   t.is(1, wrapper.dive().find('h4.title').length);
   t.is(1, wrapper.dive().find('DDToggle').length);
   t.truthy(wrapper.dive().find('h4.title').text().match(field_def.description));
@@ -63,7 +63,7 @@ test('NestedBlock: renders title, ddtoggle', t => {
 
 test('NestedBlock: renders children when uncollapsed', t => {
   const context = ctx();
-  const wrapper = mk_stubbed(field_def, data_item, context, [
+  const wrapper = mk(field_def, data_item, context, [
     <div className="sbw-child sbw-child-1" key="k1"></div>,
     <div className="sbw-child sbw-child-2" key="k2"></div>,
   ]);
@@ -82,7 +82,7 @@ test('NestedBlock: renders children when uncollapsed', t => {
 
 test('NestedBlockWrapper: collapse toggle calls ctx should_redraw, block_toggled', t => {
   const context = ctx();
-  const wrapper = mk_stubbed(field_def, data_item, context, [
+  const wrapper = mk(field_def, data_item, context, [
     <div className="sbw-child sbw-child-1" key="k1"></div>,
     <div className="sbw-child sbw-child-2" key="k2"></div>,
   ]);
@@ -98,14 +98,14 @@ test('NestedBlockWrapper: collapse toggle calls ctx should_redraw, block_toggled
 
 
 test('NestedBlockWrapper: when optional, renders Toggle', t => {
-  const wrapper = mk_stubbed(field_def__optional, data_item, {}, []);
+  const wrapper = mk(field_def__optional, data_item, {}, []);
   t.is(1, wrapper.dive().find('Toggle').length);
 });
 
 
 test('NestedBlockWrapper: when optional, enable state respects initial presence/absence of data', t => {
-  const wrapper__data    = mk_stubbed(field_def__optional, data_item, {}, [ ]);
-  const wrapper__no_data = mk_stubbed(field_def__optional, data_item__no_nested_block_data, {}, [ ]);
+  const wrapper__data    = mk(field_def__optional, data_item, {}, [ ]);
+  const wrapper__no_data = mk(field_def__optional, data_item__no_nested_block_data, {}, [ ]);
 
   t.true(wrapper__data.dive().find('Toggle').prop('checked'));
   t.false(wrapper__no_data.dive().find('Toggle').prop('checked'));
@@ -114,7 +114,7 @@ test('NestedBlockWrapper: when optional, enable state respects initial presence/
 
 test('NestedBlockWrapper: when optional, collapse toggle does nothing until enabled', t => {
   const context = ctx();
-  const wrapper = mk_stubbed(field_def__optional, data_item__no_nested_block_data, context, [
+  const wrapper = mk(field_def__optional, data_item__no_nested_block_data, context, [
     <div className="sbw-child sbw-child-1" key="k1"></div>,
     <div className="sbw-child sbw-child-2" key="k2"></div>,
   ]);
@@ -146,7 +146,7 @@ test('NestedBlockWrapper: when optional, collapse toggle does nothing until enab
 
 test('NestedBlockWrapper: toggle_enabled calls ctx value_updated, should_redraw, block_toggled', t => {
   const context = ctx();
-  const wrapper = mk_stubbed(field_def__optional, data_item__no_nested_block_data, context, [ ]);
+  const wrapper = mk(field_def__optional, data_item__no_nested_block_data, context, [ ]);
   wrapper.dive().find('Toggle').prop('onChange')({
     currentTarget: {
       blur: sinon.spy(),
