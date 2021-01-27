@@ -14,11 +14,21 @@
     exit;
   }
 
+  $n = getenv('N');
+  if (!$n) {
+    $n = -1;
+  }
+
   require_once($path_wpconfig);
 
   $q = new WP_Query([
-    'post_type'      => 'bw_landing_page',
-    'posts_per_page' => -1,
+    'post_type'           => 'post',
+    'posts_per_page'      => $n,
+    'paged'               => 0,
+    'ignore_sticky_posts' => true,
+    'orderby'             => 'ID',
+    'order'               => 'DESC',
+    'post_status'         => 'publish',
   ]);
 
   $urls = call_user_func(function() use ($q) {
@@ -36,10 +46,14 @@
 
   $cmds = [ ];
   $n = count($urls);
+  $dir = __DIR__;
+  $tidy = "| php $dir/tidy--leading-whitespace.php " .
+    "| php $dir/tidy--comments.php " .
+    "| php $dir/tidy--unimportant-attribs.php";
   foreach ($urls as $i => $url) {
     $j = $i + 1;
     $fn = preg_replace('/[^a-zA-Z0-9]/', '-', $url);
-    $cmds []= "echo -n '$j of $n  ' && echo '$fn' && curl -sL $url > $fn.html";
+    $cmds []= "echo -n '$j of $n  ' && echo '$fn' && curl -sL $url $tidy > $fn.html";
   }
 
   echo implode($cmds, " && "), "\n";
