@@ -13,13 +13,16 @@
   $files1 = array_values(array_diff(scandir($dir1), ['.', '..', '.DS_Store']));
   $files2 = array_values(array_diff(scandir($dir2), ['.', '..', '.DS_Store']));
 
-  if (count($files1) === 0) {
+  $n1 = count($files1);
+  $n2 = count($files2);
+
+  if ($n1 === 0) {
     echo "Error: no files to compare\n";
     exit(1);
   }
 
-  if (count($files1) !== count($files2)) {
-    echo "Fail: number of files differs\n";
+  if ($n1 !== $n2) {
+    echo "Fail: number of files differs ($n1 vs. $n2)\n";
     exit(1);
   }
 

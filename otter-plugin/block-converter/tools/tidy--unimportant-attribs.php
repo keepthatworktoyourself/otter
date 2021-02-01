@@ -1,6 +1,7 @@
 <?php
   function remove_unimportant_attribs($s) {
-    $attribs = ['width', 'height', 'data-secret', 'src', 'data-width'];
+    // $attribs = ['width', 'height', 'data-secret', 'src', 'href', 'data-width'];
+    $attribs = [ ];
     foreach ($attribs as $a) {
       $s = preg_replace("/$a=\"[^\"]+\"/", '', $s);
     }
