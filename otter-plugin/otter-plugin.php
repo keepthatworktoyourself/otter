@@ -33,6 +33,7 @@
 
   require_once('classic-editor/classic-editor.php');
   require_once('metabox-init.php');
+  require_once('block-converter/block-converter.php');
   // require_once('dev/init.php');
 
   class OtterPlugin { }
@@ -144,4 +145,101 @@
       }
     }
   });
+
+
+  // hook for updates
+  // -----------------------------------
+
+  function autotransition($version = null, $transition_directory = null) {
+    static $transitions = [ ];
+    if ($version) {
+      $transitions []= [
+        'version'   => $version,
+        'directory' => $transition_directory,
+      ];
+    }
+    return $transitions;
+  }
+
+  function get_transitions($version__db, $version__code) {
+    $transitions = autotransition();
+    usort($transitions, function($t1, $t2) {
+      return $t2['version'] - $t1['version'];
+    });
+    return array_filter($transitions, function($t) use ($version__db, $version__code) {
+      return $t['version'] > $version__db && $t['version'] <= $version__code;
+    });
+  }
+
+  function acquire_lock($pdo, $lock_name) {
+    $lock = $pdo->query("select get_lock('$lock_name', 0) as l");
+    $result = $lock->fetchAll(\PDO::FETCH_ASSOC)[0]['l'] ?? null;
+    return $result === '1';
+  }
+
+  function release_lock($pdo, $lock_name) {
+    $unlock = $pdo->query("select release_lock('$lock_name') as l");
+  }
+
+
+  add_action('init', function($muffins) {
+    global $wpdb;
+
+    $lock_name = 'otter-update';
+    $version__code = @constant('OTTER_DATA_VERSION');
+    $version__db = get_option('otter-data-version');
+
+    if ($version__code === null) {  // App is not using versions
+      return;
+    }
+
+    $version__code = (float) $version__code;
+    $version__db   = (float) $version__db;
+
+    if ($version__db > $version__code) {
+      echo "Warning: DB content version ($version__db) more recent than codebase content version ($version__code)!";
+      return;
+    }
+
+    $transitions = get_transitions($version__db, $version__code);
+    if (count($transitions) === 0) {  // Nothing to do
+      return;
+    }
+
+    try {
+      Transition::$pdo = new \PDO(
+        "mysql:dbname={$wpdb->dbname};host={$wpdb->dbhost};charset=utf8",
+        $wpdb->dbuser,
+        $wpdb->dbpassword,
+        [ \PDO::MYSQL_ATTR_FOUND_ROWS => true ]
+      );
+      Transition::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+      Transition::$pdo->exec('set names utf8mb4 collate utf8mb4_unicode_ci');
+
+      $lock = acquire_lock(Transition::$pdo, $lock_name);
+      if (!$lock) {  // Update task is running in a different process
+        echo 'The website’s database is currently running an update. Please check back in a few seconds. 🦦';
+        exit;
+      }
+
+      foreach ($transitions as $t) {
+        \Otter\run_transition($t['directory']);
+      }
+
+      update_option('otter-data-version', $version__code);
+    }
+    catch (\PDOException $exc) {
+      echo "Database error during transitioning";
+      var_dump($exc);
+      exit;
+    }
+    catch (\Exception $exc) {
+      echo "Transitioning error";
+      var_dump($exc);
+      exit;
+    }
+    finally {
+      release_lock(Transition::$pdo, $lock_name);
+    }
+  }, 1000);
 

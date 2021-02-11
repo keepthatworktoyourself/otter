@@ -1,7 +1,5 @@
 <?php
-  //
-  // helpers.php - some helpers for converters to use
-  //
+  namespace Otter;
 
 
   // Dynamically create stdclass models during
@@ -13,8 +11,11 @@
       eval("class $class extends stdClass { }");
     }
   }
-  ini_set('unserialize_callback_func', 'unserialize_helper');
+  ini_set('unserialize_callback_func', '\Otter\unserialize_helper');
 
+
+  // The following are helper functions for use by converters
+  // ---------------------------------
 
   function post_url($id) {
     return get_permalink($id);
@@ -22,8 +23,6 @@
 
 
   function image($image_id) {
-    global $pdo;
-
     $url = wp_get_attachment_url($image_id);
     return $url ? [
       'id'  => $image_id,
@@ -32,8 +31,14 @@
   }
 
 
+  function files_with_extension($directory, $ext) {
+    return array_filter(scandir("$directory"), function($file) use ($ext) {
+      return preg_match("/\.$ext$/", $file);
+    });
+  }
+
+
   function media_from_url($item_url) {
-    global $pdo;
     if (!$item_url) {
       return null;
     }
@@ -45,13 +50,13 @@
       return null;
     }
 
-    $st = $pdo->prepare('select post_id from wp_postmeta where meta_key = "_wp_attached_file" && meta_value = ?');
+    $st = Transition::$pdo->prepare('select post_id from wp_postmeta where meta_key = "_wp_attached_file" && meta_value = ?');
     $r = $st->execute([$attachment_meta]);
     if (!$r) {
       return null;
     }
 
-    $item_id = $st->fetchAll(PDO::FETCH_ASSOC)[0]['post_id'] ?? null;
+    $item_id = $st->fetchAll(\PDO::FETCH_ASSOC)[0]['post_id'] ?? null;
     return $item_id ? [
       'id'  => $item_id,
       'url' => $item_url,
@@ -74,27 +79,31 @@
 
 
   function post_property($postid, $property) {
-    global $pdo;
-
-    $st = $pdo->prepare('select ? from wp_posts where ID = ?');
+    $st = Transition::$pdo->prepare('select ? from wp_posts where ID = ?');
     $r = $st->execute([$property, $postid]);
     if (!$r) {
       return null;
     }
 
-    return $st->fetchAll(PDO::FETCH_ASSOC)[0][$property] ?? null;
+    return $st->fetchAll(\PDO::FETCH_ASSOC)[0][$property] ?? null;
   }
 
 
   function post_meta($postid, $metakey) {
-    global $pdo;
-
-    $st = $pdo->prepare('select meta_value from wp_postmeta where post_id = ? and meta_key = ?');
+    $st = Transition::$pdo->prepare('select meta_value from wp_postmeta where post_id = ? and meta_key = ?');
     $r = $st->execute([$postid, $metakey]);
     if (!$r) {
       return null;
     }
 
-    return $st->fetchAll(PDO::FETCH_ASSOC)[0]['meta_value'] ?? null;
+    return $st->fetchAll(\PDO::FETCH_ASSOC)[0]['meta_value'] ?? null;
+  }
+
+
+  // is_obj
+  // ---------------------------------
+
+  function is_obj($x) {
+    return gettype($x) === 'object';
   }
 
