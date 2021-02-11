@@ -5,6 +5,7 @@ package-lock.json
 dist
 demo/dist
 .cache
+.parcel-cache
 
 otter-plugin/dev/dist
 otter-plugin/dev/deps

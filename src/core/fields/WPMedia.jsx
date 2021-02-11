@@ -69,7 +69,7 @@ export default class WPMedia extends React.Component {
 
               <div className="level-item flex-start">
                 <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level}
-                            align="left" colon={true} />
+                            colon={true} />
               </div>
 
               <div className="level-item flex-start">

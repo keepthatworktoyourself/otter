@@ -39,7 +39,7 @@ export default class Select extends React.Component {
 
             <div className="c-label-margin-btm-phone">
               <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level}
-                          align="left" colon={true} min_width={true} />
+                          colon={true} min_width={true} />
             </div>
 
             <div className="is-flex" style={{ alignItems: 'center' }}>
