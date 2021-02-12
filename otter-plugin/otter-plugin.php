@@ -218,7 +218,7 @@
 
       $lock = acquire_lock(Transition::$pdo, $lock_name);
       if (!$lock) {  // Update task is running in a different process
-        echo 'The website’s database is currently running an update. Please check back in a few seconds. 🦦';
+        echo 'The website is currently running a database update. Please check back in a few seconds. 🦦';
         exit;
       }
 

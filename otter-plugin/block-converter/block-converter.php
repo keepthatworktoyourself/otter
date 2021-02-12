@@ -6,23 +6,40 @@
 
 
   class Transition {
-    static $load;
-    static $meta_key;
-    static $is_block;
+    // config
+    // ---------------------------------
+    // Set these in the transition's setup.php file
 
-    static $converters;
-    static $pdo;
+    static $load;       // ($pdo) -> [ row, ... ]  rows must have post_id and data
+    static $meta_key;   // the key to save/update otter data in wp_postmeta
+    static $is_block;   // ($block) -> bool
+    static $cleanup;    // ($pdo) -> null
+
+
+    // define_converter
+    // ---------------------------------
+    // Use to register block converters
+
+    static function define_converter($type, $func) {
+      self::$converters[$type] = $func;
+    }
+
+
+    // reset()
+    // ---------------------------------
+    // Called automatically before each transition
+    // (As multiple transitions may run during a single session)
 
     static function reset() {
       self::$load       = null;
       self::$meta_key   = null;
       self::$is_block   = null;
+      self::$cleanup    = null;
       self::$converters = [ ];
     }
 
-    static function define_converter($type, $func) {
-      self::$converters[$type] = $func;
-    }
+    static $converters;
+    static $pdo;
   }
 
 
@@ -44,7 +61,7 @@
       return false;
     }
 
-    // Load setup
+    // Load config
     require("$directory/setup.php");
 
     // Load converters
@@ -53,20 +70,31 @@
       require("$directory/converters/$file");
     }
 
+    // Load data
     if (Transition::$load) {
       $rows = (Transition::$load)(Transition::$pdo);
     }
 
+    // Convert
     if ($rows) {
       $rows__converted = array_map(function($row) {
         return array_merge($row, ['data' => convert($row['data'], Transition::$converters)]);
       }, $rows);
     }
 
+    // Save
     if ($rows__converted) {
+      if (!Transition::$meta_key) {
+        throw new Exception('Data has been loaded & converted, but no $meta_key was set.');
+      }
       foreach ($rows__converted as $row) {
         \Otter\save($row['post_id'], Transition::$meta_key, $row['data'] ?? [ ]);
       }
+    }
+
+    // Cleanup
+    if (Transition::$cleanup) {
+      (Transition::$cleanup)(Transition::$pdo);
     }
   }
 
