@@ -65,9 +65,11 @@
     require("$directory/setup.php");
 
     // Load converters
-    $converter_files = \Otter\files_with_extension("$directory/converters", 'php');
-    foreach ($converter_files as $file) {
-      require("$directory/converters/$file");
+    if (is_dir("$directory/converters")) {
+      $converter_files = \Otter\files_with_extension("$directory/converters", 'php');
+      foreach ($converter_files as $file) {
+        require("$directory/converters/$file");
+      }
     }
 
     // Load data
