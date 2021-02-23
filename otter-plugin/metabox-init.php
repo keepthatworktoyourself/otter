@@ -12,7 +12,7 @@
           $editor_info['metabox_title'] ?? 'Otter Editor',
           '\Otter\Editor\render',
           null,
-          'normal',
+          'otter__after_title',
           'high',
           ['editor_info' => $editor_info]
         );
@@ -26,4 +26,9 @@
   }
 
   add_action('add_meta_boxes', '\Otter\Editor\init', 100);
+
+  add_action('edit_form_after_title', function() {
+    global $post, $wp_meta_boxes;
+    do_meta_boxes(get_current_screen(), 'otter__after_title', $post);
+  });
 
