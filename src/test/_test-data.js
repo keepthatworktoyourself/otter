@@ -35,10 +35,9 @@ function get_test_data() {
 }
 
 
-function get_test_data_with_invalid_field_type() {
+get_test_data.with_invalid_field_type = function() {
   return Otter.Utils.copy(test_data__block_with_invalid_field_type);
-}
-get_test_data.with_invalid_field_type = get_test_data_with_invalid_field_type;
+};
 
 
 export default get_test_data;

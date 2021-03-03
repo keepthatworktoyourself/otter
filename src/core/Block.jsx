@@ -12,8 +12,6 @@ export default class Block extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.uid         = Utils.uid();
     this.drag_styles = { };
   }
 
@@ -34,7 +32,7 @@ export default class Block extends React.Component {
     const Draggable         = this.props.draggable_component          || DnD.Draggable;
     const ContextConsumer   = this.props.consumer_component           || PageDataContext.Consumer;
     const RecursiveRenderer = this.props.recursive_renderer_component || RecursiveBlockRenderer;
-    const draggable_key     = `block-${this.uid}`;
+    const draggable_key     = `block-${data_item.__uid}`;
     let block;
 
     return (

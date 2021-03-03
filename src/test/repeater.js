@@ -63,10 +63,11 @@ test('Repeater: renders RepeaterItems', t => {
 
 
 test('Repeater: props passed to RepeaterItems', t => {
-  const wrapper = mk(test_blocks()[3].fields[0], test_data()[3], ctx());
+  const containing_data_item = Object.assign({}, test_data()[3], { __uid: 'uid-7' });
+  const wrapper = mk(test_blocks()[3].fields[0], containing_data_item, ctx());
   const item = wrapper.find('[type="RepeaterItem"]').first();
   t.is(0, item.prop('index'));
-  t.is(`d-${wrapper.instance().uid}`, item.prop('dnd_context_id'));
+  t.is('d-uid-7-content_items', item.prop('dnd_context_id'));
   t.is(wrapper.instance().cb__delete, item.prop('cb__delete'));
 });
 

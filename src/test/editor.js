@@ -37,6 +37,19 @@ function mk(load_state, blocks, data_items, when_to_save) {
 }
 
 
+function deep_equal_ignoring_uids(t, _a, _b) {
+  const a = Otter.Utils.copy(_a);
+  const b = Otter.Utils.copy(_b);
+
+  const remove_uid = (item) => { delete item.__uid };
+
+  Otter.Utils.iterate_data(a, remove_uid);
+  Otter.Utils.iterate_data(b, remove_uid);
+
+  return t.deepEqual(a, b);
+}
+
+
 test('Editor: blog_toggled calls delegate.block_toggled if present', t => {
   const e = new Editor();
   const f = new Editor();
@@ -131,6 +144,13 @@ test('Editor: renders save button when Save is OnClick (also by default)', t => 
 });
 
 
+test('Editor: ensures data items have uids', t => {
+  const data = test_data();
+  const wrapper = mk(Otter.State.Loaded, test_blocks(), data, Otter.Save.OnInput);
+  t.true(data[0].__uid !== undefined);
+});
+
+
 test('Editor: renders a Block for each data item', t => {
   const wrapper = mk(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
   const droppable = wrapper.find('[droppableId]');
@@ -145,7 +165,7 @@ test('Editor: passes props to Blocks', t => {
   const first = items.first();
 
   t.deepEqual(Otter.Utils.upto(test_data().length), items.map(b => b.prop('index')));
-  t.deepEqual(test_data()[0], first.prop('data_item'));
+  deep_equal_ignoring_uids(t, test_data()[0], first.prop('data_item'));
   t.is(wrapper.instance().delete_item, first.prop('cb__delete'));
 });
 

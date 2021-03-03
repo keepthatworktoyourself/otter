@@ -200,7 +200,8 @@ export default class TextEditor extends React.Component {
           </div>
 
           <div style={{ backgroundColor: 'white' }}>
-            <QuillComponent defaultValue={value} onChange={this.cb_change} modules={this.modules} theme="snow" />
+            <QuillComponent defaultValue={value} onChange={this.cb_change} modules={this.modules} theme="snow"
+                            parent_uid={this.uid} />
           </div>
 
         </div>

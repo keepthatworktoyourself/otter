@@ -8,7 +8,6 @@ export default class Select extends React.Component {
 
   constructor(props) {
     super(props);
-    this.uid       = Utils.uid();
     this.cb_change = this.cb_change.bind(this);
   }
 
@@ -26,6 +25,7 @@ export default class Select extends React.Component {
     const containing_data_item = this.props.containing_data_item;
     const is_top_level         = this.props.is_top_level;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
+    const uid                  = `${containing_data_item.__uid}-${field_def.name}`;
     const value                = containing_data_item[field_def.name];
 
     const opts_raw = field_def.options || { };
@@ -51,9 +51,9 @@ export default class Select extends React.Component {
                     {opt_keys.length === 0 && `[Select field has no options!]`}
 
                     {opt_keys.length !== 0 && [
-                      <option disabled key={`f${this.uid}--null-value`} value="">Select an option</option>,
+                      <option disabled key={`f${uid}--disabled`} value="">Select an option</option>,
                       ...opt_keys.map((opt, i) => (
-                        <option value={opt} key={`f${this.uid}--${i}`}>{opts[opt]}</option>
+                        <option value={opt} key={`f${uid}--${i}`}>{opts[opt]}</option>
                       )),
                     ]}
 

@@ -46,18 +46,18 @@ export default class Bool extends React.Component {
 
             <div className="is-flex" style={{ alignItems: 'center' }}>
               <div className="buttons has-addons is-marginless">
-                <a className={`button is-small ${value === true && 'is-selected is-link'}`} data-value="yes"
+                <a className={`button is-small ${value && 'is-selected is-link'}`} data-value="yes"
                    style={{ marginBottom: 0 }} onClick={this.cb_click}>
                   {yes_label}
                 </a>
-                <a className={`button is-small ${value === false && 'is-selected is-link'}`} data-value="no"
+                <a className={`button is-small ${!value && 'is-selected is-link'}`} data-value="no"
                    style={{ marginBottom: 0 }} onClick={this.cb_click}>
                   {no_label}
                 </a>
               </div>
             </div>
 
-            <input type="checkbox" readOnly checked={value} style={{ display: 'none' }} />
+            <input type="checkbox" readOnly checked={value || false} style={{ display: 'none' }} />
 
           </div>
         </div>

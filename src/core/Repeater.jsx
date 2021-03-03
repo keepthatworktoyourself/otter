@@ -19,7 +19,6 @@ export default class Repeater extends React.Component {
       show_dialogue: false,
     };
 
-    this.uid         = Utils.uid();
     this.cb__add_btn = this.cb__add_btn.bind(this);
     this.cb__add     = this.cb__add.bind(this);
     this.cb__delete  = this.cb__delete.bind(this);
@@ -58,13 +57,12 @@ export default class Repeater extends React.Component {
     }
     containing_data_item[field_def.name].push({ __type: block_type });
 
-    this.setState({
-      show_dialogue: false,
-    });
-
     this.ctx.value_updated();
     this.ctx.should_redraw();
     this.ctx.block_toggled();
+    this.setState({
+      show_dialogue: false,
+    });
   }
 
 
@@ -112,7 +110,7 @@ export default class Repeater extends React.Component {
     const nested_block_types         = field_def.nested_block_types || [ ];
     const max                        = field_def.max || -1;
     const multiple_types             = nested_block_types.length !== 1;
-    const dnd_context_id             = `d-${this.uid}`;
+    const dnd_context_id             = `d-${containing_data_item.__uid}-${field_def.name}`;
     const show_add_button            = max === -1 || data_items.length < max;
 
     return (
@@ -148,7 +146,8 @@ export default class Repeater extends React.Component {
                 {data_items.map((data_item, index) => (
                   <RepeaterItemStub index={index}
                                     dnd_context_id={dnd_context_id}
-                                    key={index}
+                                    dnd_key={data_item.__uid}
+                                    key={data_item.__uid || index}
                                     cb__delete={this.cb__delete}>
 
                     <RecursiveBlockRendererStub data_item={data_item} blocks={ctx.blocks} />

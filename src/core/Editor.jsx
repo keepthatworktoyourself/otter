@@ -118,9 +118,11 @@ export default class Editor extends React.Component {
         }
 
         const remove = (
-          carry[field_name] === '' || carry[field_name] === null || carry[field_name] === undefined ||
-          (carry[field_name].constructor === Array && carry[field_name].length === 0) ||
-          (Utils.is_data_item(carry[field_name]) && !Utils.item_has_data(carry[field_name])) ||
+          carry[field_name] === '' ||
+          carry[field_name] === null ||
+          carry[field_name] === undefined ||
+          carry[field_name].constructor === Array && carry[field_name].length === 0 ||
+          Utils.is_data_item(carry[field_name]) && !Utils.item_has_data(carry[field_name]) ||
           field_name.match(/^__/)
         );
         if (remove) {
@@ -219,6 +221,19 @@ export default class Editor extends React.Component {
   }
 
 
+  // data: generate uids
+  // -----------------------------------
+
+
+  static ensure_uids(data) {
+    Utils.iterate_data(data, (data_item) => {
+      if (data_item && !data_item.__uid) {
+        data_item.__uid = Utils.uid();
+      }
+    });
+  }
+
+
   // render()
   // -----------------------------------
 
@@ -237,15 +252,18 @@ export default class Editor extends React.Component {
       Utils.blocks_are_grouped(blocks)
     );
 
+
     let content__main;
     let content__picker;
 
     this.ctx.blocks = blocks;
+    Editor.ensure_uids(data_items);
 
 
-    function msg_div(msg) {
-      return <div className="otter-load-error bg-solid has-text-centered" style={{ padding: '1rem' }}>{msg}</div>;
-    }
+    const msg_div = (msg) =>
+      <div className="otter-load-error bg-solid has-text-centered" style={{ padding: '1rem' }}>
+        {msg}
+      </div>;
 
 
     if (load_state === State.Error || !load_state) {
@@ -276,9 +294,9 @@ export default class Editor extends React.Component {
             <Droppable droppableId="d-blocks" type="block">{(prov, snap) => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
 
-                {data_items.map((data_item, index) => (
-                  <BlockStub key={index} data_item={data_item} index={index} cb__delete={this.delete_item} />
-                ))}
+                {data_items.map((data_item, index) =>
+                  <BlockStub key={data_item.__uid} data_item={data_item} index={index} cb__delete={this.delete_item} />
+                )}
 
                 {prov.placeholder}
 

@@ -23,7 +23,7 @@ export default class TextInput extends React.Component {
     const containing_data_item = this.props.containing_data_item;
     const is_top_level         = this.props.is_top_level;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
-    const value                = containing_data_item[field_def.name];
+    const value                = containing_data_item[field_def.name] || '';
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (

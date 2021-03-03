@@ -11,7 +11,6 @@ export default class Radios extends React.Component {
   constructor(props) {
     super(props);
 
-    this.uid      = Utils.uid();
     this.cb_click = this.cb_click.bind(this);
     this.cb_clear = this.cb_clear.bind(this);
   }
@@ -39,8 +38,9 @@ export default class Radios extends React.Component {
     const containing_data_item = this.props.containing_data_item;
     const is_top_level         = this.props.is_top_level;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
-    const input_name           = `radios-${this.uid}`;
-    const value                = containing_data_item[field_def.name];
+    const uid                  = `${containing_data_item.__uid}-${field_def.name}`;
+    const input_name           = `radios-${uid}`;
+    const value                = containing_data_item[field_def.name] || '';
 
     const opts_raw = field_def.options || { };
     const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { };

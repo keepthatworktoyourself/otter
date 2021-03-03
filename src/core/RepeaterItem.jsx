@@ -7,13 +7,13 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 export default function RepeaterItem(props) {
   const index          = props.index;
+  const dnd_key        = `draggable-${props.dnd_key || index}`;
   const dnd_context_id = props.dnd_context_id;
   const Draggable      = props.draggable_component || DnD.Draggable;
   const cb__delete     = props.cb__delete;
-  const draggable_key  = `repeater-item-${index}`;
 
   return (
-    <Draggable key={draggable_key} draggableId={draggable_key} index={index} type={dnd_context_id}>{(prov, snap) => (
+    <Draggable key={dnd_key} draggableId={dnd_key} type={dnd_context_id} index={index}>{(prov, snap) => (
       <div className="repeater-item-wrapper" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps}>
         <div style={{ paddingBottom: '0.5rem' }}>
           <div className="otter-box" style={{ position: 'relative', paddingTop: '2rem' }}>
