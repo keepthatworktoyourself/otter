@@ -38,9 +38,10 @@ const text_block = {
   description: 'Text content',
   fields: [
     {
-      name:                'content',
-      description:         'Text content',
-      type:                Otter.Fields.TextEditor,
+      name:        'content',
+      description: 'Text content',
+      type:        Otter.Fields.TextEditor,
+      hr:          true,
     },
     {
       name:        'fancy',

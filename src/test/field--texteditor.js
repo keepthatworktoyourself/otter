@@ -123,7 +123,7 @@ test('TextEditor: hr enables hr', t => {
   const wrapper__default = mk(field, data_item, {}, true);
   const wrapper__hr      = mk(f,     data_item, {}, true);
 
-  t.is(0, wrapper__default.find('.ql-insertHR').length);
-  t.is(1, wrapper__hr.find('.ql-insertHR').length);
+  t.is(0, wrapper__default.find('.ql-hr').length);
+  t.is(1, wrapper__hr.find('.ql-hr').length);
 });
 
