@@ -26,7 +26,7 @@ export default class Radios extends React.Component {
 
 
   cb_clear(ev) {
-    this.props.containing_data_item[this.props.field_def.name] = null;
+    delete this.props.containing_data_item[this.props.field_def.name];
     this.setState({});
     this.ctx.value_updated();
     this.ctx.should_redraw();   // Required for conditional rendering
