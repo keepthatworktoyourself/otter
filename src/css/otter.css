@@ -76,8 +76,17 @@ body {
 }
 
 
-.ql-container, .ql-editor {
-  height: auto !important;
+.ql-container,
+.ql-editor {
+  height: auto;
+}
+.ql-editor {
+  max-height: 16rem;
+  resize: vertical;
+}
+.ql-editor[style*="height"] {
+  height: unset;
+  max-height: unset;
 }
 
 .ql-editor h1, h2 {
