@@ -1,6 +1,7 @@
 import React from 'react';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
+import Utils from '../definitions/utils';
 
 
 export default class Bool extends React.Component {
@@ -29,8 +30,9 @@ export default class Bool extends React.Component {
     const field_def            = this.props.field_def;
     const containing_data_item = this.props.containing_data_item;
     const is_top_level         = this.props.is_top_level;
-    const yes_label            = field_def.yes_label || 'Yes';
-    const no_label             = field_def.no_label  || 'No';
+    const yes_label            = field_def.yes_label   || 'Yes';
+    const no_label             = field_def.no_label    || 'No';
+    const label                = field_def.description || Utils.humanify_str(field_def.name);
     const value                = containing_data_item[field_def.name];
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
 
@@ -40,7 +42,7 @@ export default class Bool extends React.Component {
           <div className="is-flex-tablet" style={{ alignItems: 'center' }}>
 
             <div className="c-label-margin-btm-phone">
-              <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level}
+              <FieldLabel label={label} is_top_level={is_top_level}
                           align="left" colon={true} min_width={true} />
             </div>
 

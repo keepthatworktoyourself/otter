@@ -66,7 +66,7 @@ export default class AddBlockBtn extends React.Component {
               <div className="dropdown-content" style={{ maxHeight: '12rem', overflowY: 'scroll' }}>
                 {displayed_blocks.map((block, i) => (
                   <a className="dropdown-item" onClick={this.cb__select} key={i} data-block-type={block.type}>
-                    {block.description}
+                    {block.description || Utils.humanify_str(block.type)}
                   </a>
                 ))}
               </div>

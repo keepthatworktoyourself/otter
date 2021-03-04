@@ -1,7 +1,8 @@
 import React from 'react';
+import PageDataContext from '../PageDataContext';
+import Utils from '../definitions/utils';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
-import PageDataContext from '../PageDataContext';
 
 
 export default class BlockPicker extends React.Component {
@@ -65,7 +66,7 @@ export default class BlockPicker extends React.Component {
                         <div className="card">
                           <div className="card-content" style={{ padding: '1rem' }}>
                             <h3 className="title is-6">
-                              {block.description || block.__type}
+                              {block.description || Utils.humanify_str(block.type)}
                             </h3>
                           </div>
 

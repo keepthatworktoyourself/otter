@@ -61,7 +61,7 @@ export default class NestedBlockWrapper extends React.Component {
     const field_def            = this.props.field_def;
     const containing_data_item = this.props.containing_data_item;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
-    const title                = field_def.description || field_def.name;
+    const title                = field_def.description || Utils.humanify_str(field_def.name);
     const is_optional          = field_def.optional;
     const is_enabled           = !is_optional || Utils.optional_nested_block__is_enabled(field_def.name, containing_data_item);
 

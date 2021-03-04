@@ -1,6 +1,7 @@
 import React from 'react';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
+import Utils from '../definitions/utils';
 
 
 export default class TextInput extends React.Component {
@@ -24,12 +25,13 @@ export default class TextInput extends React.Component {
     const is_top_level         = this.props.is_top_level;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
     const value                = containing_data_item[field_def.name] || '';
+    const label                = field_def.description || Utils.humanify_str(field_def.name);
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
         <div className="field">
 
-          <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level} />
+          <FieldLabel label={label} is_top_level={is_top_level} />
 
           <div className="control">
             <input type="text" className="input" value={value} onChange={this.cb_change} />

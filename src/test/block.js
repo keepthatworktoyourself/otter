@@ -53,15 +53,17 @@ test('Block: warning if invalid block type', t => {
 
 test('Block: renders', t => {
   const blocks = test_blocks();
-  const blocks__with_descr = Object.assign(Otter.Utils.copy(blocks), {
-    description: 'A block',
-  });
+  const blocks__with_descr = Otter.Utils.copy(blocks);
+  blocks__with_descr[0].description = 'A block';
 
   const block__with_type_only = mk(blocks, test_data()[0]);
   const block__with_descr     = mk(blocks__with_descr, test_data()[0]);
 
-  t.truthy(block__with_type_only.find('h3.title').text().match(test_blocks()[0].type));
-  t.truthy(block__with_descr.find('h3.title').text().match(blocks__with_descr[0].description));
+  const exp__type_only = Otter.Utils.humanify_str(test_blocks()[0].type);
+  const exp__with_descr = 'A block';
+
+  t.truthy(block__with_type_only.find('h3.title').text().match(exp__type_only));
+  t.truthy(block__with_descr.find('h3.title').text().match(exp__with_descr));
 });
 
 

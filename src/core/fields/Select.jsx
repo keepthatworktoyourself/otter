@@ -27,6 +27,7 @@ export default class Select extends React.Component {
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
     const uid                  = `${containing_data_item.__uid}-${field_def.name}`;
     const value                = containing_data_item[field_def.name];
+    const label                = field_def.description || Utils.humanify_str(field_def.name);
 
     const opts_raw = field_def.options || { };
     const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { };
@@ -38,7 +39,7 @@ export default class Select extends React.Component {
           <div className="is-flex-tablet" style={{ alignItems: 'center' }}>
 
             <div className="c-label-margin-btm-phone">
-              <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level}
+              <FieldLabel label={label} is_top_level={is_top_level}
                           colon={true} min_width={true} />
             </div>
 

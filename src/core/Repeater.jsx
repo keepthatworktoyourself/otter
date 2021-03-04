@@ -182,7 +182,7 @@ export default class Repeater extends React.Component {
                       {block_types__objects.map((block, i) => {
                         return (
                           <a className="dropdown-item" onClick={this.cb__add} key={i} data-nested_block-type={block.type}>
-                            {block.description || block.type}
+                            {field_def.description || Utils.humanify_str(field_def.name)}
                           </a>
                         );
                       })}

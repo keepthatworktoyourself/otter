@@ -153,6 +153,7 @@ export default class TextEditor extends React.Component {
     const hr                   = field_def.hr;
     const paste_as_plain_text  = field_def.paste_as_plain_text;
     const value                = containing_data_item[field_def.name];
+    const label                = field_def.description || Utils.humanify_str(field_def.name);
 
     if (paste_as_plain_text) {
       this.modules.clipboard.matchers = [
@@ -164,7 +165,7 @@ export default class TextEditor extends React.Component {
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
         <div className="field">
 
-          <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level} />
+          <FieldLabel label={label} is_top_level={is_top_level} />
 
           <div className="editor-toolbar" id={this.toolbar}>
             {heading_levels && heading_levels.length > 0 &&

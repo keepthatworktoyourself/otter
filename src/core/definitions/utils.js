@@ -23,6 +23,17 @@ function retitle_field(field, name, description) {
 }
 
 
+// humanify_str
+// -----------------------------------
+
+function humanify_str(s) {
+  s = (s || '').replace(/[-_]/g, ' ');
+  s = s.replace(/ +/g, ' ');
+  s = s.replace(/([a-z])([A-Z])/g, (m, c1, c2) => `${c1} ${c2.toLowerCase()}`);
+  return `${s.slice(0,1).toUpperCase()}${s.slice(1)}`;
+}
+
+
 // copy
 // -----------------------------------
 
@@ -332,6 +343,7 @@ export default {
   uid,
   find_field,
   retitle_field,
+  humanify_str,
   copy,
   deep_equal,
   recursive_find,

@@ -9,21 +9,18 @@ import '../src/css';
 
 const header_block = {
   type: 'Header',
-  description: 'Header',
   fields: [
     {
       name:        'heading',
-      description: 'Heading',
       type:        Otter.Fields.TextInput,
     },
     {
       name:        'subheading',
-      description: 'Catchy subtitle',
+      description: 'Catchy subheading',
       type:        Otter.Fields.TextInput,
     },
     {
       name:        'theme',
-      description: 'Theme',
       type:        Otter.Fields.Radios,
       options: {
         light: 'Light',
@@ -54,7 +51,6 @@ const text_block = {
     },
     {
       name:        'align',
-      description: 'Align',
       type:        Otter.Fields.Select,
       options: {
         left:   'Left',
@@ -83,17 +79,15 @@ const block_with_nested_block = {
   description: 'Block demonstrating NestedBlock fields',
   fields: [
     {
-      name:          'heading',
-      description:   'Heading',
-      type:          Otter.Fields.NestedBlock,
-      nested_block_type: 'Header',      // Supports string block-type references
+      name:              'heading',
+      type:              Otter.Fields.NestedBlock,
+      nested_block_type: 'Header',       // Supports string block-type references
     },
     {
-      name:          'text_content',
-      description:   'Text content',
-      type:          Otter.Fields.NestedBlock,
+      name:              'text_content',
+      type:              Otter.Fields.NestedBlock,
       nested_block_type: text_block,    // Supports inline block definitions
-      optional:      true,
+      optional:          true,
     },
   ],
 };

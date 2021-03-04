@@ -1,6 +1,7 @@
 import React from 'react';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
+import Utils from '../definitions/utils';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 
@@ -59,6 +60,7 @@ export default class WPMedia extends React.Component {
     const is_top_level         = this.props.is_top_level;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
     const value                = containing_data_item[field_def.name];
+    const label                = field_def.description || Utils.humanify_str(field_def.name);
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
@@ -68,8 +70,7 @@ export default class WPMedia extends React.Component {
             <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
 
               <div className="level-item flex-start">
-                <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level}
-                            colon={true} />
+                <FieldLabel label={label} is_top_level={is_top_level} colon={true} />
               </div>
 
               <div className="level-item flex-start">

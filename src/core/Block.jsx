@@ -57,7 +57,7 @@ export default class Block extends React.Component {
                     <>
                       <h3 className="title is-4">
                         {block_numbers && <span style={{ fontWeight: 700, marginRight: '0.8rem' }} className="has-text-grey-light">{index + 1}</span>}
-                        {block.description || block.type}
+                        {block.description || Utils.humanify_str(block.type)}
                       </h3>
                       <div>
                         <RecursiveRenderer data_item={data_item} blocks={this.ctx.blocks} is_top_level={true} />
