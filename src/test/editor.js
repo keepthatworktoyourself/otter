@@ -165,6 +165,7 @@ test('Editor: passes props to Blocks', t => {
   const first = items.first();
 
   t.deepEqual(Otter.Utils.upto(test_data().length), items.map(b => b.prop('index')));
+  t.is(false, first.prop('block_numbers'));
   deep_equal_ignoring_uids(t, test_data()[0], first.prop('data_item'));
   t.is(wrapper.instance().delete_item, first.prop('cb__delete'));
 });

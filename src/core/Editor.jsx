@@ -237,10 +237,11 @@ export default class Editor extends React.Component {
   // -----------------------------------
 
   render() {
-    const data_items      = this.props.data || [ ];
-    const blocks          = this.props.blocks || [ ];
     const load_state      = this.props.load_state;
-    const when_to_save    = this.props.save || Save.OnClick;
+    const data_items      = this.props.data          || [ ];
+    const blocks          = this.props.blocks        || [ ];
+    const when_to_save    = this.props.save          || Save.OnClick;
+    const block_numbers   = this.props.block_numbers || false;
     const DragDropContext = this.props.drag_context_component || DnD.DragDropContext;
     const Droppable       = this.props.droppable_component    || DnD.Droppable;
     const ContextProvider = this.props.provider_component     || PageDataContext.Provider;
@@ -294,7 +295,11 @@ export default class Editor extends React.Component {
               <div ref={prov.innerRef} {...prov.droppableProps}>
 
                 {data_items.map((data_item, index) =>
-                  <BlockStub key={data_item.__uid} data_item={data_item} index={index} cb__delete={this.delete_item} />
+                  <BlockStub key={data_item.__uid}
+                             index={index}
+                             data_item={data_item}
+                             cb__delete={this.delete_item}
+                             block_numbers={block_numbers} />
                 )}
 
                 {prov.placeholder}

@@ -28,13 +28,14 @@ The `<Otter.Editor />` element renders the editor.
               load_state={Otter.State.Loaded} />
 ```
 
-| Property      | Value                                      | Required | Default   |                                           |
-| :------------ | :----------------------------------------- | :------- | :-------- | :---------------------------------------- |
-| `blocks`      | `Array(<Block>)`                           | Yes      |           | Defines the [blocks](#blocks) available in the editor. |
-| `data`        | Loaded data                                |          |           | The loaded page data. |
-| `load_state`  | `Otter.State.Loading`, `.Loaded`, `.Error` | Yes      |           | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data. |
-| `delegate`    | A delegate object                          |          |           | An object Otter uses to communicate state changes back to you. May have `save` and `block_toggled` methods. |
-| `save`        | `Otter.Save.OnInput`, `.OnClick`           |          | `OnClick` | Specify at what point Otter will cal `save()` is called on the delegate: on change, or only when a save button is clicked. |
+| Property        | Value                                          | Required | Default   |                                                                                                                                   |
+| :-------------- | :--------------------------------------------- | :------- | :-------- | :-------------------------------------------------------------------------------------------------------------------------------- |
+| `blocks`        | `<Array(Block)>`                               | Yes      |           | Defines the [blocks](#blocks) available in the editor.                                                                            |
+| `data`          | Loaded data                                    |          |           | The loaded page data.                                                                                                             |
+| `load_state`    | `Otter.State.Loading` or `.Loaded` or `.Error` | Yes      |           | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data. |
+| `delegate`      | `<Object>`                                     |          |           | An object Otter uses to communicate state changes back to you. May have `save` and `block_toggled` methods.                       |
+| `save`          | `Otter.Save.OnInput` or `.OnClick`             |          | `OnClick` | Specify at what point Otter will cal `save()` is called on the delegate: on change, or only when a save button is clicked.        |
+| `block_numbers` | `<bool>`                                       |          | `false`   | Label each block with its 1-based index                                                                                           |
 
 ```js
 const my_delegate = {

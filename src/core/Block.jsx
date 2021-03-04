@@ -29,6 +29,7 @@ export default class Block extends React.Component {
     const data_item         = this.props.data_item;
     const index             = this.props.index;
     const cb__delete        = this.props.cb__delete;
+    const block_numbers     = this.props.block_numbers;
     const Draggable         = this.props.draggable_component          || DnD.Draggable;
     const ContextConsumer   = this.props.consumer_component           || PageDataContext.Consumer;
     const RecursiveRenderer = this.props.recursive_renderer_component || RecursiveBlockRenderer;
@@ -54,7 +55,10 @@ export default class Block extends React.Component {
 
                   {(block = Utils.find_block(ctx.blocks, data_item.__type)) && (
                     <>
-                      <h3 className="title is-4">{block.description || block.type}</h3>
+                      <h3 className="title is-4">
+                        {block_numbers && <span style={{ fontWeight: 700, marginRight: '0.8rem' }} className="has-text-grey-light">{index + 1}</span>}
+                        {block.description || block.type}
+                      </h3>
                       <div>
                         <RecursiveRenderer data_item={data_item} blocks={this.ctx.blocks} is_top_level={true} />
                       </div>

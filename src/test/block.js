@@ -24,9 +24,10 @@ const snapshot = {
 };
 
 
-function mk(blocks, data_item, index, cb__delete, extra_ctx_props) {
+function mk(blocks, data_item, index, cb__delete, extra_ctx_props, block_numbers) {
   return mount(<Block data_item={data_item} index={0}
                       index={index}
+                      block_numbers={block_numbers}
                       cb__delete={cb__delete}
                       draggable_component={stubs.func_stub([provided, snapshot])}
                       consumer_component={stubs.func_stub([{ blocks, ...extra_ctx_props }])}
@@ -61,6 +62,14 @@ test('Block: renders', t => {
 
   t.truthy(block__with_type_only.find('h3.title').text().match(test_blocks()[0].type));
   t.truthy(block__with_descr.find('h3.title').text().match(blocks__with_descr[0].description));
+});
+
+
+test('Block: renders index if block_numbers true', t => {
+  const blocks = test_blocks();
+  const index = 0;
+  const block = mk(blocks, test_data()[0], index, null, {}, true);
+  t.is(`${index + 1}`, block.find('h3.title span').first().text());
 });
 
 
