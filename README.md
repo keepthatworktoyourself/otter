@@ -2,10 +2,10 @@
 
 [![Build Status](https://travis-ci.com/bhallstein/otter.svg?branch=int)](https://travis-ci.com/bhallstein/otter)
 
-- Rapidly create rich content editors by composing content blocks 🐟
-- Simple, declarative syntax 🌿
-- Generates post data in a simple JSON format 💦
-- Easily integrates as a React component 🏞
+- With Otter, create full content editors by simply ~~splashing about in bodies of water~~ defining some content models 🐟
+- Simple and ~~estuarine~~ declarative syntax for blocks & fields 🌿
+- Delivered as a React component that’s really ~~furry~~ easy to use 🏞
+- Generates post data in an ~adorable~ accessible JSON format 💧
 
 
 ### Contents
@@ -28,14 +28,14 @@ The `<Otter.Editor />` element renders the editor.
               load_state={Otter.State.Loaded} />
 ```
 
-| Property        | Value                                          | Required | Default   |                                                                                                                                   |
-| :-------------- | :--------------------------------------------- | :------- | :-------- | :-------------------------------------------------------------------------------------------------------------------------------- |
-| `blocks`        | `<Array(Block)>`                               | Yes      |           | Defines the [blocks](#blocks) available in the editor.                                                                            |
-| `data`          | Loaded data                                    |          |           | The loaded page data.                                                                                                             |
-| `load_state`    | `Otter.State.Loading` or `.Loaded` or `.Error` | Yes      |           | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data. |
-| `delegate`      | `<Object>`                                     |          |           | An object Otter uses to communicate state changes back to you. May have `save` and `block_toggled` methods.                       |
-| `save`          | `Otter.Save.OnInput` or `.OnClick`             |          | `OnClick` | Specify at what point Otter will cal `save()` is called on the delegate: on change, or only when a save button is clicked.        |
-| `block_numbers` | `<bool>`                                       |          | `false`   | Label each block with its 1-based index                                                                                           |
+| Property        | Value                                          | Required | Default   |                                                                                                                                    |
+| :-------------- | :--------------------------------------------- | :------- | :-------- | :--------------------------------------------------------------------------------------------------------------------------------- |
+| `blocks`        | `<Array(Block)>`                               | Yes      |           | Defines the [blocks](#blocks) available in the editor.                                                                             |
+| `data`          | Loaded data                                    |          |           | The loaded page data.                                                                                                              |
+| `load_state`    | `Otter.State.Loading` or `.Loaded` or `.Error` | Yes      |           | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data.  |
+| `delegate`      | `<Object>`                                     |          |           | An object Otter uses to communicate state changes back to you. May have `save` and `block_toggled` methods.                        |
+| `save`          | `Otter.Save.OnInput` or `.OnClick`             |          | `OnClick` | Specify at what point Otter will call `save()` on the delegate: continuously on user inpue, or only when a save button is clicked. |
+| `block_numbers` | `<bool>`                                       |          | `false`   | Label each block with its 1-based index                                                                                            |
 
 ```js
 const my_delegate = {
@@ -189,14 +189,16 @@ npm run demo
   # or: parcel demo/index.html
 ````
 
+The demo can be run whilst doing dev work, allowing to live test features & changes.
+
 
 
 ## License
 
-Otter is dual-licensed to enable Wordpress integration. The license is:
+To enable Wordpress integration, Otter is dual-licensed. The license is:
 
 - GPLv2 for the purpose of embedding within Wordpress themes
 - MIT for all other purposes
 
-See [LICENSE.md](LICENSE.md) for details.
+See [LICENSE.md](LICENSE.md).
 
