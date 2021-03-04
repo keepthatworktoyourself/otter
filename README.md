@@ -154,10 +154,12 @@ All fields should be specified with the Otter-defined constants in the form `Ott
 | :------------ | :------------------------------------ | :----------------------- | :------- | :---------------------------------------------------------------------- |
 | `TextInput`   | Plain text input                      |                          |          |                                                                         |
 | `TextArea`    | Textarea (multi-line plain text)      |                          |          |                                                                         |
+|               |                                       | `mono` (bool)            | `false`  | Use a monospace font                                                    |
 | `TextEditor`  | Rich text editor                      |                          |          |                                                                         |
-|               |                                       | `heading_levels` (array) | `[1, 2]` | Set which heading types are available in the paragraph styles dropdown  |
-|               |                                       | `blockquote` (bool)      | `false`  | Render a blockquote option                                              |
-|               |                                       | `paste_as_plain_text`    | `false`  | Clear text formatting on paste?                                         |
+|               |                                       | `heading_levels` (array) | `[1, 2]` | Heading types to display in the paragraph style dropdown                |
+|               |                                       | `blockquote` (bool)      | `false`  | Enable blockquote                                                       |
+|               |                                       | `hr` (bool)              | `false`  | Enable horizontal rule                                                  |
+|               |                                       | `paste_as_plain_text`    | `false`  | Clear text formatting on paste                                          |
 | `Bool`        | A toggle                              |                          |          |                                                                         |
 |               |                                       | `no_label` (string)      | `"Yes"`  | Label for `true` option                                                 |
 |               |                                       | `yes_label` (string)     | `"No"`   | Label for `false` option                                                |

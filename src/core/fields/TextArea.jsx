@@ -23,6 +23,7 @@ export default class TextArea extends React.Component {
     const is_top_level         = this.props.is_top_level;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
     const value                = containing_data_item[field_def.name];
+    const mono                 = field_def.mono || false;
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
@@ -30,7 +31,9 @@ export default class TextArea extends React.Component {
 
           <FieldLabel label={field_def.description || field_def.name} is_top_level={is_top_level} />
 
-          <textarea className="textarea" ref={this.textarea_ref} value={value || ''} onChange={this.cb_change} />
+          <textarea className={`textarea ${mono ? 'otter-monospace': ''}`}
+                    style={mono ? { fontSize: '0.9em' } : {}}
+                    ref={this.textarea_ref} value={value || ''} onChange={this.cb_change} />
 
         </div>
       )}</ContextConsumer>

@@ -211,12 +211,18 @@ function display_if(block, field_name, data_item) {
 // item_has_data
 // -----------------------------------
 
+function all_items_exist_in(items, arr) {
+  return items.reduce((carry, item) => {
+    return carry && arr.includes(item);
+  }, true);
+}
+
 function item_has_data(item) {
   return (
     item &&
     item.constructor === Object &&
     item.hasOwnProperty('__type') &&
-    !deep_equal(Object.keys(item), [ '__type' ])
+    !all_items_exist_in(Object.keys(item), [ '__type', '__uid' ])
   );
 }
 
@@ -334,6 +340,7 @@ export default {
   iterate_data,
   check_display_if,
   display_if,
+  all_items_exist_in,
   item_has_data,
   optional_nested_block__is_enabled,
   optional_nested_block__set_enabled,

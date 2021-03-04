@@ -38,10 +38,12 @@ const text_block = {
   description: 'Text content',
   fields: [
     {
-      name:        'content',
-      description: 'Text content',
-      type:        Otter.Fields.TextEditor,
-      hr:          true,
+      name:           'content',
+      description:    'Text content',
+      type:           Otter.Fields.TextEditor,
+      heading_levels: [1, 2, 3, 4, 5, 6],
+      hr:             true,
+      blockquote:     true,
     },
     {
       name:        'fancy',
@@ -71,6 +73,7 @@ const html_block = {
       name:        'html',
       description: 'HTML',
       type:        Otter.Fields.TextArea,
+      mono:        true,
     },
   ],
 };

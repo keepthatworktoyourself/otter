@@ -224,7 +224,6 @@ export default class Editor extends React.Component {
   // data: generate uids
   // -----------------------------------
 
-
   static ensure_uids(data) {
     Utils.iterate_data(data, (data_item) => {
       if (data_item && !data_item.__uid) {

@@ -265,17 +265,24 @@ test('utils: display_if not set -> positive', t => {
 // item_has_data
 // ------------------------------------
 
+test('utils: all_items_exist_in: true if all items are in array', t => {
+  t.falsy(Otter.Utils.all_items_exist_in([1, 2, 3], [2, 3, 4, 5, 6]));
+  t.truthy(Otter.Utils.all_items_exist_in([1, 2, 3], [2, 3, 4, 5, 6, 1]));
+});
+
 test('utils: item_has_data: true if the item has more than just a __type property', t => {
   const item__null = null;
   const item__string = 'string';
   const item__empty_obj = { };
   const item__only_type = { __type: 'X' };
+  const item__type_and_uid = { __uid: 'a-uid' };
   const item__with_data = { __type: 'X', x: 'y' };
 
   t.falsy(Otter.Utils.item_has_data(item__null));
   t.falsy(Otter.Utils.item_has_data(item__string));
   t.falsy(Otter.Utils.item_has_data(item__empty_obj));
   t.falsy(Otter.Utils.item_has_data(item__only_type));
+  t.falsy(Otter.Utils.item_has_data(item__type_and_uid));
   t.truthy(Otter.Utils.item_has_data(item__with_data));
 });
 

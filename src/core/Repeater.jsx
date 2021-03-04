@@ -57,12 +57,13 @@ export default class Repeater extends React.Component {
     }
     containing_data_item[field_def.name].push({ __type: block_type });
 
-    this.ctx.value_updated();
-    this.ctx.should_redraw();
-    this.ctx.block_toggled();
     this.setState({
       show_dialogue: false,
     });
+
+    this.ctx.value_updated();
+    this.ctx.should_redraw();
+    this.ctx.block_toggled();
   }
 
 
