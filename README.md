@@ -33,7 +33,7 @@ The `<Otter.Editor />` element renders the editor.
 | `blocks`        | `<Array(Block)>`                               | Yes      |           | Defines the [blocks](#blocks) available in the editor.                                                                             |
 | `data`          | Loaded data                                    |          |           | The loaded page data.                                                                                                              |
 | `load_state`    | `Otter.State.Loading` or `.Loaded` or `.Error` | Yes      |           | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data.  |
-| `delegate`      | `<Object>`                                     |          |           | An object Otter uses to communicate state changes back to you. May have `save` and `block_toggled` methods.                        |
+| `delegate`      | `<Object>`                                     |          |           | Used by Otter to communicate state changes back to you, via `save` and `block_toggled` methods if present.                         |
 | `save`          | `Otter.Save.OnInput` or `.OnClick`             |          | `OnClick` | Specify at what point Otter will call `save()` on the delegate: continuously on user inpue, or only when a save button is clicked. |
 | `block_numbers` | `<bool>`                                       |          | `false`   | Label each block with its 1-based index                                                                                            |
 
@@ -52,7 +52,7 @@ const my_delegate = {
 
 ## Blocks
 
-The Otter editor is based on content blocks that you define. These block definitions are succinct and declarative. Within a block, there will be one or more [Fields](#fields). This system lets you rapidly arrange fields into blocks to create rich content editors.
+The Otter editor is based on content models that you define. These **block definitions** are succinct and declarative. Within a block, there will be one or more [Fields](#fields). This system lets you rapidly arrange fields into blocks to create rich content editors.
 
 An example Block of type `PageHeader` might contain the Fields: `title`, `subtitle`, and `background_image`.
 
@@ -68,12 +68,12 @@ An example Block of type `PageHeader` might contain the Fields: `title`, `subtit
 }
 ```
 
-| Property      | Value              | Required | Default |                                      |
-| :------------ | :----------------- | :------- | :------ | :----------------------------------- |
-| `type`        | `<string>`         | Yes      |         | The block type identifier. Each block's `type` string must be unique within the editor. |
-| `description` | `<string>`         |          |         | A human-readable name for the block, identifying it clearly to the user. |
-| `fields`      | `Array(<Field>)`   | Yes      |         | The [fields](#fields) in this block. |
-| `thumbnail`   | `<path>`           |          |         | Optional thumbnail for use in the [graphical block picker](#blocks-optionally-categorise-in-groups). |
+| Property      | Value              | Required | Default |                                                                                                                                                                 |
+| :------------ | :----------------- | :------- | :------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`        | `<string>`         | Yes      |         | The block type identifier. Each block's `type` string must be unique within the editor.                                                                         |
+| `description` | `<string>`         |          |         | A human-readable name for the block, identifying it clearly to the user. If not present Otter will use a prettified version of the block type.                  |
+| `fields`      | `Array(<Field>)`   | Yes      |         | The [fields](#fields) in this block.                                                                                                                            |
+| `thumbnail`   | `<path>`           |          |         | Optional thumbnail for use in the [graphical block picker](#blocks-optionally-categorise-in-groups).                                                            |
 | `hidden`      | `<bool>`           |          | `false` | If `true`, don't display this block in the block picker. This allows you to define blocks at the top level which can only be used in a NestedBlock or Repeater. |
 
 
@@ -124,12 +124,12 @@ Each block should contain at least one field.
 }
 ```
 
-| Property      | Value                                   | Required   |                                    |
-| :------------ | :-------------------------------------- | :--------- | :--------------------------------- |
-| `name`        | `<string>`                              | Yes        | The block data save key.           |
-| `description` | `<string>`                              |            | Field label displayed to the user. |
-| `type`        | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).    |
-| `display_if`  | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s). |
+| Property      | Value                                   | Required   |                                                                                                          |
+| :------------ | :-------------------------------------- | :--------- | :------------------------------------------------------------------------------------------------------- |
+| `name`        | `<string>`                              | Yes        | The block data save key.                                                                                 |
+| `description` | `<string>`                              |            | Field label displayed to the user. If not present Otter will use a prettified version of the field name. |
+| `type`        | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).                                                                          |
+| `display_if`  | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s).                                            |
 
 With `display_if` you can show or hide the field based on the value of one or more of its siblings. Each `DisplayRule` specifies the name of the sibling and a value. `Bool`, `Radio`, and `Select` sibling fields are supported. You can test against more than one sibling field using an array of multiple `DisplayRule` objects.
 

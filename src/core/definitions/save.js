@@ -1,5 +1,5 @@
 const Save = {
-  OnInput:               'OnInput',
+  OnInput: 'OnInput',
   OnClick: 'OnClick',
 };
 

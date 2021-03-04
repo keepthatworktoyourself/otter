@@ -79,7 +79,7 @@ function recursive_find(obj, f) {
 // -----------------------------------
 
 function find_block(blocks, type) {
-  const defs = blocks.constructor === Array ? blocks : [ blocks ];
+  const defs = (blocks && blocks.constructor === Array) ? blocks : [ blocks ];
 
   return recursive_find(
     defs,
@@ -108,6 +108,10 @@ function is_data_item(obj) {
 // -----------------------------------
 
 function iterate_data(data, f) {
+  if (data === null || data === undefined) {
+    return;
+  }
+
   const is_obj = data.constructor === Object;
   const is_arr = data.constructor === Array;
 
@@ -159,13 +163,13 @@ function check_display_if(block, field) {
     }
   }
 
-  const rules      = field.display_if;
+  const rules      = field.display_if || false;
   const valid_type = rules.constructor === Object || rules.constructor === Array;
   if (!valid_type) {
     return [`must be an array of rules or single rule object`];
   }
 
-  const rules_arr  = rules.constructor === Array ? rules : [rules];
+  const rules_arr = rules.constructor === Array ? rules : [rules];
   const errors = rules_arr
     .map(check_rule)
     .filter(x => x);
