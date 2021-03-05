@@ -10,15 +10,8 @@ import '../src/css';
 const header_block = {
   type: 'Header',
   fields: [
-    {
-      name:        'heading',
-      type:        Otter.Fields.TextInput,
-    },
-    {
-      name:        'subheading',
-      description: 'Catchy subheading',
-      type:        Otter.Fields.TextInput,
-    },
+    Otter.Fields.mk_textinput('heading'),
+    Otter.Fields.mk_textinput('subheading', 'Catchy subheading'),
     {
       name:        'theme',
       type:        Otter.Fields.Radios,
