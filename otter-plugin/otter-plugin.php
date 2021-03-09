@@ -229,13 +229,23 @@
       update_option('otter-data-version', $version__code);
     }
     catch (\PDOException $exc) {
+      ob_start();
       echo "Database error during transitioning";
       var_dump($exc);
+      $err = ob_get_clean();
+
+      echo $err;
+      error_log($err);
       exit;
     }
     catch (\Exception $exc) {
+      ob_start();
       echo "Transitioning error";
       var_dump($exc);
+      $err = ob_get_clean();
+
+      echo $err;
+      error_log($err);
       exit;
     }
     finally {

@@ -16,8 +16,8 @@ uid.i = 0;
 function retitle_field(field, name, description) {
   const f = copy(field);
 
-  f.name = name || f.name;
-  f.description = description || f.description;
+  f.name = name;
+  f.description = description;
 
   return f;
 }

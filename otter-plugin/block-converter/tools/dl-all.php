@@ -19,10 +19,15 @@
     $n = -1;
   }
 
+  $post_type = getenv('POSTTYPE');
+  if (!$post_type) {
+    $post_type = 'post';
+  }
+
   require_once($path_wpconfig);
 
   $q = new WP_Query([
-    'post_type'           => 'post',
+    'post_type'           => $post_type,
     'posts_per_page'      => $n,
     'paged'               => 0,
     'ignore_sticky_posts' => true,

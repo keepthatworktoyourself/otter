@@ -80,7 +80,7 @@
     // Convert
     if ($rows) {
       $rows__converted = array_map(function($row) {
-        return array_merge($row, ['data' => convert($row['data'], Transition::$converters)]);
+        return array_merge($row, ['data' => convert($row['data'], Transition::$converters, $row)]);
       }, $rows);
     }
 
@@ -90,7 +90,20 @@
         throw new Exception('Data has been loaded & converted, but no $meta_key was set.');
       }
       foreach ($rows__converted as $row) {
-        \Otter\save($row['post_id'], Transition::$meta_key, $row['data'] ?? [ ]);
+        $meta_key = Transition::$meta_key;
+
+        if (is_array($meta_key)) {
+          $post_type = $row['post_type'] ?? null;
+          if (!$post_type) {
+            throw new Exception('No post_type was found in row: this must be supplied when using an array $meta_key');
+          }
+          $meta_key = $meta_key[$post_type] ?? null;
+          if (!$meta_key) {
+            throw new Exception("No meta key was found in the row for post_type '{$row['post_type']}'");
+          }
+        }
+
+        \Otter\save($row['post_id'], $meta_key, $row['data'] ?? [ ]);
       }
     }
 

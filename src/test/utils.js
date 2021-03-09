@@ -29,13 +29,13 @@ test('utils: retitle_field returns field with new name, description', t => {
   };
 
   const f__new_name = Otter.Utils.retitle_field(f, 'a_field');
-  const f__new_desc = Otter.Utils.retitle_field(f, null, 'Enter a title');
+  const f__new_desc = Otter.Utils.retitle_field(f, undefined, 'Enter a title');
   const f__new_both = Otter.Utils.retitle_field(f, 'content', 'Content');
 
   t.not(f, f__new_name);
-  t.deepEqual(Object.assign({}, f, {name: 'a_field'}), f__new_name);
-  t.deepEqual(Object.assign({}, f, {description: 'Enter a title'}), f__new_desc);
-  t.deepEqual(Object.assign({}, f, {name: 'content', description: 'Content'}), f__new_both);
+  t.deepEqual(Object.assign({}, f, {name: 'a_field', description: undefined}),       f__new_name);
+  t.deepEqual(Object.assign({}, f, {name: undefined, description: 'Enter a title'}), f__new_desc);
+  t.deepEqual(Object.assign({}, f, {name: 'content', description: 'Content'}),       f__new_both);
 });
 
 
