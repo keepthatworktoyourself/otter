@@ -1,10 +1,9 @@
 <?php
   $wpconfig = getenv('WPCONFIG');
   $post_id = getenv('POSTID');
-  $meta_key = getenv('METAKEY');
 
-  if (!($wpconfig && $post_id && $meta_key)) {
-    echo 'Please set env vars: WPCONFIG, POSTID, and METAKEY', "\n";
+  if (!($wpconfig && $post_id)) {
+    echo 'Please set env vars: WPCONFIG & POSTID', "\n";
     exit;
   }
 
@@ -16,12 +15,11 @@
   $db_host = constant('DB_HOST');
 
   $pdo = new PDO("mysql:dbname=$db;host=$db_host", $db_user, $db_pass);
-  $st = $pdo->prepare("select * from wp_postmeta where meta_key = ? and post_id = ?");
-  $result = $st->execute([ $meta_key, $post_id ]);
+  $st = $pdo->prepare('select uncompress(data) as data from pb_blocks where post_id = ?');
+  $result = $st->execute([ $post_id ]);
 
   if ($result) {
     $r = $st->fetchAll(PDO::FETCH_ASSOC)[0];
-    $data = unserialize($r['meta_value']);
-    print_r($data);
+    print_r(json_decode($r['data']));
   }
 
