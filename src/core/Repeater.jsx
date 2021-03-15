@@ -5,6 +5,7 @@ import Utils from './definitions/utils';
 import NestedBlockWrapper from './NestedBlockWrapper';
 import RepeaterItem from './RepeaterItem';
 import RecursiveBlockRenderer from './RecursiveBlockRenderer';
+import ErrorField from './fields/ErrorField';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faPlusCircle} from '@fortawesome/free-solid-svg-icons';
 
@@ -122,39 +123,48 @@ export default class Repeater extends React.Component {
           typeof t === 'string' ? Utils.find_block(ctx.blocks, t) : t
         ));
 
-        const invalid = block_types__objects.reduce((carry, block, index) => {
+        const invalid_block_types = block_types__objects.reduce((carry, block, index) => {
           const is_valid = block && typeof block === 'object' && block.hasOwnProperty('type');
           return is_valid ? carry : carry.concat(index);
         }, [ ]);
 
-        if (invalid.length > 0) {
-          const multiple = invalid.length > 1;
+        if (invalid_block_types.length > 0) {
+          const multiple = invalid_block_types.length > 1;
           return (
             <p className="repeater-error">{`
-              Error: the nested_block_types ${multiple ? 'values' : 'value'} at
-              ${multiple ? 'indexes' : 'index'}
-              ${invalid.join(',')}
+              Error: the value${multiple ? 's' : ''} of nested_block_types at
+              index${multiple ? 'es' : ''}
+              ${invalid_block_types.join(',')}
               ${multiple ? 'were' : 'was'} invalid
             `}</p>
-          )
+          );
         }
+
+        const block_types__strings = block_types__objects.map(item => item.type);
 
         return <>
           <DragDropContext onDragEnd={this.cb__reorder}>
             <Droppable droppableId={dnd_context_id} type={dnd_context_id}>{(prov, snap) => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
 
-                {data_items.map((data_item, index) => (
-                  <RepeaterItemStub index={index}
-                                    dnd_context_id={dnd_context_id}
-                                    dnd_key={data_item.__uid}
-                                    key={data_item.__uid || index}
-                                    cb__delete={this.cb__delete}>
+                {data_items.map((data_item, index) => {
+                  const is_permitted = block_types__strings.includes(data_item.__type);
 
-                    <RecursiveBlockRendererStub data_item={data_item} blocks={ctx.blocks} />
+                  return (
+                    <RepeaterItemStub index={index}
+                                      dnd_context_id={dnd_context_id}
+                                      dnd_key={data_item.__uid}
+                                      key={data_item.__uid || index}
+                                      cb__delete={this.cb__delete}>
 
-                  </RepeaterItemStub>
-                ))}
+                      {is_permitted ?
+                        <RecursiveBlockRendererStub data_item={data_item} blocks={ctx.blocks} /> :
+                        <ErrorField text={`Items of type ${data_item.__type} are not allowed in this repeater`} />
+                      }
+
+                    </RepeaterItemStub>
+                  );
+                })}
 
                 {prov.placeholder}
 

@@ -32,9 +32,11 @@
 
 
   function files_with_extension($directory, $ext) {
-    return array_filter(scandir("$directory"), function($file) use ($ext) {
+    $files = array_filter(scandir("$directory"), function($file) use ($ext) {
       return preg_match("/\.$ext$/", $file);
     });
+    sort($files);
+    return $files;
   }
 
 

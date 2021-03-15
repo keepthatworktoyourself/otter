@@ -98,6 +98,18 @@ test('Repeater: if nested_block_types invalid, display error message', t => {
 });
 
 
+test('Repater: if nested_block_type not permitted, display error message', t => {
+  const wrapper = mk(test_blocks()[3].fields[0], {
+    __type: 'B4',
+    content_items: [
+      { __type: 'AContentItem' },
+    ],
+  }, ctx());
+  const error_msg = wrapper.find('ErrorField');
+  t.truthy(error_msg.text().match(/Items of type AContentItem are not allowed/));
+});
+
+
 test('Repater: renders Add btn', t => {
   const wrapper = mk(test_blocks()[3].fields[0], test_data()[3], ctx());
   t.is(1, wrapper.find('.repeater-add-btn').length);
