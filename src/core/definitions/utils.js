@@ -142,15 +142,35 @@ function iterate_data(data, f) {
 function check_display_if(block, field) {
   function check_rule(rule) {
     if (rule.constructor !== Object) {
-      return `must be an object`;
+      return `display_if must be an object or array of objects`;
     }
 
     const has_eq       = rule.hasOwnProperty('equal_to');
     const has_neq      = rule.hasOwnProperty('not_equal_to');
+    const has_regex    = rule.hasOwnProperty('matches');
+    const has_nregex   = rule.hasOwnProperty('doesnt_match');
     const has_sibling  = rule.hasOwnProperty('sibling');
 
-    if ((has_eq && has_neq) || (!has_eq && !has_neq) || !has_sibling) {
-      return `must have properties 'sibling', and either 'equal_to' or 'not_equal_to'`;
+    const valid = has_sibling && (has_eq || has_neq || has_regex || has_nregex);
+    if (!valid) {
+      return `must have properties sibling, and equal_to|not_equal_to|matches|doesnt_match`;
+    }
+
+    if (has_regex || has_nregex) {
+      const err = `matches or doesnt_match must be a string that compiles to a regex`;
+      const str = has_regex ? rule.matches : rule.doesnt_match;
+      const valid = typeof str === 'string' || str.constructor === RegExp;
+
+      if (!valid) {
+        return err;
+      }
+
+      try {
+        const r = RegExp(str);
+      }
+      catch (exc) {
+        return err;
+      }
     }
 
     if (field.name === rule.sibling) {
@@ -163,14 +183,12 @@ function check_display_if(block, field) {
     }
   }
 
-  const rules      = field.display_if || false;
-  const valid_type = rules.constructor === Object || rules.constructor === Array;
-  if (!valid_type) {
-    return [`must be an array of rules or single rule object`];
+  const rules = field.display_if || false;
+  if (rules.constructor !== Array) {
+    return [`display_if must be an object or array of objects`];
   }
 
-  const rules_arr = rules.constructor === Array ? rules : [rules];
-  const errors = rules_arr
+  const errors = rules
     .map(check_rule)
     .filter(x => x);
 
@@ -198,20 +216,24 @@ function display_if(block, field_name, data_item) {
     };
   }
 
-  if (field.display_if.constructor !== Array) {
-    field.display_if = [field.display_if];
-  }
-
   const display = field.display_if.reduce((carry, rule) => {
-    const rule_eq       = rule.hasOwnProperty('equal_to');
-    const rule_neq      = rule.hasOwnProperty('not_equal_to');
+    const has_eq       = rule.hasOwnProperty('equal_to');
+    const has_neq      = rule.hasOwnProperty('not_equal_to');
+    const has_regex    = rule.hasOwnProperty('matches');
+    const has_nregex   = rule.hasOwnProperty('doesnt_match');
     const sibling_value = data_item[rule.sibling];
 
-    if (rule_eq) {
-      return carry && (sibling_value === rule.equal_to);
+    if (has_eq) {
+      return carry && sibling_value === rule.equal_to;
     }
-    else if (rule_neq) {
-      return carry && (sibling_value !== rule.not_equal_to);
+    else if (has_neq) {
+      return carry && sibling_value !== rule.not_equal_to;
+    }
+    else if (has_regex) {
+      return carry && (typeof sibling_value === 'string') && !!sibling_value.match(RegExp(rule.matches));
+    }
+    else if (has_nregex) {
+      return carry && (typeof sibling_value === 'string') && !sibling_value.match(RegExp(rule.doesnt_match));
     }
     return carry;
   }, true);

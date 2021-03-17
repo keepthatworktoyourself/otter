@@ -131,7 +131,7 @@ Each block should contain at least one field.
 | `type`        | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).                                                                          |
 | `display_if`  | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s).                                            |
 
-With `display_if` you can show or hide the field based on the value of one or more of its siblings. Each `DisplayRule` specifies the name of the sibling and a value. `Bool`, `Radio`, and `Select` sibling fields are supported. You can test against more than one sibling field using an array of multiple `DisplayRule` objects.
+With `display_if` you can show or hide the field based on the value of one or more of its siblings. Each `DisplayRule` specifies the name of the sibling and a value. You can test against more than one sibling field using an array of multiple `DisplayRule` objects.
 
 ```js
 // display_if example:
@@ -141,10 +141,22 @@ With `display_if` you can show or hide the field based on the value of one or mo
   type: Otter.Fields.TextInput,
   display_if: {
     sibling: 'is_link',
-    equal_to: true,      // Or not_equal_to
+    equal_to: true,
   },
 }
 ```
+
+Beside `equal_to`, DisplayRule supports these rule types:
+
+| Rule type      | Value                            |                                                                            |
+| :------------- | :------------------------------- | -------------------------------------------------------------------------- |
+| `equal_to`     | `<value>`                        | Show the field if the sibling's value `=== <value>`                        |
+| `not_equal_to` | `<value>`                        | ...if `!== <value>`                                                        |
+| `matches`      | `<string> (compiled to RegExp)`  | Show the field if the sibling's value is a string which matches the regex  |
+| `doesnt_match` | `<string> (compiled to RegExp)`  | ...which doesn't match the regex                                           |
+
+Note that using `matches` and `doesnt_match` may impact the performance of typing into the sibling field mentioned, as it causes relayout to occur on input.
+
 
 
 ### Field types:

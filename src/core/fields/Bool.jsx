@@ -22,7 +22,7 @@ export default class Bool extends React.Component {
 
     this.setState({});
     this.ctx.value_updated();
-    this.ctx.should_redraw();   // Required for conditional rendering
+    this.ctx.should_redraw();   // For conditional rendering
   }
 
 

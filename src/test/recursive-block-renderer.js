@@ -51,7 +51,7 @@ test('RBR: field with display_if error: renders ErrorField', t => {
   block.fields[0].display_if = 'invalid type';
 
   const wrapper = shallow(<RecursiveBlockRenderer data_item={data_item} blocks={[block]} />);
-  t.truthy(wrapper.find('ErrorField').dive().text().match('must be an array of rules or single rule object'));
+  t.truthy(wrapper.find('ErrorField').dive().text().match('display_if must be an object or array of objects'));
 });
 
 
@@ -145,6 +145,7 @@ test('RBR: nested_block_field: nested_block_type supports full inline definition
     field_def:            nested_block.fields[0],
     containing_data_item: data_item.a_nested_block,
     is_top_level:         undefined,
+    is_display_if_target: false,
   }, text_input.props());
 });
 

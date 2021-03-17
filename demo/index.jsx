@@ -13,8 +13,8 @@ const header_block = {
     Otter.Fields.mk_textinput('heading'),
     Otter.Fields.mk_textinput('subheading', 'Catchy subheading'),
     {
-      name:        'theme',
-      type:        Otter.Fields.Radios,
+      name: 'theme',
+      type: Otter.Fields.Radios,
       options: {
         light: 'Light',
         dark:  'Dark',
@@ -41,10 +41,14 @@ const text_block = {
       type:        Otter.Fields.Bool,
       yes_label:   'Sure',
       no_label:    'No, plain',
+      display_if: {
+        sibling: 'content',
+        doesnt_match: 'poop',
+      },
     },
     {
-      name:        'align',
-      type:        Otter.Fields.Select,
+      name: 'align',
+      type: Otter.Fields.Select,
       options: {
         left:   'Left',
         right:  'Right',

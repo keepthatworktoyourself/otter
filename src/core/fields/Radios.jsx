@@ -21,7 +21,7 @@ export default class Radios extends React.Component {
     this.props.containing_data_item[this.props.field_def.name] = input.value;
     this.setState({});
     this.ctx.value_updated();
-    this.ctx.should_redraw();   // Required for conditional rendering
+    this.ctx.should_redraw();   // For conditional rendering
   }
 
 
@@ -29,7 +29,7 @@ export default class Radios extends React.Component {
     delete this.props.containing_data_item[this.props.field_def.name];
     this.setState({});
     this.ctx.value_updated();
-    this.ctx.should_redraw();   // Required for conditional rendering
+    this.ctx.should_redraw();   // For conditional rendering
   }
 
 

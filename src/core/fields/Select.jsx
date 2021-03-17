@@ -16,7 +16,7 @@ export default class Select extends React.Component {
     this.props.containing_data_item[this.props.field_def.name] = ev.target.value;
     this.setState({});
     this.ctx.value_updated();
-    this.ctx.should_redraw();   // Required for conditional rendering
+    this.ctx.should_redraw();   // For conditional rendering
   }
 
 

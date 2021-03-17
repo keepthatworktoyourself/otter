@@ -181,40 +181,43 @@ test('utils: check_display_if errors', t => {
   const b1 = Otter.Utils.copy(test_blocks())[1];
   const b2 = Otter.Utils.copy(test_blocks())[1];
   const b3 = Otter.Utils.copy(test_blocks())[1];
+  const b4 = Otter.Utils.copy(test_blocks())[1];
+  const b5 = Otter.Utils.copy(test_blocks())[1];
 
   b0.fields[0].display_if = 'invalid type';
   b1.fields[0].display_if = [{ rule: 'invalid' }];
   b2.fields[0].display_if = [{ sibling: 'nonexistent', equal_to: 3.14 }];
   b3.fields[0].display_if = [{ sibling: b3.fields[0].name, equal_to: 3.14 }];
+  b4.fields[0].display_if = [{ sibling: b4.fields[0].name, matches: 394857 }];
+  b5.fields[0].display_if = [{ sibling: b5.fields[0].name, doesnt_match: '*&^GBIO' }];
 
   const r0 = Otter.Utils.check_display_if(b0, b0.fields[0]);
   const r1 = Otter.Utils.check_display_if(b1, b1.fields[0]);
   const r2 = Otter.Utils.check_display_if(b2, b2.fields[0]);
   const r3 = Otter.Utils.check_display_if(b3, b3.fields[0]);
+  const r4 = Otter.Utils.check_display_if(b4, b4.fields[0]);
+  const r5 = Otter.Utils.check_display_if(b5, b5.fields[0]);
 
-  t.deepEqual([`must be an array of rules or single rule object`], r0);
-  t.deepEqual([`must have properties 'sibling', and either 'equal_to' or 'not_equal_to'`], r1);
+  t.deepEqual([`display_if must be an object or array of objects`], r0);
+  t.deepEqual([`must have properties sibling, and equal_to|not_equal_to|matches|doesnt_match`], r1);
   t.deepEqual([`sibling does not exist in the block`], r2);
   t.deepEqual([`sibling cannot refer to the self field`], r3);
+  t.deepEqual([`matches or doesnt_match must be a string that compiles to a regex`], r4);
+  t.deepEqual([`matches or doesnt_match must be a string that compiles to a regex`], r5);
 });
 
 
 test('utils: check_display_if valid -> empty array', t => {
-  const b0 = Otter.Utils.copy(test_blocks())[1];
-  const b1 = Otter.Utils.copy(test_blocks())[1];
+  const b = Otter.Utils.copy(test_blocks())[1];
 
-  const display_if = {
+  b.fields[1].display_if = [{
     sibling: 'size',
     equal_to: 'something',
-  };
-  b0.fields[1].display_if = display_if;
-  b1.fields[1].display_if = [display_if];
+  }];
 
-  const r0 = Otter.Utils.check_display_if(b0, b0.fields[1]);
-  const r1 = Otter.Utils.check_display_if(b1, b1.fields[1]);
+  const r0 = Otter.Utils.check_display_if(b, b.fields[1]);
 
   t.deepEqual([], r0);
-  t.deepEqual([], r1);
 });
 
 
@@ -227,17 +230,17 @@ test('utils: display_if passes through errors from check_display_if', t => {
 
   const result = Otter.Utils.display_if(block, block.fields[0].name);
   t.deepEqual({
-    errors: ['must be an array of rules or single rule object'],
+    errors: ['display_if must be an object or array of objects'],
   }, result);
 });
 
 
 test('utils: display_if rule matches sibling value -> negative', t => {
   const block = Otter.Utils.copy(test_blocks())[1];
-  block.fields[1].display_if = {
+  block.fields[1].display_if = [{
     sibling: 'size',
     equal_to: 'something',
-  };
+  }];
   const result = Otter.Utils.display_if(block, block.fields[1].name, test_data()[1]);
   t.deepEqual({
     display: false,
@@ -248,10 +251,10 @@ test('utils: display_if rule matches sibling value -> negative', t => {
 
 test('utils: display_if rule sibling has other value -> positive', t => {
   const block = Otter.Utils.copy(test_blocks())[1];
-  block.fields[1].display_if = {
+  block.fields[1].display_if = [{
     sibling: 'size',
     equal_to: 'regular',
-  };
+  }];
   const result = Otter.Utils.display_if(block, block.fields[1].name, test_data()[1]);
   t.deepEqual({
     display: true,

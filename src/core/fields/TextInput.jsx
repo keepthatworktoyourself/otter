@@ -16,6 +16,7 @@ export default class TextInput extends React.Component {
     this.props.containing_data_item[this.props.field_def.name] = ev.target.value;
     this.setState({});
     this.ctx.value_updated();
+    this.props.is_display_if_target && this.ctx.should_redraw();
   }
 
 

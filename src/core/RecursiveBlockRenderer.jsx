@@ -59,8 +59,21 @@ export default function RecursiveBlockRenderer(props) {
   const is_top_level = props.is_top_level;
   const blocks       = props.blocks;
   const block        = Utils.find_block(blocks, data_item.__type);
+  const field_defs   = block.fields || [ ];
 
-  return (block.fields || []).map((field_def, index) => {
+  field_defs.forEach(field_def => {
+    if (field_def && field_def.display_if && field_def.display_if.constructor !== Array) {
+      field_def.display_if = [field_def.display_if];
+    }
+  });
+
+  const display_if_targets = field_defs
+    .map(field_def => field_def && field_def.display_if)
+    .filter(x => x)
+    .map(display_if => display_if.map(rule => rule.sibling))
+    .flat();
+
+  return field_defs.map((field_def, index) => {
     if (!field_def || typeof field_def !== 'object') {
       return <Fields.components.ErrorField text={error_text__field_not_object(index, field_def)}
                                            is_top_level={is_top_level}
@@ -70,6 +83,7 @@ export default function RecursiveBlockRenderer(props) {
     const field_name = field_def.name;
     const field_type = field_def.type;
     const field_value = data_item[field_name];
+    const is_display_if_target = display_if_targets.includes(field_name);
     let out = null;
 
 
@@ -120,6 +134,7 @@ export default function RecursiveBlockRenderer(props) {
         out = <Field field_def={field_def}
                      containing_data_item={data_item}
                      is_top_level={is_top_level}
+                     is_display_if_target={is_display_if_target}
                      key={index} />;
       }
       else {
