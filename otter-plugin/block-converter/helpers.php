@@ -67,15 +67,15 @@
 
 
   function find_oembed_src($data) {
-    if (preg_match_all('/https:\/\/twitter.com\/[^\/]+\/status\/[^\/? "]+/', $data, $m)) {
+    if (preg_match_all('/https?:\/\/twitter.com\/[^\/]+\/status\/[^\/? "]+/', $data, $m)) {
       return end($m[0]);
     }
 
-    if (preg_match('/"https:\/\/www\.youtube\.com\/embed\/([^?"]+)/', $data, $m)) {
+    if (preg_match('/"https?:\/\/www\.youtube\.com\/embed\/([^?"]+)/', $data, $m)) {
       return "https://www.youtube.com/watch?v={$m[1]}";
     }
 
-    $src = substr($data, strpos($data, 'https'));
+    $src = substr($data, strpos($data, 'http'));
     return substr($src, 0, strpos($src, '"'));
   }
 
