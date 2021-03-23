@@ -8,6 +8,9 @@
   //  | bash
   //
 
+  // Opts
+  // ---------------------------------------
+
   $path_wpconfig = getenv('WPCONFIG');
   if (!$path_wpconfig) {
     echo "Please define WPCONFIG as the path to wp-config.php\n";
@@ -24,6 +27,12 @@
     $post_type = 'post';
   }
 
+  $append_to_url = getenv('APPEND');
+
+
+  // Generate cmd
+  // ---------------------------------------
+
   require_once($path_wpconfig);
 
   $q = new WP_Query([
@@ -36,13 +45,16 @@
     'post_status'         => 'publish',
   ]);
 
-  $urls = call_user_func(function() use ($q) {
+  $urls = call_user_func(function() use ($q, $append_to_url) {
     $out = [ ];
     while ($q->have_posts()) {
       $q->the_post();
       $permalink = get_permalink();
       if (substr($permalink, -1) === '/') {
         $permalink = substr($permalink, 0, -1);
+      }
+      if ($append_to_url) {
+        $permalink .= $append_to_url;
       }
       $out []= $permalink;
     }

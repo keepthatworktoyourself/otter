@@ -14,6 +14,7 @@
 - [Blocks](#blocks)
 - [Fields](#fields)
 - [Demo](#demo)
+- [Tests](#tests)
 - [License](#license)
 
 
@@ -183,25 +184,37 @@ All fields should be specified with the Otter-defined constants in the form `Ott
 | `WPMedia`     | Wordpress media item (Wordpress only) |                          |          |                                                                         |
 |               |                                       | `media_types` (array)    | `[ ]`    | File types to include in the media browser. Supported: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If omitted or an empty array, all files are included. |
 | `NestedBlock` | Embed another block into this block.  |                          |          |                                                                         |
-|               |                                       | `nested_block_type` (string or Block object)  | | The block to embed inside this block. Can be either a Block object reference, or a block name for a block defined elsewhere in the blockset. |
+|               |                                       | `nested_block_type` (string or Block object)  | | The block to embed inside this block. Vakue is either a Block object or the name string of a block defined elsewhere in the blockset. |
 |               |                                       | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Nested Block         |
 | `Repeater`    | Embed an array of blocks within this block. |                    |          |                                                                         |
-|               |                                       | `nested_block_types` (array: strings or Block objects)  | | The blocks available in this Repeater. Can be an array of inline Block objects, or type strings referring to Blocks defined elsewhere in the editor's block definitions. |
+|               |                                       | `nested_block_types` (array: strings or Block objects)  | | The blocks available in this Repeater. Value is an array of either Block objects or name strings of blocks defined elsewhere in the blockset. |
 |               |                                       | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Repeater             |
-|               |                                       | `max` (number)           | No limit | Optionally limit the number of nested_blocks the user can add           |
+|               |                                       | `max` (number)           | No limit | Optionally limit the number of items the user can add                   |
 
 
 
 ## Demo
 
-The demo project in [/demo](demo/) renders a complete Otter editor with several blocks, including blocks with NestedBlock and Repeater fields.
+The demo project in [/demo](demo/) renders a complete Otter editor with several blocks, including blocks with NestedBlock and Repeater fields. The demo can be run whilst doing dev work, for realtime feedback while working on the project.
 
 ```bash
 npm run demo
   # or: parcel demo/index.html
 ````
 
-The demo can be run whilst doing dev work, allowing to live test features & changes.
+
+
+## Tests
+
+Tests are implemented with ava, enzyme, and sinon. Changes should be unit tested. Ideally, tests should be written first.
+
+Run the tests:
+
+```bash
+npm run t   # all tests
+npm run tw  # all tests, --watch
+npm run ts src/test/<file>  # run a single test, --watch
+```
 
 
 
