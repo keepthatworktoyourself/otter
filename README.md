@@ -69,6 +69,8 @@ An example Block of type `PageHeader` might contain the Fields: `title`, `subtit
 }
 ```
 
+### Block properties
+
 | Property      | Value              | Required | Default |                                                                                                                                                                 |
 | :------------ | :----------------- | :------- | :------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `type`        | `<string>`         | Yes      |         | The block type identifier. Each block's `type` string must be unique within the editor.                                                                         |
@@ -78,7 +80,7 @@ An example Block of type `PageHeader` might contain the Fields: `title`, `subtit
 | `hidden`      | `<bool>`           |          | `false` | If `true`, don't display this block in the block picker. This allows you to define blocks at the top level which can only be used in a NestedBlock or Repeater. |
 
 
-### Blocks: optionally categorise in groups
+### Optionally group blocks for a richer block picker
 
 When supplying your content blocks to Otter, (`<Otter.Editor blocks={blocks} />`), you can either use a **simple, flat array** of blocks, or **group them into categories**.
 
@@ -125,12 +127,18 @@ Each block should contain at least one field.
 }
 ```
 
+### Field properties
+
+All fields have the following properties:
+
 | Property      | Value                                   | Required   |                                                                                                          |
 | :------------ | :-------------------------------------- | :--------- | :------------------------------------------------------------------------------------------------------- |
 | `name`        | `<string>`                              | Yes        | The block data save key.                                                                                 |
 | `description` | `<string>`                              |            | Field label displayed to the user. If not present Otter will use a prettified version of the field name. |
 | `type`        | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).                                                                          |
 | `display_if`  | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s).                                            |
+
+[Field type](#field-types) should be specified with the Otter-defined constants such as `Otter.Fields.TextInput`.
 
 With `display_if` you can show or hide the field based on the value of one or more of its siblings. Each `DisplayRule` specifies the name of the sibling and a value. You can test against more than one sibling field using an array of multiple `DisplayRule` objects.
 
@@ -162,34 +170,34 @@ Note that using `matches` and `doesnt_match` may impact the performance of typin
 
 ### Field types:
 
-All fields should be specified with the Otter-defined constants in the form `Otter.Fields.TextInput`.
+The supported field types are listed below. Many fields have additional options you can set alongside the above [field properties] common to all fields.
 
-| Type          | Description                           | Options                  | Default  |                                                                         |
-| :------------ | :------------------------------------ | :----------------------- | :------- | :---------------------------------------------------------------------- |
-| `TextInput`   | Plain text input                      |                          |          |                                                                         |
-| `TextArea`    | Textarea (multi-line plain text)      |                          |          |                                                                         |
-|               |                                       | `mono` (bool)            | `false`  | Use a monospace font                                                    |
-| `TextEditor`  | Rich text editor                      |                          |          |                                                                         |
-|               |                                       | `heading_levels` (array) | `[1, 2]` | Heading types to display in the paragraph style dropdown                |
-|               |                                       | `blockquote` (bool)      | `false`  | Enable blockquote                                                       |
-|               |                                       | `hr` (bool)              | `false`  | Enable horizontal rule                                                  |
-|               |                                       | `paste_as_plain_text`    | `false`  | Clear text formatting on paste                                          |
-| `Bool`        | A toggle                              |                          |          |                                                                         |
-|               |                                       | `no_label` (string)      | `"Yes"`  | Label for `true` option                                                 |
-|               |                                       | `yes_label` (string)     | `"No"`   | Label for `false` option                                                |
-| `Radios`      | Radio buttons                         |                          |          |                                                                         |
-|               |                                       | `options` (object)       |          | Radio options. Key pairs are in the form `value: "Label"`.              |
-| `Select`      | Select dropdown                       |                          |          |                                                                         |
-|               |                                       | `options` (object)       |          | Select options. Key pairs are in the form `value: "Label"`.             |
-| `WPMedia`     | Wordpress media item (Wordpress only) |                          |          |                                                                         |
-|               |                                       | `media_types` (array)    | `[ ]`    | File types to include in the media browser. Supported: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If omitted or an empty array, all files are included. |
-| `NestedBlock` | Embed another block into this block.  |                          |          |                                                                         |
-|               |                                       | `nested_block_type` (string or Block object)  | | The block to embed inside this block. Vakue is either a Block object or the name string of a block defined elsewhere in the blockset. |
-|               |                                       | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Nested Block         |
-| `Repeater`    | Embed an array of blocks within this block. |                    |          |                                                                         |
-|               |                                       | `nested_block_types` (array: strings or Block objects)  | | The blocks available in this Repeater. Value is an array of either Block objects or name strings of blocks defined elsewhere in the blockset. |
-|               |                                       | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Repeater             |
-|               |                                       | `max` (number)           | No limit | Optionally limit the number of items the user can add                   |
+| Type          | Description                                 | Options                  | Default  |                                                                         |
+| :------------ | :------------------------------------------ | :----------------------- | :------- | :---------------------------------------------------------------------- |
+| `TextInput`   | Plain text input                            |                          |          |                                                                         |
+| `TextArea`    | Textarea (multi-line plain text)            |                          |          |                                                                         |
+|               |                                             | `mono` (bool)            | `false`  | Use a monospace font                                                    |
+| `TextEditor`  | Rich text editor                            |                          |          |                                                                         |
+|               |                                             | `heading_levels` (array) | `[1, 2]` | Heading types to display in the paragraph style dropdown                |
+|               |                                             | `blockquote` (bool)      | `false`  | Enable blockquote                                                       |
+|               |                                             | `hr` (bool)              | `false`  | Enable horizontal rule                                                  |
+|               |                                             | `paste_as_plain_text`    | `false`  | Clear text formatting on paste                                          |
+| `Bool`        | A toggle                                    |                          |          |                                                                         |
+|               |                                             | `no_label` (string)      | `"Yes"`  | Label for `true` option                                                 |
+|               |                                             | `yes_label` (string)     | `"No"`   | Label for `false` option                                                |
+| `Radios`      | Radio buttons                               |                          |          |                                                                         |
+|               |                                             | `options` (object)       |          | Radio options. Key pairs are in the form `value: "Label"`.              |
+| `Select`      | Select dropdown                             |                          |          |                                                                         |
+|               |                                             | `options` (object)       |          | Select options. Key pairs are in the form `value: "Label"`.             |
+| `WPMedia`     | Wordpress media item (Wordpress only)       |                          |          |                                                                         |
+|               |                                             | `media_types` (array)    | `[ ]`    | File types to include in the media browser. Supported: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If omitted or an empty array, all files are included. |
+| `NestedBlock` | Embed another block into this block.        |                          |          |                                                                         |
+|               |                                             | `nested_block_type` (string or Block object)  | | The block to embed inside this block. Vakue is either a Block object or the name string of a block defined elsewhere in the blockset. |
+|               |                                             | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Nested Block         |
+| `Repeater`    | Embed an array of blocks within this block. |                          |          |                                                                         |
+|               |                                             | `nested_block_types` (array: strings or Block objects)  | | The blocks available in this Repeater. Value is an array of either Block objects or name strings of blocks defined elsewhere in the blockset. |
+|               |                                             | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Repeater             |
+|               |                                             | `max` (number)           | No limit | Optionally limit the number of items the user can add                   |
 
 
 

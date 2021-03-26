@@ -60,28 +60,28 @@
   // -----------------------------------
   // - call on wp init
   // - priority must be < 100
-  // - editor_info: [  bundle_path => '...', meta_key => '...' ]
+  // - editor_opts: [ bundle_path => '...', meta_key => '...', metabox_title => '...' ]
   // - $post_type can be a single type or an array
 
-  function editor($post_type, $editor_info = null) {
+  function editor($post_type, $editor_opts = null) {
     static $otters = [ ];
 
-    if ($editor_info) {
-      if (!isset($editor_info['bundle_path']) || !isset($editor_info['meta_key'])) {
+    if ($editor_opts) {
+      if (!isset($editor_opts['bundle_path']) || !isset($editor_opts['meta_key'])) {
         throw new \RuntimeException(
-          "\Otter\editor($post_type, $editor_info):\n" .
-          "\$post_type: string or array\n" .
-          "\$editor_info requires: [\n" .
-          "  'bundle_path'   => '...',\n" .
-          "  'meta_key'      => '...',\n" .
-          "  'metabox_title' => '...',  (optional)\n" .
-          "]"
+          '\Otter\editor($post_type, $editor_opts):'    . "\n" .
+          ' - $post_type: string or array'              . "\n" .
+          ' - $editor_opts: ['                          . "\n" .
+          '     "bundle_path"   => string,'             . "\n" .
+          '     "meta_key"      => string,'             . "\n" .
+          '     "metabox_title" => string,  (optional)' . "\n" .
+          '   ]'
         );
       }
 
       $post_types = is_array($post_type) ? $post_type : [$post_type];
       foreach ($post_types as $p) {
-        $otters[$p] []= $editor_info;
+        $otters[$p] []= $editor_opts;
       }
     }
 
