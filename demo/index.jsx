@@ -41,10 +41,6 @@ const text_block = {
       type:        Otter.Fields.Bool,
       yes_label:   'Sure',
       no_label:    'No, plain',
-      display_if: {
-        sibling: 'content',
-        doesnt_match: 'poop',
-      },
     },
     {
       name: 'align',
