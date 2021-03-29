@@ -225,9 +225,21 @@ export default class Editor extends React.Component {
   // -----------------------------------
 
   static ensure_uids(data) {
-    Utils.iterate_data(data, (data_item) => {
+    Utils.iterate_data(data, data_item => {
       if (data_item && !data_item.__uid) {
         data_item.__uid = Utils.uid();
+      }
+    });
+  }
+
+
+  // blocks: convert display_ifs to arrays if single objects
+  // -----------------------------------
+
+  static ensure_display_ifs_are_arrays(blocks) {
+    Utils.iterate(blocks, item => {
+      if (item && item.display_if && item.display_if.constructor !== Array) {
+        item.display_if = [item.display_if];
       }
     });
   }
@@ -258,6 +270,7 @@ export default class Editor extends React.Component {
 
     this.ctx.blocks = blocks;
     Editor.ensure_uids(data_items);
+    Editor.ensure_display_ifs_are_arrays(blocks);
 
 
     const msg_div = (msg) =>

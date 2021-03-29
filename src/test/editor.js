@@ -151,6 +151,17 @@ test('Editor: ensures data items have uids', t => {
 });
 
 
+test('Editor: ensures display_ifs are arrays', t => {
+  const blocks = test_blocks();
+  blocks[1].fields[0].display_if = {
+    sibling: 'test',
+    matches: 'muffins',
+  };
+  const wrapper = mk(Otter.State.Loaded, blocks, test_data(), Otter.Save.OnInput);
+  t.true(blocks[1].fields[0].display_if.constructor === Array);
+});
+
+
 test('Editor: renders a Block for each data item', t => {
   const wrapper = mk(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput);
   const droppable = wrapper.find('[droppableId]');

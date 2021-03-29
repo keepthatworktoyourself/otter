@@ -104,35 +104,29 @@ function is_data_item(obj) {
 }
 
 
+// iterate
+// -----------------------------------
+
+function iterate(data, f) {
+  f(data);
+
+  const is_obj = data && data.constructor === Object;
+  const is_arr = data && data.constructor === Array;
+
+  if (is_arr) {
+    data.forEach(item => iterate(item, f));
+  }
+  else if (is_obj) {
+    Object.keys(data).forEach(k => iterate(data[k], f));
+  }
+}
+
+
 // iterate_data
 // -----------------------------------
 
 function iterate_data(data, f) {
-  if (data === null || data === undefined) {
-    return;
-  }
-
-  const is_obj = data.constructor === Object;
-  const is_arr = data.constructor === Array;
-
-  if (!(is_obj || is_arr)) {
-    return;
-  }
-
-  if (is_data_item(data)) {
-    f(data);
-  }
-
-  if (is_arr) {
-    data.forEach(item => iterate_data(item, f));
-  }
-
-  else {
-    const children = Object.keys(data).filter(k => k !== '__type');
-    children.forEach(k => {
-      iterate_data(data[k], f);
-    });
-  }
+  iterate(data, (item) => is_data_item(item) && f(item));
 }
 
 
@@ -375,6 +369,7 @@ export default {
   recursive_find,
   find_block,
   is_data_item,
+  iterate,
   iterate_data,
   check_display_if,
   display_if,

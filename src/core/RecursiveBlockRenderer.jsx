@@ -61,15 +61,9 @@ export default function RecursiveBlockRenderer(props) {
   const block        = Utils.find_block(blocks, data_item.__type);
   const field_defs   = block.fields || [ ];
 
-  field_defs.forEach(field_def => {
-    if (field_def && field_def.display_if && field_def.display_if.constructor !== Array) {
-      field_def.display_if = [field_def.display_if];
-    }
-  });
-
   const display_if_targets = field_defs
     .map(field_def => field_def && field_def.display_if)
-    .filter(x => x)
+    .filter(display_if => display_if && display_if.constructor === Array)
     .map(display_if => display_if.map(rule => rule.sibling))
     .flat();
 

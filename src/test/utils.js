@@ -148,6 +148,22 @@ test('utils: is_data_item succeeds if is object with __type', t => {
 });
 
 
+// iterate
+// ------------------------------------
+
+test('utils: iterate iterates through nested object', t => {
+  const obj = {
+    a: [5, 'a', null],
+    b: [false, { things: 3 }],
+  };
+  const exp = [obj, obj.a, 5, 'a', null, obj.b, false, {things: 3}, 3];
+  const result = [ ];
+  Otter.Utils.iterate(obj, item => result.push(item))
+  t.deepEqual(exp, result);
+});
+
+
+
 // iterate_data
 // ------------------------------------
 

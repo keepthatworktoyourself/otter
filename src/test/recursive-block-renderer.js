@@ -59,10 +59,10 @@ test('RBR: field with display_if false: renders null', t => {
   const block = Otter.Utils.copy(test_blocks())[1];
   const data_item = test_data()[1];
 
-  block.fields[1].display_if = {
+  block.fields[1].display_if = [{
     sibling:  'size',
     equal_to: 'something',
-  };
+  }];
 
   const wrapper = shallow(<RecursiveBlockRenderer data_item={data_item} blocks={[block]} />);
   t.is(null, wrapper.get(1));
@@ -73,10 +73,10 @@ test('RBR: field with display_if true or not set: renders field, props passed', 
   const block = Otter.Utils.copy(test_blocks())[1];
   const data_item = test_data()[1];
 
-  block.fields[1].display_if = {
+  block.fields[1].display_if = [{
     sibling:  'size',
     equal_to: 'regular',
-  };
+  }];
 
   const wrapper = shallow(<RecursiveBlockRenderer data_item={data_item} blocks={[block]} is_top_level={true} />);
   const field_without_display_if = wrapper.find(block.fields[0].type);
