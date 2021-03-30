@@ -7,8 +7,6 @@ import FieldLabel from '../other/FieldLabel';
 import Icons from '../other/Icons';
 const Delta = Quill.import('delta');
 const BlockEmbed = Quill.import('blots/block/embed');
-const Link = Quill.import('formats/link');
-const Inline = Quill.import('blots/inline');
 
 
 function cliphandler__clear_formatting() {
@@ -41,56 +39,6 @@ HRBlot.tagName = 'hr';
 Quill.register(HRBlot);
 
 
-// Link without target=_blank
-// ---------------------------------
-
-class InternalLink extends Inline {
-  static create(url) {   // Creates DOM node
-    let node = super.create(url);
-    node.setAttribute('href', url);
-    node.setAttribute('rel', 'noopener noreferrer');
-    return node;
-  }
-
-  static formats(node) {
-    return node.getAttribute('href');
-  }
-
-  format(name, value) {
-    if (name === 'internal-link' && value) {
-      this.domNode.setAttribute('href', value);
-      this.domNode.setAttribute('rel', 'noopener noreferrer');
-    }
-    else {
-      super.format(name, value);
-    }
-  }
-}
-InternalLink.blotName = 'internal-link';
-InternalLink.tagName = 'a';
-Quill.register(InternalLink);
-
-
-// Override regular Link to work the same way as InternalLink (although worse)
-// ---------------------------------
-
-class ExternalLink extends Link {
-  static create(value) {
-    const node = Link.create(value);
-    value = Link.sanitize(value);
-    node.setAttribute('href', value);
-    return node;
-  }
-
-  format(name, value) {
-    super.format(name, value);
-  }
-}
-ExternalLink.blotName = 'external-link';
-ExternalLink.tagName = 'a';
-Quill.register(ExternalLink);
-
-
 // TextEditor
 // ---------------------------------
 
@@ -112,18 +60,6 @@ export default class TextEditor extends React.Component {
             this.quill.insertText(cursor_pos, '\n', Quill.sources.USER);
             this.quill.insertEmbed(cursor_pos + 1, 'hr', true, Quill.sources.USER);
             this.quill.setSelection(cursor_pos + 2, Quill.sources.SILENT);
-          },
-          internalLink: function(value) {
-            const url = prompt('URL');
-            if (url && url.length > 0) {
-              this.quill.format('internal-link', url, Quill.sources.USER);
-            }
-          },
-          externalLink: function(value) {
-            const url = prompt('URL');
-            if (url && url.length > 0) {
-              this.quill.format('external-link', url, Quill.sources.USER);
-            }
           },
         },
       },
@@ -185,8 +121,7 @@ export default class TextEditor extends React.Component {
             </span>
 
             <span className="ql-formats">
-              <button className="ql-internalLink"><Icons.LinkInt /></button>
-              <button className="ql-externalLink"><Icons.LinkExt/></button>
+              <button className="ql-link"></button>
               {hr && <button className="ql-hr"><Icons.HR /></button>}
             </span>
 
