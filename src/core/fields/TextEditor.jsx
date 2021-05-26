@@ -2,6 +2,7 @@ import React from 'react';
 import ReactQuill from 'react-quill';
 import Quill from 'quill';
 import Utils from '../definitions/utils';
+import styles from '../definitions/styles';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
 import Icons from '../other/Icons';
@@ -100,7 +101,7 @@ export default class TextEditor extends React.Component {
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
-        <div className="field">
+        <div className={`${styles.field}`}>
 
           <FieldLabel label={label} is_top_level={is_top_level} />
 

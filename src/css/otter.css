@@ -1,22 +1,9 @@
-body {
-  background-color: rgb(183, 190, 199);
-}
-.bg-solid {
-  background-color: #fdfefe;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 
-.otter-box {
-  background-color: rgba(25, 33, 40, 0.06);
-  border-radius: 5px;
-  padding: 1rem;
-}
-.otter-box--bordered {
-  border: 1px solid rgba(25, 33, 40, 0.06);
-}
-
-
-.otter-monospace {
+.monospace {
   font-family: Hack, Consolas, Menlo, 'Source Code Pro', 'Lucida Sans Typewriter', 'Courier New', courier, sans-serif;
 }
 
@@ -33,26 +20,21 @@ body {
 }
 
 
-@media screen and (max-width: 767px) {
-  .c-label-margin-btm-phone {
-    margin-bottom: 0.4em;
-  }
-}
-
-
-.c-block-add-btn {
-  display: none;
-}
-
-.c-block:hover .c-block-add-btn {
-  display: block;
-}
-
-
 .flex-start {
   justify-content: flex-start !important;
 }
 
+
+.select {
+  position: relative;
+}
+.select::after {
+  content: "⌄";
+  position: absolute;
+  right: 0.5rem;
+  top: 0.08rem;
+  font-size: 1.2em;
+}
 
 
 .react-toggle {

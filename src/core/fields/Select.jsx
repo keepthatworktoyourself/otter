@@ -1,7 +1,10 @@
 import React from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faTimes} from '@fortawesome/free-solid-svg-icons';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
 import Utils from '../definitions/utils';
+import styles from '../definitions/styles';
 
 
 export default class Select extends React.Component {
@@ -35,33 +38,26 @@ export default class Select extends React.Component {
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
-        <div className="field">
-          <div className="is-flex-tablet" style={{ alignItems: 'center' }}>
+        <div className={`${styles.field}`}>
+          <div className="md:flex items-center">
 
-            <div className="c-label-margin-btm-phone">
-              <FieldLabel label={label} is_top_level={is_top_level}
-                          colon={true} min_width={true} />
+            <div className="mb-2 md:mb-0">
+              <FieldLabel label={label}
+                          is_top_level={is_top_level}
+                          min_width={true} />
             </div>
 
-            <div className="is-flex" style={{ alignItems: 'center' }}>
-              <div style={{ paddingRight: '0.5rem' }}>
+            <div className="select">
+              <select className={`${styles.dropdown_button} pr-7`} value={value || ''} onChange={this.cb_change}>
+                {opt_keys.length === 0 && `[Select field has no options!]`}
 
-                <div className="select is-small">
-                  <select value={value || ''} onChange={this.cb_change}>
-
-                    {opt_keys.length === 0 && `[Select field has no options!]`}
-
-                    {opt_keys.length !== 0 && [
-                      <option disabled key={`f${uid}--disabled`} value="">Select an option</option>,
-                      ...opt_keys.map((opt, i) => (
-                        <option value={opt} key={`f${uid}--${i}`}>{opts[opt]}</option>
-                      )),
-                    ]}
-
-                  </select>
-                </div>
-
-              </div>
+                {opt_keys.length !== 0 && [
+                  <option disabled key={`f${uid}--disabled`} value="">Select an option</option>,
+                  ...opt_keys.map((opt, i) => (
+                    <option value={opt} key={`f${uid}--${i}`}>{opts[opt]}</option>
+                  )),
+                ]}
+              </select>
             </div>
 
           </div>

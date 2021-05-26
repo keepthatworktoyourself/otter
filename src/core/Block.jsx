@@ -1,11 +1,12 @@
 import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faTimes} from '@fortawesome/free-solid-svg-icons';
 import RecursiveBlockRenderer from './RecursiveBlockRenderer';
 import PageDataContext from './PageDataContext';
 import AddBlockBtn from './other/AddBlockBtn';
 import Utils from './definitions/utils';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
+import styles from './definitions/styles';
 
 
 export default class Block extends React.Component {
@@ -41,22 +42,22 @@ export default class Block extends React.Component {
         <div ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={this.get_drag_styles(prov, snap)}>
 
           <ContextConsumer>{ctx => (this.ctx = ctx) && (
-            <div className="c-block" style={{ position: 'relative', paddingBottom: '1rem' }} data-blocktype={data_item.__type}>
+            <div className="c-block group relative pb-4" data-blocktype={data_item.__type}>
 
-              <div className="bg-solid" style={{ padding: '1rem' }}>
-                <div style={{ position: 'relative' }}>
+              <div className={`p-4 ${styles.block_bg_color}`}>
+                <div className="relative">
 
-                  <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                    <a className="block-delete-btn button is-rounded is-small is-outlined" onClick={ev => cb__delete(index)}>
-                      <span style={{ marginRight: '0.5rem' }}>Delete block</span>
+                  <div className="absolute top-0 right-0">
+                    <a className={`block-delete-btn ${styles.button} ${styles.button_pad}`} onClick={ev => cb__delete(index)}>
+                      <span className="mr-2">Delete block</span>
                       <FontAwesomeIcon icon={faTimes} />
                     </a>
                   </div>
 
                   {(block = Utils.find_block(ctx.blocks, data_item.__type)) && (
                     <>
-                      <h3 className="title is-4">
-                        {block_numbers && <span style={{ fontWeight: 700, marginRight: '0.8rem' }} className="has-text-grey-light">{index + 1}</span>}
+                      <h3 className={`block-title ${styles.block_title} mb-4`}>
+                        {block_numbers && <span className="mr-2 text-gray-300">{index + 1}</span>}
                         {block.description || Utils.humanify_str(block.type)}
                       </h3>
                       <div>
@@ -66,18 +67,18 @@ export default class Block extends React.Component {
                   )}
 
                   {!block && (
-                    <h3 className="title is-4">{`Unknown block type: '${data_item.__type}'`}</h3>
+                    <h3 className={`block-title ${styles.block_title}`}>
+                      {`Unknown block type: '${data_item.__type}'`}
+                    </h3>
                   )}
 
                 </div>
               </div>
 
-              <div className="c-block-add-btn" style={{
-                position: 'absolute',
+              <div className="c-block-add-btn absolute hidden group-hover:block z-10" style={{
                 top: '-1.5rem',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                zIndex: 2
               }}>
                 <AddBlockBtn blocks={ctx.blocks} index={index} />
               </div>

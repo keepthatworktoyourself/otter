@@ -1,13 +1,14 @@
 import React from 'react';
 import * as DnD from 'react-beautiful-dnd';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faPlusCircle} from '@fortawesome/free-solid-svg-icons';
 import PageDataContext from './PageDataContext';
 import Utils from './definitions/utils';
 import NestedBlockWrapper from './NestedBlockWrapper';
 import RepeaterItem from './RepeaterItem';
 import RecursiveBlockRenderer from './RecursiveBlockRenderer';
 import ErrorField from './fields/ErrorField';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPlusCircle} from '@fortawesome/free-solid-svg-icons';
+import styles from './definitions/styles';
 
 
 export default class Repeater extends React.Component {
@@ -174,29 +175,28 @@ export default class Repeater extends React.Component {
 
           {show_add_button && (
             <div className="repeater-add-btn">
-              <div className={`dropdown ${this.state.show_dialogue ? 'is-active' : ''}`}>
+              <div className="relative">
 
-                <div className="dropdown-trigger">
-                  <button className="button is-small" aria-haspopup="true" aria-controls="dropdown-menu"
+                <div className="">
+                  <button className={`${styles.dropdown_button} ${styles.button_dark_border}`}
                           onClick={this.cb__add_btn}>
-                    <span className="icon is-small has-text-grey">
-                      <FontAwesomeIcon icon={faPlusCircle} />
-                    </span>
-                    <span>Add</span>
+                    <span>Add item</span>
                   </button>
                 </div>
 
-                {multiple_types && (
-                  <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                    <div className="dropdown-content">
-                      {block_types__objects.map((block, i) => {
-                        return (
-                          <a className="dropdown-item" onClick={this.cb__add} key={i} data-nested_block-type={block.type}>
-                            {block.description || Utils.humanify_str(block.type)}
-                          </a>
-                        );
-                      })}
-                    </div>
+                {multiple_types && this.state.show_dialogue && (
+                  <div className={`absolute border ${styles.button_dark_border_static} rounded mt-1`} style={{minWidth: '10rem'}}>
+                    {block_types__objects.map((block, i) => (
+                      <a className={`
+                           block p-2
+                           ${styles.button_bg} ${styles.button_bg_hover} ${styles.button_bg_active}
+                           ${i < block_types__objects.length - 1 ? 'border-b' : ''} border-gray-500
+                         `}
+                         onClick={this.cb__add} key={i} data-nested_block-type={block.type}
+                      >
+                        {block.description || Utils.humanify_str(block.type)}
+                      </a>
+                    ))}
                   </div>
                 )}
 

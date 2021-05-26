@@ -1,9 +1,10 @@
 import React from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faTimes} from '@fortawesome/free-solid-svg-icons';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
 import Utils from '../definitions/utils';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
+import styles from '../definitions/styles';
 
 
 export default class Radios extends React.Component {
@@ -47,48 +48,54 @@ export default class Radios extends React.Component {
     const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { };
     const opt_keys = Object.keys(opts);
 
+    const btn_styles = (selected) => `
+      inline-block
+      border-r
+      ${styles.button_bg_hover} ${styles.button_bg_active}
+      ${styles.button_pad_sm}
+      ${selected && 'bg-gray-400'}
+    `;
+
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
-        <div className="field">
-          <div className="is-flex-tablet" style={{ alignItems: 'center' }}>
+        <div className={`${styles.field}`}>
+          <div className="md:flex items-center">
 
-            <div className="c-label-margin-btm-phone">
-              <FieldLabel label={label} is_top_level={is_top_level}
-                          colon={true} min_width={true} />
+            <div className="mb-2 md:mb-0">
+              <FieldLabel label={label}
+                          is_top_level={is_top_level}
+                          min_width={true} />
             </div>
 
-            <div className="is-flex" style={{ alignItems: 'center' }}>
-              <div style={{ paddingRight: '0.5rem' }}>
-                <div className="buttons has-addons is-marginless">
-                  {opt_keys.length === 0 && `[Radio field has no options!]`}
-                  {opt_keys.map((opt, i) => {
-                    const input_id = `${input_name}--${i}`;
-                    const active = opt === value ? 'is-selected is-link' : '';
-                    const sel = { checked: opt === value };
+            <div className={`${styles.button_bg} ${styles.button} ${styles.button_dark_border_static} overflow-hidden`}>
+              {opt_keys.length === 0 && `[Radio field has no options!]`}
+              {opt_keys.map((opt, i) => {
+                const input_id = `${input_name}--${i}`;
+                const selected = opt === value;
+                const sel = { checked: selected };
 
-                    return (
-                      <a className={`radio-option button is-small ${active}`} data-value={opt}
-                        style={{ marginBottom: 0 }} onClick={this.cb_click} key={input_id}>
+                return (
+                  <a className={`${btn_styles(selected)} mb-0`}
+                     data-value={opt}
+                     onClick={this.cb_click}
+                     key={input_id}
+                  >
+                    {opts[opt]}
 
-                        {opts[opt]}
-
-                        <input type="radio" readOnly name={input_name} id={input_id} {...sel}
-                               value={opt} style={{ display: 'none' }} />
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {opt_keys.length > 0 && (
-                <div>
-                  <a className="radio-clear-btn button is-rounded is-small is-light has-text-grey-light"
-                     onClick={this.cb_clear}>
-                    <FontAwesomeIcon icon={faTimes} />
+                    <input type="radio" readOnly name={input_name} id={input_id} {...sel}
+                           value={opt} className="hidden" />
                   </a>
-                </div>
-              )}
+                );
+              })}
             </div>
+
+            {opt_keys.length > 0 && (
+              <div className="ml-3">
+                <a className="cursor-pointer text-gray-600 hover:text-gray-400" onClick={this.cb_clear}>
+                  <FontAwesomeIcon icon={faTimes} />
+                </a>
+              </div>
+            )}
 
           </div>
         </div>

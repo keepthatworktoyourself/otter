@@ -1,8 +1,9 @@
 import React from 'react';
+import Toggle from 'react-toggle';
 import PageDataContext from './PageDataContext';
 import Utils from './definitions/utils';
 import DDToggle from './other/DDToggle';
-import Toggle from 'react-toggle';
+import styles from './definitions/styles';
 
 
 export default class NestedBlockWrapper extends React.Component {
@@ -67,18 +68,18 @@ export default class NestedBlockWrapper extends React.Component {
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
-        <div className="nested_block-wrapper">
+        <div>
 
           <div>
-            <h4 style={{ paddingBottom: '0.5rem' }} className="is-clickable title is-7 is-marginless">
-              <span onClick={this.cb__toggle_collapse} className="nested_block-wrapper-toggle is-inline-block">
+            <h4 className="pb-2 cursor-pointer font-semibold">
+              <span className="inline-block" onClick={this.cb__toggle_collapse} >
                 {title}
 
                 {is_enabled && <DDToggle is_open={!this.state.collapsed} cb={this.cb__toggle_collapse} />}
               </span>
 
               {is_optional && (
-                <span style={{ paddingLeft: '0.3rem', position: 'relative', top: '1px' }}>
+                <span className="relative pl-2 top-px">
                   <Toggle checked={is_enabled} icons={false} onChange={this.cb__toggle_enabled} />
                 </span>
               )}
@@ -86,8 +87,8 @@ export default class NestedBlockWrapper extends React.Component {
           </div>
 
           {is_enabled && !this.state.collapsed && (
-            <div style={{ paddingBottom: '0.5rem' }}>
-              <div className={`otter-box otter-box--bordered`} style={{ padding: '1rem' }}>
+            <div className="pb-2">
+              <div className={`${styles.nested_block(1)} ${styles.nested_block_border} p-4`}>
                 {this.props.children}
               </div>
             </div>

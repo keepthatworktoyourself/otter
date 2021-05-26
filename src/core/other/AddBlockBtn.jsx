@@ -1,8 +1,9 @@
 import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPlusCircle} from '@fortawesome/free-solid-svg-icons';
+import {faPlus} from '@fortawesome/free-solid-svg-icons';
 import PageDataContext from '../PageDataContext';
 import Utils from '../definitions/utils';
+import styles from '../definitions/styles';
 
 
 export default class AddBlockBtn extends React.Component {
@@ -36,41 +37,69 @@ export default class AddBlockBtn extends React.Component {
   render() {
     const blocks           = this.props.blocks || [ ];
     const active           = this.state.open ? 'is-active' : '';
-    const popup_dir        = this.props.popup_direction === 'up' ? 'is-up' : '';
+    const popup_dir        = this.props.popup_direction || 'down';
     const suggest          = this.props.suggest;
     const ContextConsumer  = this.props.consumer_component || PageDataContext.Consumer;
     this.is_simple         = Utils.blocks_are_simple(blocks);
-    const c__dropdown      = `dropdown ${this.is_simple ? `${popup_dir} ${active}` : ''}`;
     const displayed_blocks = this.is_simple && blocks.filter(b => b && b.hidden !== true);
+
+    const btn_txt = (
+      <span>
+        {suggest ? (
+          <span className="mr-1">
+            Insert block
+          </span>
+        ) : ''}
+        <FontAwesomeIcon icon={faPlus} />
+      </span>
+    );
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
-        <div className={c__dropdown}>
-
-          <div className="dropdown-trigger">
-            <button className="button is-rounded" aria-haspopup="true" aria-controls="dropdown-menu"
-                    onClick={this.cb__toggle}>
-
-              {suggest && (
-                <span>Add a block to get started</span>
-              )}
-
-              <span className="icon is-small has-text-grey">
-                <FontAwesomeIcon icon={faPlusCircle} />
-              </span>
-            </button>
-          </div>
+        <div>
 
           {this.is_simple && (
-            <div className="dropdown-menu" style={{ left: '50%', transform: 'translateX(-50%)' }} id="dropdown-menu" role="menu">
-              <div className="dropdown-content" style={{ maxHeight: '12rem', overflowY: 'scroll' }}>
-                {displayed_blocks.map((block, i) => (
-                  <a className="dropdown-item" onClick={this.cb__select} key={i} data-block-type={block.type}>
-                    {block.description || Utils.humanify_str(block.type)}
-                  </a>
-                ))}
-              </div>
+            <div className="add-block-btn relative">
+              <button className={`${styles.dropdown_button} ${styles.button_dark_border}`}
+                      onClick={this.cb__toggle}
+              >
+                {btn_txt}
+              </button>
+
+              {this.state.open && (
+                <div className={`
+                       absolute
+                       border ${styles.button_dark_border_static}
+                       rounded
+                       left-1/2
+                       ${popup_dir === 'down' ? 'top-7' : ''}
+                       ${popup_dir === 'up' ? 'bottom-7' : ''}
+                     `}
+                     style={{minWidth: '10rem', transform: 'translateX(-50%)'}}
+                >
+
+                  {displayed_blocks.map((block, i) => (
+                    <a className={`
+                         block p-2
+                         ${styles.button_bg} ${styles.button_bg_hover} ${styles.button_bg_active}
+                         ${i < displayed_blocks.length - 1 ? 'border-b' : ''} border-gray-500
+                       `}
+                       onClick={this.cb__select} key={i} data-block-type={block.type}
+                    >
+                      {block.description || Utils.humanify_str(block.type)}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
+          )}
+
+          {!this.is_simple && (
+            <button className={`${styles.dropdown_button} ${styles.button_dark_border}`}
+                    onClick={this.cb__toggle}
+            >
+              {btn_txt}
+            </button>
           )}
 
         </div>

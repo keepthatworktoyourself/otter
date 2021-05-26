@@ -70,7 +70,7 @@ export default class WPMedia extends React.Component {
             <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
 
               <div className="level-item flex-start">
-                <FieldLabel label={label} is_top_level={is_top_level} colon={true} />
+                <FieldLabel label={label} is_top_level={is_top_level} />
               </div>
 
               <div className="level-item flex-start">

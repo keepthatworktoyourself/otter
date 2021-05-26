@@ -2,6 +2,7 @@ import React from 'react';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
 import Utils from '../definitions/utils';
+import styles from '../definitions/styles';
 
 
 export default class TextInput extends React.Component {
@@ -30,14 +31,12 @@ export default class TextInput extends React.Component {
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
-        <div className="field">
-
+        <div className={`${styles.field}`}>
           <FieldLabel label={label} is_top_level={is_top_level} />
 
-          <div className="control">
-            <input type="text" className="input" value={value} onChange={this.cb_change} />
-          </div>
-
+          <input type="text" className={`w-full bg-white ${styles.button_pad} rounded border border-gray-200`}
+                 value={value}
+                 onChange={this.cb_change} />
         </div>
       )}</ContextConsumer>
     );

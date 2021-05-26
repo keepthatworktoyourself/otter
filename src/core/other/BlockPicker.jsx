@@ -37,15 +37,17 @@ export default class BlockPicker extends React.Component {
 
     return (
       <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
-        <div className="is-overlay" style={{ zIndex: 10, backgroundColor: 'rgba(0,0,0,0.3)', padding: '1rem' }}>
-          <div className="wrapper" style={{
-            transform: `translateY(${offset}px`,
-            transition: 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
-            maxHeight: 'calc(100vh - 2rem)',
-            overflowY: 'auto' }}>
-            <div style={{ maxHeight: outer_max_height || 'none' }}>
+        <div className="absolute inset-0 p-4 z-20" style={{backgroundColor: 'rgba(0,0,0,0.3)', padding: '1rem'}}>
+          <div style={{
+              transform: `translateY(${offset}px`,
+              transition: 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
+              maxHeight: 'calc(100vh - 2rem)',
+              overflowY: 'auto'
+            }}
+          >
+            <div style={{maxHeight: outer_max_height || 'none'}}>
 
-            <div className="box" style={{ position: 'relative', paddingTop: '2rem', borderRadius: 0 }}>
+            <div className="box relative pt-4" style={{borderRadius: 0}}>
 
               <div style={{ position: 'absolute', top: '1rem', right: '1.2rem', }}>
                 <span style={{ cursor: 'pointer' }} onClick={this.close}>

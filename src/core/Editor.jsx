@@ -274,7 +274,7 @@ export default class Editor extends React.Component {
 
 
     const msg_div = (msg) =>
-      <div className="otter-load-error bg-solid has-text-centered" style={{ padding: '1rem' }}>
+      <div className="otter-load-error p-4 bg-gray-50 text-center">
         {msg}
       </div>;
 
@@ -295,10 +295,10 @@ export default class Editor extends React.Component {
       }
 
       content__main = (
-        <div className="container" style={{ minHeight: min_height }}>
+        <div className="text-gray-800 text-xs" style={{ minHeight: min_height }}>
 
           {when_to_save === Save.OnClick && (
-            <div className="save-button" style={{ margin: '1rem' }}>
+            <div className="save-button m-4">
               <a className="button" onClick={this.save}>Save</a>
             </div>
           )}
@@ -321,7 +321,7 @@ export default class Editor extends React.Component {
             )}</Droppable>
           </DragDropContext>
 
-          <div className="is-flex" style={{ justifyContent: 'center' }}>
+          <div className="flex justify-center">
             <AddBlockBtn blocks={blocks}
                          index={data_items.length}
                          suggest={data_items.length === 0}
@@ -340,7 +340,7 @@ export default class Editor extends React.Component {
 
     return (
       <ContextProvider value={this.ctx}>
-        <div className="post-builder" style={{ padding: '2rem', position: 'relative' }}>
+        <div className="post-builder relative p-8 bg-gray-500">
           {content__main}
 
           {show_block_picker && <BlockPicker blocks={blocks}

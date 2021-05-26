@@ -2,6 +2,7 @@ import React from 'react';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
 import Utils from '../definitions/utils';
+import styles from '../definitions/styles';
 
 
 export default class TextArea extends React.Component {
@@ -31,13 +32,11 @@ export default class TextArea extends React.Component {
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
         <div className="field">
-
           <FieldLabel label={label} is_top_level={is_top_level} />
 
-          <textarea className={`textarea ${mono ? 'otter-monospace': ''}`}
+          <textarea className={`w-full rounded border ${styles.button_dark_border_static} ${mono ? 'monospace': ''}`}
                     style={mono ? { fontSize: '0.9em' } : {}}
                     ref={this.textarea_ref} value={value || ''} onChange={this.cb_change} />
-
         </div>
       )}</ContextConsumer>
     );
