@@ -1,7 +1,7 @@
-import React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
-import styles from '../definitions/styles';
+import React from 'react'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faTimes} from '@fortawesome/free-solid-svg-icons'
+import styles from '../definitions/styles'
 
 export default function({cb__delete, classes}) {
   return (
@@ -10,6 +10,6 @@ export default function({cb__delete, classes}) {
     >
       <FontAwesomeIcon icon={faTimes} />
     </a>
-  );
-};
+  )
+}
 

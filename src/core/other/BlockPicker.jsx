@@ -1,39 +1,39 @@
-import React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
-import PageDataContext from '../PageDataContext';
-import Utils from '../definitions/utils';
+import React from 'react'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faTimes} from '@fortawesome/free-solid-svg-icons'
+import PageDataContext from '../PageDataContext'
+import Utils from '../definitions/utils'
 
 
 export default class BlockPicker extends React.Component {
 
   constructor(props) {
-    super(props);
-    this.close = this.close.bind(this);
-    this.cb__select = this.cb__select.bind(this);
+    super(props)
+    this.close = this.close.bind(this)
+    this.cb__select = this.cb__select.bind(this)
   }
 
 
   close(ev) {
-    this.ctx.close_block_picker();
+    this.ctx.close_block_picker()
   }
 
 
   cb__select(ev) {
-    this.close();
-    this.ctx.add_item(ev.currentTarget.getAttribute('data-block-type'), this.props.block_index);
+    this.close()
+    this.ctx.add_item(ev.currentTarget.getAttribute('data-block-type'), this.props.block_index)
   }
 
 
   render() {
-    const blocks = this.props.blocks || { };
-    const block_group_keys = Object.keys(blocks);
+    const blocks = this.props.blocks || { }
+    const block_group_keys = Object.keys(blocks)
     const container  = this.props.iframe_container_info || {
       y:      0,
       height: 0,
-    };
-    const offset = (this.props.scroll_offset || 0) + container.y;
-    const outer_max_height = container.height;
+    }
+    const offset = (this.props.scroll_offset || 0) + container.y
+    const outer_max_height = container.height
 
     return (
       <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
@@ -100,7 +100,7 @@ export default class BlockPicker extends React.Component {
           </div>
         </div>
       )}</PageDataContext.Consumer>
-    );
+    )
   }
 
 }

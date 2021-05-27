@@ -1,42 +1,42 @@
-import React from 'react';
-import * as DnD from 'react-beautiful-dnd';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
-import RecursiveBlockRenderer from './RecursiveBlockRenderer';
-import PageDataContext from './PageDataContext';
-import AddBlockBtn from './other/AddBlockBtn';
-import BlockDeleteBtn from './other/BlockDeleteBtn';
-import Utils from './definitions/utils';
-import styles from './definitions/styles';
+import React from 'react'
+import * as DnD from 'react-beautiful-dnd'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faTimes} from '@fortawesome/free-solid-svg-icons'
+import RecursiveBlockRenderer from './RecursiveBlockRenderer'
+import PageDataContext from './PageDataContext'
+import AddBlockBtn from './other/AddBlockBtn'
+import BlockDeleteBtn from './other/BlockDeleteBtn'
+import Utils from './definitions/utils'
+import styles from './definitions/styles'
 
 
 export default class Block extends React.Component {
 
   constructor(props) {
-    super(props);
-    this.drag_styles = { };
+    super(props)
+    this.drag_styles = { }
   }
 
 
   get_drag_styles(provided, snapshot) {
-    const custom_styles = snapshot.isDragging ? this.drag_styles : { };
+    const custom_styles = snapshot.isDragging ? this.drag_styles : { }
     return {
       ...custom_styles,
       ...provided.draggableProps.style,
-    };
+    }
   }
 
 
   render() {
-    const data_item         = this.props.data_item;
-    const index             = this.props.index;
-    const cb__delete        = this.props.cb__delete;
-    const block_numbers     = this.props.block_numbers;
-    const Draggable         = this.props.draggable_component          || DnD.Draggable;
-    const ContextConsumer   = this.props.consumer_component           || PageDataContext.Consumer;
-    const RecursiveRenderer = this.props.recursive_renderer_component || RecursiveBlockRenderer;
-    const draggable_key     = `block-${data_item.__uid}`;
-    let block;
+    const data_item         = this.props.data_item
+    const index             = this.props.index
+    const cb__delete        = this.props.cb__delete
+    const block_numbers     = this.props.block_numbers
+    const Draggable         = this.props.draggable_component          || DnD.Draggable
+    const ContextConsumer   = this.props.consumer_component           || PageDataContext.Consumer
+    const RecursiveRenderer = this.props.recursive_renderer_component || RecursiveBlockRenderer
+    const draggable_key     = `block-${data_item.__uid}`
+    let block
 
     return (
       <Draggable key={draggable_key} draggableId={draggable_key} index={index} type="block">{(prov, snap) => (
@@ -84,7 +84,7 @@ export default class Block extends React.Component {
 
         </div>
       )}</Draggable>
-    );
+    )
   }
 
 }

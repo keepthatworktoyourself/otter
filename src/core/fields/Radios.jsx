@@ -1,51 +1,51 @@
-import React from 'react';
-import PageDataContext from '../PageDataContext';
-import FieldLabel from '../other/FieldLabel';
-import ClearSelectionBtn from '../other/ClearSelectionBtn';
-import Utils from '../definitions/utils';
-import styles from '../definitions/styles';
+import React from 'react'
+import PageDataContext from '../PageDataContext'
+import FieldLabel from '../other/FieldLabel'
+import ClearSelectionBtn from '../other/ClearSelectionBtn'
+import Utils from '../definitions/utils'
+import styles from '../definitions/styles'
 
 
 export default class Radios extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.cb__click = this.cb__click.bind(this);
-    this.cb__clear = this.cb__clear.bind(this);
+    this.cb__click = this.cb__click.bind(this)
+    this.cb__clear = this.cb__clear.bind(this)
   }
 
 
   cb__click(ev) {
-    const input = ev.currentTarget.querySelector('input');
-    this.props.containing_data_item[this.props.field_def.name] = input.value;
-    this.setState({});
-    this.ctx.value_updated();
-    this.ctx.should_redraw();   // For conditional rendering
+    const input = ev.currentTarget.querySelector('input')
+    this.props.containing_data_item[this.props.field_def.name] = input.value
+    this.setState({})
+    this.ctx.value_updated()
+    this.ctx.should_redraw()   // For conditional rendering
   }
 
 
   cb__clear(ev) {
-    delete this.props.containing_data_item[this.props.field_def.name];
-    this.setState({});
-    this.ctx.value_updated();
-    this.ctx.should_redraw();   // For conditional rendering
+    delete this.props.containing_data_item[this.props.field_def.name]
+    this.setState({})
+    this.ctx.value_updated()
+    this.ctx.should_redraw()   // For conditional rendering
   }
 
 
   render() {
-    const field_def            = this.props.field_def;
-    const containing_data_item = this.props.containing_data_item;
-    const is_top_level         = this.props.is_top_level;
-    const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
-    const uid                  = `${containing_data_item.__uid}-${field_def.name}`;
-    const input_name           = `radios-${uid}`;
-    const value                = containing_data_item[field_def.name] || '';
-    const label                = field_def.description || Utils.humanify_str(field_def.name);
+    const field_def            = this.props.field_def
+    const containing_data_item = this.props.containing_data_item
+    const is_top_level         = this.props.is_top_level
+    const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer
+    const uid                  = `${containing_data_item.__uid}-${field_def.name}`
+    const input_name           = `radios-${uid}`
+    const value                = containing_data_item[field_def.name] || ''
+    const label                = field_def.description || Utils.humanify_str(field_def.name)
 
-    const opts_raw = field_def.options || { };
-    const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { };
-    const opt_keys = Object.keys(opts);
+    const opts_raw = field_def.options || { }
+    const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
+    const opt_keys = Object.keys(opts)
 
     const btn_styles = (selected, last) => `
       inline-block
@@ -54,7 +54,7 @@ export default class Radios extends React.Component {
       ${selected ? 'text-gray-50' : ''}
       ${selected ? 'font-semibold' : ''}
       ${styles.button_pad__sm}
-    `;
+    `
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
@@ -70,10 +70,10 @@ export default class Radios extends React.Component {
             <div className={`inline-block md:block ${styles.control_border} ${styles.button} overflow-hidden mr-3`}>
               {opt_keys.length === 0 && `[Radio field has no options!]`}
               {opt_keys.map((opt, i) => {
-                const input_id = `${input_name}--${i}`;
-                const selected = opt === value;
-                const sel = { checked: selected };
-                const last = i === opt_keys.length - 1;
+                const input_id = `${input_name}--${i}`
+                const selected = opt === value
+                const sel = { checked: selected }
+                const last = i === opt_keys.length - 1
 
                 return (
                   <a className={`${btn_styles(selected, last)} mb-0`}
@@ -86,7 +86,7 @@ export default class Radios extends React.Component {
                     <input type="radio" readOnly name={input_name} id={input_id} {...sel}
                            value={opt} className="hidden" />
                   </a>
-                );
+                )
               })}
             </div>
 
@@ -95,7 +95,7 @@ export default class Radios extends React.Component {
           </div>
         </div>
       )}</ContextConsumer>
-    );
+    )
   }
 }
 

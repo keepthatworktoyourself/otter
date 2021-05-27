@@ -1,4 +1,4 @@
-import Otter from '..';
+import Otter from '..'
 
 
 const test_data = [
@@ -19,7 +19,7 @@ const test_data = [
       { __type: 'OneMoreContentItem' },
     ],
   },
-];
+]
 
 
 const test_data__block_with_invalid_field_type = [
@@ -27,18 +27,18 @@ const test_data__block_with_invalid_field_type = [
     __type: 'BlockWithInvalidFieldType',
     text:   'Hello',
   },
-];
+]
 
 
 function get_test_data() {
-  return Otter.Utils.copy(test_data);
+  return Otter.Utils.copy(test_data)
 }
 
 
 get_test_data.with_invalid_field_type = function() {
-  return Otter.Utils.copy(test_data__block_with_invalid_field_type);
-};
+  return Otter.Utils.copy(test_data__block_with_invalid_field_type)
+}
 
 
-export default get_test_data;
+export default get_test_data
 

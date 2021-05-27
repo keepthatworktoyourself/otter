@@ -1,6 +1,6 @@
-import React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
+import React from 'react'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faTimes} from '@fortawesome/free-solid-svg-icons'
 
 export default function({cb__clear}) {
   return (
@@ -9,6 +9,6 @@ export default function({cb__clear}) {
         <FontAwesomeIcon icon={faTimes} />
       </a>
     </div>
-  );
-};
+  )
+}
 

@@ -1,7 +1,7 @@
 const Save = {
   OnInput: 'OnInput',
   OnClick: 'OnClick',
-};
+}
 
-export default Save;
+export default Save
 

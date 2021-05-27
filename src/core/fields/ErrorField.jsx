@@ -1,5 +1,5 @@
-import React from 'react';
-import FieldLabel from '../other/FieldLabel';
+import React from 'react'
+import FieldLabel from '../other/FieldLabel'
 import styles from '../definitions/styles'
 
 export default function ErrorField(props) {
@@ -8,6 +8,6 @@ export default function ErrorField(props) {
       <FieldLabel label='Error' is_top_level={props.__is_top_level} />
       <p>{props.text}</p>
     </div>
-  );
-};
+  )
+}
 

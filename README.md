@@ -46,7 +46,7 @@ const my_delegate = {
   block_toggled() {
     // update container height, perhaps
   },
-};
+}
 ```
 
 
@@ -90,7 +90,7 @@ const blocks = [
   <Block>,
   <Block>,
   ...
-];
+]
 ```
 
 ```js
@@ -104,7 +104,7 @@ const blocks = {
     name: 'Media blocks',
     blocks: [ <Block>, <Block>, ... ],
   },
-};
+}
 ```
 
 Otter uses a different block picker depending on whether simple or grouped blocks are used. Grouped blocks can provide a much better user experience if your editor uses many types of blocks:

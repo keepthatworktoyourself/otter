@@ -1,18 +1,18 @@
-import TextArea   from './TextArea';
-import TextInput  from './TextInput';
-import TextEditor from './TextEditor';
-import Bool       from './Bool';
-import Radios     from './Radios';
-import Select     from './Select';
-import WPMedia    from './WPMedia';
-import ErrorField from './ErrorField';
+import TextArea   from './TextArea'
+import TextInput  from './TextInput'
+import TextEditor from './TextEditor'
+import Bool       from './Bool'
+import Radios     from './Radios'
+import Select     from './Select'
+import WPMedia    from './WPMedia'
+import ErrorField from './ErrorField'
 
 function mk_field(name, description, type) {
   return {
     name:        name,
     description: description || null,
     type:        type,
-  };
+  }
 }
 
 
@@ -41,7 +41,7 @@ const fields = {
     WPMedia,
     ErrorField,
   },
-};
+}
 
-export default fields;
+export default fields
 

@@ -1,69 +1,69 @@
-import React from 'react';
-import PageDataContext from '../PageDataContext';
-import FieldLabel from '../other/FieldLabel';
-import ClearSelectionBtn from '../other/ClearSelectionBtn';
-import Utils from '../definitions/utils';
-import styles from '../definitions/styles';
+import React from 'react'
+import PageDataContext from '../PageDataContext'
+import FieldLabel from '../other/FieldLabel'
+import ClearSelectionBtn from '../other/ClearSelectionBtn'
+import Utils from '../definitions/utils'
+import styles from '../definitions/styles'
 
 
 export default class WPMedia extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.cb__click = this.cb__click.bind(this);
-    this.cb__clear = this.cb__clear.bind(this);
+    this.cb__click = this.cb__click.bind(this)
+    this.cb__clear = this.cb__clear.bind(this)
   }
 
 
   image_selection__bind(ctx, containing_data_item, field_def) {
     function cb(ev) {
-      const proceed = ev.data && ev.data['otter--set-wp-media-item'];
+      const proceed = ev.data && ev.data['otter--set-wp-media-item']
       if (proceed) {
-        ev.stopPropagation();
+        ev.stopPropagation()
 
-        containing_data_item[field_def.name] = ev.data['otter--set-wp-media-item'];
-        ctx.value_updated();
-        ctx.should_redraw();
+        containing_data_item[field_def.name] = ev.data['otter--set-wp-media-item']
+        ctx.value_updated()
+        ctx.should_redraw()
 
-        window.removeEventListener('message', cb);
+        window.removeEventListener('message', cb)
       }
     }
 
-    window.addEventListener('message', cb);
+    window.addEventListener('message', cb)
   }
 
 
   open_media_browser(field_def) {
     window.parent && window.parent.postMessage({
       'otter--get-wp-media-item': field_def.media_types || [],
-    }, '*');
+    }, '*')
   }
 
 
   cb__click(ev) {
-    this.image_selection__bind(this.ctx, this.props.containing_data_item, this.props.field_def);
-    this.open_media_browser(this.props.field_def);
+    this.image_selection__bind(this.ctx, this.props.containing_data_item, this.props.field_def)
+    this.open_media_browser(this.props.field_def)
   }
 
 
   cb__clear() {
-    this.props.containing_data_item[this.props.field_def.name] = null;
-    this.ctx.value_updated();
-    this.ctx.should_redraw();
+    this.props.containing_data_item[this.props.field_def.name] = null
+    this.ctx.value_updated()
+    this.ctx.should_redraw()
   }
 
 
   render() {
-    const field_def            = this.props.field_def;
-    const containing_data_item = this.props.containing_data_item;
-    const is_top_level         = this.props.is_top_level;
-    const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
+    const field_def            = this.props.field_def
+    const containing_data_item = this.props.containing_data_item
+    const is_top_level         = this.props.is_top_level
+    const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer
     const value                = containing_data_item[field_def.name] || {
       url: 'https://placekitten.com/1000/100'
-    };
-    const label                = field_def.description || Utils.humanify_str(field_def.name);
-    const file_name            = value && value.url.replace(/^.+\//, '');
+    }
+    const label                = field_def.description || Utils.humanify_str(field_def.name)
+    const file_name            = value && value.url.replace(/^.+\//, '')
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
@@ -103,7 +103,7 @@ export default class WPMedia extends React.Component {
           </div>
         </div>
       )}</ContextConsumer>
-    );
+    )
   }
 }
 

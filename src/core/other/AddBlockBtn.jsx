@@ -1,47 +1,47 @@
-import React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPlus} from '@fortawesome/free-solid-svg-icons';
-import PageDataContext from '../PageDataContext';
-import Utils from '../definitions/utils';
-import styles from '../definitions/styles';
+import React from 'react'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faPlus} from '@fortawesome/free-solid-svg-icons'
+import PageDataContext from '../PageDataContext'
+import Utils from '../definitions/utils'
+import styles from '../definitions/styles'
 
 
 export default class AddBlockBtn extends React.Component {
 
   constructor(props) {
-    super(props);
-    this.state = { open: false };
-    this.cb__toggle = this.cb__toggle.bind(this);
-    this.cb__select = this.cb__select.bind(this);
+    super(props)
+    this.state = { open: false }
+    this.cb__toggle = this.cb__toggle.bind(this)
+    this.cb__select = this.cb__select.bind(this)
   }
 
 
   cb__toggle() {
     if (this.is_flat) {
-      this.setState({ open: !this.state.open });
+      this.setState({ open: !this.state.open })
     }
     else {
-      this.ctx.open_block_picker(this.props.index);
+      this.ctx.open_block_picker(this.props.index)
     }
   }
 
 
   cb__select(ev) {
-    this.setState({ open: false });
+    this.setState({ open: false })
 
-    const block_type = ev.currentTarget.getAttribute('data-block-type');
-    this.ctx.add_item(block_type, this.props.index);
+    const block_type = ev.currentTarget.getAttribute('data-block-type')
+    this.ctx.add_item(block_type, this.props.index)
   }
 
 
   render() {
-    const blocks           = this.props.blocks || [ ];
-    const active           = this.state.open ? 'is-active' : '';
-    const popup_dir        = this.props.popup_direction || 'down';
-    const suggest          = this.props.suggest;
-    const ContextConsumer  = this.props.consumer_component || PageDataContext.Consumer;
-    this.is_flat         = Utils.blocks_are_simple(blocks);
-    const displayed_blocks = this.is_flat && blocks.filter(b => b && b.hidden !== true);
+    const blocks           = this.props.blocks || [ ]
+    const active           = this.state.open ? 'is-active' : ''
+    const popup_dir        = this.props.popup_direction || 'down'
+    const suggest          = this.props.suggest
+    const ContextConsumer  = this.props.consumer_component || PageDataContext.Consumer
+    this.is_flat         = Utils.blocks_are_simple(blocks)
+    const displayed_blocks = this.is_flat && blocks.filter(b => b && b.hidden !== true)
 
     const btn_txt = (
       <span>
@@ -52,7 +52,7 @@ export default class AddBlockBtn extends React.Component {
         ) : ''}
         <FontAwesomeIcon icon={faPlus} />
       </span>
-    );
+    )
 
     const btn = (
       <button className={`${styles.button} ${styles.button_pad} ${styles.control_bg} ${styles.control_border} ${styles.control_border__interactive}`}
@@ -60,7 +60,7 @@ export default class AddBlockBtn extends React.Component {
       >
         {btn_txt}
       </button>
-    );
+    )
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
@@ -103,7 +103,7 @@ export default class AddBlockBtn extends React.Component {
 
         </div>
       )}</ContextConsumer>
-    );
+    )
   }
 
 }

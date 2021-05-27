@@ -1,50 +1,50 @@
-import React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
-import PageDataContext from '../PageDataContext';
-import FieldLabel from '../other/FieldLabel';
-import ClearSelectionBtn from '../other/ClearSelectionBtn';
-import Utils from '../definitions/utils';
-import styles from '../definitions/styles';
+import React from 'react'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faTimes} from '@fortawesome/free-solid-svg-icons'
+import PageDataContext from '../PageDataContext'
+import FieldLabel from '../other/FieldLabel'
+import ClearSelectionBtn from '../other/ClearSelectionBtn'
+import Utils from '../definitions/utils'
+import styles from '../definitions/styles'
 
 
 export default class Select extends React.Component {
 
   constructor(props) {
-    super(props);
-    this.cb__clear = this.cb__clear.bind(this);
-    this.cb__change = this.cb__change.bind(this);
+    super(props)
+    this.cb__clear = this.cb__clear.bind(this)
+    this.cb__change = this.cb__change.bind(this)
   }
 
 
   cb__clear() {
-    this.props.containing_data_item[this.props.field_def.name] = null;
-    this.setState({});
-    this.ctx.value_updated();
-    this.ctx.should_redraw();   // For conditional rendering
+    this.props.containing_data_item[this.props.field_def.name] = null
+    this.setState({})
+    this.ctx.value_updated()
+    this.ctx.should_redraw()   // For conditional rendering
   }
 
 
   cb__change(ev) {
-    this.props.containing_data_item[this.props.field_def.name] = ev.target.value;
-    this.setState({});
-    this.ctx.value_updated();
-    this.ctx.should_redraw();   // For conditional rendering
+    this.props.containing_data_item[this.props.field_def.name] = ev.target.value
+    this.setState({})
+    this.ctx.value_updated()
+    this.ctx.should_redraw()   // For conditional rendering
   }
 
 
   render() {
-    const field_def            = this.props.field_def;
-    const containing_data_item = this.props.containing_data_item;
-    const is_top_level         = this.props.is_top_level;
-    const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
-    const uid                  = `${containing_data_item.__uid}-${field_def.name}`;
-    const value                = containing_data_item[field_def.name];
-    const label                = field_def.description || Utils.humanify_str(field_def.name);
+    const field_def            = this.props.field_def
+    const containing_data_item = this.props.containing_data_item
+    const is_top_level         = this.props.is_top_level
+    const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer
+    const uid                  = `${containing_data_item.__uid}-${field_def.name}`
+    const value                = containing_data_item[field_def.name]
+    const label                = field_def.description || Utils.humanify_str(field_def.name)
 
-    const opts_raw = field_def.options || { };
-    const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { };
-    const opt_keys = Object.keys(opts);
+    const opts_raw = field_def.options || { }
+    const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
+    const opt_keys = Object.keys(opts)
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
@@ -83,7 +83,7 @@ export default class Select extends React.Component {
           </div>
         </div>
       )}</ContextConsumer>
-    );
+    )
   }
 }
 

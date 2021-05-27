@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Otter from '../src/index';
-import '../src/css';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Otter from '../src/index'
+import '../src/css'
 
 
 // Define blocks
@@ -21,7 +21,7 @@ const header_block = {
       },
     },
   ],
-};
+}
 
 const text_block = {
   type: 'Text',
@@ -52,7 +52,7 @@ const text_block = {
       },
     },
   ],
-};
+}
 
 const html_block = {
   type: 'HTML',
@@ -65,7 +65,7 @@ const html_block = {
       mono:        true,
     },
   ],
-};
+}
 
 const block_with_nested_block = {
   type: 'NestedBlockDemo',
@@ -83,7 +83,7 @@ const block_with_nested_block = {
       optional:          true,
     },
   ],
-};
+}
 
 const block_with_repeater = {
   type: 'RepeaterDemo',
@@ -99,7 +99,7 @@ const block_with_repeater = {
       ],
     },
   ],
-};
+}
 
 
 // Blocks can be a flat array or nested in groups
@@ -109,7 +109,7 @@ const blocks__flat = [
   html_block,
   block_with_nested_block,
   block_with_repeater,
-];
+]
 
 const blocks__nested = {
   simple: {
@@ -120,7 +120,7 @@ const blocks__nested = {
     name:   'Content',
     blocks: [ block_with_nested_block, block_with_repeater ],
   },
-};
+}
 
 
 // load
@@ -145,7 +145,7 @@ function load(post_id) {
         align:   'center',
       },
     ],
-  });
+  })
 }
 
 
@@ -154,11 +154,11 @@ function load(post_id) {
 
 function cb_load(data) {
   if (!data) {
-    throw Error('cb_load called but data object missing');
+    throw Error('cb_load called but data object missing')
   }
 
-  state.load_state = Otter.State.Loaded;
-  state.data = data || [ ];
+  state.load_state = Otter.State.Loaded
+  state.data = data || [ ]
 }
 
 
@@ -167,41 +167,41 @@ function cb_load(data) {
 
 const delegate = {
   save(data) {
-    console.log('save()', data);
+    console.log('save()', data)
   },
   block_toggled() {
-    console.log('block toggled');
+    console.log('block toggled')
   },
-};
+}
 
 
 const state = {
   load_state: null,
   data: [ ],
   post_parameter_supplied: true,   // Toggle to simulate error
-};
+}
 
 
 if (!state.post_parameter_supplied) {
-  state.load_state = Otter.State.Error;
-  render();
+  state.load_state = Otter.State.Error
+  render()
 }
 else {
-  state.load_state = Otter.State.Loading;
-  render();
+  state.load_state = Otter.State.Loading
+  render()
   load(state.post_id)
     .then(response => response.json())
     .then(cb_load)
     .then(data => {
-      state.load_state = Otter.State.Loaded;
-      return data;
+      state.load_state = Otter.State.Loaded
+      return data
     })
     .then(render)
     .catch(err => {
-      console.log(err);
-      state.load_state = Otter.State.Error;
-      render();
-    });
+      console.log(err)
+      state.load_state = Otter.State.Error
+      render()
+    })
 }
 
 
@@ -214,6 +214,6 @@ function render() {
                   save={Otter.Save.OnInput}
                   block_numbers={true} />,
     document.getElementById('otter-container')
-  );
+  )
 }
 
