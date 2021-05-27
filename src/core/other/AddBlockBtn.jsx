@@ -17,7 +17,7 @@ export default class AddBlockBtn extends React.Component {
 
 
   cb__toggle() {
-    if (this.is_simple) {
+    if (this.is_flat) {
       this.setState({ open: !this.state.open });
     }
     else {
@@ -40,8 +40,8 @@ export default class AddBlockBtn extends React.Component {
     const popup_dir        = this.props.popup_direction || 'down';
     const suggest          = this.props.suggest;
     const ContextConsumer  = this.props.consumer_component || PageDataContext.Consumer;
-    this.is_simple         = Utils.blocks_are_simple(blocks);
-    const displayed_blocks = this.is_simple && blocks.filter(b => b && b.hidden !== true);
+    this.is_flat         = Utils.blocks_are_simple(blocks);
+    const displayed_blocks = this.is_flat && blocks.filter(b => b && b.hidden !== true);
 
     const btn_txt = (
       <span>
@@ -54,35 +54,40 @@ export default class AddBlockBtn extends React.Component {
       </span>
     );
 
+    const btn = (
+      <button className={`${styles.button} ${styles.button_pad} ${styles.control_bg} ${styles.control_border} ${styles.control_border__interactive}`}
+              onClick={this.cb__toggle}
+      >
+        {btn_txt}
+      </button>
+    );
+
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
         <div>
 
-          {this.is_simple && (
+          {this.is_flat && (
             <div className="add-block-btn relative">
-              <button className={`${styles.dropdown_button} ${styles.button_dark_border}`}
-                      onClick={this.cb__toggle}
-              >
-                {btn_txt}
-              </button>
+              {btn}
 
               {this.state.open && (
+
                 <div className={`
                        absolute
-                       border ${styles.button_dark_border_static}
-                       rounded
+                       rounded-lg overflow-hidden
                        left-1/2
-                       ${popup_dir === 'down' ? 'top-7' : ''}
-                       ${popup_dir === 'up' ? 'bottom-7' : ''}
+                       ${styles.control_border}
+                       ${popup_dir === 'down' ? 'top-9' : ''}
+                       ${popup_dir === 'up' ? 'bottom-9' : ''}
                      `}
                      style={{minWidth: '10rem', transform: 'translateX(-50%)'}}
                 >
-
                   {displayed_blocks.map((block, i) => (
                     <a className={`
                          block p-2
-                         ${styles.button_bg} ${styles.button_bg_hover} ${styles.button_bg_active}
-                         ${i < displayed_blocks.length - 1 ? 'border-b' : ''} border-gray-500
+                         cursor-pointer
+                         ${styles.control_bg} hover:bg-gray-100 active:bg-gray-200
+                         ${i < displayed_blocks.length - 1 ? 'border-b' : ''}
                        `}
                        onClick={this.cb__select} key={i} data-block-type={block.type}
                     >
@@ -94,13 +99,7 @@ export default class AddBlockBtn extends React.Component {
             </div>
           )}
 
-          {!this.is_simple && (
-            <button className={`${styles.dropdown_button} ${styles.button_dark_border}`}
-                    onClick={this.cb__toggle}
-            >
-              {btn_txt}
-            </button>
-          )}
+          {!this.is_flat && btn}
 
         </div>
       )}</ContextConsumer>

@@ -10,7 +10,7 @@ export default class BlockPicker extends React.Component {
   constructor(props) {
     super(props);
     this.close = this.close.bind(this);
-    this.cb_select = this.cb_select.bind(this);
+    this.cb__select = this.cb__select.bind(this);
   }
 
 
@@ -19,7 +19,7 @@ export default class BlockPicker extends React.Component {
   }
 
 
-  cb_select(ev) {
+  cb__select(ev) {
     this.close();
     this.ctx.add_item(ev.currentTarget.getAttribute('data-block-type'), this.props.block_index);
   }
@@ -73,14 +73,14 @@ export default class BlockPicker extends React.Component {
                               </h3>
                             </div>
 
-                            <figure className="relative w-full overflow-hidden" style={{paddingTop: '60%'}}>
+                            <figure className="relative w-full overflow-hidden bg-gray-300" style={{paddingTop: '60%'}}>
                               <img className="absolute inset-0"
-                                   src={block.thumbnail || `https://placekitten.com/400/329`} />
+                                   src={block.thumbnail} />
                             </figure>
 
                             <footer className="p-4 text-xs text-center">
                               <a className="cursor-pointer text-blue-500 hover:text-blue-300 active:text-blue-800"
-                                 onClick={this.cb_select}
+                                 onClick={this.cb__select}
                                  data-block-type={block.type}
                               >
                                 Insert

@@ -50,7 +50,7 @@ export default class TextEditor extends React.Component {
 
     this.uid = Utils.uid();
     this.toolbar = `texteditor-toolbar-${this.uid}`;
-    this.cb_change = this.cb_change.bind(this);
+    this.cb__change = this.cb__change.bind(this);
     this.default_headings = [1, 2];
     this.modules = {
       toolbar: {
@@ -71,7 +71,7 @@ export default class TextEditor extends React.Component {
   }
 
 
-  cb_change(html, _, event_origin) {
+  cb__change(html, _, event_origin) {
     this.props.containing_data_item[this.props.field_def.name] = html;
     if (event_origin === 'user') {
       this.ctx.value_updated();
@@ -138,7 +138,7 @@ export default class TextEditor extends React.Component {
           </div>
 
           <div style={{ backgroundColor: 'white' }}>
-            <QuillComponent defaultValue={value} onChange={this.cb_change} modules={this.modules} theme="snow"
+            <QuillComponent defaultValue={value} onChange={this.cb__change} modules={this.modules} theme="snow"
                             parent_uid={this.uid} />
           </div>
 

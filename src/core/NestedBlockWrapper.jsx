@@ -88,7 +88,7 @@ export default class NestedBlockWrapper extends React.Component {
 
           {is_enabled && !this.state.collapsed && (
             <div className="pb-2">
-              <div className={`${styles.nested_block(1)} ${styles.nested_block_border} p-4`}>
+              <div className={`${styles.nested_block} ${styles.control_bg} p-4`}>
                 {this.props.children}
               </div>
             </div>

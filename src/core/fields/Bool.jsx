@@ -9,11 +9,11 @@ export default class Bool extends React.Component {
 
   constructor(props) {
     super(props);
-    this.cb_click = this.cb_click.bind(this);
+    this.cb__click = this.cb__click.bind(this);
   }
 
 
-  cb_click(ev) {
+  cb__click(ev) {
     if (ev.currentTarget.getAttribute('data-value') === 'yes') {
       this.props.containing_data_item[this.props.field_def.name] = true;
     }
@@ -37,13 +37,14 @@ export default class Bool extends React.Component {
     const value                = containing_data_item[field_def.name];
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
 
-    const btn_styles = (selected) => `
-      inline-block
-      border-r
-      ${styles.button_bg_hover} ${styles.button_bg_active}
-      ${styles.button_pad_sm}
-      ${selected && 'bg-gray-400'}
-    `;
+  const btn_styles = (selected, last) => `
+    inline-block
+    ${!last ? 'border-r' : ''}
+    ${selected ? 'bg-gray-600' : styles.control_bg}
+    ${selected ? 'text-gray-50' : ''}
+    ${selected ? 'font-semibold' : ''}
+    ${styles.button_pad__sm}
+  `;
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
@@ -56,17 +57,17 @@ export default class Bool extends React.Component {
                           min_width={true} />
             </div>
 
-            <div className={`inline-block md:block ${styles.button_bg} ${styles.button} ${styles.button_dark_border_static} overflow-hidden`}>
+            <div className={`inline-block md:block ${styles.control_border} ${styles.button} overflow-hidden`}>
               <a className={btn_styles(value)}
                  data-value="yes"
-                 onClick={this.cb_click}
+                 onClick={this.cb__click}
               >
                 {yes_label}
               </a>
 
-              <a className={btn_styles(!value)}
+              <a className={btn_styles(!value, true)}
                  data-value="no"
-                 onClick={this.cb_click}
+                 onClick={this.cb__click}
               >
                 {no_label}
               </a>

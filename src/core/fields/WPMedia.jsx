@@ -1,9 +1,9 @@
 import React from 'react';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
+import ClearSelectionBtn from '../other/ClearSelectionBtn';
 import Utils from '../definitions/utils';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
+import styles from '../definitions/styles';
 
 
 export default class WPMedia extends React.Component {
@@ -11,8 +11,8 @@ export default class WPMedia extends React.Component {
   constructor(props) {
     super(props);
 
-    this.cb_click = this.cb_click.bind(this);
-    this.cb_clear = this.cb_clear.bind(this);
+    this.cb__click = this.cb__click.bind(this);
+    this.cb__clear = this.cb__clear.bind(this);
   }
 
 
@@ -41,13 +41,13 @@ export default class WPMedia extends React.Component {
   }
 
 
-  cb_click(ev) {
+  cb__click(ev) {
     this.image_selection__bind(this.ctx, this.props.containing_data_item, this.props.field_def);
     this.open_media_browser(this.props.field_def);
   }
 
 
-  cb_clear() {
+  cb__clear() {
     this.props.containing_data_item[this.props.field_def.name] = null;
     this.ctx.value_updated();
     this.ctx.should_redraw();
@@ -59,55 +59,46 @@ export default class WPMedia extends React.Component {
     const containing_data_item = this.props.containing_data_item;
     const is_top_level         = this.props.is_top_level;
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer;
-    const value                = containing_data_item[field_def.name];
+    const value                = containing_data_item[field_def.name] || {
+      url: 'https://placekitten.com/1000/100'
+    };
     const label                = field_def.description || Utils.humanify_str(field_def.name);
+    const file_name            = value && value.url.replace(/^.+\//, '');
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
-        <div className="field">
-          <div style={{ paddingRight: '7rem' }}>
+        <div className={`md:flex ${styles.field}`}>
+          <FieldLabel label={label} is_top_level={is_top_level} min_width={true} />
 
-            <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
+          <div className="flex justify-start items-start">
+            <div className="mr-4">
+              <figure className="block relative w-24 h-24 mb-1 text-center border">
+                {value && (
+                  <img src={value.thumbnail || value.url}
+                       className="object-contain h-full w-full"
+                       alt="WPMedia image preview" />
+                )}
 
-              <div className="level-item flex-start">
-                <FieldLabel label={label} is_top_level={is_top_level} />
-              </div>
+                {!value && (
+                  <p className="font-medium text-gray-300">Nothing selected</p>
+                )}
+              </figure>
+              {file_name &&
+                <p className="ml-1 text-gray-500">
+                  {file_name}
+                </p>
+              }
+            </div>
 
-              <div className="level-item flex-start">
-                <div className="level is-mobile" style={{ alignItems: 'flex-start' }}>
-                  {value && (
-                    <div className="level-item flex-start">
-                        <div style={{
-                               display: 'block',
-                               minWidth: '3.5rem',
-                               width: '3.5rem',
-                               height: '3.5rem',
-                               textAlign: 'center',
-                               border: '1px solid rgba(0,0,0,0.1)'
-                             }}
-                             className="has-background-light">
-                          <img src={value.thumbnail || value.url} alt="WPMedia image preview"
-                               style={{ maxWidth: '100%', maxHeight: '100%' }} />
-                        </div>
-                    </div>
-                  )}
+            <div className="flex justify-start items-center">
+              <a className={`inline-block ${styles.button} ${styles.button_pad__sm} ${styles.control_bg} ${styles.control_border} ${styles.control_border__interactive} mr-3`}
+                 onClick={this.cb__click}
+              >
+                Select
+              </a>
 
-                  <div className="level-item flex-start">
-                    <a className="wpmedia-select-btn button is-small" onClick={this.cb_click}>Select</a>
-                  </div>
-
-                  {value && (
-                    <div className="level-item flex-start">
-                      <a className="wpmedia-clear-btn button is-rounded is-small is-light has-text-grey-light"
-                         onClick={this.cb_clear}>
-                        <FontAwesomeIcon icon={faTimes} />
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-            </div>{/* level */}
+              {value && <ClearSelectionBtn onClick={this.cb__clear} />}
+            </div>
 
           </div>
         </div>

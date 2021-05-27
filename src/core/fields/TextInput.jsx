@@ -9,11 +9,11 @@ export default class TextInput extends React.Component {
 
   constructor(props) {
     super(props);
-    this.cb_change = this.cb_change.bind(this);
+    this.cb__change = this.cb__change.bind(this);
   }
 
 
-  cb_change(ev) {
+  cb__change(ev) {
     this.props.containing_data_item[this.props.field_def.name] = ev.target.value;
     this.setState({});
     this.ctx.value_updated();
@@ -34,9 +34,14 @@ export default class TextInput extends React.Component {
         <div className={`${styles.field}`}>
           <FieldLabel label={label} is_top_level={is_top_level} />
 
-          <input type="text" className={`w-full bg-white ${styles.button_pad} rounded border border-gray-200`}
+          <input type="text" className={`
+                   w-full
+                   outline-none rounded
+                   ${styles.button_pad} ${styles.control_bg} ${styles.control_border}
+                   ${styles.control_border__focus}
+                 `}
                  value={value}
-                 onChange={this.cb_change} />
+                 onChange={this.cb__change} />
         </div>
       )}</ContextConsumer>
     );

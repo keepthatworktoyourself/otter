@@ -340,7 +340,7 @@ export default class Editor extends React.Component {
 
     return (
       <ContextProvider value={this.ctx}>
-        <div className="post-builder relative p-8 bg-gray-500">
+        <div className="post-builder relative p-8 bg-gray-600">
           {content__main}
 
           {show_block_picker && <BlockPicker blocks={blocks}

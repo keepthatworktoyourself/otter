@@ -178,19 +178,21 @@ export default class Repeater extends React.Component {
               <div className="relative">
 
                 <div className="">
-                  <button className={`${styles.dropdown_button} ${styles.button_dark_border}`}
+                  <button className={`${styles.button} ${styles.button_pad} ${styles.control_border} ${styles.control_border__interactive}`}
                           onClick={this.cb__add_btn}>
                     <span>Add item</span>
                   </button>
                 </div>
 
                 {multiple_types && this.state.show_dialogue && (
-                  <div className={`absolute border ${styles.button_dark_border_static} rounded mt-1 z-10`} style={{minWidth: '10rem'}}>
+                  <div className={`absolute rounded-lg mt-1 z-10 ${styles.control_border} overflow-hidden`}
+                       style={{minWidth: '10rem'}}
+                  >
                     {block_types__objects.map((block, i) => (
                       <a className={`
                            block p-2
-                           ${styles.button_bg} ${styles.button_bg_hover} ${styles.button_bg_active}
-                           ${i < block_types__objects.length - 1 ? 'border-b' : ''} border-gray-500
+                           ${styles.control_bg} hover:bg-gray-100 active:bg-gray-200
+                           ${i < block_types__objects.length - 1 ? 'border-b' : ''}
                          `}
                          onClick={this.cb__add} key={i} data-nested_block-type={block.type}
                       >

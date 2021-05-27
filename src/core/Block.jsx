@@ -5,6 +5,7 @@ import {faTimes} from '@fortawesome/free-solid-svg-icons';
 import RecursiveBlockRenderer from './RecursiveBlockRenderer';
 import PageDataContext from './PageDataContext';
 import AddBlockBtn from './other/AddBlockBtn';
+import BlockDeleteBtn from './other/BlockDeleteBtn';
 import Utils from './definitions/utils';
 import styles from './definitions/styles';
 
@@ -39,20 +40,15 @@ export default class Block extends React.Component {
 
     return (
       <Draggable key={draggable_key} draggableId={draggable_key} index={index} type="block">{(prov, snap) => (
-        <div ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={this.get_drag_styles(prov, snap)}>
+        <div className="outline-none" ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} style={this.get_drag_styles(prov, snap)}>
 
           <ContextConsumer>{ctx => (this.ctx = ctx) && (
             <div className="c-block group relative pb-4" data-blocktype={data_item.__type}>
 
-              <div className={`p-4 ${styles.block_bg_color}`}>
+              <div className={`p-4 ${styles.control_bg}`}>
                 <div className="relative">
 
-                  <div className="absolute top-0 right-0">
-                    <a className={`block-delete-btn ${styles.button} ${styles.button_pad}`} onClick={ev => cb__delete(index)}>
-                      <span className="mr-2">Delete block</span>
-                      <FontAwesomeIcon icon={faTimes} />
-                    </a>
-                  </div>
+                  <BlockDeleteBtn cb__delete={(ev) => cb__delete(index)} classes="top-0 right-0" />
 
                   {(block = Utils.find_block(ctx.blocks, data_item.__type)) && (
                     <>

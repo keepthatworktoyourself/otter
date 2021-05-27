@@ -3,6 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
+import ClearSelectionBtn from '../other/ClearSelectionBtn';
 import Utils from '../definitions/utils';
 import styles from '../definitions/styles';
 
@@ -11,11 +12,20 @@ export default class Select extends React.Component {
 
   constructor(props) {
     super(props);
-    this.cb_change = this.cb_change.bind(this);
+    this.cb__clear = this.cb__clear.bind(this);
+    this.cb__change = this.cb__change.bind(this);
   }
 
 
-  cb_change(ev) {
+  cb__clear() {
+    this.props.containing_data_item[this.props.field_def.name] = null;
+    this.setState({});
+    this.ctx.value_updated();
+    this.ctx.should_redraw();   // For conditional rendering
+  }
+
+
+  cb__change(ev) {
     this.props.containing_data_item[this.props.field_def.name] = ev.target.value;
     this.setState({});
     this.ctx.value_updated();
@@ -47,8 +57,17 @@ export default class Select extends React.Component {
                           min_width={true} />
             </div>
 
-            <div className="select inline-block">
-              <select className={`${styles.dropdown_button} pr-7`} value={value || ''} onChange={this.cb_change}>
+            <div className="select inline-block mr-3">
+              <select className={`
+                        appearance-none
+                        outline-none
+                        ${styles.control_bg} ${styles.control_border} ${styles.button_pad__sm}
+                        ${styles.control_border__focus}
+                        pr-7
+                      `}
+                      value={value || ''}
+                      onChange={this.cb__change}
+              >
                 {opt_keys.length === 0 && `[Select field has no options!]`}
 
                 {opt_keys.length !== 0 && [
@@ -60,6 +79,7 @@ export default class Select extends React.Component {
               </select>
             </div>
 
+            <ClearSelectionBtn cb__clear={this.cb__clear} />
           </div>
         </div>
       )}</ContextConsumer>

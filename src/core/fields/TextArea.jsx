@@ -9,10 +9,10 @@ export default class TextArea extends React.Component {
 
   constructor(props) {
     super(props);
-    this.cb_change = this.cb_change.bind(this);
+    this.cb__change = this.cb__change.bind(this);
   }
 
-  cb_change(ev) {
+  cb__change(ev) {
     this.props.containing_data_item[this.props.field_def.name] = ev.target.value;
     this.setState({});
     this.ctx.value_updated();
@@ -34,9 +34,18 @@ export default class TextArea extends React.Component {
         <div className="field">
           <FieldLabel label={label} is_top_level={is_top_level} />
 
-          <textarea className={`w-full rounded border ${styles.button_dark_border_static} ${mono ? 'monospace': ''}`}
-                    style={mono ? { fontSize: '0.9em' } : {}}
-                    ref={this.textarea_ref} value={value || ''} onChange={this.cb_change} />
+          <textarea className={`
+                      w-full
+                      outline-none rounded
+                      ${styles.button_pad} ${styles.control_bg} ${styles.control_border}
+                      ${styles.control_border__focus}
+                      ${mono ? 'monospace': ''}
+                    `}
+                    style={{
+                      minHeight: '5rem',
+                      fontSize: mono ? '1.1em' : null,
+                    }}
+                    ref={this.textarea_ref} value={value || ''} onChange={this.cb__change} />
         </div>
       )}</ContextConsumer>
     );

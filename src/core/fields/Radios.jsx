@@ -1,8 +1,7 @@
 import React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
 import PageDataContext from '../PageDataContext';
 import FieldLabel from '../other/FieldLabel';
+import ClearSelectionBtn from '../other/ClearSelectionBtn';
 import Utils from '../definitions/utils';
 import styles from '../definitions/styles';
 
@@ -12,12 +11,12 @@ export default class Radios extends React.Component {
   constructor(props) {
     super(props);
 
-    this.cb_click = this.cb_click.bind(this);
-    this.cb_clear = this.cb_clear.bind(this);
+    this.cb__click = this.cb__click.bind(this);
+    this.cb__clear = this.cb__clear.bind(this);
   }
 
 
-  cb_click(ev) {
+  cb__click(ev) {
     const input = ev.currentTarget.querySelector('input');
     this.props.containing_data_item[this.props.field_def.name] = input.value;
     this.setState({});
@@ -26,7 +25,7 @@ export default class Radios extends React.Component {
   }
 
 
-  cb_clear(ev) {
+  cb__clear(ev) {
     delete this.props.containing_data_item[this.props.field_def.name];
     this.setState({});
     this.ctx.value_updated();
@@ -48,12 +47,13 @@ export default class Radios extends React.Component {
     const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { };
     const opt_keys = Object.keys(opts);
 
-    const btn_styles = (selected) => `
+    const btn_styles = (selected, last) => `
       inline-block
-      border-r
-      ${styles.button_bg_hover} ${styles.button_bg_active}
-      ${styles.button_pad_sm}
-      ${selected && 'bg-gray-400'}
+      ${!last ? 'border-r' : ''}
+      ${selected ? 'bg-gray-600' : styles.control_bg}
+      ${selected ? 'text-gray-50' : ''}
+      ${selected ? 'font-semibold' : ''}
+      ${styles.button_pad__sm}
     `;
 
     return (
@@ -67,17 +67,18 @@ export default class Radios extends React.Component {
                           min_width={true} />
             </div>
 
-            <div className={`{styles.button_bg} ${styles.button} ${styles.button_dark_border_static} overflow-hidden`}>
+            <div className={`inline-block md:block ${styles.control_border} ${styles.button} overflow-hidden mr-3`}>
               {opt_keys.length === 0 && `[Radio field has no options!]`}
               {opt_keys.map((opt, i) => {
                 const input_id = `${input_name}--${i}`;
                 const selected = opt === value;
                 const sel = { checked: selected };
+                const last = i === opt_keys.length - 1;
 
                 return (
-                  <a className={`${btn_styles(selected)} mb-0`}
+                  <a className={`${btn_styles(selected, last)} mb-0`}
                      data-value={opt}
-                     onClick={this.cb_click}
+                     onClick={this.cb__click}
                      key={input_id}
                   >
                     {opts[opt]}
@@ -89,13 +90,7 @@ export default class Radios extends React.Component {
               })}
             </div>
 
-            {opt_keys.length > 0 && (
-              <div className="inline-block md:block ml-3">
-                <a className="cursor-pointer text-gray-600 hover:text-gray-400" onClick={this.cb_clear}>
-                  <FontAwesomeIcon icon={faTimes} />
-                </a>
-              </div>
-            )}
+            {opt_keys.length > 0 && <ClearSelectionBtn cb__clear={this.cb__clear} />}
 
           </div>
         </div>
