@@ -26,7 +26,7 @@
     "tw": "ava -c 1 --watch src/test/*",
     "ts": "ava -c 1 --watch",
     "test": "npm run t",
-    "i": "rm -rf node_modules && npm install"
+    "i": "npm run clean && rm -rf node_modules && npm install"
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
@@ -60,8 +60,8 @@
     "react-toggle": "^4.1.1"
   },
   "peerDependencies": {
-    "react": "16.14.0",
-    "react-dom": "16.14.0"
+    "react": "*",
+    "react-dom": "*"
   },
   "ava": {
     "babel": true,

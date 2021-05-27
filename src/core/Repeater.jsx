@@ -185,7 +185,7 @@ export default class Repeater extends React.Component {
                 </div>
 
                 {multiple_types && this.state.show_dialogue && (
-                  <div className={`absolute border ${styles.button_dark_border_static} rounded mt-1`} style={{minWidth: '10rem'}}>
+                  <div className={`absolute border ${styles.button_dark_border_static} rounded mt-1 z-10`} style={{minWidth: '10rem'}}>
                     {block_types__objects.map((block, i) => (
                       <a className={`
                            block p-2

@@ -5,6 +5,7 @@ module.exports = {
       backgroundColor: ['active'],
       borderColor: ['active'],
       display: ['group-hover'],
+      textColor: ['active'],
     },
   },
   plugins: [ ],

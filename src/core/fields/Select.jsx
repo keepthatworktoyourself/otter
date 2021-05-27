@@ -47,7 +47,7 @@ export default class Select extends React.Component {
                           min_width={true} />
             </div>
 
-            <div className="select">
+            <div className="select inline-block">
               <select className={`${styles.dropdown_button} pr-7`} value={value || ''} onChange={this.cb_change}>
                 {opt_keys.length === 0 && `[Select field has no options!]`}
 

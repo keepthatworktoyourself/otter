@@ -59,15 +59,15 @@ export default class Radios extends React.Component {
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
         <div className={`${styles.field}`}>
-          <div className="md:flex items-center">
+          <div className="flex flex-wrap items-center">
 
-            <div className="mb-2 md:mb-0">
+            <div className="mb-2 md:mb-0 w-full md:w-auto">
               <FieldLabel label={label}
                           is_top_level={is_top_level}
                           min_width={true} />
             </div>
 
-            <div className={`${styles.button_bg} ${styles.button} ${styles.button_dark_border_static} overflow-hidden`}>
+            <div className={`{styles.button_bg} ${styles.button} ${styles.button_dark_border_static} overflow-hidden`}>
               {opt_keys.length === 0 && `[Radio field has no options!]`}
               {opt_keys.map((opt, i) => {
                 const input_id = `${input_name}--${i}`;
@@ -90,7 +90,7 @@ export default class Radios extends React.Component {
             </div>
 
             {opt_keys.length > 0 && (
-              <div className="ml-3">
+              <div className="inline-block md:block ml-3">
                 <a className="cursor-pointer text-gray-600 hover:text-gray-400" onClick={this.cb_clear}>
                   <FontAwesomeIcon icon={faTimes} />
                 </a>

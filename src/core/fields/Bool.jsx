@@ -56,7 +56,7 @@ export default class Bool extends React.Component {
                           min_width={true} />
             </div>
 
-            <div className={`${styles.button_bg} ${styles.button} ${styles.button_dark_border_static} overflow-hidden`}>
+            <div className={`inline-block md:block ${styles.button_bg} ${styles.button} ${styles.button_dark_border_static} overflow-hidden`}>
               <a className={btn_styles(value)}
                  data-value="yes"
                  onClick={this.cb_click}
