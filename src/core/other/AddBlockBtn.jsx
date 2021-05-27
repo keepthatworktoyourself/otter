@@ -28,7 +28,6 @@ export default class AddBlockBtn extends React.Component {
 
   cb__select(ev) {
     this.setState({ open: false })
-
     const block_type = ev.currentTarget.getAttribute('data-block-type')
     this.ctx.add_item(block_type, this.props.index)
   }
@@ -40,7 +39,7 @@ export default class AddBlockBtn extends React.Component {
     const popup_dir        = this.props.popup_direction || 'down'
     const suggest          = this.props.suggest
     const ContextConsumer  = this.props.consumer_component || PageDataContext.Consumer
-    this.is_flat         = Utils.blocks_are_simple(blocks)
+    this.is_flat           = Utils.blocks_are_simple(blocks)
     const displayed_blocks = this.is_flat && blocks.filter(b => b && b.hidden !== true)
 
     const btn_txt = (
@@ -71,8 +70,8 @@ export default class AddBlockBtn extends React.Component {
               {btn}
 
               {this.state.open && (
-
                 <div className={`
+                       add-block-btn-menu
                        absolute
                        rounded-lg overflow-hidden
                        left-1/2
@@ -84,6 +83,7 @@ export default class AddBlockBtn extends React.Component {
                 >
                   {displayed_blocks.map((block, i) => (
                     <a className={`
+                         add-block-btn-menu-item
                          block p-2
                          cursor-pointer
                          ${styles.control_bg} hover:bg-gray-100 active:bg-gray-200

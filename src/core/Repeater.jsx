@@ -185,11 +185,12 @@ export default class Repeater extends React.Component {
                 </div>
 
                 {multiple_types && this.state.show_dialogue && (
-                  <div className={`absolute rounded-lg mt-1 z-10 ${styles.control_border} overflow-hidden`}
+                  <div className={`repeater-add-menu absolute rounded-lg mt-1 z-10 ${styles.control_border} overflow-hidden`}
                        style={{minWidth: '10rem'}}
                   >
                     {block_types__objects.map((block, i) => (
                       <a className={`
+                           repeater-add-menu-item
                            block p-2
                            ${styles.control_bg} hover:bg-gray-100 active:bg-gray-200
                            ${i < block_types__objects.length - 1 ? 'border-b' : ''}

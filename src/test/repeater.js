@@ -124,14 +124,6 @@ test('Repeater: does not render Add btn if has max children', t => {
 })
 
 
-test('Repeater: Add btn renders dropdown item for each nested_block_types', t => {
-  const f = Otter.Utils.copy(test_blocks()[3].fields[0])
-  const wrapper = mk(f, test_data()[3], ctx())
-  const items = wrapper.find('.dropdown-item')
-  t.deepEqual(f.nested_block_types, items.map(item => item.prop('data-nested_block-type')))
-  t.is(wrapper.instance().cb__add, items.first().prop('onClick'))
-})
-
 
 const blocks__object_nested_block_types = [{
   type: 'MyBlock',
@@ -172,7 +164,9 @@ const data_item__object_nested_block_types = {
 test('Repeater: Add btn supports nested_block_types objects as well as strings', t => {
   const f = blocks__object_nested_block_types[0].fields[0]
   const wrapper = mk(f, data_item__object_nested_block_types, ctx({ blocks: blocks__object_nested_block_types }))
-  const items = wrapper.find('.dropdown-item')
+  wrapper.find('.repeater-add-btn button').prop('onClick')()
+  wrapper.update()
+  const items = wrapper.find('.repeater-add-menu-item')
   t.deepEqual(['AAA', 'BBB'], items.map(item => item.prop('data-nested_block-type')))
   t.is(wrapper.instance().cb__add, items.first().prop('onClick'))
 })
@@ -184,7 +178,6 @@ test('Repeater: Add btn when only 1 block type: immediately adds', t => {
   f.nested_block_types = [ 'AContentItem' ]
   const wrapper = mk(f, data_item, ctx())
   const add_btn = wrapper.find('.repeater-add-btn button')
-
   t.is(0, wrapper.find('[type="RepeaterItem"]').length)
 
   add_btn.prop('onClick')()
@@ -209,13 +202,23 @@ test('Repeater: on Add btn click, if >1 nested_block_type, open submenu', t => {
   const data_item = { __type: 'B4' }
   const wrapper = mk(test_blocks()[3].fields[0], data_item, ctx())
   const add_btn = wrapper.find('.repeater-add-btn button')
-
   t.is(0, wrapper.find('.dropdown.is-active').length)
 
   add_btn.prop('onClick')()
   wrapper.update()
   t.is(0, wrapper.find('[type="RepeaterItem"]').length)
-  t.is(1, wrapper.find('.dropdown.is-active').length)
+  t.is(1, wrapper.find('.repeater-add-menu').length)
+})
+
+
+test('Repeater: Add btn renders dropdown item for each nested_block_types', t => {
+  const f = Otter.Utils.copy(test_blocks()[3].fields[0])
+  const wrapper = mk(f, test_data()[3], ctx())
+  wrapper.find('.repeater-add-btn button').prop('onClick')()
+  wrapper.update()
+  const items = wrapper.find('.repeater-add-menu-item')
+  t.deepEqual(f.nested_block_types, items.map(item => item.prop('data-nested_block-type')))
+  t.is(wrapper.instance().cb__add, items.first().prop('onClick'))
 })
 
 
@@ -223,9 +226,10 @@ test('Repeater: cb__add: add menu item click adds item', t => {
   const data_item = { __type: 'B4' }
   const wrapper = mk(test_blocks()[3].fields[0], data_item, ctx())
   wrapper.find('.repeater-add-btn button').prop('onClick')()
+  wrapper.update()
   t.is(0, wrapper.find('[type="RepeaterItem"]').length)
 
-  const add_menu_items = wrapper.find('.dropdown-item')
+  const add_menu_items = wrapper.find('.repeater-add-menu-item')
   t.is(test_blocks()[3].fields[0].nested_block_types.length, add_menu_items.length)
 
   add_menu_items.first().prop('onClick')({
@@ -235,7 +239,6 @@ test('Repeater: cb__add: add menu item click adds item', t => {
       },
     },
   })
-
   wrapper.update()
   t.is(1, wrapper.find('[type="RepeaterItem"]').length)
 })
@@ -245,7 +248,8 @@ test('Repeater: cb__add: supports nested_block_types as objects', t => {
   const f = blocks__object_nested_block_types[0].fields[0]
   const wrapper = mk(f, data_item__object_nested_block_types, ctx({ blocks: blocks__object_nested_block_types }))
   wrapper.find('.repeater-add-btn button').prop('onClick')()
-  const add_menu_items = wrapper.find('.dropdown-item')
+  wrapper.update()
+  const add_menu_items = wrapper.find('.repeater-add-menu-item')
   t.is(blocks__object_nested_block_types[0].fields[0].nested_block_types.length, add_menu_items.length)
 
   add_menu_items.first().prop('onClick')({

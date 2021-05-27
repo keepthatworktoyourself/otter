@@ -3,6 +3,7 @@ import React from 'react'
 import { shallow, mount, configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import RecursiveBlockRenderer from '../core/RecursiveBlockRenderer'
+import ClearSelectionBtn from '../core/other/ClearSelectionBtn'
 import test_blocks from './_test-blocks'
 import test_data from './_test-data'
 import stubs from './_stubs'
@@ -47,8 +48,8 @@ function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
 test('Radios: no opts -> warning msg', t => {
   const b = Otter.Utils.copy(block)
   delete b.fields[0].options
-  const wrapper = mk(b.fields[0], data_item, {}, true)
-  const opts_wrapper = wrapper.find('.buttons')
+  const wrapper = mk(b.fields[0], data_item, { }, true)
+  const opts_wrapper = wrapper.find('.radios')
 
   t.is(1, opts_wrapper.length)
   t.is('[Radio field has no options!]', opts_wrapper.text())
@@ -57,7 +58,7 @@ test('Radios: no opts -> warning msg', t => {
 
 test('Radios: renders radio options, initial value selected', t => {
   const wrapper = mk(block.fields[0], data_item, {}, true)
-  const opts    = wrapper.find('a.radio-option')
+  const opts    = wrapper.find('.radios a')
   const n_opts  = Object.keys(block.fields[0].options).length
 
   t.is(n_opts, opts.length)
@@ -76,7 +77,7 @@ test('Radios: click updates state, calls ctx update methods', t => {
   }
 
   const wrapper = mk(block.fields[0], data_item, ctx)
-  const opt__c = wrapper.find('.radio-option[data-value="c"]')
+  const opt__c = wrapper.find('.radios a[data-value="c"]')
   t.is(1, opt__c.length)
 
   opt__c.prop('onClick')({
@@ -103,10 +104,11 @@ test('Radios: clear button sets value to null', t => {
   }
 
   const wrapper = mk(block.fields[0], data_item, ctx)
-  const clear_btn = wrapper.find('.radio-clear-btn')
+  const clear_btn = wrapper.findWhere(node => node.type() === ClearSelectionBtn)
   t.is(1, clear_btn.length)
 
-  clear_btn.simulate('click')
+  clear_btn.prop('cb__clear')()
+  wrapper.update()
 
   const selected_opt = wrapper.find('input[checked=true]')
   t.is(true, ctx.value_updated.called)

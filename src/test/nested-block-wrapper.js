@@ -55,43 +55,41 @@ function mk(field_def, containing_data_item, ctx_methods, children) {
 
 test('NestedBlock: renders title, ddtoggle', t => {
   const wrapper = mk(field_def, data_item, {}, [])
-  t.is(1, wrapper.dive().find('h4.title').length)
+  t.is(1, wrapper.dive().find('h4').length)
   t.is(1, wrapper.dive().find('DDToggle').length)
-  t.truthy(wrapper.dive().find('h4.title').text().match(field_def.description))
+  t.truthy(wrapper.dive().find('h4').text().match(field_def.description))
 })
 
 
 test('NestedBlock: renders children when uncollapsed', t => {
   const context = ctx()
   const wrapper = mk(field_def, data_item, context, [
-    <div className="sbw-child sbw-child-1" key="k1"></div>,
-    <div className="sbw-child sbw-child-2" key="k2"></div>,
+    <div className="nbw-child nbw-child-1" key="k1"></div>,
+    <div className="nbw-child nbw-child-2" key="k2"></div>,
   ])
-  wrapper.dive().find('.nested_block-wrapper-toggle').prop('onClick')({
+  wrapper.dive().find('.nbw-toggle').prop('onClick')({
     currentTarget: {
       blur: sinon.spy(),
     },
   })
-
   wrapper.update()
-  t.is(2, wrapper.dive().find('.sbw-child').length)
-  t.is(1, wrapper.dive().find('.sbw-child-1').length)
-  t.is(1, wrapper.dive().find('.sbw-child-2').length)
+  t.is(2, wrapper.dive().find('.nbw-child').length)
+  t.is(1, wrapper.dive().find('.nbw-child-1').length)
+  t.is(1, wrapper.dive().find('.nbw-child-2').length)
 })
 
 
 test('NestedBlockWrapper: collapse toggle calls ctx should_redraw, block_toggled', t => {
   const context = ctx()
   const wrapper = mk(field_def, data_item, context, [
-    <div className="sbw-child sbw-child-1" key="k1"></div>,
-    <div className="sbw-child sbw-child-2" key="k2"></div>,
+    <div className="nbw-child nbw-child-1" key="k1"></div>,
+    <div className="nbw-child nbw-child-2" key="k2"></div>,
   ])
-  wrapper.dive().find('.nested_block-wrapper-toggle').prop('onClick')({
+  wrapper.dive().find('.nbw-toggle').prop('onClick')({
     currentTarget: {
       blur: sinon.spy(),
     },
   })
-
   t.true(context.should_redraw.calledOnce)
   t.true(context.block_toggled.calledOnce)
 })
@@ -106,7 +104,6 @@ test('NestedBlockWrapper: when optional, renders Toggle', t => {
 test('NestedBlockWrapper: when optional, enable state respects initial presence/absence of data', t => {
   const wrapper__data    = mk(field_def__optional, data_item, {}, [ ])
   const wrapper__no_data = mk(field_def__optional, data_item__no_nested_block_data, {}, [ ])
-
   t.true(wrapper__data.dive().find('Toggle').prop('checked'))
   t.false(wrapper__no_data.dive().find('Toggle').prop('checked'))
 })
@@ -115,11 +112,11 @@ test('NestedBlockWrapper: when optional, enable state respects initial presence/
 test('NestedBlockWrapper: when optional, collapse toggle does nothing until enabled', t => {
   const context = ctx()
   const wrapper = mk(field_def__optional, data_item__no_nested_block_data, context, [
-    <div className="sbw-child sbw-child-1" key="k1"></div>,
-    <div className="sbw-child sbw-child-2" key="k2"></div>,
+    <div className="nbw-child nbw-child-1" key="k1"></div>,
+    <div className="nbw-child nbw-child-2" key="k2"></div>,
   ])
   const toggle_collapse = () => {
-    wrapper.dive().find('.nested_block-wrapper-toggle').prop('onClick')({
+    wrapper.dive().find('.nbw-toggle').prop('onClick')({
       currentTarget: {
         blur: sinon.spy(),
       },
@@ -129,7 +126,7 @@ test('NestedBlockWrapper: when optional, collapse toggle does nothing until enab
 
   // Initially disabled: collapse toggle doesn't work
   toggle_collapse()
-  t.is(0, wrapper.dive().find('.sbw-child').length)
+  t.is(0, wrapper.dive().find('.nbw-child').length)
 
   // After enable: collapse toggle works
   wrapper.dive().find('Toggle').prop('onChange')({
@@ -140,7 +137,7 @@ test('NestedBlockWrapper: when optional, collapse toggle does nothing until enab
   })
   wrapper.update()
   toggle_collapse()
-  t.is(2, wrapper.dive().find('.sbw-child').length)
+  t.is(2, wrapper.dive().find('.nbw-child').length)
 })
 
 

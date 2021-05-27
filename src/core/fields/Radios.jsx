@@ -67,7 +67,7 @@ export default class Radios extends React.Component {
                           min_width={true} />
             </div>
 
-            <div className={`inline-block md:block ${styles.control_border} ${styles.button} overflow-hidden mr-3`}>
+            <div className={`radios inline-block md:block ${styles.control_border} ${styles.button} overflow-hidden mr-3`}>
               {opt_keys.length === 0 && `[Radio field has no options!]`}
               {opt_keys.map((opt, i) => {
                 const input_id = `${input_name}--${i}`

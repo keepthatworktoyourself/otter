@@ -114,7 +114,7 @@ test('Editor: msg on unknown load_state', t => {
 
 test('Editor: renders post data container on load_state loaded', t => {
   const wrapper = shallow(<Editor load_state={Otter.State.Loaded} />)
-  t.true(wrapper.exists('.container'))
+  t.true(wrapper.exists('.post-builder-inner'))
 })
 
 

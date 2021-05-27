@@ -3,6 +3,7 @@ import React from 'react'
 import { shallow, mount, configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import sinon from 'sinon'
+import ClearSelectionBtn from '../core/other/ClearSelectionBtn'
 import test_blocks from './_test-blocks'
 import test_data from './_test-data'
 import stubs from './_stubs'
@@ -51,7 +52,7 @@ test('WPMedia: select button rendered and begins wp selection', t => {
   }
 
   const wrapper = mk(block.fields[0], data_item, ctx, true)
-  const btn = wrapper.find('.wpmedia-select-btn')
+  const btn = wrapper.find('.wpmedia-select')
   t.is(1, btn.length)
 
   const event_listeners = { }
@@ -95,9 +96,8 @@ test('WPMedia: clear btn sets value to null, calls ctx update methods', t => {
   }
   const d = Otter.Utils.copy(data_item)
   const wrapper = mk(block.fields[0], d, ctx)
-  const clearbtn = wrapper.find('.wpmedia-clear-btn')
+  wrapper.findWhere(node => node.type() === ClearSelectionBtn).prop('onClick')({})
 
-  clearbtn.prop('onClick')({})
   t.is(null, d.image)
   t.is(true, ctx.value_updated.called)
   t.is(true, ctx.should_redraw.called)

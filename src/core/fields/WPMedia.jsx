@@ -59,11 +59,9 @@ export default class WPMedia extends React.Component {
     const containing_data_item = this.props.containing_data_item
     const is_top_level         = this.props.is_top_level
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer
-    const value                = containing_data_item[field_def.name] || {
-      url: 'https://placekitten.com/1000/100'
-    }
+    const value                = containing_data_item[field_def.name]
     const label                = field_def.description || Utils.humanify_str(field_def.name)
-    const file_name            = value && value.url.replace(/^.+\//, '')
+    const file_name            = value && value.url && value.url.replace(/^.+\//, '')
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
@@ -91,7 +89,7 @@ export default class WPMedia extends React.Component {
             </div>
 
             <div className="flex justify-start items-center">
-              <a className={`inline-block ${styles.button} ${styles.button_pad__sm} ${styles.control_bg} ${styles.control_border} ${styles.control_border__interactive} mr-3`}
+              <a className={`wpmedia-select inline-block ${styles.button} ${styles.button_pad__sm} ${styles.control_bg} ${styles.control_border} ${styles.control_border__interactive} mr-3`}
                  onClick={this.cb__click}
               >
                 Select

@@ -20,11 +20,6 @@
 }
 
 
-.flex-start {
-  justify-content: flex-start !important;
-}
-
-
 .select {
   position: relative;
 }

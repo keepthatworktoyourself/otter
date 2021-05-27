@@ -4,6 +4,7 @@ import { shallow, mount, configure } from 'enzyme'
 import sinon from 'sinon'
 import Adapter from 'enzyme-adapter-react-16'
 import Block from '../core/Block'
+import BlockDeleteBtn from '../core/other/BlockDeleteBtn'
 import test_blocks from './_test-blocks'
 import test_data from './_test-data'
 import stubs from './_stubs'
@@ -47,7 +48,7 @@ test('Block: get_drag_styles', t => {
 
 test('Block: warning if invalid block type', t => {
   const wrapper = mk([ ], test_data()[0])
-  t.truthy(wrapper.find('.title').text().match(/Unknown block type/))
+  t.truthy(wrapper.text().match(/Unknown block type/))
 })
 
 
@@ -62,8 +63,8 @@ test('Block: renders', t => {
   const exp__type_only = Otter.Utils.humanify_str(test_blocks()[0].type)
   const exp__with_descr = 'A block'
 
-  t.truthy(block__with_type_only.find('h3.title').text().match(exp__type_only))
-  t.truthy(block__with_descr.find('h3.title').text().match(exp__with_descr))
+  t.truthy(block__with_type_only.text().match(exp__type_only))
+  t.truthy(block__with_descr.text().match(exp__with_descr))
 })
 
 
@@ -71,7 +72,7 @@ test('Block: renders index if block_numbers true', t => {
   const blocks = test_blocks()
   const index = 0
   const block = mk(blocks, test_data()[0], index, null, {}, true)
-  t.is(`${index + 1}`, block.find('h3.title span').first().text())
+  t.is(`${index + 1}`, block.find('h3 span').first().text())
 })
 
 
@@ -85,7 +86,7 @@ test('Block: delete btn calls ctx.remove_block(uid)', t => {
   const cb__delete = sinon.spy()
   const block = mk(test_blocks(), test_data()[0], 67, cb__delete, { })
 
-  block.find('.block-delete-btn').prop('onClick')()
+  block.findWhere(node => node.type() === BlockDeleteBtn).prop('cb__delete')()
   t.deepEqual([67], cb__delete.lastCall.args)
 })
 

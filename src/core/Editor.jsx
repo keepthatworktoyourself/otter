@@ -295,7 +295,7 @@ export default class Editor extends React.Component {
       }
 
       content__main = (
-        <div className="text-gray-800 text-xs" style={{ minHeight: min_height }}>
+        <div className="post-builder-inner text-gray-800 text-xs" style={{ minHeight: min_height }}>
 
           {when_to_save === Save.OnClick && (
             <div className="save-button m-4">
