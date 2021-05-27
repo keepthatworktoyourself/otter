@@ -1,11 +1,26 @@
-# Otter <img align="right" src="files/otter.png" width=60 height=60>
+# Otter, the embeddable content editor <img align="right" src="files/otter.png" width=60 height=60>
 
 [![Build Status](https://travis-ci.com/bhallstein/otter.svg?branch=int)](https://travis-ci.com/bhallstein/otter)
 
+
 - With Otter, create full content editors by simply ~~splashing about in bodies of water~~ defining some content models 🐟
-- Simple and ~~estuarine~~ declarative syntax for blocks & fields 🌿
-- Delivered as a React component that’s really ~~furry~~ easy to use 🏞
+- Simple and ~~estuarine~~ declarative block-’n-field syntax for your models 🌿
 - Generates post data in an ~adorable~ accessible JSON format 💧
+- Delivered as a React component that’s really ~~furry~~ easy to use 🏞
+
+
+```jsx
+🐟 🐟 🐟
+npm i -S otter-editor
+🐟 🐟 🐟
+<Otter.Editor blocks={blocks}
+              data={data}
+              load_state={Otter.State.Loaded} />
+🐟 🐟 🐟
+```
+
+
+<img src="files/screenshot.png">
 
 
 ### Contents
@@ -14,6 +29,7 @@
 - [Blocks](#blocks)
 - [Fields](#fields)
 - [Demo](#demo)
+- [CSS and Tailwind](#css-and-tailwind)
 - [Tests](#tests)
 - [License](#license)
 
@@ -209,6 +225,34 @@ The demo project in [/demo](demo/) renders a complete Otter editor with several 
 npm run demo
   # or: parcel demo/index.html
 ````
+
+
+
+## CSS and Tailwind
+
+Otter uses Tailwind for styling.
+
+The ideal way is for Tailwind to be compiled by your applciation. Note that Otter needs the following variants enabled. (Also see Otter’s [tailwind config file](tailwind.config.js).)
+
+```
+  backgroundColor: ['active'],
+  borderColor: ['active'],
+  display: ['group-hover'],
+  textColor: ['active'],
+```
+
+Your app also must import Otter's small amount of its own CSS and that of the Quill editor:
+
+```js
+import 'otter/css/quill.snow.css'
+import 'otter/css/otter.css'
+```
+
+If you're not using Tailwind yet, import Tailwind, Quill, and Otter in one go:
+
+```js
+import 'otter/css/all.css
+```
 
 
 

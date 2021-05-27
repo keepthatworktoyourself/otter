@@ -134,15 +134,14 @@ function load(post_id) {
     json: () => [
       {
         __type:     'Header',
-        heading:    'Concerning the spiritual in art',
-        subheading: 'Wassily Kandinsky',
+        heading:    'Otters',
+        subheading: 'Otters? We got otters!',
         theme:      'light',
       },
       {
-        __type: 'Text',
-        content: '<p>Every work of <b>art</b> is the child of its age and, in many cases, the mother of our emotions...</p>',
-        fancy:   true,
-        align:   'center',
+        __type: 'HTML',
+        html: `<div>I'm a TextArea field with mono={true}!</div>`,
+        mono: true,
       },
     ],
   })

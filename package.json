@@ -1,7 +1,7 @@
 {
   "name": "otter-editor",
   "description": "Content editor with declaratively defined content blocks.",
-  "version": "0.0.90",
+  "version": "0.0.91",
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://github.com/bhallstein/otter",
@@ -19,8 +19,7 @@
     "demo": "parcel demo/index.html",
     "clean": "rm -rf dist && rm -rf demo/dist",
     "build": "npm run clean && parcel build --no-source-maps demo/index.html --target default",
-    "build--npm": "npm run build && cp -R dist/*.css dist/otter.css && babel src/index.js -d dist && babel src/core -d dist/core",
-    "prepublishOnly": "npm run build--npm",
+    "babel": "babel src/index.js -d dist && babel src/core -d dist/core",
     "dev--plugin": "babel -w src/index.js -d otter-plugin/dev/deps/otter-editor & babel -w src/core -d otter-plugin/dev/deps/otter-editor/core",
     "t": "ava -c 1 --verbose src/test/*",
     "tw": "ava -c 1 --watch src/test/*",
@@ -72,15 +71,5 @@
   },
   "targets": {
     "default": {}
-  },
-  "//dependency_licenses": {
-    "NOTE!": "Please keep these up to date :)",
-    "@fortawesome/fontawesome-svg-core": "MIT",
-    "@fortawesome/free-solid-svg-icons": "CC BY 4.0 (applied to SVG icons)",
-    "@fortawesome/react-fontawesome": "MIT",
-    "react": "MIT",
-    "react-beautiful-dnd": "Apache-2.0",
-    "react-dom": "MIT",
-    "react-quill": "MIT"
   }
 }
