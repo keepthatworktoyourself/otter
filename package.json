@@ -1,7 +1,7 @@
 {
   "name": "otter-editor",
   "description": "Content editor with declaratively defined content blocks.",
-  "version": "0.0.92",
+  "version": "0.0.97",
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://github.com/bhallstein/otter",

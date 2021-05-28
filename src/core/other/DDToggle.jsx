@@ -1,5 +1,5 @@
 import React from 'react'
-import Icons from './Icons'
+import {ChevronDownIcon} from '@heroicons/react/outline'
 
 
 export default function DDToggle(props) {
@@ -13,10 +13,10 @@ export default function DDToggle(props) {
   }
 
   return (
-    <span className="icon c-toggler-icon"
+    <span className="icon c-svg c-svg--toggler"
           onClick={props.cb || null}
           {...attrs}>
-      <Icons.Icon icon="ChevronDownIcon" />
+      <ChevronDownIcon />
     </span>
   )
 }

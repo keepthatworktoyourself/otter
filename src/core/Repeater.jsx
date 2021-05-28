@@ -172,7 +172,7 @@ export default class Repeater extends React.Component {
           </DragDropContext>
 
           {show_add_button && (
-            <div className="repeater-add-btn">
+            <div className="repeater-add-btn mb-4">
               <div className="relative">
 
                 <div className="">

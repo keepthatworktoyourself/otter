@@ -74,7 +74,6 @@ export default class NestedBlockWrapper extends React.Component {
             <h4 className="pb-2 cursor-pointer font-semibold">
               <span className="nbw-toggle inline-block" onClick={this.cb__toggle_collapse} >
                 {title}
-
                 {is_enabled && <DDToggle is_open={!this.state.collapsed} cb={this.cb__toggle_collapse} />}
               </span>
 
@@ -88,7 +87,7 @@ export default class NestedBlockWrapper extends React.Component {
 
           {is_enabled && !this.state.collapsed && (
             <div className="pb-2">
-              <div className={`${styles.nested_block} ${styles.control_bg} p-4`}>
+              <div className={`${styles.nested_block} ${styles.control_bg} p-4 pb-0`}>
                 {this.props.children}
               </div>
             </div>
