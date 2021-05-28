@@ -1,6 +1,5 @@
 import React from 'react'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTimes} from '@fortawesome/free-solid-svg-icons'
+import Icons from './Icons'
 import PageDataContext from '../PageDataContext'
 import Utils from '../definitions/utils'
 
@@ -51,7 +50,7 @@ export default class BlockPicker extends React.Component {
                 {/* Close btn */}
                 <div className="absolute" style={{top: '1rem', right: '1.2rem'}}>
                   <span className="cursor-pointer" onClick={this.close}>
-                    <FontAwesomeIcon icon={faTimes} />
+                    <Icons.Icon icon="XIcon" />
                   </span>
                 </div>
 

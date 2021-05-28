@@ -10,7 +10,6 @@ export default class Radios extends React.Component {
 
   constructor(props) {
     super(props)
-
     this.cb__click = this.cb__click.bind(this)
     this.cb__clear = this.cb__clear.bind(this)
   }
@@ -47,9 +46,9 @@ export default class Radios extends React.Component {
     const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
     const opt_keys = Object.keys(opts)
 
-    const btn_styles = (selected, last) => `
-      inline-block
-      ${!last ? 'border-r' : ''}
+    const btn_styles = (selected) => `
+      inline-block mr-1
+      ${styles.button} ${styles.control_border} ${styles.control_border__interactive}
       ${selected ? 'bg-gray-600' : styles.control_bg}
       ${selected ? 'text-gray-50' : ''}
       ${selected ? 'font-semibold' : ''}
@@ -67,16 +66,15 @@ export default class Radios extends React.Component {
                           min_width={true} />
             </div>
 
-            <div className={`radios inline-block md:block ${styles.control_border} ${styles.button} overflow-hidden mr-3`}>
+            <div className={`inline-block md:block mr-2`}>
               {opt_keys.length === 0 && `[Radio field has no options!]`}
               {opt_keys.map((opt, i) => {
                 const input_id = `${input_name}--${i}`
                 const selected = opt === value
                 const sel = { checked: selected }
-                const last = i === opt_keys.length - 1
 
                 return (
-                  <a className={`${btn_styles(selected, last)} mb-0`}
+                  <a className={`${btn_styles(selected)} mb-0`}
                      data-value={opt}
                      onClick={this.cb__click}
                      key={input_id}

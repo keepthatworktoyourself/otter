@@ -8,6 +8,7 @@ import Fields from './fields'
 import Utils from './definitions/utils'
 import State from './definitions/state'
 import Save from './definitions/save'
+import styles from './definitions/styles'
 
 
 // PageDataContext object
@@ -295,7 +296,9 @@ export default class Editor extends React.Component {
       }
 
       content__main = (
-        <div className="post-builder-inner text-gray-800 text-xs" style={{ minHeight: min_height }}>
+        <div className="post-builder-inner text-gray-800 text-xs mx-auto"
+             style={{ minHeight: min_height, maxWidth: '50rem' }}
+        >
 
           {when_to_save === Save.OnClick && (
             <div className="save-button m-4">
@@ -340,7 +343,9 @@ export default class Editor extends React.Component {
 
     return (
       <ContextProvider value={this.ctx}>
-        <div className="post-builder relative p-8 bg-gray-600">
+        <div className="post-builder relative p-4 md:p-8 bg-gray-600"
+             style={{ stroke: styles.text_color }}
+        >
           {content__main}
 
           {show_block_picker && <BlockPicker blocks={blocks}

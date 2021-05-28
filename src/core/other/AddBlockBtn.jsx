@@ -1,6 +1,5 @@
 import React from 'react'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPlus} from '@fortawesome/free-solid-svg-icons'
+import Icons from './Icons'
 import PageDataContext from '../PageDataContext'
 import Utils from '../definitions/utils'
 import styles from '../definitions/styles'
@@ -49,7 +48,7 @@ export default class AddBlockBtn extends React.Component {
             Insert block
           </span>
         ) : ''}
-        <FontAwesomeIcon icon={faPlus} />
+        <Icons.Icon icon="PlusIcon" />
       </span>
     )
 

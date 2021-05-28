@@ -244,8 +244,8 @@ The ideal way is for Tailwind to be compiled by your applciation. Note that Otte
 Your app also must import Otter's small amount of its own CSS and that of the Quill editor:
 
 ```js
-import 'otter/css/quill.snow.css'
-import 'otter/css/otter.css'
+import 'otter/dist/css/quill.snow.css'
+import 'otter/dist/css/otter.css'
 ```
 
 If you're not using Tailwind yet, import Tailwind, Quill, and Otter in one go:

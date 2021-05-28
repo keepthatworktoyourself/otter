@@ -1,7 +1,5 @@
 import React from 'react'
 import * as DnD from 'react-beautiful-dnd'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTimes} from '@fortawesome/free-solid-svg-icons'
 import RecursiveBlockRenderer from './RecursiveBlockRenderer'
 import PageDataContext from './PageDataContext'
 import AddBlockBtn from './other/AddBlockBtn'
@@ -72,7 +70,7 @@ export default class Block extends React.Component {
               </div>
 
               <div className="c-block-add-btn absolute hidden group-hover:block z-10" style={{
-                top: '-1.5rem',
+                top: index === 0 ? '-1rem' : '-1.5rem',
                 left: '50%',
                 transform: 'translateX(-50%)',
               }}>

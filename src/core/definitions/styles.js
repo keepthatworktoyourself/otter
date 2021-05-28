@@ -6,6 +6,7 @@ export default {
   button_pad:                  'py-2 px-3',
   button_pad__sm:              'py-1 px-2',
   control_bg:                  'bg-white',
+  text_color:                  '#1f2937',
 
   control_bg: 'bg-gray-50',
   block_title: 'text-xl font-semibold',

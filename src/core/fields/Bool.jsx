@@ -20,7 +20,6 @@ export default class Bool extends React.Component {
     else {
       this.props.containing_data_item[this.props.field_def.name] = false
     }
-
     this.setState({})
     this.ctx.value_updated()
     this.ctx.should_redraw()   // For conditional rendering
@@ -37,9 +36,9 @@ export default class Bool extends React.Component {
     const value                = containing_data_item[field_def.name]
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer
 
-  const btn_styles = (selected, last) => `
-    inline-block
-    ${!last ? 'border-r' : ''}
+  const btn_styles = (selected) => `
+    inline-block mr-1
+    ${styles.button} ${styles.control_border} ${styles.control_border__interactive}
     ${selected ? 'bg-gray-600' : styles.control_bg}
     ${selected ? 'text-gray-50' : ''}
     ${selected ? 'font-semibold' : ''}
@@ -57,7 +56,7 @@ export default class Bool extends React.Component {
                           min_width={true} />
             </div>
 
-            <div className={`inline-block md:block ${styles.control_border} ${styles.button} overflow-hidden`}>
+            <div className={`inline-block md:block mr-2`}>
               <a className={btn_styles(value)}
                  data-value="yes"
                  onClick={this.cb__click}

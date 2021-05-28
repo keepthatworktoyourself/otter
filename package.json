@@ -1,7 +1,7 @@
 {
   "name": "otter-editor",
   "description": "Content editor with declaratively defined content blocks.",
-  "version": "0.0.91",
+  "version": "0.0.92",
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://github.com/bhallstein/otter",
@@ -36,8 +36,6 @@
     "@babel/preset-env": "^7.12.7",
     "@babel/preset-react": "^7.12.7",
     "@babel/register": "^7.12.1",
-    "@tailwindcss/aspect-ratio": "^0.2.0",
-    "@tailwindcss/forms": "^0.3.2",
     "autoprefixer": "^10.2.5",
     "ava": "^3.13.0",
     "browser-env": "^3.3.0",
@@ -51,9 +49,7 @@
     "tailwindcss": "^2.1.2"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "@fortawesome/react-fontawesome": "^0.1.13",
+    "@heroicons/react": "^1.0.1",
     "react-beautiful-dnd": "^13.0.0",
     "react-quill": "^1.3.5",
     "react-toggle": "^4.1.1"

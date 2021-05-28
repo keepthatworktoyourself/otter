@@ -1,7 +1,5 @@
 import React from 'react'
 import * as DnD from 'react-beautiful-dnd'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPlusCircle} from '@fortawesome/free-solid-svg-icons'
 import PageDataContext from './PageDataContext'
 import Utils from './definitions/utils'
 import NestedBlockWrapper from './NestedBlockWrapper'

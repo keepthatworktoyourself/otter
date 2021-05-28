@@ -1,6 +1,5 @@
 import React from 'react'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faChevronDown} from '@fortawesome/free-solid-svg-icons'
+import Icons from './Icons'
 
 
 export default function DDToggle(props) {
@@ -17,7 +16,7 @@ export default function DDToggle(props) {
     <span className="icon c-toggler-icon"
           onClick={props.cb || null}
           {...attrs}>
-      <FontAwesomeIcon icon={faChevronDown} />
+      <Icons.Icon icon="ChevronDownIcon" />
     </span>
   )
 }
