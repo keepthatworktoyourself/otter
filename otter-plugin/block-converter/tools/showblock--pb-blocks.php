@@ -1,4 +1,8 @@
 <?php
+  if (!defined('ABSPATH')) {
+    exit('Invalid request.');
+  }
+
   $wpconfig = getenv('WPCONFIG');
   $post_id = getenv('POSTID');
 

@@ -1,17 +1,9 @@
 <?php
   namespace Otter;
 
-
-  // Dynamically create stdclass models during
-  // unserialization
-  // ---------------------------------
-
-  function unserialize_helper($class) {
-    if (!class_exists($class)) {
-      eval("class $class extends stdClass { }");
-    }
+  if (!defined('ABSPATH')) {
+    exit('Invalid request.');
   }
-  ini_set('unserialize_callback_func', '\Otter\unserialize_helper');
 
 
   // The following are helper functions for use by converters

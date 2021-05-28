@@ -1,4 +1,8 @@
 <?php
+  if (!defined('ABSPATH')) {
+    exit('Invalid request.');
+  }
+
   function remove_leading_whitespace($s) {
     return preg_replace('/\n\s+/', "\n", $s);
   }

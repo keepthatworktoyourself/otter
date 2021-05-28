@@ -1,6 +1,10 @@
 <?php
   namespace Otter;
 
+  if (!defined('ABSPATH')) {
+    exit('Invalid request.');
+  }
+
   require_once('helpers.php');
   require_once('convert.php');
 

@@ -1,6 +1,10 @@
 <?php
   namespace Otter;
 
+  if (!defined('ABSPATH')) {
+    exit('Invalid request.');
+  }
+
   // convert()
   // ---------------------------------
   // - recursively convert data using a map of converters:

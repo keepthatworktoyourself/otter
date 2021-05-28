@@ -1,4 +1,8 @@
 <?php
+  if (!defined('ABSPATH')) {
+    exit('Invalid request.');
+  }
+
   function remove_comments($s) {
     $s = preg_replace('/<!--.+-->/', '', $s);
     var_dump($s);

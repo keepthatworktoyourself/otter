@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/bhallstein/otter.svg?branch=int)](https://travis-ci.com/bhallstein/otter)
 
 
-- With Otter, create full content editors by simply ~~splashing about in bodies of water~~ defining some content models 🐟
+- Embed a content editor in your app by simply ~~splashing about in bodies of water~~ defining some content models 🐟
 - Simple and ~~estuarine~~ declarative block-’n-field syntax for your models 🌿
 - Generates post data in an ~adorable~ accessible JSON format 💧
 - Delivered as a React component that’s really ~~furry~~ easy to use 🏞

@@ -3,11 +3,11 @@
  * Otter-Plugin
  *
  * Plugin Name: Otter Editor
- * Plugin URI:  https://wordpress.org/plugins/classic-editor/
- * Description: Otter Editor: Declarative. Easy. Fast.
- * Version:     0.1
+ * Plugin URI:  https://github.com/bhallstein/otter
+ * Description: Rapidly prototype and create rich content editing experiences for your wordpres site.
+ * Version:     1.0.0
  * Author:      Ben Hallstein
- * Author URI:  https://ben.am/
+ * Author URI:  https://github.com/bhallstein
  * License:     GPLv2 or later
  * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * Text Domain: otter-plugin
@@ -31,7 +31,6 @@
     return true;
   }
 
-  require_once('classic-editor/classic-editor.php');
   require_once('metabox-init.php');
   require_once('block-converter/block-converter.php');
   // require_once('dev/init.php');

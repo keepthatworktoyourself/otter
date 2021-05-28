@@ -3,17 +3,17 @@ Contributors: bhallstein
 Tags: Editor, React, Otter
 Requires at least: 5.1
 Tested up to: 5.7.2
-Stable tag: trunk
+Stable tag: 1.0.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-With Otter Editor, declare content blocks as simple javascript objects. Otter renders
+Rapidly prototype and deliver rich content editors in modern JS, then easily embed them in your wordpress admin.
 
 
 == Description ==
 
-Otter Editor is a developer-specific editor tool designed to provide a superior editing and development experience for pro websites.
+Otter Editor is an editor tool designed to provide a superior editing and development experience for pro websites.
 
 For a sample theme showing how to implement the Otter editor on your site, go to https://github.com/bhallstein/otter/otter-plugin/sample-theme
 

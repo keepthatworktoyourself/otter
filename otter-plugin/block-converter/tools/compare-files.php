@@ -3,6 +3,10 @@
   // compare.php - compare all files in DIR1 to all those in DIR2
   //
 
+  if (!defined('ABSPATH')) {
+    exit('Invalid request.');
+  }
+
   $dir1 = getenv('DIR1');
   $dir2 = getenv('DIR2');
 

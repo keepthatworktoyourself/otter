@@ -1,4 +1,8 @@
 <?php
+  if (!defined('ABSPATH')) {
+    exit('Invalid request.');
+  }
+
   $data = \Otter\load($post->ID, $editor_info['meta_key']);
 
   $css_bundle = \Otter\set_css_bundle_path();
@@ -6,13 +10,13 @@
   $iframe_id = "otter-container--{$editor_info['meta_key']}";
 ?>
 
-<input type="text" name="<?= $input_name ?>" style="display: none;" />
+<input type="text" name="<?php echo $input_name ?>" style="display: none;" />
 
-<iframe id="<?= $iframe_id ?>"
+<iframe id="<?php echo $iframe_id ?>"
         style="display: block; width: 100%;"></iframe>
 
 <style>
-  #otter-editor-metabox--<?= $editor_info['meta_key'] ?> .inside {
+  #otter-editor-metabox--<?php echo $editor_info['meta_key'] ?> .inside {
     margin: 0;
     padding: 0;
   }
@@ -24,10 +28,10 @@
 
 <script>
   (function() {
-    const iframe = document.getElementById('<?= $iframe_id ?>');
-    const input = document.querySelector('input[name="<?= $input_name ?>"]');
-    const initial_data = <?= json_encode($data, JSON_UNESCAPED_UNICODE) ?>;
-    const dynamic_data = <?= json_encode(\Otter\dynamic_data(), JSON_UNESCAPED_UNICODE) ?>;
+    const iframe = document.getElementById('<?php echo $iframe_id ?>');
+    const input = document.querySelector('input[name="<?php echo $input_name ?>"]');
+    const initial_data = <?php echo json_encode($data, JSON_UNESCAPED_UNICODE) ?>;
+    const dynamic_data = <?php echo json_encode(\Otter\dynamic_data(), JSON_UNESCAPED_UNICODE) ?>;
     let times_updated = 0;
 
     set_input_value(initial_data);
@@ -42,13 +46,13 @@
 
       const link = iframe_doc.createElement('link');
       link.rel = 'stylesheet';
-      link.href = '<?= $css_bundle ?>';
+      link.href = '<?php echo $css_bundle ?>';
 
       const div = iframe_doc.createElement('div');
       div.className = 'otter-container';
 
       const script = iframe_doc.createElement('script');
-      script.src = '<?= $editor_info['bundle_path'] ?>';
+      script.src = '<?php echo $editor_info['bundle_path'] ?>';
 
       iframe_doc.head.appendChild(link);
       iframe_doc.body.appendChild(div);
