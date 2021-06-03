@@ -1,58 +1,45 @@
-body {
-  background-color: rgb(183, 190, 199);
-}
-.bg-solid {
-  background-color: #fdfefe;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 
-.otter-box {
-  background-color: rgba(25, 33, 40, 0.06);
-  border-radius: 5px;
-  padding: 1rem;
-}
-.otter-box--bordered {
-  border: 1px solid rgba(25, 33, 40, 0.06);
-}
-
-
-.otter-monospace {
+.monospace {
   font-family: Hack, Consolas, Menlo, 'Source Code Pro', 'Lucida Sans Typewriter', 'Courier New', courier, sans-serif;
 }
 
 
-.c-toggler-icon {
+.c-svg {
+  display: block;
+  height: 1em;
+  width: 1em;
+}
+.c-svg svg {
+  display: block;
+  margin: 0;
+  max-height: inherit;
+  fill: inherit !important;
+  stroke: inherit !important;
+  width: 100%;
+  height: 100%;
+}
+.c-svg--toggler {
+  display: inline-block;
   position: relative;
   top: 0.12rem;
-  margin-left: 0.3rem;
-
   transition: transform 0.15s ease-in-out;
-
-  width: 1em !important;
-  height: 1em !important;
 }
 
 
-@media screen and (max-width: 767px) {
-  .c-label-margin-btm-phone {
-    margin-bottom: 0.4em;
-  }
+.select {
+  position: relative;
 }
-
-
-.c-block-add-btn {
-  display: none;
+.select::after {
+  content: "⌄";
+  position: absolute;
+  right: 0.5rem;
+  top: 0.08rem;
+  font-size: 1.2em;
 }
-
-.c-block:hover .c-block-add-btn {
-  display: block;
-}
-
-
-.flex-start {
-  justify-content: flex-start !important;
-}
-
 
 
 .react-toggle {

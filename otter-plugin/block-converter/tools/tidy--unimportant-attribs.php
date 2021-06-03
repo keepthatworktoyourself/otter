@@ -1,4 +1,8 @@
 <?php
+  if (!defined('ABSPATH')) {
+    exit('Invalid request.');
+  }
+
   function remove_unimportant_attribs($s) {
     // $attribs = ['width', 'height', 'data-secret', 'src', 'href', 'data-width'];
     $attribs = [ ];

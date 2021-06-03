@@ -1,16 +1,17 @@
-import test from 'ava';
-import React from 'react';
-import { shallow, mount, configure } from 'enzyme';
-import sinon from 'sinon';
-import Adapter from 'enzyme-adapter-react-16';
-import Block from '../core/Block';
-import test_blocks from './_test-blocks';
-import test_data from './_test-data';
-import stubs from './_stubs';
-import Otter from '..';
+import test from 'ava'
+import React from 'react'
+import { shallow, mount, configure } from 'enzyme'
+import sinon from 'sinon'
+import Adapter from 'enzyme-adapter-react-16'
+import Block from '../core/Block'
+import BlockDeleteBtn from '../core/other/BlockDeleteBtn'
+import test_blocks from './_test-blocks'
+import test_data from './_test-data'
+import stubs from './_stubs'
+import Otter from '..'
 
 
-configure({ adapter: new Adapter() });
+configure({ adapter: new Adapter() })
 
 
 const provided = {
@@ -18,10 +19,10 @@ const provided = {
   draggableProps: {
     style: { color: 'yellow' },
   },
-};
+}
 const snapshot = {
   isDragging: false,
-};
+}
 
 
 function mk(blocks, data_item, index, cb__delete, extra_ctx_props, block_numbers) {
@@ -31,69 +32,69 @@ function mk(blocks, data_item, index, cb__delete, extra_ctx_props, block_numbers
                       cb__delete={cb__delete}
                       draggable_component={stubs.func_stub([provided, snapshot])}
                       consumer_component={stubs.func_stub([{ blocks, ...extra_ctx_props }])}
-                      recursive_renderer_component={stubs.mk_stub('RecursiveRenderer')} />);
+                      recursive_renderer_component={stubs.mk_stub('RecursiveRenderer')} />)
 }
 
 
 test('Block: get_drag_styles', t => {
-  const while_dragging     = (new Block()).get_drag_styles(provided, { isDragging: true  });
-  const while_not_dragging = (new Block()).get_drag_styles(provided, snapshot);
+  const while_dragging     = (new Block()).get_drag_styles(provided, { isDragging: true  })
+  const while_not_dragging = (new Block()).get_drag_styles(provided, snapshot)
 
-  t.deepEqual(Object.keys(provided.draggableProps.style), Object.keys(while_dragging));
-  t.deepEqual(Object.keys(provided.draggableProps.style), Object.keys(while_not_dragging));
+  t.deepEqual(Object.keys(provided.draggableProps.style), Object.keys(while_dragging))
+  t.deepEqual(Object.keys(provided.draggableProps.style), Object.keys(while_not_dragging))
   // Block doesn't currently use any custom drag styles
-});
+})
 
 
 test('Block: warning if invalid block type', t => {
-  const wrapper = mk([ ], test_data()[0]);
-  t.truthy(wrapper.find('.title').text().match(/Unknown block type/));
-});
+  const wrapper = mk([ ], test_data()[0])
+  t.truthy(wrapper.text().match(/Unknown block type/))
+})
 
 
 test('Block: renders', t => {
-  const blocks = test_blocks();
-  const blocks__with_descr = Otter.Utils.copy(blocks);
-  blocks__with_descr[0].description = 'A block';
+  const blocks = test_blocks()
+  const blocks__with_descr = Otter.Utils.copy(blocks)
+  blocks__with_descr[0].description = 'A block'
 
-  const block__with_type_only = mk(blocks, test_data()[0]);
-  const block__with_descr     = mk(blocks__with_descr, test_data()[0]);
+  const block__with_type_only = mk(blocks, test_data()[0])
+  const block__with_descr     = mk(blocks__with_descr, test_data()[0])
 
-  const exp__type_only = Otter.Utils.humanify_str(test_blocks()[0].type);
-  const exp__with_descr = 'A block';
+  const exp__type_only = Otter.Utils.humanify_str(test_blocks()[0].type)
+  const exp__with_descr = 'A block'
 
-  t.truthy(block__with_type_only.find('h3.title').text().match(exp__type_only));
-  t.truthy(block__with_descr.find('h3.title').text().match(exp__with_descr));
-});
+  t.truthy(block__with_type_only.text().match(exp__type_only))
+  t.truthy(block__with_descr.text().match(exp__with_descr))
+})
 
 
 test('Block: renders index if block_numbers true', t => {
-  const blocks = test_blocks();
-  const index = 0;
-  const block = mk(blocks, test_data()[0], index, null, {}, true);
-  t.is(`${index + 1}`, block.find('h3.title span').first().text());
-});
+  const blocks = test_blocks()
+  const index = 0
+  const block = mk(blocks, test_data()[0], index, null, {}, true)
+  t.is(`${index + 1}`, block.find('h3 span').first().text())
+})
 
 
 test('Block: creates AddBlockBtn', t => {
-  const block = mk(test_blocks(), test_data()[0]);
-  t.is(1, block.find('AddBlockBtn').length);
-});
+  const block = mk(test_blocks(), test_data()[0])
+  t.is(1, block.find('AddBlockBtn').length)
+})
 
 
 test('Block: delete btn calls ctx.remove_block(uid)', t => {
-  const cb__delete = sinon.spy();
-  const block = mk(test_blocks(), test_data()[0], 67, cb__delete, { });
+  const cb__delete = sinon.spy()
+  const block = mk(test_blocks(), test_data()[0], 67, cb__delete, { })
 
-  block.find('.block-delete-btn').prop('onClick')();
-  t.deepEqual([67], cb__delete.lastCall.args);
-});
+  block.findWhere(node => node.type() === BlockDeleteBtn).prop('cb__delete')()
+  t.deepEqual([67], cb__delete.lastCall.args)
+})
 
 
 test('Block: passes data_item, ctx.blocks, is_top_level to RecursiveBlockRenderer', t => {
-  const data  = test_data();
-  const block = mk(test_blocks(), data[0]);
-  const recursive_renderer = block.find('[type="RecursiveRenderer"]');
+  const data  = test_data()
+  const block = mk(test_blocks(), data[0])
+  const recursive_renderer = block.find('[type="RecursiveRenderer"]')
 
   t.deepEqual(
     {
@@ -106,6 +107,6 @@ test('Block: passes data_item, ctx.blocks, is_top_level to RecursiveBlockRendere
       blocks: recursive_renderer.prop('blocks'),
       is_top_level: recursive_renderer.prop('is_top_level'),
     }
-  );
-});
+  )
+})
 

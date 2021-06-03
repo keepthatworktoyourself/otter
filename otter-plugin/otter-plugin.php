@@ -3,11 +3,11 @@
  * Otter-Plugin
  *
  * Plugin Name: Otter Editor
- * Plugin URI:  https://wordpress.org/plugins/classic-editor/
- * Description: Otter Editor: Declarative. Easy. Fast.
- * Version:     0.1
+ * Plugin URI:  https://github.com/bhallstein/otter
+ * Description: Rapidly prototype and create rich content editing experiences for your wordpres site.
+ * Version:     1.0.0
  * Author:      Ben Hallstein
- * Author URI:  https://ben.am/
+ * Author URI:  https://github.com/bhallstein
  * License:     GPLv2 or later
  * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * Text Domain: otter-plugin
@@ -31,7 +31,6 @@
     return true;
   }
 
-  require_once('classic-editor/classic-editor.php');
   require_once('metabox-init.php');
   require_once('block-converter/block-converter.php');
   // require_once('dev/init.php');
@@ -60,8 +59,8 @@
   // -----------------------------------
   // - call on wp init
   // - priority must be < 100
-  // - editor_opts: [ bundle_path => '...', meta_key => '...', metabox_title => '...' ]
   // - $post_type can be a single type or an array
+  // - editor_opts: [ bundle_path => '...', meta_key => '...', metabox_title => '...' ]
 
   function editor($post_type, $editor_opts = null) {
     static $otters = [ ];
@@ -125,20 +124,33 @@
   // -----------------------------------
 
   add_action('save_post', function($post_id) {
-    $input = file_get_contents('php://input');
-
-    preg_match_all('/otter-data--[^&]+/', $input, $m, PREG_PATTERN_ORDER);
-
-    if (!$m) {
+    if (!current_user_can('edit_post', $post_id)) {
       return;
     }
 
-    foreach ($m[0] as $match) {
+    $otter_items = [ ];
+    foreach ($_POST as $k => $item) {
+      if (preg_match('/^otter-data--/', $k)) {
+        $otter_items []= [$k, $item];
+      }
+    }
+
+    foreach ($otter_items as $item) {
       preg_match('/^otter-data--([^=]+)=([^&]+)/', $match, $mm);
 
-      $meta_key = $mm[1];
-      $data     = $mm[2];
+      $meta_key = preg_replace('/^otter-data--/', '', $item[0]);
+      $data = $item[1];
+      if (!$meta_key || !$data) {
+        continue;
+      }
 
+      $nonce_name = "nonce--$meta_key";
+      $nonce = $_POST[$nonce_name];
+      if (!wp_verify_nonce($nonce, $nonce_name)) {
+        continue;
+      }
+
+      $data = stripslashes($data);
       $arr = json_decode(urldecode($data), true);
       if ($arr) {
         save($post_id, $meta_key, $arr);

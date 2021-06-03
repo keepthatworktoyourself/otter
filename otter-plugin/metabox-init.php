@@ -1,6 +1,10 @@
 <?php
   namespace Otter\Editor;
 
+  if (!defined('ABSPATH')) {
+    exit('Invalid request.');
+  }
+
   function init() {
     $editors = \Otter\editor(get_post_type());
     $proceed = is_admin() && $editors;

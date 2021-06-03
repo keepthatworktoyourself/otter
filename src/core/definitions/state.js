@@ -2,7 +2,7 @@ const State = {
   Loading: 'loading',
   Loaded:  'loaded',
   Error:   'error',
-};
+}
 
-export default State;
+export default State
 

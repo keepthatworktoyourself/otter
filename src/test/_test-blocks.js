@@ -1,4 +1,4 @@
-import Otter from '..';
+import Otter from '..'
 
 const blocks = [
   { type: 'B1', },
@@ -45,7 +45,7 @@ const blocks = [
   { type: 'AContentItem',       fields: [{ name: 'f', type: Otter.Fields.TextInput }] },
   { type: 'AnotherContentItem', fields: [{ name: 'f', type: Otter.Fields.TextInput }] },
   { type: 'OneMoreContentItem', fields: [{ name: 'f', type: Otter.Fields.TextInput }] },
-];
+]
 
 
 const blocks_with_invalid_field_type = [
@@ -58,18 +58,18 @@ const blocks_with_invalid_field_type = [
       },
     ],
   },
-];
+]
 
 function get_blocks() {
-  return Otter.Utils.copy(blocks);
+  return Otter.Utils.copy(blocks)
 }
 
 function get_blocks_with_invalid_field_type() {
-  return Otter.Utils.copy(blocks_with_invalid_field_type);
+  return Otter.Utils.copy(blocks_with_invalid_field_type)
 }
 
-get_blocks.with_invalid_field_type = get_blocks_with_invalid_field_type;
+get_blocks.with_invalid_field_type = get_blocks_with_invalid_field_type
 
 
-export default get_blocks;
+export default get_blocks
 

@@ -8,6 +8,10 @@
   //  | bash
   //
 
+  if (!defined('ABSPATH')) {
+    exit('Invalid request.');
+  }
+
   // Opts
   // ---------------------------------------
 

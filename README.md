@@ -1,11 +1,26 @@
-# Otter <img align="right" src="files/otter.png" width=60 height=60>
+# Otter, the embeddable content editor <img align="right" src="files/otter.png" width=60 height=60>
 
 [![Build Status](https://travis-ci.com/bhallstein/otter.svg?branch=int)](https://travis-ci.com/bhallstein/otter)
 
-- With Otter, create full content editors by simply ~~splashing about in bodies of water~~ defining some content models 🐟
-- Simple and ~~estuarine~~ declarative syntax for blocks & fields 🌿
-- Delivered as a React component that’s really ~~furry~~ easy to use 🏞
+
+- Embed a content editor in your app by simply ~~splashing about in bodies of water~~ defining some content models 🐟
+- Simple and ~~estuarine~~ declarative block-’n-field syntax for your models 🌿
 - Generates post data in an ~adorable~ accessible JSON format 💧
+- Delivered as a React component that’s really ~~furry~~ easy to use 🏞
+
+
+```jsx
+🐟 🐟 🐟
+npm i -S otter-editor
+🐟 🐟 🐟
+<Otter.Editor blocks={blocks}
+              data={data}
+              load_state={Otter.State.Loaded} />
+🐟 🐟 🐟
+```
+
+
+<img src="files/screenshot.png">
 
 
 ### Contents
@@ -14,6 +29,7 @@
 - [Blocks](#blocks)
 - [Fields](#fields)
 - [Demo](#demo)
+- [CSS and Tailwind](#css-and-tailwind)
 - [Tests](#tests)
 - [License](#license)
 
@@ -29,24 +45,24 @@ The `<Otter.Editor />` element renders the editor.
               load_state={Otter.State.Loaded} />
 ```
 
-| Property        | Value                                          | Required | Default   |                                                                                                                                    |
-| :-------------- | :--------------------------------------------- | :------- | :-------- | :--------------------------------------------------------------------------------------------------------------------------------- |
-| `blocks`        | `<Array(Block)>`                               | Yes      |           | Defines the [blocks](#blocks) available in the editor.                                                                             |
-| `data`          | Loaded data                                    |          |           | The loaded page data.                                                                                                              |
-| `load_state`    | `Otter.State.Loading` or `.Loaded` or `.Error` | Yes      |           | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data.  |
-| `delegate`      | `<Object>`                                     |          |           | Used by Otter to communicate state changes back to you, via `save` and `block_toggled` methods if present.                         |
-| `save`          | `Otter.Save.OnInput` or `.OnClick`             |          | `OnClick` | Specify at what point Otter will call `save()` on the delegate: continuously on user inpue, or only when a save button is clicked. |
-| `block_numbers` | `<bool>`                                       |          | `false`   | Label each block with its 1-based index                                                                                            |
+| Property        | Value                                           | Required | Default   |                                                                                                                                    |
+| :-------------- | :---------------------------------------------  | :------- | :-------- | :--------------------------------------------------------------------------------------------------------------------------------- |
+| `blocks`        | `<Array(Block)>`                                | Yes      |           | Defines the [blocks](#blocks) available in the editor.                                                                             |
+| `data`          | Loaded data                                     |          |           | The loaded page data.                                                                                                              |
+| `load_state`    | `Otter.State.Loading` or `.Loaded` or `.Error`  | Yes      |           | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data.  |
+| `delegate`      | `{save: <Function>, block_toggled: <Function>}` |          |           | Used by Otter to communicate state changes to the parent.                                                                          |
+| `save`          | `Otter.Save.OnInput` or `.OnClick`              |          | `OnClick` | Specify at what point Otter will call `save()` on the delegate: continuously on user inpue, or only when a save button is clicked. |
+| `block_numbers` | `<bool>`                                        |          | `false`   | Label each block with its 1-based index                                                                                            |
 
 ```js
 const my_delegate = {
   save(data) {
-    // Kick-off a request to update the post data
+    // e.g. kick off a request to update the database
   },
   block_toggled() {
-    // update container height, perhaps
+    // e.g. reflow other parts of page layout if necessary
   },
-};
+}
 ```
 
 
@@ -90,7 +106,7 @@ const blocks = [
   <Block>,
   <Block>,
   ...
-];
+]
 ```
 
 ```js
@@ -104,7 +120,7 @@ const blocks = {
     name: 'Media blocks',
     blocks: [ <Block>, <Block>, ... ],
   },
-};
+}
 ```
 
 Otter uses a different block picker depending on whether simple or grouped blocks are used. Grouped blocks can provide a much better user experience if your editor uses many types of blocks:
@@ -209,6 +225,34 @@ The demo project in [/demo](demo/) renders a complete Otter editor with several 
 npm run demo
   # or: parcel demo/index.html
 ````
+
+
+
+## CSS and Tailwind
+
+Otter uses Tailwind for styling.
+
+The ideal way is for Tailwind to be compiled by your applciation. Note that Otter needs the following variants enabled. (Also see Otter’s [tailwind config file](tailwind.config.js).)
+
+```
+  backgroundColor: ['active'],
+  borderColor: ['active'],
+  display: ['group-hover'],
+  textColor: ['active'],
+```
+
+Your app also must import Otter's small amount of its own CSS and that of the Quill editor:
+
+```js
+import 'otter/dist/css/quill.snow.css'
+import 'otter/dist/css/otter.css'
+```
+
+If you're not using Tailwind yet, import Tailwind, Quill, and Otter in one go:
+
+```js
+import 'otter/css/all.css
+```
 
 
 

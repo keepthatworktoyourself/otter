@@ -1,24 +1,23 @@
-import React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faChevronDown} from '@fortawesome/free-solid-svg-icons';
+import React from 'react'
+import {ChevronDownIcon} from '@heroicons/react/outline'
 
 
 export default function DDToggle(props) {
-  const l_margin = props.marginLeft || '0.3rem';
+  const l_margin = props.marginLeft || '0.3rem'
 
   const attrs = {
     style: {
       marginLeft: l_margin,
       transform: `rotate(${props.is_open ? '180' : '0'}deg)`
     },
-  };
+  }
 
   return (
-    <span className="icon c-toggler-icon"
+    <span className="icon c-svg c-svg--toggler"
           onClick={props.cb || null}
           {...attrs}>
-      <FontAwesomeIcon icon={faChevronDown} />
+      <ChevronDownIcon />
     </span>
-  );
+  )
 }
 
