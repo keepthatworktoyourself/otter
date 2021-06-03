@@ -49,7 +49,7 @@ test('Radios: no opts -> warning msg', t => {
   const b = Otter.Utils.copy(block)
   delete b.fields[0].options
   const wrapper = mk(b.fields[0], data_item, { }, true)
-  const opts_wrapper = wrapper.find('.radios')
+  const opts_wrapper = wrapper.find('.otter-radios')
 
   t.is(1, opts_wrapper.length)
   t.is('[Radio field has no options!]', opts_wrapper.text())
@@ -58,7 +58,7 @@ test('Radios: no opts -> warning msg', t => {
 
 test('Radios: renders radio options, initial value selected', t => {
   const wrapper = mk(block.fields[0], data_item, {}, true)
-  const opts    = wrapper.find('.radios a')
+  const opts    = wrapper.find('.otter-radios a')
   const n_opts  = Object.keys(block.fields[0].options).length
 
   t.is(n_opts, opts.length)
@@ -77,7 +77,7 @@ test('Radios: click updates state, calls ctx update methods', t => {
   }
 
   const wrapper = mk(block.fields[0], data_item, ctx)
-  const opt__c = wrapper.find('.radios a[data-value="c"]')
+  const opt__c = wrapper.find('.otter-radios a[data-value="c"]')
   t.is(1, opt__c.length)
 
   opt__c.prop('onClick')({

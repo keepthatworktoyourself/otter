@@ -66,7 +66,7 @@ export default class Radios extends React.Component {
                           min_width={true} />
             </div>
 
-            <div className={`inline-block md:block mr-2`}>
+            <div className={`otter-radios inline-block md:block mr-2`}>
               {opt_keys.length === 0 && `[Radio field has no options!]`}
               {opt_keys.map((opt, i) => {
                 const input_id = `${input_name}--${i}`
