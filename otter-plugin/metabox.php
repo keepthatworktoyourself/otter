@@ -4,10 +4,12 @@
   }
 
   $data = \Otter\load($post->ID, $editor_info['meta_key']);
-
   $css_bundle = \Otter\set_css_bundle_path();
   $input_name = "otter-data--{$editor_info['meta_key']}";
   $iframe_id = "otter-container--{$editor_info['meta_key']}";
+
+  $meta_key = $editor_info['meta_key'];
+  wp_nonce_field("nonce--$meta_key", "nonce--$meta_key");
 ?>
 
 <input type="text" name="<?php echo $input_name ?>" style="display: none;" />
