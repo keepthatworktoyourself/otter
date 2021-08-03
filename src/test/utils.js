@@ -42,8 +42,11 @@ test('utils: retitle_field returns field with new name, description', t => {
 // humanify_str
 // ------------------------------------
 
-test('utils: humanify_str removes -_, uppercases 1st letter', t => {
-  t.is('Hi there friendly person hello', Otter.Utils.humanify_str('hi-there__friendlyPersonHello'))
+test('utils: humanify_str removes -_, uppercases 1st letter and single-letter words', t => {
+  t.is(
+    'Hi there friendly person hello B',
+    Otter.Utils.humanify_str('hi-there__friendlyPersonHelloB')
+  )
 })
 
 

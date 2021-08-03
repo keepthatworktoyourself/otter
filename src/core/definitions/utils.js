@@ -30,6 +30,7 @@ function humanify_str(s) {
   s = (s || '').replace(/[-_]/g, ' ')
   s = s.replace(/ +/g, ' ')
   s = s.replace(/([a-z])([A-Z])/g, (m, c1, c2) => `${c1} ${c2.toLowerCase()}`)
+  s = s.replace(/\s[a-z]$/, (m) => m.toUpperCase())
   return `${s.slice(0,1).toUpperCase()}${s.slice(1)}`
 }
 
@@ -330,6 +331,30 @@ function upto(n) {
 }
 
 
+// dynamic_data
+// -----------------------------------
+
+function dynamic_data(name) {
+  return function() {
+    if (dynamic_data.data.hasOwnProperty(name)) {
+      return dynamic_data.data[name];
+    }
+
+    if (dynamic_data.request_from_iframe) {
+      window.parent.postMessage({
+        'otter--get-dynamic-data': name,
+      });
+    }
+
+    return { };
+  };
+}
+function set_dynamic_data(name, value) {
+  dynamic_data.data[name] = value
+}
+dynamic_data.data = { };
+
+
 // Some errors
 // -----------------------------------
 
@@ -381,6 +406,8 @@ export default {
   blocks_are_grouped,
   rnd_str,
   upto,
+  dynamic_data,
+  set_dynamic_data,
   Err__BlockNoType,
   Err__BlockTypeNotFound,
   Err__FieldNoType,

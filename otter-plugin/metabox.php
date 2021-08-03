@@ -117,8 +117,7 @@
           "It looks like you've edited things on the page!";
 
         (ev || window.event).returnValue = msg;
-        return msg;
-          // NB the message contents is ignored in modern browsers
+        return msg;  // NB the message contents is ignored in modern browsers
       });
     }
 

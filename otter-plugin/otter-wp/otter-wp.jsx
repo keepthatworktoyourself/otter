@@ -50,31 +50,16 @@ function render() {
 // Dynamic data
 // -----------------------------------
 
-function dynamic_data(name) {
-  return function() {
-    if (dynamic_data.data.hasOwnProperty(name)) {
-      return dynamic_data.data[name];
-    }
-
-    window.parent.postMessage({
-      'otter--get-dynamic-data': name,
-    });
-
-    return { };
-  };
-}
-dynamic_data.data = { };
+Otter.Utils.dynamic_data.request_from_iframe = true
 
 window.addEventListener('message', function(ev) {
   const proceed = ev.data && ev.data['otter--set-dynamic-data'];
   if (proceed) {
     const item = ev.data['otter--set-dynamic-data'];
-    dynamic_data.data[item.name] = item.value;
+    Otter.Utils.set_dynamic_data(item.name, item.value);
     render.component.forceUpdate();
   }
 });
-
-Otter.dynamic_data = dynamic_data;
 
 
 // Fetch & kick off

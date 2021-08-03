@@ -14,8 +14,7 @@ import styles from './definitions/styles'
 // PageDataContext object
 // -----------------------------------
 // - provides back-communication interface
-// - we break this out from the editor component just to make the interface clearer
-//   provided
+// - separate from the editor component just to make the interface clearer
 
 function ctx(pb_instance) {
   return {
@@ -29,11 +28,9 @@ function ctx(pb_instance) {
       pb_instance.block_toggled()
     },
 
-
     add_item(type, index) {
       pb_instance.add_item(type, index)
     },
-
 
     open_block_picker(block_index) {
       pb_instance.set_block_picker(block_index)
@@ -41,7 +38,6 @@ function ctx(pb_instance) {
     close_block_picker() {
       pb_instance.set_block_picker(false)
     },
-
 
     blocks: { },
   }
