@@ -1,8 +1,9 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import { mount, configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import * as DnD from 'react-beautiful-dnd'
+import PageDataContext from '../core/PageDataContext'
 import RecursiveBlockRenderer from '../core/RecursiveBlockRenderer'
 import test_blocks from './_test-blocks'
 import test_data from './_test-data'
@@ -30,11 +31,14 @@ const data_item = {
 
 
 function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
-  const wrapper = shallow(<Otter.Fields.components.TextInput field_def={field_def}
-                                                             containing_data_item={containing_data_item}
-                                                             consumer_component={stubs.func_stub([{...ctx_methods}])}
-                                                             is_top_level={is_top_level} />)
-  return wrapper.dive()
+  const Prov = PageDataContext.Provider
+  return mount(
+    <Prov value={ctx_methods}>
+      <Otter.Fields.components.TextInput field_def={field_def}
+                                         containing_data_item={containing_data_item}
+                                         is_top_level={is_top_level} />
+    </Prov>
+  )
 }
 
 

@@ -30,7 +30,6 @@ const Icon = ({icon}) => {
 }
 
 
-
 export default {
   HR,
   LinkInt,

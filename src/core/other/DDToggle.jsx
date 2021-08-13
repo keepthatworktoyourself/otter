@@ -1,7 +1,6 @@
 import React from 'react'
 import {ChevronDownIcon} from '@heroicons/react/outline'
 
-
 export default function DDToggle(props) {
   const l_margin = props.marginLeft || '0.3rem'
 

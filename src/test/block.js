@@ -3,6 +3,7 @@ import React from 'react'
 import { shallow, mount, configure } from 'enzyme'
 import sinon from 'sinon'
 import Adapter from 'enzyme-adapter-react-16'
+import PageDataContext from '../core/PageDataContext'
 import Block from '../core/Block'
 import BlockDeleteBtn from '../core/other/BlockDeleteBtn'
 import test_blocks from './_test-blocks'
@@ -26,24 +27,18 @@ const snapshot = {
 
 
 function mk(blocks, data_item, index, cb__delete, extra_ctx_props, block_numbers) {
-  return mount(<Block data_item={data_item} index={0}
-                      index={index}
-                      block_numbers={block_numbers}
-                      cb__delete={cb__delete}
-                      draggable_component={stubs.func_stub([provided, snapshot])}
-                      consumer_component={stubs.func_stub([{ blocks, ...extra_ctx_props }])}
-                      recursive_renderer_component={stubs.mk_stub('RecursiveRenderer')} />)
+  const Prov = PageDataContext.Provider
+  return mount(
+    <Prov value={{blocks, ...extra_ctx_props}}>
+      <Block data_item={data_item} index={0}
+             index={index}
+             block_numbers={block_numbers}
+             cb__delete={cb__delete}
+             draggable_component={stubs.func_stub([provided, snapshot])}
+             recursive_renderer_component={stubs.mk_stub('RecursiveRenderer')} />
+    </Prov>
+  )
 }
-
-
-test('Block: get_drag_styles', t => {
-  const while_dragging     = (new Block()).get_drag_styles(provided, { isDragging: true  })
-  const while_not_dragging = (new Block()).get_drag_styles(provided, snapshot)
-
-  t.deepEqual(Object.keys(provided.draggableProps.style), Object.keys(while_dragging))
-  t.deepEqual(Object.keys(provided.draggableProps.style), Object.keys(while_not_dragging))
-  // Block doesn't currently use any custom drag styles
-})
 
 
 test('Block: warning if invalid block type', t => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import Icons from './Icons'
 
-export default function({cb__clear}) {
+export default function ClearSelectionBtn({cb__clear}) {
   return (
     <div className="inline-block">
       <a className="cursor-pointer text-gray-600 hover:text-gray-400" onClick={cb__clear}>

@@ -3,6 +3,7 @@ import React from 'react'
 import { shallow, mount, configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import sinon from 'sinon'
+import PageDataContext from '../core/PageDataContext'
 import Repeater from '../core/Repeater'
 import test_blocks from './_test-blocks'
 import test_data from './_test-data'
@@ -37,14 +38,19 @@ const ctx = (overrides) => Object.assign(
 
 
 function mk(field_def, containing_data_item, ctx_methods) {
-  return mount(<Repeater field_def={field_def}
-                         containing_data_item={containing_data_item}
-                         consumer_component={stubs.func_stub([{...ctx_methods}])}
-                         repeater_item_component={stubs.mk_stub('RepeaterItem')}
-                         rbr_component={stubs.mk_stub('RecursiveBlockRenderer')}
-                         drag_context_component={stubs.mk_stub('DragDropContext')}
-                         droppable_component={stubs.func_stub([provided, snapshot])}
-                         draggable_component={stubs.func_stub([provided, snapshot])} />)
+  const Prov = PageDataContext.Provider
+  return mount(
+    <Prov value={ctx_methods}>
+      <Repeater field_def={field_def}
+                           containing_data_item={containing_data_item}
+                           consumer_component={stubs.func_stub([{...ctx_methods}])}
+                           repeater_item_component={stubs.mk_stub('RepeaterItem')}
+                           rbr_component={stubs.mk_stub('RecursiveBlockRenderer')}
+                           drag_context_component={stubs.mk_stub('DragDropContext')}
+                           droppable_component={stubs.func_stub([provided, snapshot])}
+                           draggable_component={stubs.func_stub([provided, snapshot])} />
+    </Prov>
+  )
 }
 
 
@@ -52,7 +58,7 @@ test('Repeater: creates a Droppable (DnD context)', t => {
   const wrapper = mk(test_blocks()[3].fields[0], test_data()[3], ctx())
   const dnd_context = wrapper.find('[type="DragDropContext"]')
   t.is(1, wrapper.find('[droppableId]').length)
-  t.is(wrapper.instance().cb__reorder, dnd_context.prop('onDragEnd'))
+  t.is('cb__reorder', dnd_context.prop('onDragEnd').name)
 })
 
 
@@ -68,7 +74,7 @@ test('Repeater: props passed to RepeaterItems', t => {
   const item = wrapper.find('[type="RepeaterItem"]').first()
   t.is(0, item.prop('index'))
   t.is('d-uid-7-content_items', item.prop('dnd_context_id'))
-  t.is(wrapper.instance().cb__delete, item.prop('cb__delete'))
+  t.is('cb__delete', item.prop('cb__delete').name)
 })
 
 
@@ -98,7 +104,7 @@ test('Repeater: if nested_block_types invalid, display error message', t => {
 })
 
 
-test('Repater: if nested_block_type not permitted, display error message', t => {
+test('Repeater: if nested_block_type not permitted, display error message', t => {
   const wrapper = mk(test_blocks()[3].fields[0], {
     __type: 'B4',
     content_items: [
@@ -110,7 +116,7 @@ test('Repater: if nested_block_type not permitted, display error message', t => 
 })
 
 
-test('Repater: renders Add btn', t => {
+test('Repeater: renders Add btn', t => {
   const wrapper = mk(test_blocks()[3].fields[0], test_data()[3], ctx())
   t.is(1, wrapper.find('.repeater-add-btn').length)
 })
@@ -168,7 +174,7 @@ test('Repeater: Add btn supports nested_block_types objects as well as strings',
   wrapper.update()
   const items = wrapper.find('.repeater-add-menu-item')
   t.deepEqual(['AAA', 'BBB'], items.map(item => item.prop('data-nested_block-type')))
-  t.is(wrapper.instance().cb__add, items.first().prop('onClick'))
+  t.is('cb__add', items.first().prop('onClick').name)
 })
 
 
@@ -181,8 +187,7 @@ test('Repeater: Add btn when only 1 block type: immediately adds', t => {
   t.is(0, wrapper.find('[type="RepeaterItem"]').length)
 
   add_btn.prop('onClick')()
-  wrapper.update()
-  t.is(1, wrapper.find('[type="RepeaterItem"]').length)
+  t.is(1, data_item.content_items.length)
 })
 
 
@@ -193,8 +198,7 @@ test('Repeater: Add btn click when only 1 block type: supports nested_block_type
   const f = blocks[0].fields[0]
   const wrapper = mk(f, data_item, ctx({ blocks: blocks }))
   wrapper.find('.repeater-add-btn button').prop('onClick')()
-  wrapper.update()
-  t.is(1, wrapper.find('[type="RepeaterItem"]').length)
+  t.is(1, data_item.my_repeater.length)
 })
 
 
@@ -218,7 +222,7 @@ test('Repeater: Add btn renders dropdown item for each nested_block_types', t =>
   wrapper.update()
   const items = wrapper.find('.repeater-add-menu-item')
   t.deepEqual(f.nested_block_types, items.map(item => item.prop('data-nested_block-type')))
-  t.is(wrapper.instance().cb__add, items.first().prop('onClick'))
+  t.is('cb__add', items.first().prop('onClick').name)
 })
 
 
@@ -294,16 +298,17 @@ test('Repeater: cb__reorder: no destination or no change, does nothing', t => {
     value_updated: sinon.spy(),
   })
   const wrapper = mk(test_blocks()[3].fields[0], test_data()[3], context)
+  const dnd_context = wrapper.find('[type="DragDropContext"]')
+  const cb__reorder = dnd_context.prop('onDragEnd')
 
-  wrapper.instance().cb__reorder({ destination: false })
-  wrapper.instance().cb__reorder({ source: false })
-  wrapper.instance().cb__reorder({
+  cb__reorder({ destination: false })
+  cb__reorder({ source: false })
+  cb__reorder({
     source:      { index: 6 },
     destination: { index: 6 },
   })
 
-  wrapper.update()
-  t.false(wrapper.instance().ctx.value_updated.called)
+  t.false(context.value_updated.called)
 })
 
 
@@ -312,19 +317,19 @@ test('Repeater: cb__reorder: reorders items', t => {
   const data_item   = test_data()[3]
   const data_before = Otter.Utils.copy(data_item.content_items)
   const wrapper     = mk(test_blocks()[3].fields[0], data_item, context)
+  const dnd_context = wrapper.find('[type="DragDropContext"]')
+  const cb__reorder = dnd_context.prop('onDragEnd')
 
-  wrapper.instance().cb__reorder({
+  cb__reorder({
     source:      { index: data_item.content_items.length - 1 },
     destination: { index: 0 },
   })
-
-  const instance = wrapper.instance()
-  const data_after = instance.props.containing_data_item.content_items
 
   t.true(context.value_updated.calledOnce)
   t.true(context.should_redraw.calledOnce)
   t.true(context.block_toggled.calledOnce)
 
+  const data_after = Otter.Utils.copy(data_item.content_items)
   t.is(data_before.length, data_after.length)
   t.deepEqual(data_before[data_before.length - 1], data_after[0])
 })

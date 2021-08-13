@@ -2,6 +2,7 @@ import test from 'ava'
 import React from 'react'
 import { shallow, mount, configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
+import PageDataContext from '../core/PageDataContext'
 import RecursiveBlockRenderer from '../core/RecursiveBlockRenderer'
 import ClearSelectionBtn from '../core/other/ClearSelectionBtn'
 import test_blocks from './_test-blocks'
@@ -38,10 +39,14 @@ const data_item__not_set = {
 
 
 function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
-  return mount(<Otter.Fields.components.Radios field_def={field_def}
-                                               containing_data_item={containing_data_item}
-                                               consumer_component={stubs.func_stub([{...ctx_methods}])}
-                                               is_top_level={is_top_level} />)
+  const Prov = PageDataContext.Provider
+  return mount(
+    <Prov value={ctx_methods}>
+      <Otter.Fields.components.Radios field_def={field_def}
+                                                 containing_data_item={containing_data_item}
+                                                 is_top_level={is_top_level} />
+    </Prov>
+  )
 }
 
 
@@ -76,8 +81,10 @@ test('Radios: click updates state, calls ctx update methods', t => {
     should_redraw() { ctx.should_redraw.called = true },
   }
 
-  const wrapper = mk(block.fields[0], data_item, ctx)
+  const d = Object.assign({}, data_item)
+  const wrapper = mk(block.fields[0], d, ctx)
   const opt__c = wrapper.find('.otter-radios a[data-value="c"]')
+  t.is('b', d.radios_field)
   t.is(1, opt__c.length)
 
   opt__c.prop('onClick')({
@@ -93,18 +100,20 @@ test('Radios: click updates state, calls ctx update methods', t => {
   t.is(true, ctx.value_updated.called)
   t.is(true, ctx.should_redraw.called)
   t.is(1, selected_opt.length)
-  t.is('c', selected_opt.get(0).props.value)
+  t.is('c', d.radios_field)
 })
 
 
-test('Radios: clear button sets value to null', t => {
+test('Radios: clear button sets value to undefined', t => {
   const ctx = {
     value_updated() { ctx.value_updated.called = true },
     should_redraw() { ctx.should_redraw.called = true },
   }
 
-  const wrapper = mk(block.fields[0], data_item, ctx)
+  const d = Object.assign({}, data_item)
+  const wrapper = mk(block.fields[0], d, ctx)
   const clear_btn = wrapper.findWhere(node => node.type() === ClearSelectionBtn)
+  t.is('b', d.radios_field)
   t.is(1, clear_btn.length)
 
   clear_btn.prop('cb__clear')()
@@ -113,7 +122,7 @@ test('Radios: clear button sets value to null', t => {
   const selected_opt = wrapper.find('input[checked=true]')
   t.is(true, ctx.value_updated.called)
   t.is(true, ctx.should_redraw.called)
-  t.is(0, selected_opt.length)
+  t.is(undefined, d.radios_field)
 })
 
 

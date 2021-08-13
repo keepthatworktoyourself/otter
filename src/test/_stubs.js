@@ -1,6 +1,5 @@
 import React from 'react'
 
-
 function mk_stub(type) {
   return function s(props) {
     s.last_props = props
@@ -12,7 +11,6 @@ function mk_stub(type) {
   }
 }
 
-
 function func_stub(child_args) {
   return function ChildFunctionStub(props) {
     return (
@@ -22,7 +20,6 @@ function func_stub(child_args) {
     )
   }
 }
-
 
 export default {
   mk_stub,

@@ -3,6 +3,7 @@ import React from 'react'
 import { shallow, mount, configure } from 'enzyme'
 import sinon from 'sinon'
 import Adapter from 'enzyme-adapter-react-16'
+import PageDataContext from '../core/PageDataContext'
 import AddBlockBtn from '../core/other/AddBlockBtn'
 import test_blocks from './_test-blocks'
 import test_data from './_test-data'
@@ -45,11 +46,11 @@ const fake_ev = (attribute_return) => ({
 
 
 function mk(index, blocks, popup_direction, suggest, context_methods) {
-  return mount(<AddBlockBtn index={index}
+  const Prov = PageDataContext.Provider
+  return mount(<Prov value={context_methods}><AddBlockBtn index={index}
                             blocks={blocks}
                             popup_direction={popup_direction}
-                            suggest={suggest}
-                            consumer_component={stubs.func_stub([{ blocks, ...context_methods }])} />)
+                            suggest={suggest} /></Prov>)
 }
 
 
@@ -91,7 +92,7 @@ test('AddBlockBtn: simple blocks: renders non-hidden dropdown items, call cb__se
   const items = wrapper.find('.add-block-btn-menu-item')
   const exp = blocks__simple.filter(b => b.hidden !== true)
   t.is(exp.length, items.length)
-  t.is(wrapper.instance().cb__select, items.first().prop('onClick'))
+  t.is('cb__select', items.first().prop('onClick').name)
 })
 
 

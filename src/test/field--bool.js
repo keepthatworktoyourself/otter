@@ -2,6 +2,7 @@ import test from 'ava'
 import React from 'react'
 import { shallow, mount, configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
+import PageDataContext from '../core/PageDataContext'
 import test_blocks from './_test-blocks'
 import test_data from './_test-data'
 import stubs from './_stubs'
@@ -32,10 +33,14 @@ const data_item__true = {
 
 
 function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
-  return mount(<Otter.Fields.components.Bool field_def={field_def}
-                                             containing_data_item={containing_data_item}
-                                             consumer_component={stubs.func_stub([{...ctx_methods}])}
-                                             is_top_level={is_top_level} />)
+  const Prov = PageDataContext.Provider
+  return mount(
+    <Prov value={ctx_methods}>
+      <Otter.Fields.components.Bool field_def={field_def}
+                                    containing_data_item={containing_data_item}
+                                    is_top_level={is_top_level} />
+    </Prov>
+  )
 }
 
 
@@ -82,8 +87,10 @@ test('Bool: click updates state and calls ctx updated methods', t => {
     should_redraw() { ctx.should_redraw.called = true },
   }
 
-  const wrapper = mk(block.fields[0], data_item__false, ctx)
+  const data = Object.assign({}, data_item__false)
+  const wrapper = mk(block.fields[0], data, ctx)
   const btn__yes = wrapper.find('a[data-value="yes"]')
+  t.is(false, data.bool_field)
   t.is(false, wrapper.find('input').get(0).props.checked)
 
   btn__yes.prop('onClick')({
@@ -91,10 +98,8 @@ test('Bool: click updates state and calls ctx updated methods', t => {
       getAttribute() { return 'yes' },
     },
   })
-  wrapper.update()
-  t.is(true, ctx.value_updated.called)
-  t.is(true, ctx.should_redraw.called)
-  t.is(true, wrapper.find('input').get(0).props.checked)
+
+  t.is(true, data.bool_field)
 })
 
 
