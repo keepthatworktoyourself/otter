@@ -188,32 +188,33 @@ Note that using `matches` and `doesnt_match` may impact the performance of typin
 
 The supported field types are listed below. Many fields have additional options you can set alongside the above [field properties] common to all fields.
 
-| Type          | Description                                 | Options                  | Default  |                                                                         |
-| :------------ | :------------------------------------------ | :----------------------- | :------- | :---------------------------------------------------------------------- |
-| `TextInput`   | Plain text input                            |                          |          |                                                                         |
-| `TextArea`    | Textarea (multi-line plain text)            |                          |          |                                                                         |
-|               |                                             | `mono` (bool)            | `false`  | Use a monospace font                                                    |
-| `TextEditor`  | Rich text editor                            |                          |          |                                                                         |
-|               |                                             | `heading_levels` (array) | `[1, 2]` | Heading types to display in the paragraph style dropdown                |
-|               |                                             | `blockquote` (bool)      | `false`  | Enable blockquote                                                       |
-|               |                                             | `hr` (bool)              | `false`  | Enable horizontal rule                                                  |
-|               |                                             | `paste_as_plain_text`    | `false`  | Clear text formatting on paste                                          |
-| `Bool`        | A toggle                                    |                          |          |                                                                         |
-|               |                                             | `no_label` (string)      | `"Yes"`  | Label for `true` option                                                 |
-|               |                                             | `yes_label` (string)     | `"No"`   | Label for `false` option                                                |
-| `Radios`      | Radio buttons                               |                          |          |                                                                         |
-|               |                                             | `options` (object)       |          | Radio options. Key pairs are in the form `value: "Label"`.              |
-| `Select`      | Select dropdown                             |                          |          |                                                                         |
-|               |                                             | `options` (object)       |          | Select options. Key pairs are in the form `value: "Label"`.             |
-| `WPMedia`     | Wordpress media item (Wordpress only)       |                          |          |                                                                         |
+| Type          | Description                                 | Options                  | Default  |                                                                                               |
+| :------------ | :------------------------------------------ | :----------------------- | :------- | :------------------------------------------------------------------------------------------   |
+| `TextInput`   | Plain text input                            |                          |          |                                                                                               |
+| `TextArea`    | Textarea (multi-line plain text)            |                          |          |                                                                                               |
+|               |                                             | `mono` (bool)            | `false`  | Use a monospace font                                                                          |
+| `TextEditor`  | Rich text editor                            |                          |          |                                                                                               |
+|               |                                             | `heading_levels` (array) | `[1, 2]` | Heading types to display in the paragraph style dropdown                                      |
+|               |                                             | `blockquote` (bool)      | `false`  | Enable blockquote                                                                             |
+|               |                                             | `hr` (bool)              | `false`  | Enable horizontal rule                                                                        |
+|               |                                             | `paste_as_plain_text`    | `false`  | Clear text formatting on paste                                                                |
+| `Bool`        | A toggle                                    |                          |          |                                                                                               |
+|               |                                             | `no_label` (string)      | `"Yes"`  | Label for `true` option                                                                       |
+|               |                                             | `yes_label` (string)     | `"No"`   | Label for `false` option                                                                      |
+| `Radios`      | Radio buttons                               |                          |          |                                                                                               |
+|               |                                             | `options` (object)       |          | Radio options. Key pairs are in the form `value: "Label"`.                                    |
+|               |                                             | `watches` (bool)         | `false`  | Render the options as color swatches. Option values must be a valid CSS color, e.g. '#343434' |
+| `Select`      | Select dropdown                             |                          |          |                                                                                               |
+|               |                                             | `options` (object)       |          | Select options. Key pairs are in the form `value: "Label"`.                                   |
+| `WPMedia`     | Wordpress media item (Wordpress only)       |                          |          |                                                                                               |
 |               |                                             | `media_types` (array)    | `[ ]`    | File types to include in the media browser. Supported: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If omitted or an empty array, all files are included. |
-| `NestedBlock` | Embed another block into this block.        |                          |          |                                                                         |
+| `NestedBlock` | Embed another block into this block.        |                          |          |                                                                                               |
 |               |                                             | `nested_block_type` (string or Block object)  | | The block to embed inside this block. Vakue is either a Block object or the name string of a block defined elsewhere in the blockset. |
-|               |                                             | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Nested Block         |
-| `Repeater`    | Embed an array of blocks within this block. |                          |          |                                                                         |
+|               |                                             | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Nested Block                               |
+| `Repeater`    | Embed an array of blocks within this block. |                          |          |                                                                                               |
 |               |                                             | `nested_block_types` (array: strings or Block objects)  | | The blocks available in this Repeater. Value is an array of either Block objects or name strings of blocks defined elsewhere in the blockset. |
-|               |                                             | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Repeater             |
-|               |                                             | `max` (number)           | No limit | Optionally limit the number of items the user can add                   |
+|               |                                             | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Repeater                                   |
+|               |                                             | `max` (number)           | No limit | Optionally limit the number of items the user can add                                         |
 
 
 

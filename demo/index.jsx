@@ -43,6 +43,23 @@ const text_block = {
       no_label:    'No, plain',
     },
     {
+      name: 'dropcap_color',
+      type: Otter.Fields.Radios,
+      swatches: true,
+      options: {
+        'pink':       '#f06292',
+        'purple':     '#9575cd',
+        'light blue': '#4fc3f7',
+        'cyan':       '#4dd0e1',
+        'amber':      '#ffd54f',
+        'yellow':     '#fff176',
+      },
+      display_if: {
+        sibling: 'fancy',
+        equal_to: true,
+      },
+    },
+    {
       name: 'align',
       type: Otter.Fields.Select,
       options: {

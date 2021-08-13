@@ -48,7 +48,7 @@ export default class AddBlockBtn extends React.Component {
             Insert block
           </span>
         ) : ''}
-        <span class={`c-svg ${suggest ? 'c-svg--toggler' : ''}`}>
+        <span className={`c-svg ${suggest ? 'c-svg--toggler' : ''}`}>
           <Icons.Icon icon="PlusIcon" />
         </span>
       </span>

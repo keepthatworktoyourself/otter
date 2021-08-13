@@ -37,6 +37,7 @@ export default class Radios extends React.Component {
     const containing_data_item = this.props.containing_data_item
     const is_top_level         = this.props.is_top_level
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer
+    const swatches             = field_def.swatches
     const uid                  = `${containing_data_item.__uid}-${field_def.name}`
     const input_name           = `radios-${uid}`
     const value                = containing_data_item[field_def.name] || ''
@@ -46,7 +47,7 @@ export default class Radios extends React.Component {
     const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
     const opt_keys = Object.keys(opts)
 
-    const btn_styles = (selected) => `
+    const btn_classes = (selected) => `
       inline-block mr-1
       ${styles.button} ${styles.control_border} ${styles.control_border__interactive}
       ${selected ? 'bg-gray-600' : styles.control_bg}
@@ -54,6 +55,16 @@ export default class Radios extends React.Component {
       ${selected ? 'font-semibold' : ''}
       ${styles.button_pad__sm}
     `
+    const btn_classes__swatch = (selected) => `
+      inline-block mr-1 w-7
+      ${styles.button} ${styles.button_pad__sm} ${styles.control_border}
+      transform transition-transform
+      ${selected ? 'scale-125 z-10' : ''}
+    `
+
+    const styles__swatch = (selected, opt) => ({
+      backgroundColor: opts[opt],
+    })
 
     return (
       <ContextConsumer>{ctx => (this.ctx = ctx) && (
@@ -72,15 +83,17 @@ export default class Radios extends React.Component {
                 const input_id = `${input_name}--${i}`
                 const selected = opt === value
                 const sel = { checked: selected }
+                const classes = swatches ? btn_classes__swatch(selected) : btn_classes(selected)
+                const styles = swatches ? styles__swatch(selected, opt) : { }
 
                 return (
-                  <a className={`${btn_styles(selected)} mb-0`}
+                  <a className={`${classes} mb-0`}
                      data-value={opt}
                      onClick={this.cb__click}
                      key={input_id}
+                     style={styles}
                   >
-                    {opts[opt]}
-
+                     {swatches ? ' ' : opts[opt]}
                     <input type="radio" readOnly name={input_name} id={input_id} {...sel}
                            value={opt} className="hidden" />
                   </a>
