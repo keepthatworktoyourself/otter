@@ -147,12 +147,15 @@ Each block should contain at least one field.
 
 All fields have the following properties:
 
-| Property      | Value                                   | Required   |                                                                                                          |
-| :------------ | :-------------------------------------- | :--------- | :------------------------------------------------------------------------------------------------------- |
-| `name`        | `<string>`                              | Yes        | The block data save key.                                                                                 |
-| `description` | `<string>`                              |            | Field label displayed to the user. If not present Otter will use a prettified version of the field name. |
-| `type`        | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).                                                                          |
-| `display_if`  | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s).                                            |
+| Property        | Value                                   | Required   |                                                                                                          |
+| :-------------- | :-------------------------------------- | :--------- | :------------------------------------------------------------------------------------------------------- |
+| `name`          | `<string>`                              | Yes        | The block data save key.                                                                                 |
+| `description`   | `<string>`                              |            | Field label displayed to the user. If not present Otter will use a prettified version of the field name. |
+| `type`          | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).                                                                          |
+| `display_if`    | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s).                                            |
+| `default_value` | Any type, as appropriate                |            | A default value, used to set the field initially and to provide data on save if the field is empty       |
+
+(The `default_value` prop is not supported by TextEditor, WPMedia, NestedBlock, or Repeater.)
 
 [Field type](#field-types) should be specified with the Otter-defined constants such as `Otter.Fields.TextInput`.
 

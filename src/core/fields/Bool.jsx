@@ -13,6 +13,8 @@ export default function Bool(props) {
   const no_label             = field_def.no_label  || 'No'
   const label                = field_def.description || Utils.humanify_str(field_def.name)
   const value                = containing_data_item[field_def.name]
+  const default_value = Utils.evaluate(field_def.default_value)
+  const display_value = (value === undefined ? default_value : value) || false
 
   function cb__click(ev) {
     if (ev.currentTarget.getAttribute('data-value') === 'yes') {
@@ -45,14 +47,14 @@ export default function Bool(props) {
         </div>
 
         <div className={`inline-block md:block mr-2`}>
-          <a className={btn_styles(value)}
+          <a className={btn_styles(display_value)}
              data-value="yes"
              onClick={cb__click}
           >
             {yes_label}
           </a>
 
-          <a className={btn_styles(!value, true)}
+          <a className={btn_styles(!display_value, true)}
              data-value="no"
              onClick={cb__click}
           >
@@ -60,7 +62,7 @@ export default function Bool(props) {
           </a>
         </div>
 
-        <input className="hidden" type="checkbox" readOnly checked={value || false} />
+        <input className="hidden" type="checkbox" readOnly checked={display_value} />
       </div>
     </div>
   )

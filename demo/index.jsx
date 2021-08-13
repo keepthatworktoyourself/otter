@@ -158,7 +158,6 @@ function load(post_id) {
       {
         __type: 'HTML',
         html: `<div>I'm a TextArea field with mono={true}!</div>`,
-        mono: true,
       },
     ],
   })

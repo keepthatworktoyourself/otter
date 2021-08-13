@@ -13,21 +13,23 @@ export default function Radios(props) {
   const swatches             = field_def.swatches
   const uid                  = `${containing_data_item.__uid}-${field_def.name}`
   const input_name           = `radios-${uid}`
-  const value                = containing_data_item[field_def.name] || ''
+  const value                = containing_data_item[field_def.name]
   const label                = field_def.description || Utils.humanify_str(field_def.name)
-  const opts_raw = field_def.options || { }
-  const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
-  const opt_keys = Object.keys(opts)
+  const opts_raw      = field_def.options || { }
+  const opts          = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
+  const opt_keys      = Object.keys(opts)
+  const default_value = Utils.evaluate(field_def.default_value)
+  const display_value = (value === undefined ? default_value : value) || ''
 
   function cb__click(ev) {
     const input = ev.currentTarget.querySelector('input')
-    props.containing_data_item[props.field_def.name] = input.value
+    containing_data_item[field_def.name] = input.value
     ctx.value_updated()
     ctx.should_redraw()   // For conditional rendering
   }
 
   function cb__clear(ev) {
-    delete props.containing_data_item[props.field_def.name]
+    containing_data_item[field_def.name] = null
     ctx.value_updated()
     ctx.should_redraw()   // For conditional rendering
   }
@@ -65,7 +67,7 @@ export default function Radios(props) {
           {opt_keys.length === 0 && `[Radio field has no options!]`}
           {opt_keys.map((opt, i) => {
             const input_id = `${input_name}--${i}`
-            const selected = opt === value
+            const selected = opt === display_value
             const sel = { checked: selected }
             const classes = swatches ? btn_classes__swatch(selected) : btn_classes(selected)
             const styles = swatches ? styles__swatch(selected, opt) : { }

@@ -13,18 +13,20 @@ export default function Select(props) {
   const uid                  = `${containing_data_item.__uid}-${field_def.name}`
   const value                = containing_data_item[field_def.name]
   const label                = field_def.description || Utils.humanify_str(field_def.name)
-  const opts_raw = field_def.options || { }
-  const opts     = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
-  const opt_keys = Object.keys(opts)
+  const opts_raw      = field_def.options || { }
+  const opts          = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
+  const opt_keys      = Object.keys(opts)
+  const default_value = Utils.evaluate(field_def.default_value)
+  const display_value = (value === undefined ? default_value : value) || ''
 
   function cb__clear() {
-    props.containing_data_item[props.field_def.name] = null
+    containing_data_item[field_def.name] = null
     ctx.value_updated()
     ctx.should_redraw()   // For conditional rendering
   }
 
   function cb__change(ev) {
-    props.containing_data_item[props.field_def.name] = ev.target.value
+    containing_data_item[field_def.name] = ev.target.value
     ctx.value_updated()
     ctx.should_redraw()   // For conditional rendering
   }
@@ -47,7 +49,7 @@ export default function Select(props) {
                     ${styles.control_border__focus}
                     pr-7
                   `}
-                  value={value || ''}
+                  value={display_value}
                   onChange={cb__change}
           >
             {opt_keys.length === 0 && `[Select field has no options!]`}

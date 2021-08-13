@@ -111,7 +111,10 @@ export default class Editor extends React.Component {
         }
 
         else {
-          carry[field_name] = field_value
+          const use_default = field_value === null || field_value === undefined || field_value === ''
+          carry[field_name] = use_default ?
+            Utils.evaluate(field_def.default_value) :
+            field_value
         }
 
         const remove = (

@@ -13,6 +13,8 @@ export default function TextArea(props) {
   const value                = containing_data_item[field_def.name]
   const mono                 = field_def.mono || false
   const label                = field_def.description || Utils.humanify_str(field_def.name)
+  const default_value        = Utils.evaluate(field_def.default_value)
+  const display_value        = (value === undefined ? default_value : value) || ''
 
   function cb__change(ev) {
     containing_data_item[field_def.name] = ev.target.value
@@ -36,7 +38,8 @@ export default function TextArea(props) {
                   minHeight: '5rem',
                   fontSize: mono ? '1.1em' : null,
                 }}
-                value={value || ''} onChange={cb__change} />
+                value={display_value}
+                onChange={cb__change} />
     </div>
   )
 }

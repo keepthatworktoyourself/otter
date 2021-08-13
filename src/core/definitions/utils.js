@@ -355,6 +355,14 @@ function set_dynamic_data(name, value) {
 dynamic_data.data = { };
 
 
+// evaluate
+// -----------------------------------
+
+function evaluate(x) {
+  return typeof x === 'function' ? x() : x
+}
+
+
 // Some errors
 // -----------------------------------
 
@@ -408,6 +416,7 @@ export default {
   upto,
   dynamic_data,
   set_dynamic_data,
+  evaluate,
   Err__BlockNoType,
   Err__BlockTypeNotFound,
   Err__FieldNoType,

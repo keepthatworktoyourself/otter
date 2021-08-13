@@ -422,3 +422,13 @@ test('utils: upto -> array of consecutive integers', t => {
   t.deepEqual([0, 1, 2, 3, 4], Otter.Utils.upto(5))
 })
 
+
+// evaluate
+// ------------------------------------
+
+test('utils: evaluate -> result', t => {
+  t.is(7, Otter.Utils.evaluate(7))
+  t.is(7, Otter.Utils.evaluate(() => 7))
+  t.is(undefined, Otter.Utils.evaluate(undefined))
+})
+

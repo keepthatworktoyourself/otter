@@ -10,8 +10,10 @@ export default function TextInput(props) {
   const field_def            = props.field_def
   const containing_data_item = props.containing_data_item
   const is_top_level         = props.is_top_level
-  const value                = containing_data_item[field_def.name] || ''
+  const value                = containing_data_item[field_def.name]
   const label                = field_def.description || Utils.humanify_str(field_def.name)
+  const default_value        = Utils.evaluate(field_def.default_value)
+  const display_value        = (value === undefined ? default_value : value) || ''
 
   function cb__change(ev) {
     containing_data_item[field_def.name] = ev.target.value
@@ -30,10 +32,9 @@ export default function TextInput(props) {
                ${styles.button_pad} ${styles.control_bg} ${styles.control_border}
                ${styles.control_border__focus}
              `}
-             value={value}
+             value={display_value}
              onChange={cb__change} />
     </div>
   )
-
 }
 
