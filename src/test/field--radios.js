@@ -78,7 +78,7 @@ test('Radios: renders radio options, initial value selected', t => {
 test('Radios: click updates state, calls ctx update methods', t => {
   const ctx = {
     value_updated() { ctx.value_updated.called = true },
-    should_redraw() { ctx.should_redraw.called = true },
+    redraw() { ctx.redraw.called = true },
   }
 
   const d = Object.assign({}, data_item)
@@ -98,16 +98,16 @@ test('Radios: click updates state, calls ctx update methods', t => {
   wrapper.update()
   const selected_opt = wrapper.find('input[checked=true]')
   t.is(true, ctx.value_updated.called)
-  t.is(true, ctx.should_redraw.called)
+  t.is(true, ctx.redraw.called)
   t.is(1, selected_opt.length)
   t.is('c', d.radios_field)
 })
 
 
-test('Radios: clear button sets value to undefined', t => {
+test('Radios: clear button sets value to null', t => {
   const ctx = {
     value_updated() { ctx.value_updated.called = true },
-    should_redraw() { ctx.should_redraw.called = true },
+    redraw() { ctx.redraw.called = true },
   }
 
   const d = Object.assign({}, data_item)
@@ -121,8 +121,8 @@ test('Radios: clear button sets value to undefined', t => {
 
   const selected_opt = wrapper.find('input[checked=true]')
   t.is(true, ctx.value_updated.called)
-  t.is(true, ctx.should_redraw.called)
-  t.is(undefined, d.radios_field)
+  t.is(true, ctx.redraw.called)
+  t.is(null, d.radios_field)
 })
 
 

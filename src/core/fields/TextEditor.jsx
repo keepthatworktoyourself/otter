@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill'
 import Quill from 'quill'
 import Utils from '../definitions/utils'
 import styles from '../definitions/styles'
-import PageDataContext from '../PageDataContext'
+import {PageDataContext} from '../PageDataContext'
 import FieldLabel from '../other/FieldLabel'
 import Icons from '../other/Icons'
 const Delta = Quill.import('delta')
@@ -75,7 +75,7 @@ export default class TextEditor extends React.Component {
     this.props.containing_data_item[this.props.field_def.name] = html
     if (event_origin === 'user') {
       this.ctx.value_updated()
-      this.props.is_display_if_target && this.ctx.should_redraw()
+      this.props.is_display_if_target && this.ctx.redraw()
     }
   }
 

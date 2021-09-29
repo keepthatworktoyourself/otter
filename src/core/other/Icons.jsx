@@ -1,5 +1,4 @@
 import React from 'react'
-import * as Icons from '@heroicons/react/outline'
 
 
 const HR = () => (
@@ -20,11 +19,10 @@ const LinkExt = () => (
 )
 
 
-const Icon = ({icon}) => {
-  const I = Icons[icon];
+const Icon = ({Which}) => {
   return (
     <span className="c-svg">
-      <I />
+      <Which />
     </span>
   )
 }

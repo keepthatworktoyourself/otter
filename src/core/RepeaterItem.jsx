@@ -16,7 +16,7 @@ export default function RepeaterItem(props) {
         <div className="pb-2">
           <div className={`relative pt-8 ${styles.nested_block} ${styles.control_bg}`}>
             {props.children}
-            {cb__delete && <BlockDeleteBtn cb__delete={ev => cb__delete(index)} classes="top-2 right-2" />}
+            {cb__delete && <BlockDeleteBtn delete_block={ev => cb__delete(index)} classes="top-2 right-2" />}
           </div>
         </div>
       </div>

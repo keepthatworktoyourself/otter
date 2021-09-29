@@ -1,7 +1,7 @@
 {
   "name": "otter-editor",
   "description": "Content editor with declaratively defined content blocks.",
-  "version": "0.0.109",
+  "version": "0.0.125",
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://github.com/bhallstein/otter",
@@ -49,7 +49,7 @@
     "tailwindcss": "^2.1.2"
   },
   "dependencies": {
-    "@heroicons/react": "^1.0.1",
+    "@graywolfai/react-heroicons": "^1.3.0",
     "react-beautiful-dnd": "^13.1.0",
     "react-quill": "^1.3.5",
     "react-toggle": "^4.1.2"

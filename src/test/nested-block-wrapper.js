@@ -16,7 +16,7 @@ configure({ adapter: new Adapter() })
 
 const ctx = () => ({
   value_updated: sinon.spy(),
-  should_redraw: sinon.spy(),
+  redraw: sinon.spy(),
   block_toggled: sinon.spy(),
 })
 
@@ -57,7 +57,7 @@ function mk(field_def, containing_data_item, ctx_methods, children) {
 
 
 test('NestedBlock: renders title, ddtoggle', t => {
-  const wrapper = mk(field_def, data_item, {}, [])
+  const wrapper = mk(field_def, data_item, {}, [ ])
   t.is(1, wrapper.find('h4').length)
   t.is(1, wrapper.find('DDToggle').length)
   t.truthy(wrapper.find('h4').text().match(field_def.description))
@@ -82,7 +82,7 @@ test('NestedBlock: renders children when uncollapsed', t => {
 })
 
 
-test('NestedBlockWrapper: collapse toggle calls ctx should_redraw, block_toggled', t => {
+test('NestedBlockWrapper: collapse toggle calls ctx redraw, block_toggled', t => {
   const context = ctx()
   const wrapper = mk(field_def, data_item, context, [
     <div className="nbw-child nbw-child-1" key="k1"></div>,
@@ -93,13 +93,13 @@ test('NestedBlockWrapper: collapse toggle calls ctx should_redraw, block_toggled
       blur: sinon.spy(),
     },
   })
-  t.true(context.should_redraw.calledOnce)
+  t.true(context.redraw.calledOnce)
   t.true(context.block_toggled.calledOnce)
 })
 
 
 test('NestedBlockWrapper: when optional, renders Toggle', t => {
-  const wrapper = mk(field_def__optional, data_item, {}, [])
+  const wrapper = mk(field_def__optional, data_item, {}, [ ])
   t.is(1, wrapper.find('Toggle').length)
 })
 
@@ -144,7 +144,7 @@ test('NestedBlockWrapper: when optional, collapse toggle does nothing until enab
 })
 
 
-test('NestedBlockWrapper: toggle_enabled calls ctx value_updated, should_redraw, block_toggled', t => {
+test('NestedBlockWrapper: toggle_enabled calls ctx value_updated, redraw, block_toggled', t => {
   const context = ctx()
   const wrapper = mk(field_def__optional, data_item__no_nested_block_data, context, [ ])
   wrapper.find('Toggle').prop('onChange')({
@@ -155,7 +155,7 @@ test('NestedBlockWrapper: toggle_enabled calls ctx value_updated, should_redraw,
   })
   wrapper.update()
   t.true(context.value_updated.calledOnce)
-  t.true(context.should_redraw.calledOnce)
+  t.true(context.redraw.calledOnce)
   t.true(context.block_toggled.calledOnce)
 })
 

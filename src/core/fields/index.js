@@ -15,7 +15,6 @@ function mk_field(name, description, type) {
   }
 }
 
-
 const fields = {
   TextInput:        'TextInput',
   TextArea:         'TextArea',
@@ -26,6 +25,7 @@ const fields = {
   WPMedia:          'WPMedia',
   NestedBlock:      'NestedBlock',
   Repeater:         'Repeater',
+  ErrorField:       'ErrorField',
 
   mk_textinput:  (name, descr)       => mk_field(name, descr, fields.TextInput),
   mk_textarea:   (name, descr, opts) => Object.assign(mk_field(name, descr, fields.TextArea),   opts || { }),

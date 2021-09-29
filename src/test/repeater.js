@@ -29,7 +29,7 @@ const ctx = (overrides) => Object.assign(
   {},
   {
     value_updated: sinon.spy(),
-    should_redraw: sinon.spy(),
+    redraw: sinon.spy(),
     block_toggled: sinon.spy(),
     blocks: test_blocks(),
   },
@@ -42,13 +42,12 @@ function mk(field_def, containing_data_item, ctx_methods) {
   return mount(
     <Prov value={ctx_methods}>
       <Repeater field_def={field_def}
-                           containing_data_item={containing_data_item}
-                           consumer_component={stubs.func_stub([{...ctx_methods}])}
-                           repeater_item_component={stubs.mk_stub('RepeaterItem')}
-                           rbr_component={stubs.mk_stub('RecursiveBlockRenderer')}
-                           drag_context_component={stubs.mk_stub('DragDropContext')}
-                           droppable_component={stubs.func_stub([provided, snapshot])}
-                           draggable_component={stubs.func_stub([provided, snapshot])} />
+                containing_data_item={containing_data_item}
+                repeater_item_component={stubs.mk_stub('RepeaterItem')}
+                rbr_component={stubs.mk_stub('RecursiveBlockRenderer')}
+                drag_context_component={stubs.mk_stub('DragDropContext')}
+                droppable_component={stubs.func_stub([provided, snapshot])}
+                draggable_component={stubs.func_stub([provided, snapshot])} />
     </Prov>
   )
 }
@@ -280,12 +279,12 @@ test('Repeater: when cb__delete called by a RepeaterItem, the item is removed', 
 })
 
 
-test('Repeater: cb__delete calls ctx value_updated, should_redraw, block_toggled', t => {
+test('Repeater: cb__delete calls ctx value_updated, redraw, block_toggled', t => {
   const context = ctx()
   const wrapper = mk(test_blocks()[3].fields[0], test_data()[3], context)
   wrapper.find('[type="RepeaterItem"]').first().prop('cb__delete')(0)
   t.true(context.value_updated.calledOnce)
-  t.true(context.should_redraw.calledOnce)
+  t.true(context.redraw.calledOnce)
   t.true(context.block_toggled.calledOnce)
 })
 
@@ -326,7 +325,7 @@ test('Repeater: cb__reorder: reorders items', t => {
   })
 
   t.true(context.value_updated.calledOnce)
-  t.true(context.should_redraw.calledOnce)
+  t.true(context.redraw.calledOnce)
   t.true(context.block_toggled.calledOnce)
 
   const data_after = Otter.Utils.copy(data_item.content_items)

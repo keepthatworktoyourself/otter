@@ -34,14 +34,13 @@ const state = {
 
 function render() {
   render.component = ReactDOM.render(
-    <Otter.Editor
-             data={state.data}
-             load_state={state.load_state}
-             blocks={state.blocks}
-             block_numbers={true}
-             delegate={delegate}
-             save={Otter.Save.OnInput}
-             iframe_container_info={state.iframe_container_info} />,
+    <Otter.Editor data={state.data}
+                  load_state={state.load_state}
+                  blocks={state.blocks}
+                  block_numbers={true}
+                  delegate={delegate}
+                  when_to_save={Otter.Save.OnInput}
+                  iframe_container_info={state.iframe_container_info} />,
     container()
   );
 }

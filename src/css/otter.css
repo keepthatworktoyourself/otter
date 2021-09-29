@@ -2,11 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-
+/******************************
+  Otter styles
+ ******************************/
 .monospace {
   font-family: Hack, Consolas, Menlo, 'Source Code Pro', 'Lucida Sans Typewriter', 'Courier New', courier, sans-serif;
 }
-
 
 .c-svg {
   display: block;
@@ -29,7 +30,6 @@
   transition: transform 0.15s ease-in-out;
 }
 
-
 .select {
   position: relative;
 }
@@ -40,7 +40,6 @@
   top: 0.08rem;
   font-size: 1.2em;
 }
-
 
 .react-toggle {
   line-height: 1em !important;
@@ -61,7 +60,6 @@
 .react-toggle--checked .react-toggle-thumb {
   left: 10px !important;
 }
-
 
 .ql-container,
 .ql-editor {

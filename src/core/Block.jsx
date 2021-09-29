@@ -17,19 +17,17 @@ function get_drag_styles(provided, snapshot) {
   }
 }
 
-export default function Block(props) {
+export default function Block({data_item, index, block_numbers, ...props}) {
   const ctx               = usePageData()
-  const data_item         = props.data_item
-  const index             = props.index
-  const cb__delete        = props.cb__delete
-  const block_numbers     = props.block_numbers
+  const blocks            = ctx.blocks
   const Draggable         = props.draggable_component          || DnD.Draggable
   const RecursiveRenderer = props.recursive_renderer_component || RecursiveBlockRenderer
   const draggable_key     = `block-${data_item.__uid}`
-  let block
+  const block = Utils.find_block(blocks, data_item.__type)
 
   return (
-    <Draggable key={draggable_key} draggableId={draggable_key} index={index} type="block">{(prov, snap) => (
+    <Draggable key={draggable_key} draggableId={draggable_key} index={index} type="block"
+      isDragDisabled={!ctx.can_add_blocks}>{(prov, snap) => (
       <div className="outline-none"
            ref={prov.innerRef}
            {...prov.draggableProps} {...prov.dragHandleProps}
@@ -40,16 +38,18 @@ export default function Block(props) {
           <div className={`p-4 ${styles.control_bg}`}>
             <div className="relative">
 
-              <BlockDeleteBtn cb__delete={(ev) => cb__delete(index)} classes="top-0 right-0" />
+              {ctx.can_add_blocks && (
+                <BlockDeleteBtn classes="top-0 right-0" delete_block={() => ctx.delete_item(index)} />
+              )}
 
-              {(block = Utils.find_block(ctx.blocks, data_item.__type)) && (
+              {block && (
                 <>
                   <h3 className={`block-title ${styles.block_title} mb-4`}>
                     {block_numbers && <span className="mr-2 text-gray-300">{index + 1}</span>}
                     {block.description || Utils.humanify_str(block.type)}
                   </h3>
                   <div>
-                    <RecursiveRenderer data_item={data_item} blocks={ctx.blocks} is_top_level={true} />
+                    <RecursiveRenderer data_item={data_item} blocks={blocks} is_top_level={true} />
                   </div>
                 </>
               )}
@@ -63,13 +63,15 @@ export default function Block(props) {
             </div>
           </div>
 
-          <div className="c-block-add-btn absolute hidden group-hover:block z-10" style={{
-            top: index === 0 ? '-1rem' : '-1.5rem',
-            left: '50%',
-            transform: 'translateX(-50%)',
-          }}>
-            <AddBlockBtn blocks={ctx.blocks} index={index} />
-          </div>
+          {ctx.can_add_blocks && (
+            <div className="c-block-add-btn absolute hidden group-hover:block z-10" style={{
+              top: index === 0 ? '-1rem' : '-1.5rem',
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}>
+              <AddBlockBtn index={index} />
+            </div>
+          )}
 
         </div>
       </div>

@@ -88,7 +88,7 @@ test('Select: renders options, initial item or null item selected', t => {
 test('Select: option change updates state, calls ctx update methods', t => {
   const ctx = {
     value_updated() { ctx.value_updated.called = true },
-    should_redraw() { ctx.should_redraw.called = true },
+    redraw() { ctx.redraw.called = true },
   }
   const d = Otter.Utils.copy(data_item)
 
@@ -97,7 +97,7 @@ test('Select: option change updates state, calls ctx update methods', t => {
 
   select.prop('onChange')({ target: { value: 'c' } })
   t.is(true, ctx.value_updated.called)
-  t.is(true, ctx.should_redraw.called)
+  t.is(true, ctx.redraw.called)
   t.is('c', d.select_field)
 })
 

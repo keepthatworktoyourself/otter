@@ -24,7 +24,7 @@ export default function Bool(props) {
       containing_data_item[field_def.name] = false
     }
     ctx.value_updated()
-    ctx.should_redraw()   // For conditional rendering
+    ctx.redraw()   // For conditional rendering
   }
 
   const btn_styles = (selected) => `

@@ -20,7 +20,7 @@ export default function TextArea(props) {
     containing_data_item[field_def.name] = ev.target.value
     update({})
     ctx.value_updated()
-    props.is_display_if_target && ctx.should_redraw()
+    props.is_display_if_target && ctx.redraw()
   }
 
   return (

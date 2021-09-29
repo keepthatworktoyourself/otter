@@ -1,5 +1,5 @@
 import React from 'react'
-import {ChevronDownIcon} from '@heroicons/react/outline'
+import {ChevronDownOutline} from '@graywolfai/react-heroicons'
 
 export default function DDToggle(props) {
   const l_margin = props.marginLeft || '0.3rem'
@@ -15,7 +15,7 @@ export default function DDToggle(props) {
     <span className="icon c-svg c-svg--toggler"
           onClick={props.cb || null}
           {...attrs}>
-      <ChevronDownIcon />
+      <ChevronDownOutline />
     </span>
   )
 }

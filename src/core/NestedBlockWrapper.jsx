@@ -6,11 +6,9 @@ import DDToggle from './other/DDToggle'
 import styles from './definitions/styles'
 
 
-export default function NestedBlockWrapper(props) {
+export default function NestedBlockWrapper({field_def, containing_data_item, children, ...props}) {
   const ctx                        = usePageData()
   const [collapsed, set_collapsed] = useState(true)
-  const field_def                  = props.field_def
-  const containing_data_item       = props.containing_data_item
   const title                      = field_def.description || Utils.humanify_str(field_def.name)
   const is_optional = field_def.optional
   const is_enabled = (
@@ -21,10 +19,10 @@ export default function NestedBlockWrapper(props) {
   function cb__toggle_enabled(ev) {
     ev.currentTarget.blur()
 
-    if (props.field_def.optional) {
+    if (field_def.optional) {
       Utils.optional_nested_block__set_enabled(
-        props.field_def.name,
-        props.containing_data_item,
+        field_def.name,
+        containing_data_item,
         ev.currentTarget.checked
       )
     }
@@ -34,7 +32,7 @@ export default function NestedBlockWrapper(props) {
     }
 
     ctx.value_updated()
-    ctx.should_redraw()
+    ctx.redraw()
     ctx.block_toggled()
   }
 
@@ -47,7 +45,7 @@ export default function NestedBlockWrapper(props) {
 
     if (is_enabled) {
       set_collapsed(!collapsed)
-      ctx.should_redraw()
+      ctx.redraw()
       ctx.block_toggled()
     }
   }
@@ -72,7 +70,7 @@ export default function NestedBlockWrapper(props) {
       {is_enabled && !collapsed && (
         <div className="pb-2">
           <div className={`${styles.nested_block} ${styles.control_bg} p-4 pb-0`}>
-            {props.children}
+            {children}
           </div>
         </div>
       )}

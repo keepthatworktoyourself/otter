@@ -236,7 +236,7 @@ test('utils: check_display_if valid -> empty array', t => {
 
   const r0 = Otter.Utils.check_display_if(b, b.fields[1])
 
-  t.deepEqual([], r0)
+  t.deepEqual([ ], r0)
 })
 
 
@@ -263,7 +263,7 @@ test('utils: display_if rule matches sibling value -> negative', t => {
   const result = Otter.Utils.display_if(block, block.fields[1].name, test_data()[1])
   t.deepEqual({
     display: false,
-    errors: [],
+    errors: [ ],
   }, result)
 })
 
@@ -277,7 +277,7 @@ test('utils: display_if rule sibling has other value -> positive', t => {
   const result = Otter.Utils.display_if(block, block.fields[1].name, test_data()[1])
   t.deepEqual({
     display: true,
-    errors: [],
+    errors: [ ],
   }, result)
 })
 
@@ -287,7 +287,7 @@ test('utils: display_if not set -> positive', t => {
   const result = Otter.Utils.display_if(block, block.fields[0].name)
   t.deepEqual({
     display: true,
-    errors: [],
+    errors: [ ],
   }, result)
 })
 

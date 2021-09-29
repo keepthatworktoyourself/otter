@@ -1,16 +1,15 @@
 import React, {useState} from 'react'
+import {PlusOutline} from '@graywolfai/react-heroicons'
 import Icons from './Icons'
 import {usePageData} from '../PageDataContext'
 import Utils from '../definitions/utils'
 import styles from '../definitions/styles'
 
-export default function AddBlockBtn(props) {
+export default function AddBlockBtn({popup_direction = 'down', suggest, index, msg}) {
   const ctx                    = usePageData()
+  const blocks                 = ctx?.blocks || [ ]
   const [is_open, set_is_open] = useState(false)
-  const blocks                 = props.blocks || [ ]
   const active                 = is_open ? 'is-active' : ''
-  const popup_dir              = props.popup_direction || 'down'
-  const suggest                = props.suggest
   const is_flat                = Utils.blocks_are_simple(blocks)
   const displayed_blocks       = is_flat && blocks.filter(b => b && b.hidden !== true)
 
@@ -19,14 +18,14 @@ export default function AddBlockBtn(props) {
       set_is_open(!is_open)
     }
     else {
-      ctx.open_block_picker(props.index)
+      ctx.open_block_picker(index)
     }
   }
 
   function cb__select(ev) {
     set_is_open(false)
     const block_type = ev.currentTarget.getAttribute('data-block-type')
-    ctx.add_item(block_type, props.index)
+    ctx.add_item(block_type, index)
   }
 
   const btn = (
@@ -38,11 +37,11 @@ export default function AddBlockBtn(props) {
     >
       {suggest ? (
         <span className="mr-1">
-          Insert block
+          {msg || 'Insert block'}
         </span>
       ) : ''}
       <span className={`c-svg ${suggest ? 'c-svg--toggler' : ''}`}>
-        <Icons.Icon icon="PlusIcon" />
+        <Icons.Icon Which={PlusOutline} />
       </span>
     </button>
   )
@@ -60,8 +59,8 @@ export default function AddBlockBtn(props) {
                    rounded-lg overflow-hidden
                    left-1/2
                    ${styles.control_border}
-                   ${popup_dir === 'down' ? 'top-9' : ''}
-                   ${popup_dir === 'up' ? 'bottom-9' : ''}
+                   ${popup_direction === 'down' ? 'top-9' : ''}
+                   ${popup_direction === 'up' ? 'bottom-9' : ''}
                  `}
                  style={{minWidth: '10rem', transform: 'translateX(-50%)'}}
             >

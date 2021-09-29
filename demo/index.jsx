@@ -226,7 +226,7 @@ function render() {
                   data={state.data}
                   load_state={state.load_state}
                   delegate={delegate}
-                  save={Otter.Save.OnInput}
+                  when_to_save={Otter.Save.OnInput}
                   block_numbers={true} />,
     document.getElementById('otter-container')
   )

@@ -30,7 +30,7 @@ function mk(blocks, data_item, index, cb__delete, extra_ctx_props, block_numbers
   const Prov = PageDataContext.Provider
   return mount(
     <Prov value={{blocks, ...extra_ctx_props}}>
-      <Block data_item={data_item} index={0}
+      <Block data_item={data_item}
              index={index}
              block_numbers={block_numbers}
              cb__delete={cb__delete}

@@ -22,13 +22,13 @@ export default function Select(props) {
   function cb__clear() {
     containing_data_item[field_def.name] = null
     ctx.value_updated()
-    ctx.should_redraw()   // For conditional rendering
+    ctx.redraw()   // For conditional rendering
   }
 
   function cb__change(ev) {
     containing_data_item[field_def.name] = ev.target.value
     ctx.value_updated()
-    ctx.should_redraw()   // For conditional rendering
+    ctx.redraw()   // For conditional rendering
   }
 
   return (

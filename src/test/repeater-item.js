@@ -27,7 +27,7 @@ const snapshot = {
 
 const ctx = () => ({
   value_updated: sinon.spy(),
-  should_redraw: sinon.spy(),
+  redraw: sinon.spy(),
   block_toggled: sinon.spy(),
   blocks: test_blocks(),
 })

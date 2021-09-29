@@ -48,7 +48,7 @@ function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
 test('WPMedia: select button rendered and begins wp selection', t => {
   const ctx = {
     value_updated() { ctx.value_updated.called = true },
-    should_redraw() { ctx.should_redraw.called = true },
+    redraw() { ctx.redraw.called = true },
   }
 
   const wrapper = mk(block.fields[0], data_item, ctx, true)
@@ -77,7 +77,7 @@ test('WPMedia: select button rendered and begins wp selection', t => {
   })
   t.is(null, event_listeners['message'])
   t.is(true, ctx.value_updated.called)
-  t.is(true, ctx.should_redraw.called)
+  t.is(true, ctx.redraw.called)
 })
 
 
@@ -92,7 +92,7 @@ test('WPMedia: renders image thumbnail', t => {
 test('WPMedia: clear btn sets value to null, calls ctx update methods', t => {
   const ctx = {
     value_updated() { ctx.value_updated.called = true },
-    should_redraw() { ctx.should_redraw.called = true },
+    redraw() { ctx.redraw.called = true },
   }
   const d = Otter.Utils.copy(data_item)
   const wrapper = mk(block.fields[0], d, ctx)
@@ -100,7 +100,7 @@ test('WPMedia: clear btn sets value to null, calls ctx update methods', t => {
 
   t.is(null, d.image)
   t.is(true, ctx.value_updated.called)
-  t.is(true, ctx.should_redraw.called)
+  t.is(true, ctx.redraw.called)
 })
 
 

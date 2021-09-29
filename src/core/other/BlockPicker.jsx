@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
+import {XOutline} from '@graywolfai/react-heroicons'
 import {usePageData} from '../PageDataContext'
 import Icons from './Icons'
 import Utils from '../definitions/utils'
 
 export default function BlockPicker(props) {
   const ctx              = usePageData()
-  const blocks           = props.blocks || { }
+  const blocks           = ctx.blocks
   const block_group_keys = Object.keys(blocks)
   const container  = props.iframe_container_info || {
     y:      0,
@@ -38,7 +39,7 @@ export default function BlockPicker(props) {
             {/* Close btn */}
             <div className="absolute" style={{top: '1rem', right: '1.2rem'}}>
               <span className="cursor-pointer" onClick={close}>
-                <Icons.Icon icon="XIcon" />
+                <Icons.Icon Which={XOutline} />
               </span>
             </div>
 

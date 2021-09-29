@@ -53,7 +53,7 @@ test('TextInput: renders textarea containing initial value', t => {
 test('TextInput: value change updates state, calls ctx value_updated only', t => {
   const ctx = {
     value_updated() { ctx.value_updated.called = true },
-    should_redraw() { ctx.should_redraw.called = true },
+    redraw() { ctx.redraw.called = true },
   }
   const d = Otter.Utils.copy(data_item)
 
@@ -63,7 +63,7 @@ test('TextInput: value change updates state, calls ctx value_updated only', t =>
 
   textinput.prop('onChange')({ target: { value: new_value } })
   t.is(true,      ctx.value_updated.called)
-  t.is(undefined, ctx.should_redraw.called)
+  t.is(undefined, ctx.redraw.called)
   t.is(new_value, d.title)
 })
 

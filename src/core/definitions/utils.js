@@ -200,7 +200,7 @@ function display_if(block, field_name, data_item) {
   if (!field.display_if) {
     return {
       display: true,
-      errors: [],
+      errors: [ ],
     }
   }
 
@@ -235,7 +235,7 @@ function display_if(block, field_name, data_item) {
 
   return {
     display,
-    errors: [],
+    errors: [ ],
   }
 }
 

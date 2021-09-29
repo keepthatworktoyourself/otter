@@ -1,5 +1,7 @@
 module.exports = {
-  purge: ['src/**/*/.js', 'src/**/*/.jsx'],
+  purge: {
+    content: ['src/**/*/.js', 'src/**/*/.jsx'],
+  },
   variants: {
     extend: {
       backgroundColor: ['active'],

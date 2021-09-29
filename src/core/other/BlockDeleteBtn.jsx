@@ -1,10 +1,11 @@
 import React from 'react'
+import {XOutline} from '@graywolfai/react-heroicons'
 import Icons from '../other/Icons'
 import styles from '../definitions/styles'
 
-export default function BlockDeleteBtn({cb__delete, classes}) {
+export default function BlockDeleteBtn({delete_block, classes}) {
   return (
-    <a onClick={cb__delete}
+    <a onClick={delete_block}
        className={`
          absolute block
          ${styles.button} ${styles.button_pad__sm} ${styles.control_bg}
@@ -12,7 +13,7 @@ export default function BlockDeleteBtn({cb__delete, classes}) {
          ${classes}
        `}
     >
-      <Icons.Icon icon="XIcon" />
+      <Icons.Icon Which={XOutline} />
     </a>
   )
 }

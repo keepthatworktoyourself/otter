@@ -84,7 +84,7 @@ test('Bool: renders yes_label and no_label', t => {
 test('Bool: click updates state and calls ctx updated methods', t => {
   const ctx = {
     value_updated() { ctx.value_updated.called = true },
-    should_redraw() { ctx.should_redraw.called = true },
+    redraw() { ctx.redraw.called = true },
   }
 
   const data = Object.assign({}, data_item__false)

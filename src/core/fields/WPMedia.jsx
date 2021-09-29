@@ -1,5 +1,5 @@
 import React from 'react'
-import PageDataContext from '../PageDataContext'
+import PageDataContext from '../Editor'
 import FieldLabel from '../other/FieldLabel'
 import ClearSelectionBtn from '../other/ClearSelectionBtn'
 import Utils from '../definitions/utils'
@@ -24,7 +24,7 @@ export default class WPMedia extends React.Component {
 
         containing_data_item[field_def.name] = ev.data['otter--set-wp-media-item']
         ctx.value_updated()
-        ctx.should_redraw()
+        ctx.redraw()
 
         window.removeEventListener('message', cb)
       }
@@ -36,7 +36,7 @@ export default class WPMedia extends React.Component {
 
   open_media_browser(field_def) {
     window.parent && window.parent.postMessage({
-      'otter--get-wp-media-item': field_def.media_types || [],
+      'otter--get-wp-media-item': field_def.media_types || [ ],
     }, '*')
   }
 
@@ -50,7 +50,7 @@ export default class WPMedia extends React.Component {
   cb__clear() {
     this.props.containing_data_item[this.props.field_def.name] = null
     this.ctx.value_updated()
-    this.ctx.should_redraw()
+    this.ctx.redraw()
   }
 
 

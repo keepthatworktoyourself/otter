@@ -16,7 +16,7 @@ export default function Repeater(props) {
   const ctx                        = usePageData()
   const [collapsed, set_collapsed] = useState(true)
   const [dialogue, set_dialogue]   = useState(false)
-  const [_, update]                = useState({})
+  const [_, update]                = useState({ })
   const field_def                  = props.field_def
   const containing_data_item       = props.containing_data_item
   const DragDropContext            = props.drag_context_component  || DnD.DragDropContext
@@ -30,7 +30,6 @@ export default function Repeater(props) {
   const multiple_types             = nested_block_types.length !== 1
   const dnd_context_id             = `d-${containing_data_item.__uid}-${field_def.name}`
   const show_add_button            = max === -1 || data_items.length < max
-  ctx.temp__cb__reorder = cb__reorder   // Hack for testing reordering
 
   function cb__add_btn(ev) {
     if (nested_block_types.length > 1) {
@@ -53,7 +52,7 @@ export default function Repeater(props) {
 
     set_dialogue(false)
     ctx.value_updated()
-    ctx.should_redraw()
+    ctx.redraw()
     ctx.block_toggled()
   }
 
@@ -61,9 +60,8 @@ export default function Repeater(props) {
     const data_items = containing_data_item[field_def.name]
     data_items.splice(i, 1)
 
-    update({ })
     ctx.value_updated()
-    ctx.should_redraw()
+    ctx.redraw()
     ctx.block_toggled()
   }
 
@@ -79,9 +77,8 @@ export default function Repeater(props) {
     const [item] = data_items.splice(drag_result.source.index, 1)
     data_items.splice(drag_result.destination.index, 0, item)
 
-    update({ })
     ctx.value_updated()
-    ctx.should_redraw()
+    ctx.redraw()
     ctx.block_toggled()
   }
 

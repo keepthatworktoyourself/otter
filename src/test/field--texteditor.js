@@ -55,7 +55,7 @@ test('TextEditor: renders quill editor, contains initial value', t => {
 test('TextEditor: value change updates state, calls ctx value_updated only', t => {
   const ctx = {
     value_updated() { ctx.value_updated.called = true },
-    should_redraw() { ctx.should_redraw.called = true },
+    redraw() { ctx.redraw.called = true },
   }
   const d = Otter.Utils.copy(data_item)
 
@@ -65,7 +65,7 @@ test('TextEditor: value change updates state, calls ctx value_updated only', t =
 
   quill.prop('onChange')(new_html_value, null, 'user')
   t.is(true,      ctx.value_updated.called)
-  t.is(undefined, ctx.should_redraw.called)
+  t.is(undefined, ctx.redraw.called)
   t.is(new_html_value, d.content)
 })
 

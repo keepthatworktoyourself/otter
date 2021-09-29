@@ -1,7 +1,7 @@
-import React, {useContext} from 'react'
+import {createContext, useContext} from 'react'
 
-const PageDataContext = React.createContext()
-export default PageDataContext
+export const PageDataContext = createContext()
+
 export function usePageData() {
   return useContext(PageDataContext)
 }
