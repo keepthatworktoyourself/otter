@@ -153,7 +153,7 @@ export default function Repeater(props) {
             {multiple_types && dialogue && (
               <div style={{minWidth: '10rem'}}
                    className={
-                     `repeater-add-menu absolute rounded-lg mt-1 z-10 ` +
+                     `repeater-add-menu absolute rounded-lg mt-1 z-1 ` +
                      `${styles.control_border} overflow-hidden`
                    }
               >

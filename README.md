@@ -239,7 +239,7 @@ npm run demo
 
 Otter uses Tailwind for styling.
 
-The ideal way is for Tailwind to be compiled by your applciation. Note that Otter needs the following variants enabled. (Also see Otter’s [tailwind config file](tailwind.config.js).)
+The ideal way is for Tailwind to be compiled by your application. Note that Otter needs the following variants enabled. (Also see Otter’s [tailwind config file](tailwind.config.js).)
 
 ```
   backgroundColor: ['active'],
@@ -252,10 +252,11 @@ Your app also must import Otter's small amount of its own CSS and that of the Qu
 
 ```js
 import 'otter/dist/css/quill.snow.css'
+import 'react-toggle/style.css'
 import 'otter/dist/css/otter.css'
 ```
 
-If you're not using Tailwind yet, import Tailwind, Quill, and Otter in one go:
+You can also import everything (including a full compiled copy of tailwind) in one go:
 
 ```js
 import 'otter/css/all.css

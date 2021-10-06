@@ -46,7 +46,7 @@ export default function Radios(props) {
     inline-block mr-1 w-7
     ${styles.button} ${styles.button_pad__sm} ${styles.control_border}
     transform transition-transform
-    ${selected ? 'scale-125 z-10' : ''}
+    ${selected ? 'scale-125 z-2' : ''}
   `
 
   const styles__swatch = (selected, opt) => ({

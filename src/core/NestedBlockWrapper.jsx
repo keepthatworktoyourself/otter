@@ -53,7 +53,7 @@ export default function NestedBlockWrapper({field_def, containing_data_item, chi
   return (
     <div>
       <div>
-        <h4 className="pb-2 cursor-pointer font-semibold">
+        <h4 className="pb-2 cursor-pointer font-semibold text-xs">
           <span className="nbw-toggle inline-block" onClick={cb__toggle_collapse} >
             {title}
             {is_enabled && <DDToggle is_open={!collapsed} cb={cb__toggle_collapse} />}

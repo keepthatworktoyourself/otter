@@ -64,7 +64,7 @@ export default function Block({data_item, index, block_numbers, ...props}) {
           </div>
 
           {ctx.can_add_blocks && (
-            <div className="c-block-add-btn absolute hidden group-hover:block z-10" style={{
+            <div className="c-block-add-btn absolute hidden group-hover:block z-1" style={{
               top: index === 0 ? '-1rem' : '-1.5rem',
               left: '50%',
               transform: 'translateX(-50%)',
