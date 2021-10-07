@@ -1,13 +1,13 @@
 import Otter from '../src/index'
 
 export const header_block = {
-  type: 'Header',
+  type:   'Header',
   fields: [
     Otter.Fields.mk_textinput('heading'),
     Otter.Fields.mk_textinput('subheading', 'Catchy subheading'),
     {
-      name: 'theme',
-      type: Otter.Fields.Radios,
+      name:    'theme',
+      type:    Otter.Fields.Radios,
       options: {
         light: 'Light',
         dark:  'Dark',
@@ -17,9 +17,9 @@ export const header_block = {
 }
 
 export const text_block = {
-  type: 'Text',
+  type:        'Text',
   description: 'Text content',
-  fields: [
+  fields:      [
     {
       name:           'content',
       description:    'Text content',
@@ -36,10 +36,10 @@ export const text_block = {
       no_label:    'No, plain',
     },
     {
-      name: 'dropcap_color',
-      type: Otter.Fields.Radios,
+      name:     'dropcap_color',
+      type:     Otter.Fields.Radios,
       swatches: true,
-      options: {
+      options:  {
         'pink':       '#f06292',
         'purple':     '#9575cd',
         'light blue': '#4fc3f7',
@@ -48,13 +48,13 @@ export const text_block = {
         'yellow':     '#fff176',
       },
       display_if: {
-        sibling: 'fancy',
+        sibling:  'fancy',
         equal_to: true,
       },
     },
     {
-      name: 'align',
-      type: Otter.Fields.Select,
+      name:    'align',
+      type:    Otter.Fields.Select,
       options: {
         left:   'Left',
         right:  'Right',
@@ -65,9 +65,9 @@ export const text_block = {
 }
 
 export const html_block = {
-  type: 'HTML',
+  type:        'HTML',
   description: 'Raw HTML',
-  fields: [
+  fields:      [
     {
       name:        'html',
       description: 'HTML',
@@ -78,13 +78,13 @@ export const html_block = {
 }
 
 export const block_with_nested_block = {
-  type: 'NestedBlockDemo',
+  type:        'NestedBlockDemo',
   description: 'Block demonstrating NestedBlock fields',
-  fields: [
+  fields:      [
     {
       name:              'heading',
       type:              Otter.Fields.NestedBlock,
-      optional: true,
+      optional:          true,
       nested_block_type: 'Header',       // Supports string block-type references
     },
     {
@@ -97,13 +97,13 @@ export const block_with_nested_block = {
 }
 
 export const block_with_repeater = {
-  type: 'RepeaterDemo',
+  type:        'RepeaterDemo',
   description: 'Block demonstrating Repeater fields',
-  fields: [
+  fields:      [
     {
-      name:           'content_items',
-      description:    'Content:',
-      type:           Otter.Fields.Repeater,
+      name:               'content_items',
+      description:        'Content:',
+      type:               Otter.Fields.Repeater,
       nested_block_types: [
         'Text',            // Also supports both strings and objects
         html_block,        //

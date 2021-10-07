@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import PageDataContext from '../core/PageDataContext'
 import test_blocks from './_test-blocks'
@@ -9,25 +9,25 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const block = {
-  type: 'X',
+  type:   'X',
   fields: [
     {
-      name: 'bool_field',
+      name:        'bool_field',
       description: 'Turn on the thing',
-      type: Otter.Fields.Bool,
+      type:        Otter.Fields.Bool,
     },
   ],
 }
 const data_item__false = {
-  __type: 'X',
+  __type:     'X',
   bool_field: false,
 }
 const data_item__true = {
-  __type: 'X',
+  __type:     'X',
   bool_field: true,
 }
 
@@ -39,7 +39,7 @@ function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
       <Otter.Fields.components.Bool field_def={field_def}
                                     containing_data_item={containing_data_item}
                                     is_top_level={is_top_level} />
-    </Prov>
+    </Prov>,
   )
 }
 
@@ -83,8 +83,12 @@ test('Bool: renders yes_label and no_label', t => {
 
 test('Bool: click updates state and calls ctx updated methods', t => {
   const ctx = {
-    value_updated() { ctx.value_updated.called = true },
-    redraw() { ctx.redraw.called = true },
+    value_updated() {
+      ctx.value_updated.called = true
+    },
+    redraw() {
+      ctx.redraw.called = true
+    },
   }
 
   const data = Object.assign({}, data_item__false)
@@ -95,7 +99,9 @@ test('Bool: click updates state and calls ctx updated methods', t => {
 
   btn__yes.prop('onClick')({
     currentTarget: {
-      getAttribute() { return 'yes' },
+      getAttribute() {
+        return 'yes'
+      },
     },
   })
 

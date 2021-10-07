@@ -1,13 +1,13 @@
 import Otter from '..'
 
 const blocks = [
-  { type: 'B1', },
+  {type: 'B1'},
   {
-    type: 'B2',
+    type:   'B2',
     fields: [
       {
-        name: 'size',
-        type: Otter.Fields.Radios,
+        name:    'size',
+        type:    Otter.Fields.Radios,
         options: {
           regular: 'Regular',
           large:   'Large',
@@ -20,21 +20,21 @@ const blocks = [
     ],
   },
   {
-    type: 'B3',
+    type:   'B3',
     fields: [
       {
-        name: 'content_item',
-        type: Otter.Fields.NestedBlock,
+        name:              'content_item',
+        type:              Otter.Fields.NestedBlock,
         nested_block_type: 'AContentItem',
       },
     ],
   },
   {
-    type: 'B4',
+    type:   'B4',
     fields: [
       {
-        name: 'content_items',
-        type: Otter.Fields.Repeater,
+        name:               'content_items',
+        type:               Otter.Fields.Repeater,
         nested_block_types: [
           'AnotherContentItem',
           'OneMoreContentItem',
@@ -42,15 +42,15 @@ const blocks = [
       },
     ],
   },
-  { type: 'AContentItem',       fields: [{ name: 'f', type: Otter.Fields.TextInput }] },
-  { type: 'AnotherContentItem', fields: [{ name: 'f', type: Otter.Fields.TextInput }] },
-  { type: 'OneMoreContentItem', fields: [{ name: 'f', type: Otter.Fields.TextInput }] },
+  {type: 'AContentItem',       fields: [{name: 'f', type: Otter.Fields.TextInput}]},
+  {type: 'AnotherContentItem', fields: [{name: 'f', type: Otter.Fields.TextInput}]},
+  {type: 'OneMoreContentItem', fields: [{name: 'f', type: Otter.Fields.TextInput}]},
 ]
 
 
 const blocks_with_invalid_field_type = [
   {
-    type: 'BlockWithInvalidFieldType',
+    type:   'BlockWithInvalidFieldType',
     fields: [
       {
         name: 'InvalidField',

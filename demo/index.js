@@ -25,11 +25,11 @@ const blocks__flat = [
 const blocks__nested = {
   simple: {
     name:   'Headers',
-    blocks: [ header_block, text_block, html_block ],
+    blocks: [header_block, text_block, html_block],
   },
   complex: {
     name:   'Content',
-    blocks: [ block_with_nested_block, block_with_repeater ],
+    blocks: [block_with_nested_block, block_with_repeater],
   },
 }
 
@@ -48,7 +48,7 @@ function load(post_id) {
       },
       {
         __type: 'HTML',
-        html: `<div>I'm a TextArea field with mono={true}!</div>`,
+        html:   `<div>I'm a TextArea field with mono={true}!</div>`,
       },
     ],
   })
@@ -60,23 +60,23 @@ function load(post_id) {
 
 function render(state, delegate) {
   ReactDOM.render(
-    <Otter.Editor blocks={blocks__nested}
+    <Otter.Editor blocks={blocks__flat}
                   data={state.data}
                   load_state={state.load_state}
                   delegate={delegate}
                   when_to_save={Otter.Save.OnInput}
                   block_numbers={true} />,
-    document.getElementById('otter-container')
+    document.getElementById('otter-container'),
   )
 }
 
 const state = {
-  data: [ ],
+  data:       [],
   load_state: Otter.State.Loading,
 }
 
 const delegate = {
-  save: data => console.log('save()', data),
+  save:          data => console.log('save()', data),
   block_toggled: () => console.log('block toggled'),
 }
 

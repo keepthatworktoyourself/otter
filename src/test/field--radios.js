@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import PageDataContext from '../core/PageDataContext'
 import RecursiveBlockRenderer from '../core/RecursiveBlockRenderer'
@@ -11,17 +11,17 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const block = {
-  type: 'X',
+  type:   'X',
   fields: [
     {
-      name: 'radios_field',
+      name:        'radios_field',
       description: 'Pick something',
-      type: Otter.Fields.Radios,
-      options: {
+      type:        Otter.Fields.Radios,
+      options:     {
         a: 'A',
         b: 'B',
         c: 'C',
@@ -30,7 +30,7 @@ const block = {
   ],
 }
 const data_item = {
-  __type: 'X',
+  __type:       'X',
   radios_field: 'b',
 }
 const data_item__not_set = {
@@ -43,9 +43,9 @@ function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
   return mount(
     <Prov value={ctx_methods}>
       <Otter.Fields.components.Radios field_def={field_def}
-                                                 containing_data_item={containing_data_item}
-                                                 is_top_level={is_top_level} />
-    </Prov>
+                                      containing_data_item={containing_data_item}
+                                      is_top_level={is_top_level} />
+    </Prov>,
   )
 }
 
@@ -77,8 +77,12 @@ test('Radios: renders radio options, initial value selected', t => {
 
 test('Radios: click updates state, calls ctx update methods', t => {
   const ctx = {
-    value_updated() { ctx.value_updated.called = true },
-    redraw() { ctx.redraw.called = true },
+    value_updated() {
+      ctx.value_updated.called = true
+    },
+    redraw() {
+      ctx.redraw.called = true
+    },
   }
 
   const d = Object.assign({}, data_item)
@@ -90,7 +94,7 @@ test('Radios: click updates state, calls ctx update methods', t => {
   opt__c.prop('onClick')({
     currentTarget: {
       querySelector() {
-        return { value: 'c' }
+        return {value: 'c'}
       },
     },
   })
@@ -106,8 +110,12 @@ test('Radios: click updates state, calls ctx update methods', t => {
 
 test('Radios: clear button sets value to null', t => {
   const ctx = {
-    value_updated() { ctx.value_updated.called = true },
-    redraw() { ctx.redraw.called = true },
+    value_updated() {
+      ctx.value_updated.called = true
+    },
+    redraw() {
+      ctx.redraw.called = true
+    },
   }
 
   const d = Object.assign({}, data_item)

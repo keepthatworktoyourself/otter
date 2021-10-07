@@ -2,7 +2,7 @@ import React from 'react'
 import Fields from './fields'
 import NestedBlockWrapper from './NestedBlockWrapper'
 import Repeater from './Repeater'
-import Utils from './definitions/utils'
+import {find_block, display_if} from './definitions/utils'
 
 function error_text__field_not_object(index, value) {
   const value_descr = value === null ? 'null' :
@@ -58,7 +58,7 @@ export default function RecursiveBlockRenderer(props) {
   const data_item    = props.data_item || props.containing_data_item[props.field_name]
   const is_top_level = props.is_top_level
   const blocks       = props.blocks
-  const block        = Utils.find_block(blocks, data_item.__type)
+  const block        = find_block(blocks, data_item.__type)
   const field_defs   = block.fields || [ ]
 
   const display_if_targets = field_defs
@@ -93,7 +93,7 @@ export default function RecursiveBlockRenderer(props) {
 
 
     // Conditional rendering
-    const di = Utils.display_if(block, field_name, data_item)
+    const di = display_if(block, field_name, data_item)
     if (di.errors.length) {
       return <Fields.components.ErrorField text={error_text__invalid_display_if(field_name, di.errors)}
                                            is_top_level={is_top_level}

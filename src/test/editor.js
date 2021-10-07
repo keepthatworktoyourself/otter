@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import Editor from '../core/Editor'
 import Block from '../core/Block'
@@ -11,13 +11,13 @@ import Otter from '..'
 import sinon from 'sinon'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const provided = {
-  innerRef: null,
+  innerRef:       null,
   draggableProps: {
-    style: { color: 'yellow' },
+    style: {color: 'yellow'},
   },
 }
 const snapshot = {
@@ -41,7 +41,9 @@ function deep_equal_ignoring_uids(t, _a, _b) {
   const a = Otter.Utils.copy(_a)
   const b = Otter.Utils.copy(_b)
 
-  const remove_uid = (item) => { delete item.__uid }
+  const remove_uid = item => {
+    delete item.__uid
+  }
 
   Otter.Utils.iterate_data(a, remove_uid)
   Otter.Utils.iterate_data(b, remove_uid)
@@ -56,7 +58,9 @@ test('Editor: blog_toggled calls delegate.block_toggled if present', t => {
 
   let called = 0
 
-  e.props = { delegate: { block_toggled() { called += 1 } } }
+  e.props = {delegate: {block_toggled() {
+    called += 1
+  }}}
   f.props = { }
 
   e.block_toggled()
@@ -74,8 +78,8 @@ test('Editor: do_save_on_input saves if Save is OnInput', t => {
   e.save = () => e_saved = true
   f.save = () => f_saved = true
 
-  e.props = { save: Otter.Save.OnInput               }
-  f.props = { save: Otter.Save.OnClick }
+  e.props = {save: Otter.Save.OnInput}
+  f.props = {save: Otter.Save.OnClick}
 
   e.do_save_on_input()
   f.do_save_on_input()
@@ -88,7 +92,9 @@ test('Editor: do_save_on_input saves if Save is OnInput', t => {
 test('Editor: save calls delegate', t => {
   const e = new Editor()
   let saved = false
-  e.props = { delegate: { save() { saved = true } } }
+  e.props = {delegate: {save() {
+    saved = true
+  }}}
   e.save()
   t.is(true, saved)
 })
@@ -107,7 +113,7 @@ test ('Editor: msg on load_state loading', t => {
 
 
 test('Editor: msg on unknown load_state', t => {
-  const wrapper = shallow(<Editor load_state='hello' />)
+  const wrapper = shallow(<Editor load_state="hello" />)
   t.truthy(wrapper.find('.otter-load-error').text().match(/Unknown load state: hello/))
 })
 
@@ -119,14 +125,14 @@ test('Editor: renders post data container on load_state loaded', t => {
 
 
 test('Editor: provides a context', t => {
-  const wrapper = mk(Otter.State.Loaded, [ ], [ ], Otter.Save.OnInput)
+  const wrapper = mk(Otter.State.Loaded, [], [], Otter.Save.OnInput)
   const result = wrapper.find('[type="ContextProvider"]')
   t.true(wrapper.exists('[type="ContextProvider"]'))
 })
 
 
 test('Editor: creates a DnD context', t => {
-  const wrapper = mk(Otter.State.Loaded, [ ], [ ], Otter.Save.OnInput)
+  const wrapper = mk(Otter.State.Loaded, [], [], Otter.Save.OnInput)
   const dnd_context = wrapper.find('[type="DragContext"]')
   t.true(wrapper.exists('[type="DragContext"]'))
   t.true(wrapper.exists('[droppableId]'))
@@ -214,19 +220,19 @@ test('Editor: add_item adds an item at end or specified index', t => {
 
 test('Editor: renders AddBlockBtn', t => {
   const wrapper = mk(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput)
-  const wrapper__no_data = mk(Otter.State.Loaded, test_blocks(), [ ], Otter.Save.OnInput)
+  const wrapper__no_data = mk(Otter.State.Loaded, test_blocks(), [], Otter.Save.OnInput)
   const addblockbtn = wrapper.find('AddBlockBtn')
   const addblockbtn__no_data = wrapper__no_data.find('AddBlockBtn')
   t.is(1, addblockbtn.length)
 
   t.deepEqual(
     {
-      blocks: test_blocks(),
-      index: test_data().length,
-      suggest: false,
+      blocks:          test_blocks(),
+      index:           test_data().length,
+      suggest:         false,
       popup_direction: 'up',
     },
-    addblockbtn.props()
+    addblockbtn.props(),
   )
   t.is(true, addblockbtn__no_data.prop('suggest'))
   t.is('down', addblockbtn__no_data.prop('popup_direction'))
@@ -240,11 +246,11 @@ test('Editor: cb__reorder: no destination or no change, does nothing', t => {
   const wrapper = mk(Otter.State.Loaded, test_blocks(), test_data(), Otter.Save.OnInput)
   sinon.spy(wrapper.instance().ctx, 'value_updated')
 
-  wrapper.instance().cb__reorder({ destination: false })
-  wrapper.instance().cb__reorder({ source: false })
+  wrapper.instance().cb__reorder({destination: false})
+  wrapper.instance().cb__reorder({source: false})
   wrapper.instance().cb__reorder({
-    source:      { index: 6 },
-    destination: { index: 6 },
+    source:      {index: 6},
+    destination: {index: 6},
   })
 
   wrapper.update()
@@ -257,8 +263,8 @@ test('Editor: cb__reorder: reorders items', t => {
   sinon.spy(wrapper.instance().ctx, 'value_updated')
 
   wrapper.instance().cb__reorder({
-    source:      { index: test_data().length - 1 },
-    destination: { index: 0 },
+    source:      {index: test_data().length - 1},
+    destination: {index: 0},
   })
 
   const data_exported = wrapper.instance().get_data()
@@ -296,7 +302,7 @@ test('Editor: get_data strips out null, undefined, empty string, empty array fie
   })
 
   const data_items = test_data()
-  data_items[3].content_items = [ ]
+  data_items[3].content_items = []
 
   const exp = test_data()
   delete exp[3].content_items
@@ -310,11 +316,11 @@ test('Editor: get_data strips out null, undefined, empty string, empty array fie
 
 test('Editor: get_data removes fields prefixed with __ (except __type)', t => {
   const blocks = [{
-    type: 'MyBlock',
+    type:        'MyBlock',
     description: 'My block',
-    fields: [
-      { name: 'title',     type: Otter.Fields.TextInput },
-      { name: '__illegal', type: Otter.Fields.TextInput },
+    fields:      [
+      {name: 'title',     type: Otter.Fields.TextInput},
+      {name: '__illegal', type: Otter.Fields.TextInput},
     ],
   }]
   const data_items = [{
@@ -325,27 +331,27 @@ test('Editor: get_data removes fields prefixed with __ (except __type)', t => {
   const exp = Otter.Utils.copy(data_items)
   delete exp[0].__illegal
 
-  const e = new Editor({ blocks, data: data_items })
+  const e = new Editor({blocks, data: data_items})
   t.deepEqual(exp, e.get_data())
 })
 
 
 test('Editor: get_data removes non-top-level items that have only __type', t => {
   const data_items = [
-    { __type: 'B1' },
-    { __type: 'B2', text: 'hello' },
-    { __type: 'B3', content_item: { __type: 'AContentItem' } },
-    { __type: 'B3', content_item: { __type: 'AContentItem', f: 'x' } },
-    { __type: 'B4', content_items: [{ __type: 'AnotherContentItem' }] },
-    { __type: 'B4', content_items: [{ __type: 'AnotherContentItem', f: 'x' }] },
+    {__type: 'B1'},
+    {__type: 'B2', text: 'hello'},
+    {__type: 'B3', content_item: {__type: 'AContentItem'}},
+    {__type: 'B3', content_item: {__type: 'AContentItem', f: 'x'}},
+    {__type: 'B4', content_items: [{__type: 'AnotherContentItem'}]},
+    {__type: 'B4', content_items: [{__type: 'AnotherContentItem', f: 'x'}]},
   ]
   const exp = [
-    { __type: 'B1' },
-    { __type: 'B2', text: 'hello' },
-    { __type: 'B3' },
-    { __type: 'B3', content_item: { __type: 'AContentItem', f: 'x' } },
-    { __type: 'B4', content_items: [{ __type: 'AnotherContentItem' }] },    // Items in repeaters are kept
-    { __type: 'B4', content_items: [{ __type: 'AnotherContentItem', f: 'x' }] },
+    {__type: 'B1'},
+    {__type: 'B2', text: 'hello'},
+    {__type: 'B3'},
+    {__type: 'B3', content_item: {__type: 'AContentItem', f: 'x'}},
+    {__type: 'B4', content_items: [{__type: 'AnotherContentItem'}]},    // Items in repeaters are kept
+    {__type: 'B4', content_items: [{__type: 'AnotherContentItem', f: 'x'}]},
   ]
   t.deepEqual(exp, new Editor({
     blocks: test_blocks(),
@@ -363,32 +369,32 @@ test('Editor: get_data respects optional/__enabled_nested_blocks', t => {
   block__repeater.fields[0].optional = true
 
   const data__nested_block__disabled = [{
-    __type: 'B3',
-    __enabled_nested_blocks: { content_item: false },
-    content_item: { __type: 'AContentItem', f: 'F' },
+    __type:                  'B3',
+    __enabled_nested_blocks: {content_item: false},
+    content_item:            {__type: 'AContentItem', f: 'F'},
   }]
   const data__repeater__disabled = [{
-    __type: 'B4',
-    __enabled_nested_blocks: { content_items: false },
-    content_items: [{ __type: 'AnotherContentItem', f: 'F' }],
+    __type:                  'B4',
+    __enabled_nested_blocks: {content_items: false},
+    content_items:           [{__type: 'AnotherContentItem', f: 'F'}],
   }]
 
   const data__nested_block__enabled = Otter.Utils.copy(data__nested_block__disabled)
   const data__repeater__enabled = Otter.Utils.copy(data__repeater__disabled)
-  data__nested_block__enabled[0].__enabled_nested_blocks = { content_item: true }
-  data__repeater__enabled[0].__enabled_nested_blocks = { content_items: true }
+  data__nested_block__enabled[0].__enabled_nested_blocks = {content_item: true}
+  data__repeater__enabled[0].__enabled_nested_blocks = {content_items: true}
 
-  const exp__nested_block__disabled = [{ __type: 'B3' }]
-  const exp__repeater__disabled = [{ __type: 'B4' }]
+  const exp__nested_block__disabled = [{__type: 'B3'}]
+  const exp__repeater__disabled = [{__type: 'B4'}]
   const exp__nested_block__enabled  = Otter.Utils.copy(data__nested_block__enabled)
   const exp__repeater__enabled  = Otter.Utils.copy(data__repeater__enabled)
   delete exp__nested_block__enabled[0].__enabled_nested_blocks
   delete exp__repeater__enabled[0].__enabled_nested_blocks
 
-  const e__nested_block__disabled = new Editor({ blocks, data: data__nested_block__disabled })
-  const e__repeater__disabled = new Editor({ blocks, data: data__repeater__disabled })
-  const e__nested_block__enabled  = new Editor({ blocks, data: data__nested_block__enabled })
-  const e__repeater__enabled  = new Editor({ blocks, data: data__repeater__enabled })
+  const e__nested_block__disabled = new Editor({blocks, data: data__nested_block__disabled})
+  const e__repeater__disabled = new Editor({blocks, data: data__repeater__disabled})
+  const e__nested_block__enabled  = new Editor({blocks, data: data__nested_block__enabled})
+  const e__repeater__enabled  = new Editor({blocks, data: data__repeater__enabled})
 
   t.deepEqual(exp__nested_block__disabled, e__nested_block__disabled.get_data())
   t.deepEqual(exp__repeater__disabled, e__repeater__disabled.get_data())

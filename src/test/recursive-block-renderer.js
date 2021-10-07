@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import RecursiveBlockRenderer from '../core/RecursiveBlockRenderer'
 import test_blocks from './_test-blocks'
@@ -9,16 +9,16 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 test('RBR: field definition errors -> ErrorFields', t => {
   const data = [
-    { __type: 'BlockWithFieldWithMissingNameAndType' },
+    {__type: 'BlockWithFieldWithMissingNameAndType'},
   ]
   const blocks = [
     {
-      type: 'BlockWithFieldWithMissingNameAndType',
+      type:   'BlockWithFieldWithMissingNameAndType',
       fields: [
         {
           description: 'missing name and type',
@@ -110,7 +110,7 @@ test('RBR: nested_block field: renders NestedBlockWrapper with RecursiveBlockRen
 
 test('RBR: nested_block_field: nested_block_type supports full inline definition object as well as string', t => {
   const nested_block = {
-    type: 'MyNestedBlock',
+    type:   'MyNestedBlock',
     fields: [
       {
         name: 'title',
@@ -119,20 +119,20 @@ test('RBR: nested_block_field: nested_block_type supports full inline definition
     ],
   }
   const blocks = [{
-    type: 'MyBlock',
+    type:   'MyBlock',
     fields: [
       {
-        name: 'a_nested_block',
-        type: Otter.Fields.NestedBlock,
+        name:              'a_nested_block',
+        type:              Otter.Fields.NestedBlock,
         nested_block_type: nested_block,
       },
     ],
   }]
   const data_item = {
-    __type: 'MyBlock',
+    __type:         'MyBlock',
     a_nested_block: {
       __type: 'MyNestedBlock',
-      title: 'A nested block',
+      title:  'A nested block',
     },
   }
 
@@ -178,13 +178,13 @@ test('RBR: has field with invalid field name -> ErrorField', t => {
 
 
 test('RBR: ensures nested blocks and repeaters have data to operate on', t => {
-  const item__nested_block_missing = { __type: 'B3' }
-  const item__nested_block_null = { __type: 'B3', content_item: null }
+  const item__nested_block_missing = {__type: 'B3'}
+  const item__nested_block_null = {__type: 'B3', content_item: null}
 
   const wrapper__nested_block_missing = mount(<RecursiveBlockRenderer data_item={item__nested_block_missing} blocks={test_blocks()} />)
   const wrapper__nested_block_null    = mount(<RecursiveBlockRenderer data_item={item__nested_block_null}    blocks={test_blocks()} />)
   const exp = {
-    __type: 'B3',
+    __type:       'B3',
     content_item: {
       __type: 'AContentItem',
     },

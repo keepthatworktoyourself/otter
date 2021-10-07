@@ -4,7 +4,7 @@ import RecursiveBlockRenderer from './RecursiveBlockRenderer'
 import {usePageData} from './PageDataContext'
 import AddBlockBtn from './other/AddBlockBtn'
 import BlockDeleteBtn from './other/BlockDeleteBtn'
-import Utils from './definitions/utils'
+import {find_block, humanify_str} from './definitions/utils'
 import styles from './definitions/styles'
 
 const drag_styles = { }
@@ -23,7 +23,7 @@ export default function Block({data_item, index, block_numbers, ...props}) {
   const Draggable         = props.draggable_component          || DnD.Draggable
   const RecursiveRenderer = props.recursive_renderer_component || RecursiveBlockRenderer
   const draggable_key     = `block-${data_item.__uid}`
-  const block = Utils.find_block(blocks, data_item.__type)
+  const block = find_block(blocks, data_item.__type)
 
   return (
     <Draggable key={draggable_key} draggableId={draggable_key} index={index} type="block"
@@ -46,7 +46,7 @@ export default function Block({data_item, index, block_numbers, ...props}) {
                 <>
                   <h3 className={`block-title ${styles.block_title} mb-4`}>
                     {block_numbers && <span className="mr-2 text-gray-300">{index + 1}</span>}
-                    {block.description || Utils.humanify_str(block.type)}
+                    {block.description || humanify_str(block.type)}
                   </h3>
                   <div>
                     <RecursiveRenderer data_item={data_item} blocks={blocks} is_top_level={true} />

@@ -2,21 +2,21 @@ import Otter from '..'
 
 
 const test_data = [
-  { __type: 'B1', },
+  {__type: 'B1'},
   {
     __type: 'B2',
     size:   'regular',
     text:   'Hello',
   },
   {
-    __type: 'B3',
-    content_item: { __type: 'AContentItem', f: 'F' },
+    __type:       'B3',
+    content_item: {__type: 'AContentItem', f: 'F'},
   },
   {
-    __type: 'B4',
+    __type:        'B4',
     content_items: [
-      { __type: 'AnotherContentItem' },
-      { __type: 'OneMoreContentItem' },
+      {__type: 'AnotherContentItem'},
+      {__type: 'OneMoreContentItem'},
     ],
   },
 ]

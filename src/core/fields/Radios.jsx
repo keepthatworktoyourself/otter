@@ -2,7 +2,7 @@ import React from 'react'
 import {usePageData} from '../PageDataContext'
 import FieldLabel from '../other/FieldLabel'
 import ClearSelectionBtn from '../other/ClearSelectionBtn'
-import Utils from '../definitions/utils'
+import {humanify_str, evaluate} from '../definitions/utils'
 import styles from '../definitions/styles'
 
 export default function Radios(props) {
@@ -14,11 +14,11 @@ export default function Radios(props) {
   const uid                  = `${containing_data_item.__uid}-${field_def.name}`
   const input_name           = `radios-${uid}`
   const value                = containing_data_item[field_def.name]
-  const label                = field_def.description || Utils.humanify_str(field_def.name)
+  const label                = field_def.description || humanify_str(field_def.name)
   const opts_raw      = field_def.options || { }
   const opts          = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
   const opt_keys      = Object.keys(opts)
-  const default_value = Utils.evaluate(field_def.default_value)
+  const default_value = evaluate(field_def.default_value)
   const display_value = (value === undefined ? default_value : value) || ''
 
   function cb__click(ev) {

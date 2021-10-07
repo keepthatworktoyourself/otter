@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import * as DnD from 'react-beautiful-dnd'
 import PageDataContext from '../core/PageDataContext'
@@ -11,21 +11,21 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const block = {
-  type: 'X',
+  type:   'X',
   fields: [
     {
-      name: 'textarea_field',
+      name:        'textarea_field',
       description: 'Some text',
-      type: Otter.Fields.TextArea,
+      type:        Otter.Fields.TextArea,
     },
   ],
 }
 const data_item = {
-  __type: 'X',
+  __type:         'X',
   textarea_field: 'To be, or not to be...',
 }
 
@@ -35,9 +35,9 @@ function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
   return mount(
     <Prov value={ctx_methods}>
       <Otter.Fields.components.TextArea field_def={field_def}
-                                                   containing_data_item={containing_data_item}
-                                                   is_top_level={is_top_level} />
-    </Prov>
+                                        containing_data_item={containing_data_item}
+                                        is_top_level={is_top_level} />
+    </Prov>,
   )
 }
 
@@ -53,8 +53,12 @@ test('TextArea: renders textarea containing initial value', t => {
 
 test('TextArea: value change updates state, calls ctx value_updated only', t => {
   const ctx = {
-    value_updated() { ctx.value_updated.called = true },
-    redraw() { ctx.redraw.called = true },
+    value_updated() {
+      ctx.value_updated.called = true
+    },
+    redraw() {
+      ctx.redraw.called = true
+    },
   }
   const d = Otter.Utils.copy(data_item)
 
@@ -62,7 +66,7 @@ test('TextArea: value change updates state, calls ctx value_updated only', t => 
   const textarea = wrapper.find('textarea')
   const new_value = '...that is the question.'
 
-  textarea.prop('onChange')({ target: { value: new_value } })
+  textarea.prop('onChange')({target: {value: new_value}})
   t.is(true,      ctx.value_updated.called)
   t.is(undefined, ctx.redraw.called)
   t.is(new_value, d.textarea_field)

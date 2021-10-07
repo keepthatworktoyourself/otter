@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import PageDataContext from '../core/PageDataContext'
 import RecursiveBlockRenderer from '../core/RecursiveBlockRenderer'
@@ -10,17 +10,17 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const block = {
-  type: 'X',
+  type:   'X',
   fields: [
     {
-      name: 'select_field',
+      name:        'select_field',
       description: 'Select something',
-      type: Otter.Fields.Select,
-      options: {
+      type:        Otter.Fields.Select,
+      options:     {
         a: 'A',
         b: 'B',
         c: 'C',
@@ -29,7 +29,7 @@ const block = {
   ],
 }
 const data_item = {
-  __type: 'X',
+  __type:       'X',
   select_field: 'b',
 }
 const data_item__not_set = {
@@ -42,9 +42,9 @@ function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
   return mount(
     <Prov value={ctx_methods}>
       <Otter.Fields.components.Select field_def={field_def}
-                                                 containing_data_item={containing_data_item}
-                                                 is_top_level={is_top_level} />
-    </Prov>
+                                      containing_data_item={containing_data_item}
+                                      is_top_level={is_top_level} />
+    </Prov>,
   )
 }
 
@@ -87,15 +87,19 @@ test('Select: renders options, initial item or null item selected', t => {
 
 test('Select: option change updates state, calls ctx update methods', t => {
   const ctx = {
-    value_updated() { ctx.value_updated.called = true },
-    redraw() { ctx.redraw.called = true },
+    value_updated() {
+      ctx.value_updated.called = true
+    },
+    redraw() {
+      ctx.redraw.called = true
+    },
   }
   const d = Otter.Utils.copy(data_item)
 
   const wrapper = mk(block.fields[0], d, ctx)
   const select = wrapper.find('select')
 
-  select.prop('onChange')({ target: { value: 'c' } })
+  select.prop('onChange')({target: {value: 'c'}})
   t.is(true, ctx.value_updated.called)
   t.is(true, ctx.redraw.called)
   t.is('c', d.select_field)

@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { mount, configure } from 'enzyme'
+import {mount, configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import * as DnD from 'react-beautiful-dnd'
 import PageDataContext from '../core/PageDataContext'
@@ -11,11 +11,11 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const block = {
-  type: 'X',
+  type:   'X',
   fields: [
     {
       name:        'title',
@@ -26,7 +26,7 @@ const block = {
 }
 const data_item = {
   __type: 'X',
-  title: 'Welcome to Jurassic Park',
+  title:  'Welcome to Jurassic Park',
 }
 
 
@@ -37,7 +37,7 @@ function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
       <Otter.Fields.components.TextInput field_def={field_def}
                                          containing_data_item={containing_data_item}
                                          is_top_level={is_top_level} />
-    </Prov>
+    </Prov>,
   )
 }
 
@@ -52,8 +52,12 @@ test('TextInput: renders textarea containing initial value', t => {
 
 test('TextInput: value change updates state, calls ctx value_updated only', t => {
   const ctx = {
-    value_updated() { ctx.value_updated.called = true },
-    redraw() { ctx.redraw.called = true },
+    value_updated() {
+      ctx.value_updated.called = true
+    },
+    redraw() {
+      ctx.redraw.called = true
+    },
   }
   const d = Otter.Utils.copy(data_item)
 
@@ -61,7 +65,7 @@ test('TextInput: value change updates state, calls ctx value_updated only', t =>
   const textinput = wrapper.find('input')
   const new_value = 'Clever girl'
 
-  textinput.prop('onChange')({ target: { value: new_value } })
+  textinput.prop('onChange')({target: {value: new_value}})
   t.is(true,      ctx.value_updated.called)
   t.is(undefined, ctx.redraw.called)
   t.is(new_value, d.title)

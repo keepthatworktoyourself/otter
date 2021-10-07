@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import sinon from 'sinon'
 import PageDataContext from '../core/PageDataContext'
@@ -11,13 +11,13 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const provided = {
-  innerRef: null,
+  innerRef:       null,
   draggableProps: {
-    style: { color: 'yellow' },
+    style: {color: 'yellow'},
   },
 }
 const snapshot = {
@@ -25,15 +25,15 @@ const snapshot = {
 }
 
 
-const ctx = (overrides) => Object.assign(
+const ctx = overrides => Object.assign(
   {},
   {
     value_updated: sinon.spy(),
-    redraw: sinon.spy(),
+    redraw:        sinon.spy(),
     block_toggled: sinon.spy(),
-    blocks: test_blocks(),
+    blocks:        test_blocks(),
   },
-  overrides
+  overrides,
 )
 
 
@@ -48,7 +48,7 @@ function mk(field_def, containing_data_item, ctx_methods) {
                 drag_context_component={stubs.mk_stub('DragDropContext')}
                 droppable_component={stubs.func_stub([provided, snapshot])}
                 draggable_component={stubs.func_stub([provided, snapshot])} />
-    </Prov>
+    </Prov>,
   )
 }
 
@@ -68,7 +68,7 @@ test('Repeater: renders RepeaterItems', t => {
 
 
 test('Repeater: props passed to RepeaterItems', t => {
-  const containing_data_item = Object.assign({}, test_data()[3], { __uid: 'uid-7' })
+  const containing_data_item = Object.assign({}, test_data()[3], {__uid: 'uid-7'})
   const wrapper = mk(test_blocks()[3].fields[0], containing_data_item, ctx())
   const item = wrapper.find('[type="RepeaterItem"]').first()
   t.is(0, item.prop('index'))
@@ -89,11 +89,11 @@ test('Repeater: renders RecursiveBlockRenderer inside RepeaterItems, passes prop
 
 test('Repeater: if nested_block_types invalid, display error message', t => {
   const field = {
-    name: 'invalid_repeater',
-    type: Otter.Fields.Repeater,
+    name:               'invalid_repeater',
+    type:               Otter.Fields.Repeater,
     nested_block_types: [
-      { x: 'this is not a block' },
-      { type: 'X' },
+      {x: 'this is not a block'},
+      {type: 'X'},
       null,
     ],
   }
@@ -105,9 +105,9 @@ test('Repeater: if nested_block_types invalid, display error message', t => {
 
 test('Repeater: if nested_block_type not permitted, display error message', t => {
   const wrapper = mk(test_blocks()[3].fields[0], {
-    __type: 'B4',
+    __type:        'B4',
     content_items: [
-      { __type: 'AContentItem' },
+      {__type: 'AContentItem'},
     ],
   }, ctx())
   const error_msg = wrapper.find('ErrorField')
@@ -131,21 +131,21 @@ test('Repeater: does not render Add btn if has max children', t => {
 
 
 const blocks__object_nested_block_types = [{
-  type: 'MyBlock',
+  type:   'MyBlock',
   fields: [
     {
-      name: 'my_repeater',
-      type: Otter.Fields.Repeater,
+      name:               'my_repeater',
+      type:               Otter.Fields.Repeater,
       nested_block_types: [
         {
-          type: 'AAA',
+          type:   'AAA',
           fields: [{
             name: 'aaa',
             type: Otter.Fields.TextInput,
           }],
         },
         {
-          type: 'BBB',
+          type:   'BBB',
           fields: [{
             name: 'bbb',
             type: Otter.Fields.TextArea,
@@ -156,11 +156,11 @@ const blocks__object_nested_block_types = [{
   ],
 }]
 const data_item__object_nested_block_types = {
-  __type: 'MyBlock',
+  __type:      'MyBlock',
   my_repeater: [
     {
       __type: 'BBB',
-      bbb: 'A repeater entry',
+      bbb:    'A repeater entry',
     },
   ],
 }
@@ -168,7 +168,7 @@ const data_item__object_nested_block_types = {
 
 test('Repeater: Add btn supports nested_block_types objects as well as strings', t => {
   const f = blocks__object_nested_block_types[0].fields[0]
-  const wrapper = mk(f, data_item__object_nested_block_types, ctx({ blocks: blocks__object_nested_block_types }))
+  const wrapper = mk(f, data_item__object_nested_block_types, ctx({blocks: blocks__object_nested_block_types}))
   wrapper.find('.repeater-add-btn button').prop('onClick')()
   wrapper.update()
   const items = wrapper.find('.repeater-add-menu-item')
@@ -178,9 +178,9 @@ test('Repeater: Add btn supports nested_block_types objects as well as strings',
 
 
 test('Repeater: Add btn when only 1 block type: immediately adds', t => {
-  const data_item = { __type: 'B4' }
+  const data_item = {__type: 'B4'}
   const f = Otter.Utils.copy(test_blocks()[3].fields[0])
-  f.nested_block_types = [ 'AContentItem' ]
+  f.nested_block_types = ['AContentItem']
   const wrapper = mk(f, data_item, ctx())
   const add_btn = wrapper.find('.repeater-add-btn button')
   t.is(0, wrapper.find('[type="RepeaterItem"]').length)
@@ -193,16 +193,16 @@ test('Repeater: Add btn when only 1 block type: immediately adds', t => {
 test('Repeater: Add btn click when only 1 block type: supports nested_block_types objects as well as strings', t => {
   const blocks = Otter.Utils.copy(blocks__object_nested_block_types)
   blocks[0].fields[0].nested_block_types.splice(1)   // Only 1 nested block type
-  const data_item = { __type: 'MyBlock' }
+  const data_item = {__type: 'MyBlock'}
   const f = blocks[0].fields[0]
-  const wrapper = mk(f, data_item, ctx({ blocks: blocks }))
+  const wrapper = mk(f, data_item, ctx({blocks: blocks}))
   wrapper.find('.repeater-add-btn button').prop('onClick')()
   t.is(1, data_item.my_repeater.length)
 })
 
 
 test('Repeater: on Add btn click, if >1 nested_block_type, open submenu', t => {
-  const data_item = { __type: 'B4' }
+  const data_item = {__type: 'B4'}
   const wrapper = mk(test_blocks()[3].fields[0], data_item, ctx())
   const add_btn = wrapper.find('.repeater-add-btn button')
   t.is(0, wrapper.find('.dropdown.is-active').length)
@@ -226,7 +226,7 @@ test('Repeater: Add btn renders dropdown item for each nested_block_types', t =>
 
 
 test('Repeater: cb__add: add menu item click adds item', t => {
-  const data_item = { __type: 'B4' }
+  const data_item = {__type: 'B4'}
   const wrapper = mk(test_blocks()[3].fields[0], data_item, ctx())
   wrapper.find('.repeater-add-btn button').prop('onClick')()
   wrapper.update()
@@ -249,7 +249,7 @@ test('Repeater: cb__add: add menu item click adds item', t => {
 
 test('Repeater: cb__add: supports nested_block_types as objects', t => {
   const f = blocks__object_nested_block_types[0].fields[0]
-  const wrapper = mk(f, data_item__object_nested_block_types, ctx({ blocks: blocks__object_nested_block_types }))
+  const wrapper = mk(f, data_item__object_nested_block_types, ctx({blocks: blocks__object_nested_block_types}))
   wrapper.find('.repeater-add-btn button').prop('onClick')()
   wrapper.update()
   const add_menu_items = wrapper.find('.repeater-add-menu-item')
@@ -300,11 +300,11 @@ test('Repeater: cb__reorder: no destination or no change, does nothing', t => {
   const dnd_context = wrapper.find('[type="DragDropContext"]')
   const cb__reorder = dnd_context.prop('onDragEnd')
 
-  cb__reorder({ destination: false })
-  cb__reorder({ source: false })
+  cb__reorder({destination: false})
+  cb__reorder({source: false})
   cb__reorder({
-    source:      { index: 6 },
-    destination: { index: 6 },
+    source:      {index: 6},
+    destination: {index: 6},
   })
 
   t.false(context.value_updated.called)
@@ -320,8 +320,8 @@ test('Repeater: cb__reorder: reorders items', t => {
   const cb__reorder = dnd_context.prop('onDragEnd')
 
   cb__reorder({
-    source:      { index: data_item.content_items.length - 1 },
-    destination: { index: 0 },
+    source:      {index: data_item.content_items.length - 1},
+    destination: {index: 0},
   })
 
   t.true(context.value_updated.calledOnce)

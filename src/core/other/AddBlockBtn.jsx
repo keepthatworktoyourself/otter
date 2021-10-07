@@ -2,16 +2,15 @@ import React, {useState} from 'react'
 import {PlusOutline} from '@graywolfai/react-heroicons'
 import Icons from './Icons'
 import {usePageData} from '../PageDataContext'
-import Utils from '../definitions/utils'
+import {blocks_are_simple, humanify_str} from '../definitions/utils'
 import styles from '../definitions/styles'
 
 export default function AddBlockBtn({popup_direction = 'down', suggest, index, msg}) {
   const ctx                    = usePageData()
-  const blocks                 = ctx?.blocks || [ ]
+  const blocks                 = ctx?.blocks || []
   const [is_open, set_is_open] = useState(false)
-  const active                 = is_open ? 'is-active' : ''
-  const is_flat                = Utils.blocks_are_simple(blocks)
-  const displayed_blocks       = is_flat && blocks.filter(b => b && b.hidden !== true)
+  const is_flat                = blocks_are_simple(blocks)
+  const displayed_blocks       = is_flat && blocks.filter(item => item && item.hidden !== true)
 
   function cb__toggle() {
     if (is_flat) {
@@ -35,11 +34,11 @@ export default function AddBlockBtn({popup_direction = 'down', suggest, index, m
               ${styles.control_border} ${styles.control_border__interactive}
             `}
     >
-      {suggest ? (
+      {suggest && (
         <span className="mr-1">
           {msg || 'Insert block'}
         </span>
-      ) : ''}
+      )}
       <span className={`c-svg ${suggest ? 'c-svg--toggler' : ''}`}>
         <Icons.Icon Which={PlusOutline} />
       </span>
@@ -74,7 +73,7 @@ export default function AddBlockBtn({popup_direction = 'down', suggest, index, m
                    `}
                    onClick={cb__select} key={i} data-block-type={block.type}
                 >
-                  {block.description || Utils.humanify_str(block.type)}
+                  {block.description || humanify_str(block.type)}
                 </a>
               ))}
             </div>

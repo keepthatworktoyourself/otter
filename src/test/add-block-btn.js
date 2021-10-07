@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import sinon from 'sinon'
 import Adapter from 'enzyme-adapter-react-16'
 import PageDataContext from '../core/PageDataContext'
@@ -11,7 +11,7 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const blocks__simple = [
@@ -22,21 +22,21 @@ const blocks__simple = [
     type: 'MyOtherBlock',
   },
   {
-    type: 'MyHiddenBlock',
+    type:   'MyHiddenBlock',
     hidden: true,
   },
 ]
 const blocks__grouped = {
   group1: {
-    name: 'First group',
-    blocks: [ ],
+    name:   'First group',
+    blocks: [],
   },
   group2: {
-    name: 'Second group',
-    blocks: [ ],
+    name:   'Second group',
+    blocks: [],
   },
 }
-const fake_ev = (attribute_return) => ({
+const fake_ev = attribute_return => ({
   currentTarget: {
     getAttribute() {
       return attribute_return
@@ -48,14 +48,14 @@ const fake_ev = (attribute_return) => ({
 function mk(index, blocks, popup_direction, suggest, context_methods) {
   const Prov = PageDataContext.Provider
   return mount(<Prov value={context_methods}><AddBlockBtn index={index}
-                            blocks={blocks}
-                            popup_direction={popup_direction}
-                            suggest={suggest} /></Prov>)
+                                                          blocks={blocks}
+                                                          popup_direction={popup_direction}
+                                                          suggest={suggest} /></Prov>)
 }
 
 
 test('AddBlockBtn: click to open', t => {
-  const wrapper = mk(0, [ ], null, false)
+  const wrapper = mk(0, [], null, false)
   t.is(0, wrapper.find('.add-block-btn-menu').length)
   wrapper.find('button').prop('onClick')()
   wrapper.update()
@@ -64,9 +64,9 @@ test('AddBlockBtn: click to open', t => {
 
 
 test('AddBlockBtn: dropdown can go up or down', t => {
-  const wrapper       = mk(0, [ ], null,   false)
-  const wrapper__up   = mk(0, [ ], 'up',   false)
-  const wrapper__down = mk(0, [ ], 'down', false)
+  const wrapper       = mk(0, [], null,   false)
+  const wrapper__up   = mk(0, [], 'up',   false)
+  const wrapper__down = mk(0, [], 'down', false)
 
   wrapper.find('button').prop('onClick')()
   wrapper__up.find('button').prop('onClick')()
@@ -140,8 +140,8 @@ test('AddBlockBtn: grouped blocks: cb__toggle opens *global* block picker', t =>
 
 
 test('AddBlockBtn: suggest prop -> helpful text on button', t => {
-  const wrapper__suggest    = mk(0, [ ], null, true)
-  const wrapper__no_suggest = mk(0, [ ], null, false)
+  const wrapper__suggest    = mk(0, [], null, true)
+  const wrapper__no_suggest = mk(0, [], null, false)
   const exp_msg = 'Insert block'
   t.truthy(wrapper__suggest.find('button').text().match(exp_msg))
   t.falsy(wrapper__no_suggest.find('button').text().match(exp_msg))

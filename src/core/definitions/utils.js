@@ -4,41 +4,73 @@
 // uid
 // -----------------------------------
 
-function uid() {
-  return `uid-${uid.i++}`
+let cur_uid = 0
+export function uid() {
+  return `uid-${cur_uid++}`
 }
-uid.i = 0
 
 
 // retitle_field
 // -----------------------------------
 
-function retitle_field(field, name, description) {
-  const f = copy(field)
+export function retitle_field(field, name, description) {
+  const out = copy(field)
 
-  f.name = name
-  f.description = description
+  out.name = name
+  out.description = description
 
-  return f
+  return out
 }
 
 
 // humanify_str
 // -----------------------------------
 
-function humanify_str(s) {
-  s = (s || '').replace(/[-_]/g, ' ')
-  s = s.replace(/ +/g, ' ')
-  s = s.replace(/([a-z])([A-Z])/g, (m, c1, c2) => `${c1} ${c2.toLowerCase()}`)
-  s = s.replace(/\s[a-z]$/, (m) => m.toUpperCase())
-  return `${s.slice(0,1).toUpperCase()}${s.slice(1)}`
+export function humanify_str(str) {
+  str = (str || '').replace(/[-_]/g, ' ')
+  str = str.replace(/ +/g, ' ')
+  str = str.replace(/([a-z])([A-Z])/g, (_, c1, c2) => `${c1} ${c2.toLowerCase()}`)
+  str = str.replace(/\s[a-z]$/, match => match.toUpperCase())
+  return `${str.slice(0,1).toUpperCase()}${str.slice(1)}`
+}
+
+
+// debounce
+// -----------------------------------
+
+export function debounce(func, wait) {
+  let timeout
+  return function(...args) {
+    function call() {
+      timeout = null
+      func(...args)
+    }
+
+    clearTimeout(timeout)
+    timeout = setTimeout(call, wait)
+  }
+}
+
+
+// debounce_promise
+// -----------------------------------
+
+export function debounce_promise(func, wait) {
+  let timeout
+
+  return function(...args) {
+    clearTimeout(timeout)
+    return new Promise(resolve => {
+      timeout = setTimeout(() => resolve(func(...args)), wait)
+    })
+  }
 }
 
 
 // copy
 // -----------------------------------
 
-function copy(obj) {
+export function copy(obj) {
   return JSON.parse(JSON.stringify(obj))
 }
 
@@ -46,7 +78,7 @@ function copy(obj) {
 // deep_equal
 // -----------------------------------
 
-function deep_equal(o1, o2) {
+export function deep_equal(o1, o2) {
   return JSON.stringify(o1) === JSON.stringify(o2)
 }
 
@@ -54,24 +86,23 @@ function deep_equal(o1, o2) {
 // recursive_find
 // -----------------------------------
 
-function recursive_find(obj, f) {
-  if (f(obj)) {
+export function recursive_find(obj, func) {
+  if (func(obj)) {
     return obj
   }
 
-  else {
-    if (typeof obj === 'object') {
-      for (var prop in obj) {
-        if (obj.hasOwnProperty(prop) && obj[prop] && typeof obj[prop] === 'object') {
-          const result = recursive_find(obj[prop], f)
-          if (result) {
-            return result
-          }
-        }
+  if (typeof obj !== 'object') {
+    return null
+  }
+
+  for (let prop of Object.keys(obj)) {
+    if (obj[prop] && typeof obj[prop] === 'object') {
+      const result = recursive_find(obj[prop], func)
+      if (result) {
+        return result
       }
     }
   }
-
   return null
 }
 
@@ -79,12 +110,12 @@ function recursive_find(obj, f) {
 // find_block -> block or null
 // -----------------------------------
 
-function find_block(blocks, type) {
-  const defs = (blocks && blocks.constructor === Array) ? blocks : [ blocks ]
+export function find_block(blocks, type) {
+  const defs = (blocks && blocks.constructor === Array) ? blocks : [blocks]
 
   return recursive_find(
     defs,
-    item => item.hasOwnProperty('type') && item.type === type
+    item => item.type === type,
   )
 }
 
@@ -92,7 +123,7 @@ function find_block(blocks, type) {
 // find_field
 // -----------------------------------
 
-function find_field(fields, name) {
+export function find_field(fields, name) {
   return fields.find(item => item && item.name === name)
 }
 
@@ -100,25 +131,25 @@ function find_field(fields, name) {
 // is_data_item
 // -----------------------------------
 
-function is_data_item(obj) {
-  return obj && obj.constructor === Object && obj.hasOwnProperty('__type')
+export function is_data_item(obj) {
+  return obj && obj.constructor === Object && obj.__type
 }
 
 
 // iterate
 // -----------------------------------
 
-function iterate(data, f) {
-  f(data)
+export function iterate(data, func) {
+  func(data)
 
   const is_obj = data && data.constructor === Object
   const is_arr = data && data.constructor === Array
 
   if (is_arr) {
-    data.forEach(item => iterate(item, f))
+    data.forEach(item => iterate(item, func))
   }
   else if (is_obj) {
-    Object.keys(data).forEach(k => iterate(data[k], f))
+    Object.keys(data).forEach(k => iterate(data[k], func))
   }
 }
 
@@ -126,25 +157,25 @@ function iterate(data, f) {
 // iterate_data
 // -----------------------------------
 
-function iterate_data(data, f) {
-  iterate(data, (item) => is_data_item(item) && f(item))
+export function iterate_data(data, func) {
+  iterate(data, item => is_data_item(item) && func(item))
 }
 
 
 // check_display_if
 // -----------------------------------
 
-function check_display_if(block, field) {
+export function check_display_if(block, field) {
   function check_rule(rule) {
     if (rule.constructor !== Object) {
       return `display_if must be an object or array of objects`
     }
 
-    const has_eq       = rule.hasOwnProperty('equal_to')
-    const has_neq      = rule.hasOwnProperty('not_equal_to')
-    const has_regex    = rule.hasOwnProperty('matches')
-    const has_nregex   = rule.hasOwnProperty('doesnt_match')
-    const has_sibling  = rule.hasOwnProperty('sibling')
+    const has_eq       = rule.equal_to !== undefined
+    const has_neq      = rule.not_equal_to !== undefined
+    const has_regex    = rule.matches !== undefined
+    const has_nregex   = rule.doesnt_match !== undefined
+    const has_sibling  = rule.sibling !== undefined
 
     const valid = has_sibling && (has_eq || has_neq || has_regex || has_nregex)
     if (!valid) {
@@ -161,7 +192,7 @@ function check_display_if(block, field) {
       }
 
       try {
-        const r = RegExp(str)
+        RegExp(str)
       }
       catch (exc) {
         return err
@@ -169,12 +200,12 @@ function check_display_if(block, field) {
     }
 
     if (field.name === rule.sibling) {
-      return `sibling cannot refer to the self field`
+      return `'sibling' cannot refer to same field`
     }
 
     const sibling = find_field(block.fields, rule.sibling)
     if (!sibling) {
-      return `sibling does not exist in the block`
+      return `'sibling' does not exist in the block`
     }
   }
 
@@ -185,7 +216,7 @@ function check_display_if(block, field) {
 
   const errors = rules
     .map(check_rule)
-    .filter(x => x)
+    .filter(Boolean)
 
   return errors
 }
@@ -194,13 +225,13 @@ function check_display_if(block, field) {
 // display_if
 // -----------------------------------
 
-function display_if(block, field_name, data_item) {
+export function display_if(block, field_name, data_item) {
   const field = find_field(block.fields, field_name)
 
   if (!field.display_if) {
     return {
       display: true,
-      errors: [ ],
+      errors:  [],
     }
   }
 
@@ -212,30 +243,27 @@ function display_if(block, field_name, data_item) {
   }
 
   const display = field.display_if.reduce((carry, rule) => {
-    const has_eq       = rule.hasOwnProperty('equal_to')
-    const has_neq      = rule.hasOwnProperty('not_equal_to')
-    const has_regex    = rule.hasOwnProperty('matches')
-    const has_nregex   = rule.hasOwnProperty('doesnt_match')
     const sibling_value = data_item[rule.sibling]
+    let out = carry
 
-    if (has_eq) {
-      return carry && sibling_value === rule.equal_to
+    if (rule.equal_to !== undefined) {
+      out = carry && sibling_value === rule.equal_to
     }
-    else if (has_neq) {
-      return carry && sibling_value !== rule.not_equal_to
+    else if (rule.not_equal_to !== undefined) {
+      out = carry && sibling_value !== rule.not_equal_to
     }
-    else if (has_regex) {
-      return carry && (typeof sibling_value === 'string') && !!sibling_value.match(RegExp(rule.matches))
+    else if (rule.matches !== undefined) {
+      out = carry && (typeof sibling_value === 'string') && !!sibling_value.match(RegExp(rule.matches))
     }
-    else if (has_nregex) {
-      return carry && (typeof sibling_value === 'string') && !sibling_value.match(RegExp(rule.doesnt_match))
+    else if (rule.doesnt_match !== undefined) {
+      out = carry && (typeof sibling_value === 'string') && !sibling_value.match(RegExp(rule.doesnt_match))
     }
-    return carry
+    return out
   }, true)
 
   return {
     display,
-    errors: [ ],
+    errors: [],
   }
 }
 
@@ -243,18 +271,16 @@ function display_if(block, field_name, data_item) {
 // item_has_data
 // -----------------------------------
 
-function all_items_exist_in(items, arr) {
+export function all_items_exist_in(items, arr) {
   return items.reduce((carry, item) => {
     return carry && arr.includes(item)
   }, true)
 }
 
-function item_has_data(item) {
+export function item_has_data(item) {
   return (
-    item &&
-    item.constructor === Object &&
-    item.hasOwnProperty('__type') &&
-    !all_items_exist_in(Object.keys(item), [ '__type', '__uid' ])
+    is_data_item(item) &&
+    !all_items_exist_in(Object.keys(item), ['__type', '__uid'])
   )
 }
 
@@ -262,10 +288,10 @@ function item_has_data(item) {
 // optional_nested_block__is_enabled
 // -----------------------------------
 
-function optional_nested_block__is_enabled(field_name, data_item) {
+export function optional_nested_block__is_enabled(field_name, data_item) {
   const es = data_item.__enabled_nested_blocks
 
-  if (es && es.hasOwnProperty(field_name)) {
+  if (es && es[field_name]) {
     return !!es[field_name]
   }
 
@@ -279,7 +305,7 @@ function optional_nested_block__is_enabled(field_name, data_item) {
 // optional_nested_block__set_enabled
 // -----------------------------------
 
-function optional_nested_block__set_enabled(field_name, data_item, enabled) {
+export function optional_nested_block__set_enabled(field_name, data_item, enabled) {
   if (!data_item.__enabled_nested_blocks) {
     data_item.__enabled_nested_blocks = { }
   }
@@ -296,11 +322,11 @@ function optional_nested_block__set_enabled(field_name, data_item, enabled) {
 // blocks_are_grouped
 // -----------------------------------
 
-function blocks_are_simple(blocks) {
+export function blocks_are_simple(blocks) {
   return blocks && blocks.constructor === Array
 }
 
-function blocks_are_grouped(blocks) {
+export function blocks_are_grouped(blocks) {
   return blocks && blocks.constructor === Object
 }
 
@@ -308,25 +334,24 @@ function blocks_are_grouped(blocks) {
 // rnd_str
 // -----------------------------------
 
-function rnd_str(length) {
-  function rnd_chr() {
-    const i = Math.floor(97 + Math.random() * 26)
-    return String.fromCharCode(i)
-  }
+function rnd_chr() {
+  const i = Math.floor(97 + Math.random() * 26)
+  return String.fromCharCode(i)
+}
 
-  let s = ''
+export function rnd_str(length) {
+  let str = ''
   for (let i=0; i < length; ++i) {
-    s += rnd_chr()
+    str += rnd_chr()
   }
-
-  return s
+  return str
 }
 
 
 // upto
 // -----------------------------------
 
-function upto(n) {
+export function upto(n) {
   return Array.apply(null, {length: n}).map((_, i) => i)
 }
 
@@ -334,94 +359,59 @@ function upto(n) {
 // dynamic_data
 // -----------------------------------
 
-function dynamic_data(name) {
+export function dynamic_data(name) {
   return function() {
-    if (dynamic_data.data.hasOwnProperty(name)) {
-      return dynamic_data.data[name];
+    if (dynamic_data.data[name]) {
+      return dynamic_data.data[name]
     }
 
     if (dynamic_data.request_from_iframe) {
       window.parent.postMessage({
         'otter--get-dynamic-data': name,
-      });
+      })
     }
 
-    return { };
-  };
+    return { }
+  }
 }
-function set_dynamic_data(name, value) {
+export function set_dynamic_data(name, value) {
   dynamic_data.data[name] = value
 }
-dynamic_data.data = { };
+dynamic_data.data = { }
 
 
 // evaluate
 // -----------------------------------
 
-function evaluate(x) {
-  return typeof x === 'function' ? x() : x
+export function evaluate(val_or_func) {
+  return typeof val_or_func === 'function' ? val_or_func() : val_or_func
 }
 
 
 // Some errors
 // -----------------------------------
 
-function Err__BlockNoType(def) {
+export function Err__BlockNoType(def) {
   console.log('Err__BlockNoType', def)
   return `Error: block without __type property!`
 }
-function Err__BlockTypeNotFound(type) {
+export function Err__BlockTypeNotFound(type) {
   console.log(Err__BlockTypeNotFound, `${type}`)
   return `Error: could not find block definition of desired type!`
 }
-function Err__FieldNoType(def) {
+export function Err__FieldNoType(def) {
   console.log('Err__FieldNoType', def)
   return `Error: all field definitions must have a 'type' property!`
 }
-function Err__FieldNoName(def) {
+export function Err__FieldNoName(def) {
   console.log('Err__FieldNoName', def)
   return `Error: all field definitions must have a 'name' property!`
 }
-function Err__FieldDisplayIfInvalid(def) {
+export function Err__FieldDisplayIfInvalid(def) {
   console.log('Err__FieldDisplayIfInvalid', def)
   return `Error: display_if must be an object or array of objects!`
 }
-function Err__FieldTypeNotFound(def) {
+export function Err__FieldTypeNotFound(def) {
   console.log('Err__FieldTypeNotFound', def)
   return `Error: a field of the requested type does not exist!`
 }
-
-
-export default {
-  uid,
-  find_field,
-  retitle_field,
-  humanify_str,
-  copy,
-  deep_equal,
-  recursive_find,
-  find_block,
-  is_data_item,
-  iterate,
-  iterate_data,
-  check_display_if,
-  display_if,
-  all_items_exist_in,
-  item_has_data,
-  optional_nested_block__is_enabled,
-  optional_nested_block__set_enabled,
-  blocks_are_simple,
-  blocks_are_grouped,
-  rnd_str,
-  upto,
-  dynamic_data,
-  set_dynamic_data,
-  evaluate,
-  Err__BlockNoType,
-  Err__BlockTypeNotFound,
-  Err__FieldNoType,
-  Err__FieldNoName,
-  Err__FieldDisplayIfInvalid,
-  Err__FieldTypeNotFound,
-}
-

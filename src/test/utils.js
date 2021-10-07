@@ -23,9 +23,9 @@ test('utils: uid provides uids', t => {
 
 test('utils: retitle_field returns field with new name, description', t => {
   const f = {
-    name: 'my_field',
+    name:        'my_field',
     description: 'My field',
-    type: Otter.Fields.TextInput,
+    type:        Otter.Fields.TextInput,
   }
 
   const f__new_name = Otter.Utils.retitle_field(f, 'a_field')
@@ -45,7 +45,7 @@ test('utils: retitle_field returns field with new name, description', t => {
 test('utils: humanify_str removes -_, uppercases 1st letter and single-letter words', t => {
   t.is(
     'Hi there friendly person hello B',
-    Otter.Utils.humanify_str('hi-there__friendlyPersonHelloB')
+    Otter.Utils.humanify_str('hi-there__friendlyPersonHelloB'),
   )
 })
 
@@ -59,7 +59,7 @@ const nested_obj = {
   c: {
     x: 7,
     y: true,
-    z: { muffins: 100 },
+    z: {muffins: 100},
   },
 }
 
@@ -102,7 +102,7 @@ test('utils: find_block: returns null if not found', t => {
 test('utils: find_block: handles nulls', t => {
   const o = {
     x: [
-      { },  [ 6, 7, 8 ],  null,
+      { },  [6, 7, 8],  null,
     ],
   }
   t.is(null, Otter.Utils.find_block(o, 'X'))
@@ -133,7 +133,7 @@ test('Utils.find_field: returns undefined if not found', t => {
 })
 
 test('Utils.find_field: copes with nulls', t => {
-  t.is(undefined, Otter.Utils.find_field([ null ]))
+  t.is(undefined, Otter.Utils.find_field([null]))
 })
 
 
@@ -143,11 +143,11 @@ test('Utils.find_field: copes with nulls', t => {
 test('utils: is_data_item fails if not object or has no __type', t => {
   t.is(false, Otter.Utils.is_data_item('x'))
   t.is(false, Otter.Utils.is_data_item(true))
-  t.is(false, Otter.Utils.is_data_item({ lemurs: 6 }))
+  t.is(false, Otter.Utils.is_data_item({lemurs: 6}))
 })
 
 test('utils: is_data_item succeeds if is object with __type', t => {
-  t.is(true, Otter.Utils.is_data_item({ __type: 'MyBlock' }))
+  t.is(true, Otter.Utils.is_data_item({__type: 'MyBlock'}))
 })
 
 
@@ -157,10 +157,10 @@ test('utils: is_data_item succeeds if is object with __type', t => {
 test('utils: iterate iterates through nested object', t => {
   const obj = {
     a: [5, 'a', null],
-    b: [false, { things: 3 }],
+    b: [false, {things: 3}],
   }
   const exp = [obj, obj.a, 5, 'a', null, obj.b, false, {things: 3}, 3]
-  const result = [ ]
+  const result = []
   Otter.Utils.iterate(obj, item => result.push(item))
   t.deepEqual(exp, result)
 })
@@ -180,14 +180,14 @@ test('utils: iterate_data does nothing on non-objects', t => {
 })
 
 test('utils: iterate_data iterates through nested data', t => {
-  const results = [ ]
+  const results = []
   function f(item) {
     results.push(item.__type)
   }
   Otter.Utils.iterate_data(test_data(), f)
   t.deepEqual(
     ['B1', 'B2', 'B3', 'AContentItem', 'B4', 'AnotherContentItem', 'OneMoreContentItem'],
-    results
+    results,
   )
 })
 
@@ -204,11 +204,11 @@ test('utils: check_display_if errors', t => {
   const b5 = Otter.Utils.copy(test_blocks())[1]
 
   b0.fields[0].display_if = 'invalid type'
-  b1.fields[0].display_if = [{ rule: 'invalid' }]
-  b2.fields[0].display_if = [{ sibling: 'nonexistent', equal_to: 3.14 }]
-  b3.fields[0].display_if = [{ sibling: b3.fields[0].name, equal_to: 3.14 }]
-  b4.fields[0].display_if = [{ sibling: b4.fields[0].name, matches: 394857 }]
-  b5.fields[0].display_if = [{ sibling: b5.fields[0].name, doesnt_match: '*&^GBIO' }]
+  b1.fields[0].display_if = [{rule: 'invalid'}]
+  b2.fields[0].display_if = [{sibling: 'nonexistent', equal_to: 3.14}]
+  b3.fields[0].display_if = [{sibling: b3.fields[0].name, equal_to: 3.14}]
+  b4.fields[0].display_if = [{sibling: b4.fields[0].name, matches: 394857}]
+  b5.fields[0].display_if = [{sibling: b5.fields[0].name, doesnt_match: '*&^GBIO'}]
 
   const r0 = Otter.Utils.check_display_if(b0, b0.fields[0])
   const r1 = Otter.Utils.check_display_if(b1, b1.fields[0])
@@ -230,13 +230,13 @@ test('utils: check_display_if valid -> empty array', t => {
   const b = Otter.Utils.copy(test_blocks())[1]
 
   b.fields[1].display_if = [{
-    sibling: 'size',
+    sibling:  'size',
     equal_to: 'something',
   }]
 
   const r0 = Otter.Utils.check_display_if(b, b.fields[1])
 
-  t.deepEqual([ ], r0)
+  t.deepEqual([], r0)
 })
 
 
@@ -257,13 +257,13 @@ test('utils: display_if passes through errors from check_display_if', t => {
 test('utils: display_if rule matches sibling value -> negative', t => {
   const block = Otter.Utils.copy(test_blocks())[1]
   block.fields[1].display_if = [{
-    sibling: 'size',
+    sibling:  'size',
     equal_to: 'something',
   }]
   const result = Otter.Utils.display_if(block, block.fields[1].name, test_data()[1])
   t.deepEqual({
     display: false,
-    errors: [ ],
+    errors:  [],
   }, result)
 })
 
@@ -271,13 +271,13 @@ test('utils: display_if rule matches sibling value -> negative', t => {
 test('utils: display_if rule sibling has other value -> positive', t => {
   const block = Otter.Utils.copy(test_blocks())[1]
   block.fields[1].display_if = [{
-    sibling: 'size',
+    sibling:  'size',
     equal_to: 'regular',
   }]
   const result = Otter.Utils.display_if(block, block.fields[1].name, test_data()[1])
   t.deepEqual({
     display: true,
-    errors: [ ],
+    errors:  [],
   }, result)
 })
 
@@ -287,7 +287,7 @@ test('utils: display_if not set -> positive', t => {
   const result = Otter.Utils.display_if(block, block.fields[0].name)
   t.deepEqual({
     display: true,
-    errors: [ ],
+    errors:  [],
   }, result)
 })
 
@@ -304,9 +304,9 @@ test('utils: item_has_data: true if the item has more than just a __type propert
   const item__null = null
   const item__string = 'string'
   const item__empty_obj = { }
-  const item__only_type = { __type: 'X' }
-  const item__type_and_uid = { __uid: 'a-uid' }
-  const item__with_data = { __type: 'X', x: 'y' }
+  const item__only_type = {__type: 'X'}
+  const item__type_and_uid = {__uid: 'a-uid'}
+  const item__with_data = {__type: 'X', x: 'y'}
 
   t.falsy(Otter.Utils.item_has_data(item__null))
   t.falsy(Otter.Utils.item_has_data(item__string))
@@ -321,12 +321,12 @@ test('utils: item_has_data: true if the item has more than just a __type propert
 // ------------------------------------
 
 test('utils: optional_nested_block__is_enabled: returns presence of field data, if not present in __enabled_nested_blocks', t => {
-  const data_item__no_enabled_nested_blocks__field_null      = { my_nested_block: null }
-  const data_item__no_enabled_nested_blocks__field_only_type = { my_nested_block: { __type: 'X' } }
-  const data_item__no_enabled_nested_blocks__field_data      = { my_nested_block: { __type: 'X', x: 'y' } }
-  const data_item__not_set_in_enabled_nested_blocks__field_null      = { __enabled_nested_blocks: { }, my_nested_block: null }
-  const data_item__not_set_in_enabled_nested_blocks__field_only_type = { __enabled_nested_blocks: { }, my_nested_block: { __type: 'X' } }
-  const data_item__not_set_in_enabled_nested_blocks__field_data      = { __enabled_nested_blocks: { }, my_nested_block: { __type: 'X', x: 'y' } }
+  const data_item__no_enabled_nested_blocks__field_null      = {my_nested_block: null}
+  const data_item__no_enabled_nested_blocks__field_only_type = {my_nested_block: {__type: 'X'}}
+  const data_item__no_enabled_nested_blocks__field_data      = {my_nested_block: {__type: 'X', x: 'y'}}
+  const data_item__not_set_in_enabled_nested_blocks__field_null      = {__enabled_nested_blocks: { }, my_nested_block: null}
+  const data_item__not_set_in_enabled_nested_blocks__field_only_type = {__enabled_nested_blocks: { }, my_nested_block: {__type: 'X'}}
+  const data_item__not_set_in_enabled_nested_blocks__field_data      = {__enabled_nested_blocks: { }, my_nested_block: {__type: 'X', x: 'y'}}
 
   t.false(Otter.Utils.optional_nested_block__is_enabled('my_nested_block',  data_item__no_enabled_nested_blocks__field_null))
   t.false(Otter.Utils.optional_nested_block__is_enabled('my_nested_block',  data_item__no_enabled_nested_blocks__field_only_type))
@@ -338,12 +338,12 @@ test('utils: optional_nested_block__is_enabled: returns presence of field data, 
 
 test('utils: optional_nested_block__is_enabled: returns value from __enabled_nested_blocks if present', t => {
   const data_item__enabled_true = {
-    __enabled_nested_blocks: { my_nested_block: true },
-    my_nested_block: { },
+    __enabled_nested_blocks: {my_nested_block: true},
+    my_nested_block:         { },
   }
   const data_item__enabled_false = {
-    __enabled_nested_blocks: { my_nested_block: false },
-    my_nested_block: { },
+    __enabled_nested_blocks: {my_nested_block: false},
+    my_nested_block:         { },
   }
 
   t.true(Otter.Utils.optional_nested_block__is_enabled('my_nested_block', data_item__enabled_true))
@@ -398,11 +398,11 @@ test('utils: optional_nested_block__set_enabled -> deletes entry if value false'
 
 test('utils: blocks_are_simple -> true if array', t => {
   t.is(false, Otter.Utils.blocks_are_simple({ }))
-  t.is(true,  Otter.Utils.blocks_are_simple([ ]))
+  t.is(true,  Otter.Utils.blocks_are_simple([]))
 })
 
 test('utils: blocks_are_grouped -> true if object', t => {
-  t.is(false, Otter.Utils.blocks_are_grouped([ ]))
+  t.is(false, Otter.Utils.blocks_are_grouped([]))
   t.is(true,  Otter.Utils.blocks_are_grouped({ }))
 })
 

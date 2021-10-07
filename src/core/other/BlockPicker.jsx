@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {XOutline} from '@graywolfai/react-heroicons'
 import {usePageData} from '../PageDataContext'
 import Icons from './Icons'
-import Utils from '../definitions/utils'
+import {humanify_str} from '../definitions/utils'
 
 export default function BlockPicker(props) {
   const ctx              = usePageData()
@@ -57,7 +57,7 @@ export default function BlockPicker(props) {
                       <div className="shadow-lg border border-gray-100 w-full">
                         <div className="p-4">
                           <h3 className="font-semibold text-md">
-                            {block.description || Utils.humanify_str(block.type)}
+                            {block.description || humanify_str(block.type)}
                           </h3>
                         </div>
 

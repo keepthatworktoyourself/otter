@@ -5,11 +5,11 @@ module.exports = {
   variants: {
     extend: {
       backgroundColor: ['active'],
-      borderColor: ['active'],
-      display: ['group-hover'],
-      textColor: ['active'],
+      borderColor:     ['active'],
+      display:         ['group-hover'],
+      textColor:       ['active'],
     },
   },
-  plugins: [ ],
+  plugins: [],
 }
 

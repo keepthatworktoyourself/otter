@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import * as DnD from 'react-beautiful-dnd'
 import {usePageData} from './PageDataContext'
-import Utils from './definitions/utils'
+import {find_block, humanify_str} from './definitions/utils'
 import NestedBlockWrapper from './NestedBlockWrapper'
 import RepeaterItem from './RepeaterItem'
 import RecursiveBlockRenderer from './RecursiveBlockRenderer'
@@ -83,7 +83,7 @@ export default function Repeater(props) {
   }
 
   const blocktypes__objects = nested_block_types.map(t => (
-    typeof t === 'string' ? Utils.find_block(ctx.blocks, t) : t
+    typeof t === 'string' ? find_block(ctx.blocks, t) : t
   ))
 
   const invalid_blocktypes = blocktypes__objects.reduce((carry, block, index) => {
@@ -166,7 +166,7 @@ export default function Repeater(props) {
                        ${i < blocktypes__objects.length - 1 ? 'border-b' : ''}
                      `}
                   >
-                    {block.description || Utils.humanify_str(block.type)}
+                    {block.description || humanify_str(block.type)}
                   </a>
                 ))}
               </div>

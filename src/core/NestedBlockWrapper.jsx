@@ -1,26 +1,29 @@
 import React, {useState} from 'react'
 import Toggle from 'react-toggle'
 import {usePageData} from './PageDataContext'
-import Utils from './definitions/utils'
+import {
+  humanify_str,
+  optional_nested_block__is_enabled,
+  optional_nested_block__set_enabled,
+} from './definitions/utils'
 import DDToggle from './other/DDToggle'
 import styles from './definitions/styles'
-
 
 export default function NestedBlockWrapper({field_def, containing_data_item, children, ...props}) {
   const ctx                        = usePageData()
   const [collapsed, set_collapsed] = useState(true)
-  const title                      = field_def.description || Utils.humanify_str(field_def.name)
+  const title                      = field_def.description || humanify_str(field_def.name)
   const is_optional = field_def.optional
   const is_enabled = (
     !is_optional ||
-    Utils.optional_nested_block__is_enabled(field_def.name, containing_data_item)
+    optional_nested_block__is_enabled(field_def.name, containing_data_item)
   )
 
   function cb__toggle_enabled(ev) {
     ev.currentTarget.blur()
 
     if (field_def.optional) {
-      Utils.optional_nested_block__set_enabled(
+      optional_nested_block__set_enabled(
         field_def.name,
         containing_data_item,
         ev.currentTarget.checked
@@ -40,7 +43,7 @@ export default function NestedBlockWrapper({field_def, containing_data_item, chi
   function cb__toggle_collapse(ev) {
     const is_enabled = (
       !field_def.optional ||
-      Utils.optional_nested_block__is_enabled(field_def.name, containing_data_item)
+      optional_nested_block__is_enabled(field_def.name, containing_data_item)
     )
 
     if (is_enabled) {

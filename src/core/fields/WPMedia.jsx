@@ -2,7 +2,7 @@ import React from 'react'
 import PageDataContext from '../Editor'
 import FieldLabel from '../other/FieldLabel'
 import ClearSelectionBtn from '../other/ClearSelectionBtn'
-import Utils from '../definitions/utils'
+import {humanify_str} from '../definitions/utils'
 import styles from '../definitions/styles'
 
 
@@ -60,7 +60,7 @@ export default class WPMedia extends React.Component {
     const is_top_level         = this.props.is_top_level
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer
     const value                = containing_data_item[field_def.name]
-    const label                = field_def.description || Utils.humanify_str(field_def.name)
+    const label                = field_def.description || humanify_str(field_def.name)
     const file_name            = value && value.url && value.url.replace(/^.+\//, '')
 
     return (

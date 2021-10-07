@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactQuill from 'react-quill'
 import Quill from 'quill'
-import Utils from '../definitions/utils'
+import {uid, humanify_str} from '../definitions/utils'
 import styles from '../definitions/styles'
 import {PageDataContext} from '../PageDataContext'
 import FieldLabel from '../other/FieldLabel'
@@ -48,7 +48,7 @@ export default class TextEditor extends React.Component {
   constructor(props) {
     super(props)
 
-    this.uid = Utils.uid()
+    this.uid = uid()
     this.toolbar = `texteditor-toolbar-${this.uid}`
     this.cb__change = this.cb__change.bind(this)
     this.default_headings = [1, 2]
@@ -91,7 +91,7 @@ export default class TextEditor extends React.Component {
     const hr                   = field_def.hr
     const paste_as_plain_text  = field_def.paste_as_plain_text
     const value                = containing_data_item[field_def.name]
-    const label                = field_def.description || Utils.humanify_str(field_def.name)
+    const label                = field_def.description || humanify_str(field_def.name)
 
     if (paste_as_plain_text) {
       this.modules.clipboard.matchers = [

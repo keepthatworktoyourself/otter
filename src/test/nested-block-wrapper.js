@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import sinon from 'sinon'
 import PageDataContext from '../core/PageDataContext'
@@ -11,12 +11,12 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const ctx = () => ({
   value_updated: sinon.spy(),
-  redraw: sinon.spy(),
+  redraw:        sinon.spy(),
   block_toggled: sinon.spy(),
 })
 
@@ -26,19 +26,19 @@ const field_def = {
   description: 'My NestedBlock',
   type:        Otter.Fields.NestedBlock,
 }
-const field_def__optional = Object.assign({}, field_def, { optional: true })
+const field_def__optional = Object.assign({}, field_def, {optional: true})
 
 
 const data_item = {
-  __type: 'X',
+  __type:          'X',
   my_nested_block: {
-    __type: 'Y',
+    __type:  'Y',
     content: 'Hello',
   },
   some_other_field: 8,
 }
 const data_item__no_nested_block_data = {
-  __type: 'X',
+  __type:           'X',
   some_other_field: 8,
 }
 
@@ -48,16 +48,17 @@ function mk(field_def, containing_data_item, ctx_methods, children) {
   return mount(
     <Prov value={ctx_methods}>
       <NestedBlockWrapper field_def={field_def}
-                          containing_data_item={containing_data_item}>
+                          containing_data_item={containing_data_item}
+      >
         {children}
       </NestedBlockWrapper>
-    </Prov>
+    </Prov>,
   )
 }
 
 
 test('NestedBlock: renders title, ddtoggle', t => {
-  const wrapper = mk(field_def, data_item, {}, [ ])
+  const wrapper = mk(field_def, data_item, {}, [])
   t.is(1, wrapper.find('h4').length)
   t.is(1, wrapper.find('DDToggle').length)
   t.truthy(wrapper.find('h4').text().match(field_def.description))
@@ -99,14 +100,14 @@ test('NestedBlockWrapper: collapse toggle calls ctx redraw, block_toggled', t =>
 
 
 test('NestedBlockWrapper: when optional, renders Toggle', t => {
-  const wrapper = mk(field_def__optional, data_item, {}, [ ])
+  const wrapper = mk(field_def__optional, data_item, {}, [])
   t.is(1, wrapper.find('Toggle').length)
 })
 
 
 test('NestedBlockWrapper: when optional, enable state respects initial presence/absence of data', t => {
-  const wrapper__data    = mk(field_def__optional, data_item, {}, [ ])
-  const wrapper__no_data = mk(field_def__optional, data_item__no_nested_block_data, {}, [ ])
+  const wrapper__data    = mk(field_def__optional, data_item, {}, [])
+  const wrapper__no_data = mk(field_def__optional, data_item__no_nested_block_data, {}, [])
   t.true(wrapper__data.find('Toggle').prop('checked'))
   t.false(wrapper__no_data.find('Toggle').prop('checked'))
 })
@@ -134,7 +135,7 @@ test('NestedBlockWrapper: when optional, collapse toggle does nothing until enab
   // After enable: collapse toggle works
   wrapper.find('Toggle').prop('onChange')({
     currentTarget: {
-      blur: sinon.spy(),
+      blur:    sinon.spy(),
       checked: true,
     },
   })
@@ -146,10 +147,10 @@ test('NestedBlockWrapper: when optional, collapse toggle does nothing until enab
 
 test('NestedBlockWrapper: toggle_enabled calls ctx value_updated, redraw, block_toggled', t => {
   const context = ctx()
-  const wrapper = mk(field_def__optional, data_item__no_nested_block_data, context, [ ])
+  const wrapper = mk(field_def__optional, data_item__no_nested_block_data, context, [])
   wrapper.find('Toggle').prop('onChange')({
     currentTarget: {
-      blur: sinon.spy(),
+      blur:    sinon.spy(),
       checked: true,
     },
   })

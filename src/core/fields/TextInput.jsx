@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {usePageData} from '../PageDataContext'
 import FieldLabel from '../other/FieldLabel'
-import Utils from '../definitions/utils'
+import {humanify_str, evaluate} from '../definitions/utils'
 import styles from '../definitions/styles'
 
 export default function TextInput(props) {
@@ -11,8 +11,8 @@ export default function TextInput(props) {
   const containing_data_item = props.containing_data_item
   const is_top_level         = props.is_top_level
   const value                = containing_data_item[field_def.name]
-  const label                = field_def.description || Utils.humanify_str(field_def.name)
-  const default_value        = Utils.evaluate(field_def.default_value)
+  const label                = field_def.description || humanify_str(field_def.name)
+  const default_value        = evaluate(field_def.default_value)
   const display_value        = (value === undefined ? default_value : value) || ''
 
   function cb__change(ev) {

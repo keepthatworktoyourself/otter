@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import sinon from 'sinon'
 import ClearSelectionBtn from '../core/other/ClearSelectionBtn'
@@ -10,11 +10,11 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const block = {
-  type: 'X',
+  type:   'X',
   fields: [
     {
       name:        'image',
@@ -26,8 +26,8 @@ const block = {
 }
 const data_item = {
   __type: 'X',
-  image: {
-    id: 2434,
+  image:  {
+    id:        2434,
     thumbnail: 'http://test.com/x.jpg',
   },
 }
@@ -47,8 +47,12 @@ function mk(field_def, containing_data_item, ctx_methods, is_top_level) {
 
 test('WPMedia: select button rendered and begins wp selection', t => {
   const ctx = {
-    value_updated() { ctx.value_updated.called = true },
-    redraw() { ctx.redraw.called = true },
+    value_updated() {
+      ctx.value_updated.called = true
+    },
+    redraw() {
+      ctx.redraw.called = true
+    },
   }
 
   const wrapper = mk(block.fields[0], data_item, ctx, true)
@@ -91,8 +95,12 @@ test('WPMedia: renders image thumbnail', t => {
 
 test('WPMedia: clear btn sets value to null, calls ctx update methods', t => {
   const ctx = {
-    value_updated() { ctx.value_updated.called = true },
-    redraw() { ctx.redraw.called = true },
+    value_updated() {
+      ctx.value_updated.called = true
+    },
+    redraw() {
+      ctx.redraw.called = true
+    },
   }
   const d = Otter.Utils.copy(data_item)
   const wrapper = mk(block.fields[0], d, ctx)

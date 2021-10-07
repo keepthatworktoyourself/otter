@@ -15,7 +15,7 @@ Otter is perhaps the ~~furriest~~ easiest way in the universe to embed a content
 
 ```jsx
 🐟 🐟 🐟
-npm i -S otter-editor
+npm i -S otter-editor --legacy-peer-deps
 🐟 🐟 🐟
 <Otter.Editor blocks={blocks}
               data={data}

@@ -1,7 +1,7 @@
 import test from 'ava'
 import React from 'react'
 import ReactQuill from 'react-quill'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import * as DnD from 'react-beautiful-dnd'
 import RecursiveBlockRenderer from '../core/RecursiveBlockRenderer'
@@ -11,7 +11,7 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const field = {
@@ -20,7 +20,7 @@ const field = {
   type:        Otter.Fields.TextEditor,
 }
 const data_item = {
-  __type: 'X',
+  __type:  'X',
   content: '<h1>Important message</h1><p>Hi there</p>',
 }
 
@@ -54,8 +54,12 @@ test('TextEditor: renders quill editor, contains initial value', t => {
 
 test('TextEditor: value change updates state, calls ctx value_updated only', t => {
   const ctx = {
-    value_updated() { ctx.value_updated.called = true },
-    redraw() { ctx.redraw.called = true },
+    value_updated() {
+      ctx.value_updated.called = true
+    },
+    redraw() {
+      ctx.redraw.called = true
+    },
   }
   const d = Otter.Utils.copy(data_item)
 
@@ -86,7 +90,7 @@ test('TextEditor: renders label, passes through is_top_level', t => {
 
 
 test('TextEditor: paste_as_plain_text sets clipboard matcher', t => {
-  const f = Object.assign({}, field, { paste_as_plain_text: true })
+  const f = Object.assign({}, field, {paste_as_plain_text: true})
   const wrapper = mk(f, data_item, {}, true)
   const matchers = wrapper.instance().modules.clipboard.matchers
   t.is(Node.ELEMENT_NODE, matchers[0][0])
@@ -95,7 +99,7 @@ test('TextEditor: paste_as_plain_text sets clipboard matcher', t => {
 
 
 test('TextEditor: heading_levels overrides toolbar opts', t => {
-  const f = Object.assign({}, field, { heading_levels: [3, 4] })
+  const f = Object.assign({}, field, {heading_levels: [3, 4]})
   const wrapper__default         = mk(field, data_item, {}, true)
   const wrapper__custom_headings = mk(f,     data_item, {}, true)
   const tb_default         = wrapper__default.find('.editor-toolbar')
@@ -109,7 +113,7 @@ test('TextEditor: heading_levels overrides toolbar opts', t => {
 
 
 test('TextEditor: blockquote enables blockquote', t => {
-  const f = Object.assign({}, field, { blockquote: true })
+  const f = Object.assign({}, field, {blockquote: true})
   const wrapper__default    = mk(field, data_item, {}, true)
   const wrapper__blockquote = mk(f,     data_item, {}, true)
 
@@ -119,7 +123,7 @@ test('TextEditor: blockquote enables blockquote', t => {
 
 
 test('TextEditor: hr enables hr', t => {
-  const f = Object.assign({}, field, { hr: true })
+  const f = Object.assign({}, field, {hr: true})
   const wrapper__default = mk(field, data_item, {}, true)
   const wrapper__hr      = mk(f,     data_item, {}, true)
 

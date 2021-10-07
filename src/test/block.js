@@ -1,6 +1,6 @@
 import test from 'ava'
 import React from 'react'
-import { shallow, mount, configure } from 'enzyme'
+import {shallow, mount, configure} from 'enzyme'
 import sinon from 'sinon'
 import Adapter from 'enzyme-adapter-react-16'
 import PageDataContext from '../core/PageDataContext'
@@ -12,13 +12,13 @@ import stubs from './_stubs'
 import Otter from '..'
 
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 
 const provided = {
-  innerRef: null,
+  innerRef:       null,
   draggableProps: {
-    style: { color: 'yellow' },
+    style: {color: 'yellow'},
   },
 }
 const snapshot = {
@@ -36,13 +36,13 @@ function mk(blocks, data_item, index, cb__delete, extra_ctx_props, block_numbers
              cb__delete={cb__delete}
              draggable_component={stubs.func_stub([provided, snapshot])}
              recursive_renderer_component={stubs.mk_stub('RecursiveRenderer')} />
-    </Prov>
+    </Prov>,
   )
 }
 
 
 test('Block: warning if invalid block type', t => {
-  const wrapper = mk([ ], test_data()[0])
+  const wrapper = mk([], test_data()[0])
   t.truthy(wrapper.text().match(/Unknown block type/))
 })
 
@@ -98,10 +98,10 @@ test('Block: passes data_item, ctx.blocks, is_top_level to RecursiveBlockRendere
       is_top_level: true,
     },
     {
-      data_item: recursive_renderer.prop('data_item'),
-      blocks: recursive_renderer.prop('blocks'),
+      data_item:    recursive_renderer.prop('data_item'),
+      blocks:       recursive_renderer.prop('blocks'),
       is_top_level: recursive_renderer.prop('is_top_level'),
-    }
+    },
   )
 })
 
