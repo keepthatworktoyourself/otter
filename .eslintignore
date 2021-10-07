@@ -1,0 +1,6 @@
+# Ignore artifacts:
+dist
+node_modules
+.parcel-cache
+.cache
+otter-plugin
