@@ -5,6 +5,7 @@ import Bool       from './Bool'
 import Radios     from './Radios'
 import Select     from './Select'
 import WPMedia    from './WPMedia'
+import Searchable from './Searchable'
 import ErrorField from './ErrorField'
 
 function mk_field(name, description, type) {
@@ -16,16 +17,17 @@ function mk_field(name, description, type) {
 }
 
 const fields = {
-  TextInput:        'TextInput',
-  TextArea:         'TextArea',
-  TextEditor:       'TextEditor',
-  Bool:             'Bool',
-  Radios:           'Radios',
-  Select:           'Select',
-  WPMedia:          'WPMedia',
-  NestedBlock:      'NestedBlock',
-  Repeater:         'Repeater',
-  ErrorField:       'ErrorField',
+  TextInput:   'TextInput',
+  TextArea:    'TextArea',
+  TextEditor:  'TextEditor',
+  Bool:        'Bool',
+  Radios:      'Radios',
+  Select:      'Select',
+  WPMedia:     'WPMedia',
+  NestedBlock: 'NestedBlock',
+  Repeater:    'Repeater',
+  Searchable:  'Searchable',
+  ErrorField:  'ErrorField',
 
   mk_textinput:  (name, descr)       => mk_field(name, descr, fields.TextInput),
   mk_textarea:   (name, descr, opts) => Object.assign(mk_field(name, descr, fields.TextArea),   opts || { }),
@@ -39,6 +41,7 @@ const fields = {
     Radios,
     Select,
     WPMedia,
+    Searchable,
     ErrorField,
   },
 }

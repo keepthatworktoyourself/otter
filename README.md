@@ -1,4 +1,4 @@
-# Otter, the embeddable content editor <img align="right" src="files/otter.png" width=60 height=60>
+# Otter, an embeddable content editor <img align="right" src="files/otter.png" width=60 height=60>
 
 [![Build Status](https://travis-ci.com/bhallstein/otter.svg?branch=int)](https://travis-ci.com/bhallstein/otter)
 
@@ -29,6 +29,16 @@ npm i -S otter-editor --legacy-peer-deps
 - [Otter.Editor](#ottereditor)
 - [Blocks](#blocks)
 - [Fields](#fields)
+  - [TextInput](#field-types)
+  - [TextArea](#field-types)
+  - [TextEditor](#field-types)
+  - [Bool](#field-types)
+  - [Radios](#field-types)
+  - [Select](#field-types)
+  - [WPMedia](#field-types)
+  - [NestedBlock](#field-types)
+  - [Repeater](#field-types)
+  - [Searchable](#field-types)
 - [Demo](#demo)
 - [CSS and Tailwind](#css-and-tailwind)
 - [Tests](#tests)
@@ -158,7 +168,7 @@ All fields have the following properties:
 | `display_if`    | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s).                                            |
 | `default_value` | Any type, as appropriate                |            | A default value, used to set the field initially and to provide data on save if the field is empty       |
 
-(The `default_value` prop is not supported by TextEditor, WPMedia, NestedBlock, or Repeater.)
+(The `default_value` prop is not supported by TextEditor, WPMedia, NestedBlock, Repeater, or Searchable.)
 
 [Field type](#field-types) should be specified with the Otter-defined constants such as `Otter.Fields.TextInput`.
 
@@ -192,35 +202,38 @@ Note that using `matches` and `doesnt_match` may impact the performance of typin
 
 ### Field types:
 
-The supported field types are listed below. Many fields have additional options you can set alongside the above [field properties] common to all fields.
+The supported field types and their options are documented below.
 
-| Type          | Description                                 | Options                  | Default  |                                                                                               |
-| :------------ | :------------------------------------------ | :----------------------- | :------- | :------------------------------------------------------------------------------------------   |
-| `TextInput`   | Plain text input                            |                          |          |                                                                                               |
-| `TextArea`    | Textarea (multi-line plain text)            |                          |          |                                                                                               |
-|               |                                             | `mono` (bool)            | `false`  | Use a monospace font                                                                          |
-| `TextEditor`  | Rich text editor                            |                          |          |                                                                                               |
-|               |                                             | `heading_levels` (array) | `[1, 2]` | Heading types to display in the paragraph style dropdown                                      |
-|               |                                             | `blockquote` (bool)      | `false`  | Enable blockquote                                                                             |
-|               |                                             | `hr` (bool)              | `false`  | Enable horizontal rule                                                                        |
-|               |                                             | `paste_as_plain_text`    | `false`  | Clear text formatting on paste                                                                |
-| `Bool`        | A toggle                                    |                          |          |                                                                                               |
-|               |                                             | `no_label` (string)      | `"Yes"`  | Label for `true` option                                                                       |
-|               |                                             | `yes_label` (string)     | `"No"`   | Label for `false` option                                                                      |
-| `Radios`      | Radio buttons                               |                          |          |                                                                                               |
-|               |                                             | `options` (object)       |          | Radio options. Key pairs are in the form `value: "Label"`.                                    |
-|               |                                             | `watches` (bool)         | `false`  | Render the options as color swatches. Option values must be a valid CSS color, e.g. '#343434' |
-| `Select`      | Select dropdown                             |                          |          |                                                                                               |
-|               |                                             | `options` (object)       |          | Select options. Key pairs are in the form `value: "Label"`.                                   |
-| `WPMedia`     | Wordpress media item (Wordpress only)       |                          |          |                                                                                               |
-|               |                                             | `media_types` (array)    | `[ ]`    | File types to include in the media browser. Supported: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If omitted or an empty array, all files are included. |
-| `NestedBlock` | Embed another block into this block.        |                          |          |                                                                                               |
+| Type          | Description                                 | Options                        | Default  |                                                                                               |
+| :------------ | :------------------------------------------ | :----------------------------- | :------- | :------------------------------------------------------------------------------------------   |
+| `TextInput`   | Plain text input                            |                                |          |                                                                                               |
+| `TextArea`    | Textarea (multi-line plain text)            |                                |          |                                                                                               |
+|               |                                             | `mono` (bool)                  | `false`  | Use a monospace font                                                                          |
+| `TextEditor`  | Rich text editor                            |                                |          |                                                                                               |
+|               |                                             | `heading_levels` (array)       | `[1, 2]` | Heading types to display in the paragraph style dropdown                                      |
+|               |                                             | `blockquote` (bool)            | `false`  | Enable blockquote                                                                             |
+|               |                                             | `hr` (bool)                    | `false`  | Enable horizontal rule                                                                        |
+|               |                                             | `paste_as_plain_text`          | `false`  | Clear text formatting on paste                                                                |
+| `Bool`        | A toggle                                    |                                |          |                                                                                               |
+|               |                                             | `no_label` (string)            | `"Yes"`  | Label for `true` option                                                                       |
+|               |                                             | `yes_label` (string)           | `"No"`   | Label for `false` option                                                                      |
+| `Radios`      | Radio buttons                               |                                |          |                                                                                               |
+|               |                                             | `options` (object)             |          | Radio options. Key pairs are in the form `value: "Label"`.                                    |
+|               |                                             | `watches` (bool)               | `false`  | Render the options as color swatches. Option values must be a valid CSS color, e.g. '#343434' |
+| `Select`      | Select dropdown                             |                                |          |                                                                                               |
+|               |                                             | `options` (object)             |          | Select options. Key pairs are in the form `value: "Label"`.                                   |
+| `WPMedia`     | Wordpress media item (Wordpress only)       |                                |          |                                                                                               |
+|               |                                             | `media_types` (array)          | `[ ]`    | File types to include in the media browser. Supported: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If omitted or an empty array, all files are included. |
+| `NestedBlock` | Embed another block into this block.        |                                |          |                                                                                               |
 |               |                                             | `nested_block_type` (string or Block object)  | | The block to embed inside this block. Vakue is either a Block object or the name string of a block defined elsewhere in the blockset. |
-|               |                                             | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Nested Block                               |
-| `Repeater`    | Embed an array of blocks within this block. |                          |          |                                                                                               |
+|               |                                             | `optional` (bool)              | `false`  | If true, render a toggle that enables/disables the Nested Block                               |
+| `Repeater`    | Embed an array of blocks within this block. |                                |          |                                                                                               |
 |               |                                             | `nested_block_types` (array: strings or Block objects)  | | The blocks available in this Repeater. Value is an array of either Block objects or name strings of blocks defined elsewhere in the blockset. |
-|               |                                             | `optional` (bool)        | `false`  | If true, render a toggle that enables/disables the Repeater                                   |
-|               |                                             | `max` (number)           | No limit | Optionally limit the number of items the user can add                                         |
+|               |                                             | `optional` (bool)              | `false`  | If true, render a toggle that enables/disables the Repeater                                   |
+|               |                                             | `max` (number)                 | No limit | Optionally limit the number of items the user can add                                         |
+| `Searchable`  | Text input with custom search.              |                                |          |                                                                                               |
+|               |                                             | `search` (function -> promise) |          | A function that takes a search term as its argument, performs a search, and returns a promise. The promise should `resolve()` to an array of search results in the form `{value, display}`. The promise can also `reject()`, returning a string which will be displayed to the user below the search field. |
+|               |                                             | `debounce_ms` (number)         | `500`    | The `search` function is rate limited by Otter while the user types. Adjust `debounce_ms` to call your search function more or less frequently. |
 
 
 

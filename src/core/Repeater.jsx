@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import * as DnD from 'react-beautiful-dnd'
 import {usePageData} from './PageDataContext'
 import {find_block, humanify_str} from './definitions/utils'
-import NestedBlockWrapper from './NestedBlockWrapper'
 import RepeaterItem from './RepeaterItem'
 import RecursiveBlockRenderer from './RecursiveBlockRenderer'
 import ErrorField from './fields/ErrorField'
@@ -14,24 +13,21 @@ function get_block_type(str_or_obj) {
 
 export default function Repeater(props) {
   const ctx                        = usePageData()
-  const [collapsed, set_collapsed] = useState(true)
   const [dialogue, set_dialogue]   = useState(false)
-  const [_, update]                = useState({ })
   const field_def                  = props.field_def
   const containing_data_item       = props.containing_data_item
   const DragDropContext            = props.drag_context_component  || DnD.DragDropContext
   const Droppable                  = props.droppable_component     || DnD.Droppable
-  const Draggable                  = props.draggable_component     || DnD.Draggable
   const RepeaterItemStub           = props.repeater_item_component || RepeaterItem
   const RecursiveBlockRendererStub = props.rbr_component           || RecursiveBlockRenderer
-  const data_items                 = containing_data_item[field_def.name] || [ ]
-  const nested_block_types         = field_def.nested_block_types || [ ]
+  const data_items                 = containing_data_item[field_def.name] || []
+  const nested_block_types         = field_def.nested_block_types || []
   const max                        = field_def.max || -1
   const multiple_types             = nested_block_types.length !== 1
   const dnd_context_id             = `d-${containing_data_item.__uid}-${field_def.name}`
   const show_add_button            = max === -1 || data_items.length < max
 
-  function cb__add_btn(ev) {
+  function cb__add_btn() {
     if (nested_block_types.length > 1) {
       set_dialogue(!dialogue)
     }
@@ -46,9 +42,9 @@ export default function Repeater(props) {
       get_block_type(props.field_def.nested_block_types[0])
 
     if (!containing_data_item[field_def.name]) {
-      containing_data_item[field_def.name] = [ ]
+      containing_data_item[field_def.name] = []
     }
-    containing_data_item[field_def.name].push({ __type: block_type })
+    containing_data_item[field_def.name].push({__type: block_type})
 
     set_dialogue(false)
     ctx.value_updated()
@@ -87,9 +83,9 @@ export default function Repeater(props) {
   ))
 
   const invalid_blocktypes = blocktypes__objects.reduce((carry, block, index) => {
-    const is_valid = block && typeof block === 'object' && block.hasOwnProperty('type')
+    const is_valid = block && typeof block === 'object' && block.type
     return is_valid ? carry : carry.concat(index)
-  }, [ ])
+  }, [])
   if (invalid_blocktypes.length > 0) {
     const multiple = invalid_blocktypes.length > 1
     return (
@@ -118,7 +114,8 @@ export default function Repeater(props) {
                                   dnd_context_id={dnd_context_id}
                                   dnd_key={data_item.__uid}
                                   key={data_item.__uid || index}
-                                  cb__delete={cb__delete}>
+                                  cb__delete={cb__delete}
+                >
 
                   {is_permitted ?
                     <RecursiveBlockRendererStub data_item={data_item} blocks={ctx.blocks} /> :
@@ -162,6 +159,7 @@ export default function Repeater(props) {
                      className={`
                        repeater-add-menu-item
                        block p-2
+                       cursor-pointer
                        ${styles.control_bg} hover:bg-gray-100 active:bg-gray-200
                        ${i < blocktypes__objects.length - 1 ? 'border-b' : ''}
                      `}

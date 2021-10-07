@@ -1,7 +1,7 @@
 {
   "name": "otter-editor",
   "description": "Content editor with declaratively defined content blocks.",
-  "version": "0.0.128",
+  "version": "0.0.132",
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://github.com/bhallstein/otter",
@@ -27,7 +27,7 @@
     "tw": "ava -c 1 --watch src/test/*",
     "ts": "ava -c 1 --watch",
     "test": "npm run t",
-    "i": "npm run clean && rm -rf node_modules && npm install --legacy-peer-deps"
+    "i": "npm run clean && rm -rf node_modules && npm install"
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
@@ -50,7 +50,6 @@
     "parcel": "^2.0.0-rc.0",
     "postcss": "^8.3.0",
     "postcss-import": "^14.0.2",
-    "preact": "^10.5.14",
     "sinon": "^9.2.1",
     "tailwindcss": "^2.1.2"
   },
@@ -61,12 +60,8 @@
     "react-toggle": "^4.1.2"
   },
   "peerDependencies": {
-    "preact": "^10.5.14",
-    "preact-render-to-string": "^5.1.19"
-  },
-  "alias": {
-    "react": "preact/compat",
-    "react-dom": "preact/compat"
+    "react": "*",
+    "react-dom": "*"
   },
   "ava": {
     "babel": true,

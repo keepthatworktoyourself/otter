@@ -22,7 +22,7 @@ const blocks__flat = [
   block_with_repeater,
 ]
 
-const blocks__nested = {
+const blocks__grouped = {
   simple: {
     name:   'Headers',
     blocks: [header_block, text_block, html_block],
@@ -41,10 +41,14 @@ function load(post_id) {
   return Promise.resolve({
     json: () => [
       {
-        __type:     'Header',
-        heading:    'Otters',
-        subheading: 'Otters? We got otters!',
-        theme:      'light',
+        __type:          'Header',
+        heading:         'Otters',
+        subheading:      'Otters? We got otters!',
+        theme:           'light',
+        test_searchable: {
+          value:   'xxx',
+          display: 'A thing',
+        },
       },
       {
         __type: 'HTML',
@@ -60,7 +64,7 @@ function load(post_id) {
 
 function render(state, delegate) {
   ReactDOM.render(
-    <Otter.Editor blocks={blocks__flat}
+    <Otter.Editor blocks={blocks__grouped}
                   data={state.data}
                   load_state={state.load_state}
                   delegate={delegate}

@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {PlusOutline} from '@graywolfai/react-heroicons'
 import Icons from './Icons'
 import {usePageData} from '../PageDataContext'
+import PopupMenu from './PopupMenu'
 import {blocks_are_simple, humanify_str} from '../definitions/utils'
 import styles from '../definitions/styles'
 
@@ -10,7 +11,10 @@ export default function AddBlockBtn({popup_direction = 'down', suggest, index, m
   const blocks                 = ctx?.blocks || []
   const [is_open, set_is_open] = useState(false)
   const is_flat                = blocks_are_simple(blocks)
-  const displayed_blocks       = is_flat && blocks.filter(item => item && item.hidden !== true)
+  const displayed_blocks = is_flat && blocks.filter(item => item && item.hidden !== true)
+  const popup_items      = is_flat && displayed_blocks.map(block => (
+    block.description || humanify_str(block.type)
+  ))
 
   function cb__toggle() {
     if (is_flat) {
@@ -21,10 +25,9 @@ export default function AddBlockBtn({popup_direction = 'down', suggest, index, m
     }
   }
 
-  function cb__select(ev) {
+  function cb__select(i) {
     set_is_open(false)
-    const block_type = ev.currentTarget.getAttribute('data-block-type')
-    ctx.add_item(block_type, index)
+    ctx.add_item(displayed_blocks[i].type, index)
   }
 
   const btn = (
@@ -48,41 +51,18 @@ export default function AddBlockBtn({popup_direction = 'down', suggest, index, m
   return (
     <div>
       {is_flat && (
-        <div className="add-block-btn relative">
+        <>
           {btn}
-
           {is_open && (
-            <div className={`
-                   add-block-btn-menu
-                   absolute
-                   rounded-lg overflow-hidden
-                   left-1/2
-                   ${styles.control_border}
-                   ${popup_direction === 'down' ? 'top-9' : ''}
-                   ${popup_direction === 'up' ? 'bottom-9' : ''}
-                 `}
-                 style={{minWidth: '10rem', transform: 'translateX(-50%)'}}
-            >
-              {displayed_blocks.map((block, i) => (
-                <a className={`
-                     add-block-btn-menu-item
-                     block p-2
-                     cursor-pointer
-                     ${styles.control_bg} hover:bg-gray-100 active:bg-gray-200
-                     ${i < displayed_blocks.length - 1 ? 'border-b' : ''}
-                   `}
-                   onClick={cb__select} key={i} data-block-type={block.type}
-                >
-                  {block.description || humanify_str(block.type)}
-                </a>
-              ))}
-            </div>
+            <PopupMenu items={popup_items}
+                       cb={cb__select}
+                       offset={{up: 'bottom', down: 'top'}[popup_direction]}
+                       center={true} />
           )}
-        </div>
+        </>
       )}
 
       {!is_flat && btn}
     </div>
   )
 }
-
