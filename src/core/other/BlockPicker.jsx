@@ -1,37 +1,37 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {XOutline} from '@graywolfai/react-heroicons'
 import {usePageData} from '../PageDataContext'
 import Icons from './Icons'
 import {humanify_str} from '../definitions/utils'
 
-export default function BlockPicker(props) {
+export default function BlockPicker({block_index, iframe_container_info, scroll_offset}) {
   const ctx              = usePageData()
   const blocks           = ctx.blocks
   const block_group_keys = Object.keys(blocks)
-  const container  = props.iframe_container_info || {
+  const container  = iframe_container_info || {
     y:      0,
     height: 0,
   }
-  const offset = (props.scroll_offset || 0) + container.y
+  const offset = (scroll_offset || 0) + container.y
   const outer_max_height = container.height
 
-  function close(ev) {
+  function close() {
     ctx.close_block_picker()
   }
 
   function cb__select(ev) {
     close()
-    ctx.add_item(ev.currentTarget.getAttribute('data-block-type'), props.block_index)
+    ctx.add_item(ev.currentTarget.getAttribute('data-block-type'), block_index)
   }
 
   return (
     <div className="absolute inset-0 p-4 z-20 bg-gray-900 bg-opacity-20">
       <div style={{
-          transform: `translateY(${offset}px`,
-          transition: 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
-          maxHeight: 'calc(100vh - 2rem)',
-          overflowY: 'auto'
-        }}
+        transform:  `translateY(${offset}px`,
+        transition: 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
+        maxHeight:  'calc(100vh - 2rem)',
+        overflowY:  'auto',
+      }}
       >
         <div style={{maxHeight: outer_max_height || 'none'}}>
           <div className="relative p-4 pt-8 rounded-none bg-gray-50">

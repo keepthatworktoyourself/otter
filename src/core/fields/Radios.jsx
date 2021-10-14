@@ -5,11 +5,8 @@ import ClearSelectionBtn from '../other/ClearSelectionBtn'
 import {humanify_str, evaluate} from '../definitions/utils'
 import styles from '../definitions/styles'
 
-export default function Radios(props) {
+export default function Radios({field_def, containing_data_item, is_top_level}) {
   const ctx                  = usePageData()
-  const field_def            = props.field_def
-  const containing_data_item = props.containing_data_item
-  const is_top_level         = props.is_top_level
   const swatches             = field_def.swatches
   const uid                  = `${containing_data_item.__uid}-${field_def.name}`
   const input_name           = `radios-${uid}`
@@ -28,7 +25,7 @@ export default function Radios(props) {
     ctx.redraw()   // For conditional rendering
   }
 
-  function cb__clear(ev) {
+  function cb__clear() {
     containing_data_item[field_def.name] = null
     ctx.value_updated()
     ctx.redraw()   // For conditional rendering
@@ -56,7 +53,6 @@ export default function Radios(props) {
   return (
     <div className={`${styles.field}`}>
       <div className="flex flex-wrap items-center">
-
         <div className="mb-2 md:mb-0 w-full md:w-auto">
           <FieldLabel label={label}
                       is_top_level={is_top_level}
@@ -80,15 +76,16 @@ export default function Radios(props) {
                  style={styles}
               >
                 {swatches ? ' ' : opts[opt]}
-                <input type="radio" readOnly name={input_name} id={input_id} {...sel}
-                       value={opt} className="hidden" />
+                <input type="radio"
+                       name={input_name} id={input_id} value={opt} {...sel}
+                       readOnly
+                       className="hidden" />
               </a>
             )
           })}
         </div>
 
         {opt_keys.length > 0 && <ClearSelectionBtn cb__clear={cb__clear} />}
-
       </div>
     </div>
   )

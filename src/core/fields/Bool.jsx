@@ -4,11 +4,8 @@ import FieldLabel from '../other/FieldLabel'
 import {humanify_str, evaluate} from '../definitions/utils'
 import styles from '../definitions/styles'
 
-export default function Bool(props) {
+export default function Bool({field_def, containing_data_item, is_top_level}) {
   const ctx                  = usePageData()
-  const field_def            = props.field_def
-  const containing_data_item = props.containing_data_item
-  const is_top_level         = props.is_top_level
   const yes_label            = field_def.yes_label || 'Yes'
   const no_label             = field_def.no_label  || 'No'
   const label                = field_def.description || humanify_str(field_def.name)
@@ -27,7 +24,7 @@ export default function Bool(props) {
     ctx.redraw()   // For conditional rendering
   }
 
-  const btn_styles = (selected) => `
+  const btn_styles = selected => `
     inline-block mr-1
     ${styles.button} ${styles.control_border} ${styles.control_border__interactive}
     ${selected ? 'bg-gray-600' : styles.control_bg}
@@ -46,7 +43,7 @@ export default function Bool(props) {
                       min_width={true} />
         </div>
 
-        <div className={`inline-block md:block mr-2`}>
+        <div className="inline-block md:block mr-2">
           <a className={btn_styles(display_value)}
              data-value="yes"
              onClick={cb__click}

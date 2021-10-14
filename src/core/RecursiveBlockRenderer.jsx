@@ -54,7 +54,13 @@ function ensure_nested_block_data(containing_data_item, field_def) {
 }
 
 
-export default function RecursiveBlockRenderer({data_item, containing_data_item, field_name, is_top_level, blocks}) {
+export default function RecursiveBlockRenderer({
+  data_item,
+  containing_data_item,
+  field_name,
+  is_top_level,
+  blocks,
+}) {
   const item       = data_item || containing_data_item[field_name]
   const block      = find_block(blocks, item.__type)
   const field_defs = block.fields || []

@@ -5,14 +5,11 @@ import ClearSelectionBtn from '../other/ClearSelectionBtn'
 import {humanify_str, evaluate} from '../definitions/utils'
 import styles from '../definitions/styles'
 
-export default function Select(props) {
-  const ctx                  = usePageData()
-  const field_def            = props.field_def
-  const containing_data_item = props.containing_data_item
-  const is_top_level         = props.is_top_level
-  const uid                  = `${containing_data_item.__uid}-${field_def.name}`
-  const value                = containing_data_item[field_def.name]
-  const label                = field_def.description || humanify_str(field_def.name)
+export default function Select({field_def, containing_data_item, is_top_level}) {
+  const ctx           = usePageData()
+  const uid           = `${containing_data_item.__uid}-${field_def.name}`
+  const value         = containing_data_item[field_def.name]
+  const label         = field_def.description || humanify_str(field_def.name)
   const opts_raw      = field_def.options || { }
   const opts          = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
   const opt_keys      = Object.keys(opts)
@@ -34,7 +31,6 @@ export default function Select(props) {
   return (
     <div className={`${styles.field}`}>
       <div className="md:flex items-center">
-
         <div className="mb-2 md:mb-0">
           <FieldLabel label={label}
                       is_top_level={is_top_level}
@@ -68,4 +64,3 @@ export default function Select(props) {
     </div>
   )
 }
-

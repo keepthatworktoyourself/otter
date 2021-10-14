@@ -11,11 +11,9 @@ function get_block_type(str_or_obj) {
   return typeof str_or_obj === 'string' ? str_or_obj : str_or_obj.type
 }
 
-export default function Repeater(props) {
+export default function Repeater({field_def, containing_data_item, ...props}) {
   const ctx                        = usePageData()
   const [dialogue, set_dialogue]   = useState(false)
-  const field_def                  = props.field_def
-  const containing_data_item       = props.containing_data_item
   const DragDropContext            = props.drag_context_component  || DnD.DragDropContext
   const Droppable                  = props.droppable_component     || DnD.Droppable
   const RepeaterItemStub           = props.repeater_item_component || RepeaterItem
