@@ -7,7 +7,7 @@ import {find_block, display_if} from './definitions/utils'
 function error_text__field_not_object(index, value) {
   const value_descr = value === null ? 'null' :
     value === undefined ? 'undefined' :
-    typeof value
+      typeof value
 
   return `
     In block definition, field at index ${index} is ${value_descr} instead of object
@@ -42,24 +42,22 @@ function ensure_nested_block_data(containing_data_item, field_def) {
   }
 
   else if (field_def.type === Fields.Repeater) {
-    containing_data_item[field_def.name] = [ ]
+    containing_data_item[field_def.name] = []
   }
 
   else if (field_def.type === Fields.NestedBlock) {
     const __type = typeof field_def.nested_block_type === 'string' ?
       field_def.nested_block_type :
       field_def.nested_block_type.type
-    containing_data_item[field_def.name] = { __type }
+    containing_data_item[field_def.name] = {__type}
   }
 }
 
 
-export default function RecursiveBlockRenderer(props) {
-  const data_item    = props.data_item || props.containing_data_item[props.field_name]
-  const is_top_level = props.is_top_level
-  const blocks       = props.blocks
-  const block        = find_block(blocks, data_item.__type)
-  const field_defs   = block.fields || [ ]
+export default function RecursiveBlockRenderer({data_item, containing_data_item, field_name, is_top_level, blocks}) {
+  const item       = data_item || containing_data_item[field_name]
+  const block      = find_block(blocks, item.__type)
+  const field_defs = block.fields || []
 
   const display_if_targets = field_defs
     .map(field_def => field_def && field_def.display_if)
@@ -76,15 +74,19 @@ export default function RecursiveBlockRenderer(props) {
 
     const field_name = field_def.name
     const field_type = field_def.type
-    const field_value = data_item[field_name]
+    const field_value = item[field_name]
     const is_display_if_target = display_if_targets.includes(field_name)
     let out = null
 
 
     // Check required field properties
-    const errors = [ ]
-    if (!field_type) { errors.push('type') }
-    if (!field_name) { errors.push('name') }
+    const errors = []
+    if (!field_type) {
+      errors.push('type')
+    }
+    if (!field_name) {
+      errors.push('name')
+    }
     if (errors.length) {
       return <Fields.components.ErrorField text={error_text__missing_field_props(index, errors)}
                                            is_top_level={is_top_level}
@@ -93,9 +95,10 @@ export default function RecursiveBlockRenderer(props) {
 
 
     // Conditional rendering
-    const di = display_if(block, field_name, data_item)
+    const di = display_if(block, field_name, item)
     if (di.errors.length) {
-      return <Fields.components.ErrorField text={error_text__invalid_display_if(field_name, di.errors)}
+      const text = error_text__invalid_display_if(field_name, di.errors)
+      return <Fields.components.ErrorField text={text}
                                            is_top_level={is_top_level}
                                            key={index} />
     }
@@ -106,15 +109,15 @@ export default function RecursiveBlockRenderer(props) {
 
     // Render NestedBlocks / Repeaters
     if (field_type === Fields.NestedBlock || field_type === Fields.Repeater) {
-      ensure_nested_block_data(data_item, field_def)
+      ensure_nested_block_data(item, field_def)
       out = (
-        <NestedBlockWrapper field_def={field_def} containing_data_item={data_item} key={index}>
+        <NestedBlockWrapper field_def={field_def} containing_data_item={item} key={index}>
           {field_type === Fields.NestedBlock && (
-            <RecursiveBlockRenderer containing_data_item={data_item} field_name={field_name} blocks={blocks} />
+            <RecursiveBlockRenderer containing_data_item={item} field_name={field_name} blocks={blocks} />
           )}
 
           {field_type === Fields.Repeater && (
-            <Repeater field_def={field_def} containing_data_item={data_item} />
+            <Repeater field_def={field_def} containing_data_item={item} />
           )}
         </NestedBlockWrapper>
       )
@@ -126,13 +129,14 @@ export default function RecursiveBlockRenderer(props) {
       const Field = Fields.components[field_type]
       if (Field) {
         out = <Field field_def={field_def}
-                     containing_data_item={data_item}
+                     containing_data_item={item}
                      is_top_level={is_top_level}
                      is_display_if_target={is_display_if_target}
                      key={index} />
       }
       else {
-        out = <Fields.components.ErrorField text={error_text__invalid_field_type_in_field_definition(field_name, field_type)}
+        const text = error_text__invalid_field_type_in_field_definition(field_name, field_type)
+        out = <Fields.components.ErrorField text={text}
                                             is_top_level={is_top_level}
                                             key={index} />
       }

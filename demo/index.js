@@ -8,6 +8,7 @@ import {
   html_block,
   block_with_nested_block,
   block_with_repeater,
+  searchables,
 } from './blocks'
 
 
@@ -20,6 +21,7 @@ const blocks__flat = [
   html_block,
   block_with_nested_block,
   block_with_repeater,
+  searchables,
 ]
 
 const blocks__grouped = {
@@ -29,7 +31,7 @@ const blocks__grouped = {
   },
   complex: {
     name:   'Content',
-    blocks: [block_with_nested_block, block_with_repeater],
+    blocks: [block_with_nested_block, block_with_repeater, searchables],
   },
 }
 
@@ -41,14 +43,10 @@ function load(post_id) {
   return Promise.resolve({
     json: () => [
       {
-        __type:          'Header',
-        heading:         'Otters',
-        subheading:      'Otters? We got otters!',
-        theme:           'light',
-        test_searchable: {
-          value:   'xxx',
-          display: 'A thing',
-        },
+        __type:     'Header',
+        heading:    'Otters',
+        subheading: 'Otters? We got otters!',
+        theme:      'light',
       },
       {
         __type: 'HTML',

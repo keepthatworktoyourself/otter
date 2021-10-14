@@ -16,13 +16,13 @@ function cliphandler__clear_formatting() {
   setTimeout(function() {
     clear_pastes = true
   }, 1000)
-    // This is a nasty workaround for a bug where quill applies clipboard matchers
-    // to the initially rendered text
+  // This is a nasty workaround for a bug where quill applies clipboard matchers
+  // to the initially rendered text
 
   return function(node, delta) {
     if (clear_pastes) {
       const d = new Delta().insert(node.textContent)
-      return node.tagName === 'P' ? d.insert("\n") : d
+      return node.tagName === 'P' ? d.insert('\n') : d
     }
     else {
       return delta
@@ -44,7 +44,6 @@ Quill.register(HRBlot)
 // ---------------------------------
 
 export default class TextEditor extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -55,7 +54,7 @@ export default class TextEditor extends React.Component {
     this.modules = {
       toolbar: {
         container: `#${this.toolbar}`,
-        handlers: {
+        handlers:  {
           hr: function() {
             const cursor_pos = this.quill.getSelection().index
             this.quill.insertText(cursor_pos, '\n', Quill.sources.USER)
@@ -87,8 +86,10 @@ export default class TextEditor extends React.Component {
     const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer
     const QuillComponent       = this.props.quill_component || ReactQuill
     const heading_levels       = field_def.heading_levels || this.default_headings
-    const blockquote           = field_def.blockquote
-    const hr                   = field_def.hr
+    const enable_bullets       = field_def.bullets !== false
+    const enable_blockquote    = field_def.blockquote
+    const enable_hr            = field_def.hr
+
     const paste_as_plain_text  = field_def.paste_as_plain_text
     const value                = containing_data_item[field_def.name]
     const label                = field_def.description || humanify_str(field_def.name)
@@ -123,21 +124,23 @@ export default class TextEditor extends React.Component {
 
             <span className="ql-formats">
               <button className="ql-link"></button>
-              {hr && <button className="ql-hr"><Icons.HR /></button>}
+              {enable_hr && <button className="ql-hr"><Icons.HR /></button>}
             </span>
 
-            <span className="ql-formats">
-              <button className="ql-list" value="ordered"></button>
-              <button className="ql-list" value="bullet"></button>
-              {blockquote && <button className="ql-blockquote"></button>}
-            </span>
+            {(enable_bullets || enable_blockquote) && (
+              <span className="ql-formats">
+                {enable_bullets && <button className="ql-list" value="ordered"></button>}
+                {enable_bullets && <button className="ql-list" value="bullet"></button>}
+                {enable_blockquote && <button className="ql-blockquote"></button>}
+              </span>
+            )}
 
             <span className="ql-formats">
               <button className="ql-clean"></button>
             </span>
           </div>
 
-          <div style={{ backgroundColor: 'white' }}>
+          <div style={{backgroundColor: 'white'}}>
             <QuillComponent defaultValue={value} onChange={this.cb__change} modules={this.modules} theme="snow"
                             parent_uid={this.uid} />
           </div>
@@ -146,6 +149,5 @@ export default class TextEditor extends React.Component {
       )}</ContextConsumer>
     )
   }
-
 }
 

@@ -12,7 +12,7 @@ import styles from './definitions/styles'
 export default function NestedBlockWrapper({field_def, containing_data_item, children, ...props}) {
   const ctx                        = usePageData()
   const [collapsed, set_collapsed] = useState(true)
-  const title                      = field_def.description || humanify_str(field_def.name)
+  const title       = field_def.description || humanify_str(field_def.name)
   const is_optional = field_def.optional
   const is_enabled = (
     !is_optional ||
@@ -26,7 +26,7 @@ export default function NestedBlockWrapper({field_def, containing_data_item, chi
       optional_nested_block__set_enabled(
         field_def.name,
         containing_data_item,
-        ev.currentTarget.checked
+        ev.currentTarget.checked,
       )
     }
 

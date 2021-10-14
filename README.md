@@ -211,6 +211,7 @@ The supported field types and their options are documented below.
 |               |                                             | `mono` (bool)                  | `false`  | Use a monospace font                                                                          |
 | `TextEditor`  | Rich text editor                            |                                |          |                                                                                               |
 |               |                                             | `heading_levels` (array)       | `[1, 2]` | Heading types to display in the paragraph style dropdown                                      |
+|               |                                             | `bullets` (bool)               | `true`   | Enable bullets                                                                                |
 |               |                                             | `blockquote` (bool)            | `false`  | Enable blockquote                                                                             |
 |               |                                             | `hr` (bool)                    | `false`  | Enable horizontal rule                                                                        |
 |               |                                             | `paste_as_plain_text`          | `false`  | Clear text formatting on paste                                                                |

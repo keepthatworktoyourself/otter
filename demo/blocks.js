@@ -111,3 +111,17 @@ export const block_with_repeater = {
     },
   ],
 }
+
+export const searchables = {
+  type:   'SearchablesDemo',
+  fields: [
+    {
+      name:        'my_searchable',
+      description: 'Search for something',
+      type:        Otter.Fields.Searchable,
+      search:      () => [
+        {value: 'x', display: 'A search result'},
+      ],
+    },
+  ],
+}

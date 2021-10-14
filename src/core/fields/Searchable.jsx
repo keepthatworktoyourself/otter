@@ -60,11 +60,11 @@ export default function Searchable({field_def, containing_data_item, is_top_leve
                onChange={cb__change}
                ref={input_ref}
                className={`
-                  w-full
-                  outline-none rounded
-                  ${styles.button_pad} ${styles.control_bg} ${styles.control_border}
-                  ${styles.control_border__focus}
-                `} />
+                 w-full
+                 outline-none rounded
+                 ${styles.button_pad} ${styles.control_bg} ${styles.control_border}
+                 ${styles.control_border__focus}
+               `} />
       )}
 
       {value && search_term === null && (
@@ -72,23 +72,25 @@ export default function Searchable({field_def, containing_data_item, is_top_leve
              className={`
                w-full
                cursor-text
+               text-xs leading-tight
                outline-none rounded
                ${styles.button_pad} ${styles.control_bg} ${styles.control_border}
                py-1
                ${styles.control_border__focus}
              `}
         >
-          <span className="inline-block bg-gray-300 p-1 px-2 rounded">
+          <span className="inline-block bg-gray-300 py-1 px-2 rounded">
             {value?.display || ''}
             <Icons.Icon Which={XOutline}
                         onClick={begin_search}
                         style={{
                           display:       'inline-block',
+                          lineHeight:    '1',
                           marginLeft:    '0.35rem',
                           cursor:        'pointer',
                           verticalAlign: 'bottom',
                           position:      'relative',
-                          bottom:        '2px',
+                          bottom:        '1px',
                         }} />
           </span>
         </div>

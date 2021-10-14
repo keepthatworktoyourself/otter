@@ -289,16 +289,14 @@ export function item_has_data(item) {
 // -----------------------------------
 
 export function optional_nested_block__is_enabled(field_name, data_item) {
-  const es = data_item.__enabled_nested_blocks
+  const enabled_nbs = data_item.__enabled_nested_blocks || { }
 
-  if (es && es[field_name]) {
-    return !!es[field_name]
+  if (enabled_nbs[field_name] !== undefined) {
+    return !!enabled_nbs[field_name]
   }
 
-  else {
-    const sub_data_item = data_item[field_name]
-    return !!item_has_data(sub_data_item)
-  }
+  const sub_data_item = data_item[field_name]
+  return !!item_has_data(sub_data_item)
 }
 
 
@@ -310,12 +308,7 @@ export function optional_nested_block__set_enabled(field_name, data_item, enable
     data_item.__enabled_nested_blocks = { }
   }
 
-  if (enabled) {
-    data_item.__enabled_nested_blocks[field_name] = true
-  }
-  else {
-    data_item.__enabled_nested_blocks[field_name] = false
-  }
+  data_item.__enabled_nested_blocks[field_name] = !!enabled
 }
 
 

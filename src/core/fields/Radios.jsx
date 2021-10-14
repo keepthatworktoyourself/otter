@@ -34,7 +34,7 @@ export default function Radios(props) {
     ctx.redraw()   // For conditional rendering
   }
 
-  const btn_classes = (selected) => `
+  const btn_classes = selected => `
     inline-block mr-1
     ${styles.button} ${styles.control_border} ${styles.control_border__interactive}
     ${selected ? 'bg-gray-600' : styles.control_bg}
@@ -42,7 +42,7 @@ export default function Radios(props) {
     ${selected ? 'font-semibold' : ''}
     ${styles.button_pad__sm}
   `
-  const btn_classes__swatch = (selected) => `
+  const btn_classes__swatch = selected => `
     inline-block mr-1 w-7
     ${styles.button} ${styles.button_pad__sm} ${styles.control_border}
     transform transition-transform
@@ -63,12 +63,12 @@ export default function Radios(props) {
                       min_width={true} />
         </div>
 
-        <div className={`otter-radios inline-block md:block mr-2`}>
+        <div className={`otter-radios inline-block md:block mr-2 text-xs`}>
           {opt_keys.length === 0 && `[Radio field has no options!]`}
           {opt_keys.map((opt, i) => {
             const input_id = `${input_name}--${i}`
             const selected = opt === display_value
-            const sel = { checked: selected }
+            const sel = {checked: selected}
             const classes = swatches ? btn_classes__swatch(selected) : btn_classes(selected)
             const styles = swatches ? styles__swatch(selected, opt) : { }
 
@@ -79,7 +79,7 @@ export default function Radios(props) {
                  key={input_id}
                  style={styles}
               >
-                 {swatches ? ' ' : opts[opt]}
+                {swatches ? ' ' : opts[opt]}
                 <input type="radio" readOnly name={input_name} id={input_id} {...sel}
                        value={opt} className="hidden" />
               </a>
