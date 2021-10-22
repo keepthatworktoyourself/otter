@@ -27,7 +27,8 @@ export default function Block({data_item, index, block_numbers, ...props}) {
 
   return (
     <Draggable key={draggable_key} draggableId={draggable_key} index={index} type="block"
-      isDragDisabled={!ctx.can_add_blocks}>{(prov, snap) => (
+               isDragDisabled={!ctx.can_add_blocks}
+    >{(prov, snap) => (
       <div className="outline-none"
            ref={prov.innerRef}
            {...prov.draggableProps} {...prov.dragHandleProps}
@@ -65,10 +66,11 @@ export default function Block({data_item, index, block_numbers, ...props}) {
 
           {ctx.can_add_blocks && (
             <div className="c-block-add-btn absolute hidden group-hover:block z-1" style={{
-              top: index === 0 ? '-1rem' : '-1.5rem',
-              left: '50%',
+              top:       index === 0 ? '-1rem' : '-1.5rem',
+              left:      '50%',
               transform: 'translateX(-50%)',
-            }}>
+            }}
+            >
               <AddBlockBtn index={index} />
             </div>
           )}

@@ -4,7 +4,7 @@ import {PageDataContext} from './PageDataContext'
 import Block from './Block'
 import AddBlockBtn from './other/AddBlockBtn'
 import BlockPicker from './other/BlockPicker'
-import Fields from './fields'
+import fields from './fields/fields'
 import * as Utils from './definitions/utils'
 import State from './definitions/state'
 import Save from './definitions/save'
@@ -20,7 +20,7 @@ function export_data_item(data_item, blocks) {
     return null
   }
 
-  const fields__displayed = (block.fields || [ ]).filter(field_def => {
+  const fields__displayed = (block.fields || []).filter(field_def => {
     const di = Utils.display_if(block, field_def.name, data_item)
     return di.display === true
   })
@@ -30,12 +30,12 @@ function export_data_item(data_item, blocks) {
     const field_type  = field_def.type
     const field_value = data_item[field_name]
 
-    if (field_type === Fields.NestedBlock || field_type === Fields.Repeater) {
+    if (field_type === fields.NestedBlock || field_type === fields.Repeater) {
       const include = !field_def.optional || Utils.optional_nested_block__is_enabled(field_name, data_item)
       if (include) {
-        carry[field_name] = field_type === Fields.NestedBlock ?
+        carry[field_name] = field_type === fields.NestedBlock ?
           export_data_item(field_value, blocks) :
-          (field_value || [ ]).map(item => export_data_item(item, blocks))
+          (field_value || []).map(item => export_data_item(item, blocks))
       }
     }
 
@@ -59,7 +59,7 @@ function export_data_item(data_item, blocks) {
     }
 
     return carry
-  }, { __type: block.type })
+  }, {__type: block.type})
 }
 
 function ensure_uids(data) {
@@ -78,7 +78,7 @@ function ensure_display_ifs_are_arrays(blocks) {
   })
 }
 
-const Msg = (msg) => (
+const Msg = msg => (
   <div className="otter-load-error p-4 bg-gray-50 text-center">
     {msg}
   </div>
@@ -86,7 +86,7 @@ const Msg = (msg) => (
 
 function ctx_reducer(state, op) {
   if (!state.data) {
-    state.data = [ ]
+    state.data = []
   }
 
   if (op?.set_data) {
@@ -95,7 +95,7 @@ function ctx_reducer(state, op) {
 
   else if (op?.add_item) {
     const {type, index} = op.add_item
-    const data_item = { __type: type }
+    const data_item = {__type: type}
 
     typeof index === 'number' ?
       state.data.splice(index, 0, data_item) :
@@ -127,8 +127,8 @@ function ctx_reducer(state, op) {
 // -----------------------------------
 
 export default function Editor({
-  blocks = [ ],
-  data = [ ],
+  blocks = [],
+  data = [],
   delegate,
   load_state,
   when_to_save = Save.OnClick,
@@ -165,11 +165,21 @@ export default function Editor({
     dispatch_ctx({reorder: drag_result})
     enqueue_save_on_input()
   }
-  function value_updated() { enqueue_save_on_input() }
-  function redraw() { update({ }) }
-  function block_toggled() { delegate?.block_toggled?.() }
-  function open_block_picker(block_index) { set_block_picker_state(block_index) }
-  function close_block_picker() { set_block_picker(false) }
+  function value_updated() {
+    enqueue_save_on_input()
+  }
+  function redraw() {
+    update({ })
+  }
+  function block_toggled() {
+    delegate?.block_toggled?.()
+  }
+  function open_block_picker(block_index) {
+    set_block_picker_state(block_index)
+  }
+  function close_block_picker() {
+    set_block_picker(false)
+  }
 
   useEffect(() => dispatch_ctx({set_data: data}), [data])
 
@@ -185,12 +195,12 @@ export default function Editor({
   }
 
   function get_data() {
-    return (ctx.data || [ ]).map(item => export_data_item(item, ctx.blocks))
+    return (ctx.data || []).map(item => export_data_item(item, ctx.blocks))
   }
 
   function set_block_picker_state(open) {
     set_block_picker(open)
-    set_block_picker_offset: window.scrollY,
+    window.scrollY,
     block_toggled()
   }
 
@@ -228,7 +238,7 @@ export default function Editor({
   return (
     <ContextProvider value={{...ctx, ...ctx_interface}}>
       <div className="post-builder relative p-4 md:p-8 bg-gray-600"
-           style={{ stroke: styles.text_color }}
+           style={{stroke: styles.text_color}}
       >
         {!valid_state && Msg(`Unknown load state: ${load_state}`)}
         {load_state === State.Error && Msg(`Error loading post data`)}
@@ -237,7 +247,7 @@ export default function Editor({
           <div className="post-builder-inner text-gray-800 text-xs mx-auto"
                style={{
                  minHeight: `${block_picker === false ? '20' : '50'}rem`,
-                 maxWidth: '50rem',
+                 maxWidth:  '50rem',
                }}
           >
             {when_to_save === Save.OnClick && (
@@ -246,14 +256,14 @@ export default function Editor({
               </div>
             )}
 
-            <DragDropContext onDragEnd={(drag) => reorder_items(drag)}>
+            <DragDropContext onDragEnd={drag => reorder_items(drag)}>
               <Droppable droppableId="d-blocks" isDropDisabled={!can_add_blocks} type="block">{(prov, snap) => (
                 <div ref={prov.innerRef} {...prov.droppableProps}>
-                  {(ctx.data || [ ]).map((data_item, index) =>
+                  {(ctx.data || []).map((data_item, index) =>
                     <BlockStub key={data_item.__uid}
                                data_item={data_item}
                                index={index}
-                               block_numbers={block_numbers} />
+                               block_numbers={block_numbers} />,
                   )}
 
                   {prov.placeholder}
@@ -264,9 +274,9 @@ export default function Editor({
             {can_add_blocks && (
               <div className="flex justify-center">
                 <AddBlockBtn index={n_items}
-                            suggest={n_items === 0}
-                            msg={add_block_msg}
-                            popup_direction={n_items ? 'up' : 'down'} />
+                             suggest={n_items === 0}
+                             msg={add_block_msg}
+                             popup_direction={n_items ? 'up' : 'down'} />
               </div>
             )}
           </div>

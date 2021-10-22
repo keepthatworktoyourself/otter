@@ -1,4 +1,4 @@
-// Utils.js
+// utils.js
 
 
 // uid
@@ -352,13 +352,15 @@ export function upto(n) {
 // dynamic_data
 // -----------------------------------
 
+window.otter_dynamic_data = { }
+
 export function dynamic_data(name) {
   return function() {
-    if (dynamic_data.data[name]) {
-      return dynamic_data.data[name]
+    if (window.otter_dynamic_data[name]) {
+      return window.otter_dynamic_data[name]
     }
 
-    if (dynamic_data.request_from_iframe) {
+    if (window.otter_request_dynamic_data_from_iframe) {
       window.parent.postMessage({
         'otter--get-dynamic-data': name,
       })
@@ -367,10 +369,10 @@ export function dynamic_data(name) {
     return { }
   }
 }
+
 export function set_dynamic_data(name, value) {
-  dynamic_data.data[name] = value
+  window.otter_dynamic_data[name] = value
 }
-dynamic_data.data = { }
 
 
 // evaluate

@@ -1,8 +1,15 @@
 import React from 'react'
-import Fields from './fields'
+import Fields from './fields/fields'
 import NestedBlockWrapper from './NestedBlockWrapper'
 import Repeater from './Repeater'
 import {find_block, display_if} from './definitions/utils'
+import field_components from './fields/components'
+
+
+// Errors
+// ------------------------------------
+
+const ErrorField = field_components.ErrorField
 
 function error_text__field_not_object(index, value) {
   const value_descr = value === null ? 'null' :
@@ -35,6 +42,9 @@ function error_text__invalid_field_type_in_field_definition(field_name, field_ty
 }
 
 
+// ensure_nested_block_data
+// ------------------------------------
+
 function ensure_nested_block_data(containing_data_item, field_def) {
   const current_nested_data = containing_data_item[field_def.name]
   if (current_nested_data) {
@@ -53,6 +63,9 @@ function ensure_nested_block_data(containing_data_item, field_def) {
   }
 }
 
+
+// RecursiveBlockRenderer
+// ------------------------------------
 
 export default function RecursiveBlockRenderer({
   data_item,
@@ -73,9 +86,9 @@ export default function RecursiveBlockRenderer({
 
   return field_defs.map((field_def, index) => {
     if (!field_def || typeof field_def !== 'object') {
-      return <Fields.components.ErrorField text={error_text__field_not_object(index, field_def)}
-                                           is_top_level={is_top_level}
-                                           key={index} />
+      return <ErrorField text={error_text__field_not_object(index, field_def)}
+                         is_top_level={is_top_level}
+                         key={index} />
     }
 
     const field_name = field_def.name
@@ -94,9 +107,9 @@ export default function RecursiveBlockRenderer({
       errors.push('name')
     }
     if (errors.length) {
-      return <Fields.components.ErrorField text={error_text__missing_field_props(index, errors)}
-                                           is_top_level={is_top_level}
-                                           key={index} />
+      return <ErrorField text={error_text__missing_field_props(index, errors)}
+                         is_top_level={is_top_level}
+                         key={index} />
     }
 
 
@@ -104,9 +117,9 @@ export default function RecursiveBlockRenderer({
     const di = display_if(block, field_name, item)
     if (di.errors.length) {
       const text = error_text__invalid_display_if(field_name, di.errors)
-      return <Fields.components.ErrorField text={text}
-                                           is_top_level={is_top_level}
-                                           key={index} />
+      return <ErrorField text={text}
+                         is_top_level={is_top_level}
+                         key={index} />
     }
     if (!di.display) {
       return null
@@ -132,7 +145,7 @@ export default function RecursiveBlockRenderer({
 
     // Render fields
     else {
-      const Field = Fields.components[field_type]
+      const Field = field_components[field_type]
       if (Field) {
         out = <Field field_def={field_def}
                      containing_data_item={item}
@@ -142,9 +155,9 @@ export default function RecursiveBlockRenderer({
       }
       else {
         const text = error_text__invalid_field_type_in_field_definition(field_name, field_type)
-        out = <Fields.components.ErrorField text={text}
-                                            is_top_level={is_top_level}
-                                            key={index} />
+        out = <ErrorField text={text}
+                          is_top_level={is_top_level}
+                          key={index} />
       }
     }
 

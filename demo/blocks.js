@@ -85,12 +85,12 @@ export const block_with_nested_block = {
       name:              'heading',
       type:              Otter.Fields.NestedBlock,
       optional:          true,
-      nested_block_type: 'Header',       // Supports string block-type references
+      nested_block_type: 'Header',  // Supports name of block defined elsewhere
     },
     {
       name:              'text_content',
       type:              Otter.Fields.NestedBlock,
-      nested_block_type: text_block,    // Supports inline block definitions
+      nested_block_type: text_block,  // Supports inline block object
       optional:          true,
     },
   ],
@@ -105,8 +105,8 @@ export const block_with_repeater = {
       description:        'Content:',
       type:               Otter.Fields.Repeater,
       nested_block_types: [
-        'Text',            // Also supports both strings and objects
-        html_block,        //
+        'Text',       // Supports name of block defined elsewhere
+        html_block,   // Supports inline block object
       ],
     },
   ],

@@ -204,37 +204,38 @@ Note that using `matches` and `doesnt_match` may impact the performance of typin
 
 The supported field types and their options are documented below.
 
-| Type          | Description                                 | Options                        | Default  |                                                                                               |
-| :------------ | :------------------------------------------ | :----------------------------- | :------- | :------------------------------------------------------------------------------------------   |
-| `TextInput`   | Plain text input                            |                                |          |                                                                                               |
-| `TextArea`    | Textarea (multi-line plain text)            |                                |          |                                                                                               |
-|               |                                             | `mono` (bool)                  | `false`  | Use a monospace font                                                                          |
-| `TextEditor`  | Rich text editor                            |                                |          |                                                                                               |
-|               |                                             | `heading_levels` (array)       | `[1, 2]` | Heading types to display in the paragraph style dropdown                                      |
-|               |                                             | `bullets` (bool)               | `true`   | Enable bullets                                                                                |
-|               |                                             | `blockquote` (bool)            | `false`  | Enable blockquote                                                                             |
-|               |                                             | `hr` (bool)                    | `false`  | Enable horizontal rule                                                                        |
-|               |                                             | `paste_as_plain_text`          | `false`  | Clear text formatting on paste                                                                |
-| `Bool`        | A toggle                                    |                                |          |                                                                                               |
-|               |                                             | `no_label` (string)            | `"Yes"`  | Label for `true` option                                                                       |
-|               |                                             | `yes_label` (string)           | `"No"`   | Label for `false` option                                                                      |
-| `Radios`      | Radio buttons                               |                                |          |                                                                                               |
-|               |                                             | `options` (object)             |          | Radio options. Key pairs are in the form `value: "Label"`.                                    |
-|               |                                             | `watches` (bool)               | `false`  | Render the options as color swatches. Option values must be a valid CSS color, e.g. '#343434' |
-| `Select`      | Select dropdown                             |                                |          |                                                                                               |
-|               |                                             | `options` (object)             |          | Select options. Key pairs are in the form `value: "Label"`.                                   |
-| `WPMedia`     | Wordpress media item (Wordpress only)       |                                |          |                                                                                               |
+| Type          | Description                                 | Options                        | Default  |                                                                                                |
+| :------------ | :------------------------------------------ | :----------------------------- | :------- | :--------------------------------------------------------------------------------------------- |
+| `TextInput`   | Plain text input                            |                                |          |                                                                                                |
+| `TextArea`    | Textarea (multi-line plain text)            |                                |          |                                                                                                |
+|               |                                             | `mono` (bool)                  | `false`  | Use a monospace font                                                                           |
+| `TextEditor`  | Rich text editor                            |                                |          |                                                                                                |
+|               |                                             | `heading_levels` (array)       | `[1, 2]` | Heading types to display in the paragraph style dropdown                                       |
+|               |                                             | `bullets` (bool)               | `true`   | Enable bullets                                                                                 |
+|               |                                             | `blockquote` (bool)            | `false`  | Enable blockquote                                                                              |
+|               |                                             | `hr` (bool)                    | `false`  | Enable horizontal rule                                                                         |
+|               |                                             | `paste_as_plain_text`          | `false`  | Clear text formatting on paste                                                                 |
+| `Bool`        | A toggle                                    |                                |          |                                                                                                |
+|               |                                             | `no_label` (string)            | `"Yes"`  | Label for `true` option                                                                        |
+|               |                                             | `yes_label` (string)           | `"No"`   | Label for `false` option                                                                       |
+| `Radios`      | Radio buttons                               |                                |          |                                                                                                |
+|               |                                             | `options` (object)             |          | Radio options. Key pairs are in the form `value: "Label"`.                                     |
+|               |                                             | `watches` (bool)               | `false`  | Render the options as color swatches. Option values must be a valid CSS color, e.g. '#343434'. |
+| `Select`      | Select dropdown                             |                                |          |                                                                                                |
+|               |                                             | `options` (object)             |          | Select options. Key pairs are in the form `value: "Label"`.                                    |
+| `WPMedia`     | Wordpress media item (Wordpress only)       |                                |          |                                                                                                |
 |               |                                             | `media_types` (array)          | `[ ]`    | File types to include in the media browser. Supported: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If omitted or an empty array, all files are included. |
-| `NestedBlock` | Embed another block into this block.        |                                |          |                                                                                               |
-|               |                                             | `nested_block_type` (string or Block object)  | | The block to embed inside this block. Vakue is either a Block object or the name string of a block defined elsewhere in the blockset. |
-|               |                                             | `optional` (bool)              | `false`  | If true, render a toggle that enables/disables the Nested Block                               |
-| `Repeater`    | Embed an array of blocks within this block. |                                |          |                                                                                               |
+| `NestedBlock` | Embed another block into this block.        |                                |          |                                                                                                |
+|               |                                             | `nested_block_type` (string or Block object)  | | The block to embed inside this block. May be either a Block object or the string name of a block defined elsewhere in the blockset. |
+|               |                                             | `optional` (bool)              | `false`  | If true, render a toggle that enables/disables the Nested Block                                |
+| `Repeater`    | Embed an array of blocks within this block. |                                |          |                                                                                                |
 |               |                                             | `nested_block_types` (array: strings or Block objects)  | | The blocks available in this Repeater. Value is an array of either Block objects or name strings of blocks defined elsewhere in the blockset. |
-|               |                                             | `optional` (bool)              | `false`  | If true, render a toggle that enables/disables the Repeater                                   |
-|               |                                             | `max` (number)                 | No limit | Optionally limit the number of items the user can add                                         |
-| `Searchable`  | Text input with custom search.              |                                |          |                                                                                               |
-|               |                                             | `search` (function -> promise) |          | A function that takes a search term as its argument, performs a search, and returns a promise. The promise should `resolve()` to an array of search results in the form `{value, display}`. The promise can also `reject()`, returning a string which will be displayed to the user below the search field. |
-|               |                                             | `debounce_ms` (number)         | `500`    | The `search` function is rate limited by Otter while the user types. Adjust `debounce_ms` to call your search function more or less frequently. |
+|               |                                             | `optional` (bool)              | `false`  | If true, render a toggle that enables/disables the Repeater                                    |
+|               |                                             | `max` (number)                 | No limit | Optionally limit the number of items the user can add                                          |
+|               |                                             | `block_titles` (bool)          | `false`  | If true, render the block type/description as title for each item in the repeater              |
+| `Searchable`  | Text input with custom search.              |                                |          |                                                                                                |
+|               |                                             | `search` (function -> promise) |          | A function that takes a search term as its argument, performs a search, and returns a promise. The promise should `resolve()` to an array of search results in the form `{value, display}`. The promise can also `reject()`, returning an error message string which will be displayed to the user below the search field. |
+|               |                                             | `debounce_ms` (number)         | `500`    | Calling of your `search` callback is rate-limited with a debounce function: use `debounce_ms` to adjust the debounce delay. |
 
 
 

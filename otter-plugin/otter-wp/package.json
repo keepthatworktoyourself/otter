@@ -1,6 +1,6 @@
 {
   "name": "otter-wp",
-  "version": "0.0.139",
+  "version": "0.0.142",
   "description": "Wordpress integration for otter-editor",
   "main": "dist/otter-wp.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "license": "MIT",
   "homepage": "https://github.com/bhallstein/otter#readme",
   "peerDependencies": {
-    "otter-editor": "0.0.139",
+    "otter-editor": "0.0.142",
     "react": "*",
     "react-dom": "*"
   },

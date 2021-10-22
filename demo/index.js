@@ -68,7 +68,7 @@ function render(state, delegate) {
                   delegate={delegate}
                   when_to_save={Otter.Save.OnInput}
                   block_numbers={true} />,
-    document.getElementById('otter-container'),
+    document.querySelector('#otter-container'),
   )
 }
 

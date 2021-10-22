@@ -19,6 +19,7 @@ export default function Repeater({field_def, containing_data_item, ...props}) {
   const RepeaterItemStub           = props.repeater_item_component || RepeaterItem
   const RecursiveBlockRendererStub = props.rbr_component           || RecursiveBlockRenderer
   const data_items                 = containing_data_item[field_def.name] || []
+  const block_titles               = field_def.block_titles
   const nested_block_types         = field_def.nested_block_types || []
   const max                        = field_def.max || -1
   const multiple_types             = nested_block_types.length !== 1
@@ -101,31 +102,29 @@ export default function Repeater({field_def, containing_data_item, ...props}) {
   return (
     <>
       <DragDropContext onDragEnd={cb__reorder}>
-        <Droppable droppableId={dnd_context_id} type={dnd_context_id}>{(prov, snap) => (
+        <Droppable droppableId={dnd_context_id} type={dnd_context_id}>{prov => (
           <div ref={prov.innerRef} {...prov.droppableProps}>
-
             {data_items.map((data_item, index) => {
               const is_permitted = blocktypes__strings.includes(data_item.__type)
+              const block = blocktypes__objects.find(t => t.type === data_item.__type)
 
               return (
                 <RepeaterItemStub index={index}
                                   dnd_context_id={dnd_context_id}
                                   dnd_key={data_item.__uid}
                                   key={data_item.__uid || index}
+                                  title={block_titles && (block.description || humanify_str(block.type))}
                                   cb__delete={cb__delete}
                 >
-
                   {is_permitted ?
                     <RecursiveBlockRendererStub data_item={data_item} blocks={ctx.blocks} /> :
                     <ErrorField text={`Items of type ${data_item.__type} are not allowed in this repeater`} />
                   }
-
                 </RepeaterItemStub>
               )
             })}
 
             {prov.placeholder}
-
           </div>
         )}</Droppable>
       </DragDropContext>
@@ -174,4 +173,3 @@ export default function Repeater({field_def, containing_data_item, ...props}) {
     </>
   )
 }
-

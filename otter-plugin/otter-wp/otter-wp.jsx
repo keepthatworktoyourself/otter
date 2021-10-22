@@ -49,7 +49,7 @@ function render() {
 // Dynamic data
 // -----------------------------------
 
-Otter.Utils.dynamic_data.request_from_iframe = true
+window.otter_request_dynamic_data_from_iframe = true
 
 window.addEventListener('message', function(ev) {
   const proceed = ev.data && ev.data['otter--set-dynamic-data'];
