@@ -237,6 +237,13 @@ The supported field types and their options are documented below.
 |               |                                             | `search` (function -> promise) |          | A function that takes a search term as its argument, performs a search, and returns a promise. The promise should `resolve()` to an array of search results in the form `{value, display}`. The promise can also `reject()`, returning an error message string which will be displayed to the user below the search field. |
 |               |                                             | `debounce_ms` (number)         | `500`    | Calling of your `search` callback is rate-limited with a debounce function: use `debounce_ms` to adjust the debounce delay. |
 
+### Testing for optional repeaters and nested blocks
+
+When an `optional` block is saved, the data item has an extra boolean property, `__enabled`. Your rendering code should check this property to test for the state of the optional block:
+
+```jsx
+header.image.__enabled && <img src="header.image.src" alt="header.image.alt" />
+```
 
 
 ## Demo

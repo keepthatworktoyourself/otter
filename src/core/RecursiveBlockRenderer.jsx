@@ -93,19 +93,15 @@ export default function RecursiveBlockRenderer({
 
     const field_name = field_def.name
     const field_type = field_def.type
-    const field_value = item[field_name]
     const is_display_if_target = display_if_targets.includes(field_name)
     let out = null
 
 
     // Check required field properties
-    const errors = []
-    if (!field_type) {
-      errors.push('type')
-    }
-    if (!field_name) {
-      errors.push('name')
-    }
+    const errors = [
+      !field_type && 'type',
+      !field_name && 'name',
+    ].filter(Boolean)
     if (errors.length) {
       return <ErrorField text={error_text__missing_field_props(index, errors)}
                          is_top_level={is_top_level}

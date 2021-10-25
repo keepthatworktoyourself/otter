@@ -27,11 +27,19 @@ const blocks__flat = [
 const blocks__grouped = {
   simple: {
     name:   'Headers',
-    blocks: [header_block, text_block, html_block],
+    blocks: [
+      header_block,
+      text_block,
+      html_block,
+    ],
   },
   complex: {
     name:   'Content',
-    blocks: [block_with_nested_block, block_with_repeater, searchables],
+    blocks: [
+      block_with_nested_block,
+      block_with_repeater,
+      searchables,
+    ],
   },
 }
 

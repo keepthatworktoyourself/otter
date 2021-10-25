@@ -268,50 +268,6 @@ export function display_if(block, field_name, data_item) {
 }
 
 
-// item_has_data
-// -----------------------------------
-
-export function all_items_exist_in(items, arr) {
-  return items.reduce((carry, item) => {
-    return carry && arr.includes(item)
-  }, true)
-}
-
-export function item_has_data(item) {
-  return (
-    is_data_item(item) &&
-    !all_items_exist_in(Object.keys(item), ['__type', '__uid'])
-  )
-}
-
-
-// optional_nested_block__is_enabled
-// -----------------------------------
-
-export function optional_nested_block__is_enabled(field_name, data_item) {
-  const enabled_nbs = data_item.__enabled_nested_blocks || { }
-
-  if (enabled_nbs[field_name] !== undefined) {
-    return !!enabled_nbs[field_name]
-  }
-
-  const sub_data_item = data_item[field_name]
-  return !!item_has_data(sub_data_item)
-}
-
-
-// optional_nested_block__set_enabled
-// -----------------------------------
-
-export function optional_nested_block__set_enabled(field_name, data_item, enabled) {
-  if (!data_item.__enabled_nested_blocks) {
-    data_item.__enabled_nested_blocks = { }
-  }
-
-  data_item.__enabled_nested_blocks[field_name] = !!enabled
-}
-
-
 // blocks_are_grouped
 // -----------------------------------
 

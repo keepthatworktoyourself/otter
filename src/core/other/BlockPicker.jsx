@@ -4,7 +4,7 @@ import {usePageData} from '../PageDataContext'
 import Icons from './Icons'
 import {humanify_str} from '../definitions/utils'
 
-export default function BlockPicker({block_index, iframe_container_info, scroll_offset}) {
+export default function BlockPicker({block_index, iframe_container_info}) {
   const ctx              = usePageData()
   const blocks           = ctx.blocks
   const block_group_keys = Object.keys(blocks)
@@ -12,7 +12,7 @@ export default function BlockPicker({block_index, iframe_container_info, scroll_
     y:      0,
     height: 0,
   }
-  const offset = (scroll_offset || 0) + container.y
+  const offset = container.y
   const outer_max_height = container.height
 
   function close() {

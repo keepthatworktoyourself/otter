@@ -1,11 +1,20 @@
-import React, {useState, useReducer, useEffect} from 'react'
+import React, {useState, useReducer, useEffect, useMemo} from 'react'
 import * as DnD from 'react-beautiful-dnd'
 import {PageDataContext} from './PageDataContext'
 import Block from './Block'
 import AddBlockBtn from './other/AddBlockBtn'
 import BlockPicker from './other/BlockPicker'
 import fields from './fields/fields'
-import * as Utils from './definitions/utils'
+import {
+  copy,
+  evaluate,
+  find_block,
+  display_if,
+  uid,
+  iterate,
+  iterate_data,
+  blocks_are_grouped,
+} from './definitions/utils'
 import State from './definitions/state'
 import Save from './definitions/save'
 import styles from './definitions/styles'
@@ -15,13 +24,13 @@ function export_data_item(data_item, blocks) {
     return null
   }
 
-  const block = Utils.find_block(blocks, data_item.__type)
+  const block = find_block(blocks, data_item.__type)
   if (!block) {
     return null
   }
 
   const fields__displayed = (block.fields || []).filter(field_def => {
-    const di = Utils.display_if(block, field_def.name, data_item)
+    const di = display_if(block, field_def.name, data_item)
     return di.display === true
   })
 
@@ -31,28 +40,32 @@ function export_data_item(data_item, blocks) {
     const field_value = data_item[field_name]
 
     if (field_type === fields.NestedBlock || field_type === fields.Repeater) {
-      const include = !field_def.optional || Utils.optional_nested_block__is_enabled(field_name, data_item)
-      if (include) {
-        carry[field_name] = field_type === fields.NestedBlock ?
-          export_data_item(field_value, blocks) :
-          (field_value || []).map(item => export_data_item(item, blocks))
+      if (field_type === fields.Repeater) {
+        carry[field_name] = (field_value || []).map(item => export_data_item(item, blocks))
+      }
+      else if (field_type === fields.NestedBlock) {
+        carry[field_name] = export_data_item(field_value, blocks)
+      }
+      if (field_def.optional) {
+        carry[field_name]['__enabled'] = !!field_value['__enabled']
       }
     }
 
     else {
       const use_default = field_value === null || field_value === undefined || field_value === ''
       carry[field_name] = use_default ?
-        Utils.evaluate(field_def.default_value) :
+        evaluate(field_def.default_value) :
         field_value
     }
 
+    const val = carry[field_name]
     const remove = (
-      carry[field_name] === '' ||
-      carry[field_name] === null ||
-      carry[field_name] === undefined ||
-      carry[field_name].constructor === Array && carry[field_name].length === 0 ||
-      Utils.is_data_item(carry[field_name]) && !Utils.item_has_data(carry[field_name]) ||
-      field_name.match(/^__/)
+      val === '' ||
+      val === null ||
+      val === undefined ||
+      val.constructor === Array && val.length === 0 ||
+      field_name === '__type' ||
+      field_name === '__uid'
     )
     if (remove) {
       delete carry[field_name]
@@ -63,15 +76,15 @@ function export_data_item(data_item, blocks) {
 }
 
 function ensure_uids(data) {
-  Utils.iterate_data(data, data_item => {
+  iterate_data(data, data_item => {
     if (data_item && !data_item.__uid) {
-      data_item.__uid = Utils.uid()
+      data_item.__uid = uid()
     }
   })
 }
 
 function ensure_display_ifs_are_arrays(blocks) {
-  Utils.iterate(blocks, item => {
+  iterate(blocks, item => {
     if (item && item.display_if && item.display_if.constructor !== Array) {
       item.display_if = [item.display_if]
     }
@@ -141,12 +154,12 @@ export default function Editor({
   BlockStub = Block,
   iframe_container_info = { },
 }) {
-  const valid_state     = Object.values(State).includes(load_state)
+  const valid_state = Object.values(State).includes(load_state)
   const [block_picker, set_block_picker] = useState(false)
-  const [block_picker_offset, set_block_picker_offset] = useState(null)
   const [previous_load_state, set_previous_load_state] = useState(null)
   const [_, update] = useState({ })
-  const [ctx, dispatch_ctx] = useReducer(ctx_reducer, {data, blocks})
+  const initial_data = useMemo(() => copy(data), [])
+  const [ctx, dispatch_ctx] = useReducer(ctx_reducer, {data: initial_data, blocks})
 
   function enqueue_save_on_input() {
     setTimeout(do_save_on_input)
@@ -163,9 +176,6 @@ export default function Editor({
   }
   function reorder_items(drag_result) {
     dispatch_ctx({reorder: drag_result})
-    enqueue_save_on_input()
-  }
-  function value_updated() {
     enqueue_save_on_input()
   }
   function redraw() {
@@ -186,7 +196,7 @@ export default function Editor({
   const ctx_interface = {
     block_toggled,
     redraw,
-    value_updated,
+    value_updated: enqueue_save_on_input,
     add_item,
     delete_item,
     open_block_picker,
@@ -212,10 +222,6 @@ export default function Editor({
     delegate && delegate.save && delegate.save(get_data())
   }
 
-
-  let content__main
-  let content__picker
-
   ensure_uids(ctx.data)
   ensure_display_ifs_are_arrays(ctx.blocks)
 
@@ -230,7 +236,7 @@ export default function Editor({
     can_add_blocks &&
     load_state === State.Loaded &&
     block_picker !== false &&
-    Utils.blocks_are_grouped(ctx.blocks)
+    blocks_are_grouped(ctx.blocks)
   )
 
   const n_items = ctx.data?.length || 0
@@ -283,10 +289,8 @@ export default function Editor({
         )}
 
         {show_block_picker && <BlockPicker block_index={block_picker}
-                                           scroll_offset={block_picker_offset}
                                            iframe_container_info={iframe_container_info} />}
       </div>
     </ContextProvider>
   )
 }
-
