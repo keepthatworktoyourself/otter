@@ -1,4 +1,5 @@
 import React, {useState, useReducer, useEffect, useMemo} from 'react'
+import ReactDOM from 'react-dom'
 import * as DnD from 'react-beautiful-dnd'
 import {PageDataContext} from './PageDataContext'
 import Block from './Block'
@@ -152,6 +153,7 @@ export default function Editor({
   Droppable = DnD.Droppable,
   ContextProvider = PageDataContext.Provider,
   BlockStub = Block,
+  draw_block_picker_into,
   iframe_container_info = { },
 }) {
   const valid_state = Object.values(State).includes(load_state)
@@ -288,8 +290,17 @@ export default function Editor({
           </div>
         )}
 
-        {show_block_picker && <BlockPicker block_index={block_picker}
-                                           iframe_container_info={iframe_container_info} />}
+        {show_block_picker && (
+          draw_block_picker_into ?
+            ReactDOM.createPortal(
+              <BlockPicker block_index={block_picker}
+                           iframe_container_info={iframe_container_info}
+                           draw_block_picker_into={draw_block_picker_into} />,
+              draw_block_picker_into.current,
+            ) :
+            <BlockPicker block_index={block_picker}
+                         iframe_container_info={iframe_container_info} />
+        )}
       </div>
     </ContextProvider>
   )

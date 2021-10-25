@@ -68,14 +68,22 @@ function load(post_id) {
 // render
 // -----------------------------------
 
+function App({state, delegate}) {
+  return (
+    <div>
+      <Otter.Editor blocks={blocks__grouped}
+                    data={state.data}
+                    load_state={state.load_state}
+                    delegate={delegate}
+                    when_to_save={Otter.Save.OnInput}
+                    block_numbers={true} />
+    </div>
+  )
+}
+
 function render(state, delegate) {
   ReactDOM.render(
-    <Otter.Editor blocks={blocks__grouped}
-                  data={state.data}
-                  load_state={state.load_state}
-                  delegate={delegate}
-                  when_to_save={Otter.Save.OnInput}
-                  block_numbers={true} />,
+    <App state={state} delegate={delegate} />,
     document.querySelector('#otter-container'),
   )
 }

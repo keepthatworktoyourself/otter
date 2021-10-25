@@ -2,9 +2,14 @@ import React from 'react'
 import XOutline from 'simple-react-heroicons/icons/XOutline'
 import {usePageData} from '../PageDataContext'
 import Icons from './Icons'
+import styles from '../definitions/styles'
 import {humanify_str} from '../definitions/utils'
 
-export default function BlockPicker({block_index, iframe_container_info}) {
+export default function BlockPicker({
+  block_index,
+  iframe_container_info,
+  draw_block_picker_into,
+}) {
   const ctx              = usePageData()
   const blocks           = ctx.blocks
   const block_group_keys = Object.keys(blocks)
@@ -14,6 +19,7 @@ export default function BlockPicker({block_index, iframe_container_info}) {
   }
   const offset = container.y
   const outer_max_height = container.height
+  const positioning = draw_block_picker_into ? 'fixed' : 'absolute'
 
   function close() {
     ctx.close_block_picker()
@@ -25,7 +31,9 @@ export default function BlockPicker({block_index, iframe_container_info}) {
   }
 
   return (
-    <div className="absolute inset-0 p-4 z-20 bg-gray-900 bg-opacity-20">
+    <div className={`${positioning} inset-0 p-4 bg-gray-900 bg-opacity-20`}
+         style={{stroke: styles.text_color}}
+    >
       <div style={{
         transform:  `translateY(${offset}px`,
         transition: 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
@@ -51,9 +59,9 @@ export default function BlockPicker({block_index, iframe_container_info}) {
                 </h3>
 
                 <div className="flex flex-wrap -mx-4 md:-mx-6">
-                  {blocks[k].blocks.map((block, j) => (
+                  {/* Items */}
+                  {blocks[k].blocks.map(block => (
                     <div className="p-4 md:p-6 w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5" key={block.type}>
-
                       <div className="shadow-lg border border-gray-100 w-full">
                         <div className="p-4">
                           <h3 className="font-semibold text-md">
@@ -62,8 +70,7 @@ export default function BlockPicker({block_index, iframe_container_info}) {
                         </div>
 
                         <figure className="relative w-full overflow-hidden bg-gray-300" style={{paddingTop: '60%'}}>
-                          <img className="absolute inset-0"
-                               src={block.thumbnail} />
+                          <img className="absolute inset-0" src={block.thumbnail} />
                         </figure>
 
                         <footer className="p-4 text-xs text-center">
@@ -75,7 +82,6 @@ export default function BlockPicker({block_index, iframe_container_info}) {
                           </a>
                         </footer>
                       </div>
-
                     </div>
                   ))}
                 </div>
