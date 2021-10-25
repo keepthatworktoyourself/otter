@@ -1,5 +1,5 @@
 import React from 'react'
-import {XOutline} from '@graywolfai/react-heroicons'
+import XOutline from 'simple-react-heroicons/icons/XOutline'
 import {usePageData} from '../PageDataContext'
 import Icons from './Icons'
 import {humanify_str} from '../definitions/utils'
@@ -89,4 +89,3 @@ export default function BlockPicker({block_index, iframe_container_info, scroll_
     </div>
   )
 }
-

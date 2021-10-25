@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {PlusOutline} from '@graywolfai/react-heroicons'
+import PlusOutline from 'simple-react-heroicons/icons/PlusOutline'
 import Icons from './Icons'
 import {usePageData} from '../PageDataContext'
 import PopupMenu from './PopupMenu'

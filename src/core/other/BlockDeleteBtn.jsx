@@ -1,5 +1,5 @@
 import React from 'react'
-import {XOutline} from '@graywolfai/react-heroicons'
+import XOutline from 'simple-react-heroicons/icons/XOutline'
 import Icons from '../other/Icons'
 import styles from '../definitions/styles'
 

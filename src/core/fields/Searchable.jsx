@@ -1,13 +1,11 @@
 import React, {useCallback, useState, useRef} from 'react'
-import {XOutline} from '@graywolfai/react-heroicons'
+import XOutline from 'simple-react-heroicons/icons/XOutline'
 import {usePageData} from '../PageDataContext'
 import Icons from '../other/Icons'
 import FieldLabel from '../other/FieldLabel'
 import PopupMenu from '../other/PopupMenu'
 import {humanify_str, debounce_promise} from '../definitions/utils'
 import styles from '../definitions/styles'
-
-const ESC = 27
 
 export default function Searchable({field_def, containing_data_item, is_top_level}) {
   const ctx = usePageData()

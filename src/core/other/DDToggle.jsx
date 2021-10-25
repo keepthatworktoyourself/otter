@@ -1,5 +1,5 @@
 import React from 'react'
-import {ChevronDownOutline} from '@graywolfai/react-heroicons'
+import ChevronDownOutline from 'simple-react-heroicons/icons/ChevronDownOutline'
 
 export default function DDToggle({marginLeft, is_open, cb}) {
   const l_margin = marginLeft || '0.3rem'

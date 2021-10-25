@@ -1,5 +1,5 @@
 import React from 'react'
-import {XOutline} from '@graywolfai/react-heroicons'
+import XOutline from 'simple-react-heroicons/icons/XOutline'
 import Icons from './Icons'
 
 export default function ClearSelectionBtn({cb__clear}) {
@@ -11,4 +11,3 @@ export default function ClearSelectionBtn({cb__clear}) {
     </div>
   )
 }
-
