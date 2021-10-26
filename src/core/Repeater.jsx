@@ -38,7 +38,7 @@ export default function Repeater({field_def, containing_data_item, ...props}) {
   function cb__add(ev) {
     const block_type = ev ?
       ev.currentTarget.getAttribute('data-nested_block-type') :
-      get_block_type(props.field_def.nested_block_types[0])
+      get_block_type(field_def.nested_block_types[0])
 
     if (!containing_data_item[field_def.name]) {
       containing_data_item[field_def.name] = []
