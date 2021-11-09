@@ -1,4 +1,5 @@
-import Otter from '..'
+import * as Utils from '../core/definitions/utils'
+import Fields from '../core/fields/fields'
 
 const blocks = [
   {type: 'B1'},
@@ -7,7 +8,7 @@ const blocks = [
     fields: [
       {
         name:    'size',
-        type:    Otter.Fields.Radios,
+        type:    Fields.Radios,
         options: {
           regular: 'Regular',
           large:   'Large',
@@ -15,7 +16,7 @@ const blocks = [
       },
       {
         name: 'text',
-        type: Otter.Fields.TextInput,
+        type: Fields.TextInput,
       },
     ],
   },
@@ -24,7 +25,7 @@ const blocks = [
     fields: [
       {
         name:              'content_item',
-        type:              Otter.Fields.NestedBlock,
+        type:              Fields.NestedBlock,
         nested_block_type: 'AContentItem',
       },
     ],
@@ -34,7 +35,7 @@ const blocks = [
     fields: [
       {
         name:               'content_items',
-        type:               Otter.Fields.Repeater,
+        type:               Fields.Repeater,
         nested_block_types: [
           'AnotherContentItem',
           'OneMoreContentItem',
@@ -42,9 +43,9 @@ const blocks = [
       },
     ],
   },
-  {type: 'AContentItem',       fields: [{name: 'f', type: Otter.Fields.TextInput}]},
-  {type: 'AnotherContentItem', fields: [{name: 'f', type: Otter.Fields.TextInput}]},
-  {type: 'OneMoreContentItem', fields: [{name: 'f', type: Otter.Fields.TextInput}]},
+  {type: 'AContentItem',       fields: [{name: 'f', type: Fields.TextInput}]},
+  {type: 'AnotherContentItem', fields: [{name: 'f', type: Fields.TextInput}]},
+  {type: 'OneMoreContentItem', fields: [{name: 'f', type: Fields.TextInput}]},
 ]
 
 
@@ -61,11 +62,11 @@ const blocks_with_invalid_field_type = [
 ]
 
 function get_blocks() {
-  return Otter.Utils.copy(blocks)
+  return Utils.copy(blocks)
 }
 
 function get_blocks_with_invalid_field_type() {
-  return Otter.Utils.copy(blocks_with_invalid_field_type)
+  return Utils.copy(blocks_with_invalid_field_type)
 }
 
 get_blocks.with_invalid_field_type = get_blocks_with_invalid_field_type

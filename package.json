@@ -1,13 +1,13 @@
 {
   "name": "otter-editor",
   "description": "Content editor with declaratively defined content blocks.",
-  "version": "0.0.162",
+  "version": "0.0.163",
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
-  "homepage": "https://github.com/bhallstein/otter",
+  "homepage": "https://github.com/keepthatworktoyourself/otter",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bhallstein/otter.git"
+    "url": "https://github.com/keepthatworktoyourself/otter.git"
   },
   "files": [
     "README.md",
@@ -30,7 +30,6 @@
     "i": "npm run clean && rm -rf node_modules && npm install"
   },
   "devDependencies": {
-    "@ava/babel": "^2.0.0",
     "@babel/cli": "^7.15.7",
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
@@ -45,6 +44,7 @@
     "eslint": "^7.32.0",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-react": "^7.26.1",
+    "esm": "^3.2.25",
     "parcel": "^2.0.0",
     "postcss": "^8.3.9",
     "postcss-import": "^14.0.2",
@@ -62,11 +62,7 @@
     "react-dom": "*"
   },
   "ava": {
-    "babel": true,
-    "require": [
-      "@babel/register",
-      "./src/test/_browser-setup.js"
-    ]
+    "require": ["esm"]
   },
   "targets": {
     "default": {}

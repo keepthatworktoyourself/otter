@@ -132,7 +132,7 @@ export function find_field(fields, name) {
 // -----------------------------------
 
 export function is_data_item(obj) {
-  return obj && obj.constructor === Object && obj.__type
+  return !!(obj && obj.constructor === Object && obj.__type)
 }
 
 
@@ -308,7 +308,8 @@ export function upto(n) {
 // dynamic_data
 // -----------------------------------
 
-window.otter_dynamic_data = { }
+let win = typeof window === 'undefined' ? global : window
+win.otter_dynamic_data = { }
 
 export function dynamic_data(name) {
   return function() {

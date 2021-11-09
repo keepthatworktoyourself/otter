@@ -1,6 +1,6 @@
 {
   "name": "otter-wp",
-  "version": "0.0.162",
+  "version": "0.0.163",
   "description": "Wordpress integration for otter-editor",
   "main": "dist/otter-wp.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bhallstein/otter.git"
+    "url": "git+https://github.com/keepthatworktoyourself/otter.git"
   },
   "files": [
     "dist"
@@ -24,9 +24,9 @@
   ],
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "MIT",
-  "homepage": "https://github.com/bhallstein/otter#readme",
+  "homepage": "https://github.com/keepthatworktoyourself/otter",
   "peerDependencies": {
-    "otter-editor": "0.0.162",
+    "otter-editor": "0.0.163",
     "react": "*",
     "react-dom": "*"
   },

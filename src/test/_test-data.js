@@ -1,4 +1,4 @@
-import Otter from '..'
+import * as Utils from '../core/definitions/utils'
 
 
 const test_data = [
@@ -31,12 +31,12 @@ const test_data__block_with_invalid_field_type = [
 
 
 function get_test_data() {
-  return Otter.Utils.copy(test_data)
+  return Utils.copy(test_data)
 }
 
 
 get_test_data.with_invalid_field_type = function() {
-  return Otter.Utils.copy(test_data__block_with_invalid_field_type)
+  return Utils.copy(test_data__block_with_invalid_field_type)
 }
 
 
