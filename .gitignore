@@ -6,6 +6,7 @@ dist
 demo/dist
 .cache
 .parcel-cache
+.vscode
 
 otter-plugin/dev/dist
 otter-plugin/dev/deps

@@ -18,7 +18,7 @@
   "scripts": {
     "lint": "eslint --fix .",
     "lint-check": "eslint .",
-    "demo": "parcel demo/index.html",
+    "demo": "parcel demo/index.html -p 3001",
     "clean": "rm -rf dist demo/dist .parcel-cache",
     "build": "npm run clean && parcel build --no-source-maps demo/index.html --target default",
     "babel": "babel src/index.js -d dist --presets=@babel/preset-env,@babel/preset-react && babel src/core -d dist/core --presets=@babel/preset-env,@babel/preset-react",
@@ -52,7 +52,10 @@
     "tailwindcss": "^2.2.17"
   },
   "dependencies": {
+    "framer-motion": "^5.3.1",
+    "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
+    "react-dom": "^17.0.2",
     "react-quill": "^1.3.5",
     "react-toggle": "^4.1.2",
     "simple-react-heroicons": "1.3.12"
@@ -62,7 +65,9 @@
     "react-dom": "*"
   },
   "ava": {
-    "require": ["esm"]
+    "require": [
+      "esm"
+    ]
   },
   "targets": {
     "default": {}

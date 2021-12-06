@@ -61,7 +61,7 @@ The `<Otter.Editor />` element renders the editor.
 | `blocks`         | `<Array(Block)>`                                | Yes      |                  | Defines the [blocks](#blocks) available in the editor.                                                                             |
 | `data`           | Loaded data                                     |          |                  | The loaded page data.                                                                                                              |
 | `load_state`     | `Otter.State.Loading` or `.Loaded` or `.Error`  | Yes      |                  | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data.  |
-| `delegate`       | `{save: <Function>, block_toggled: <Function>}` |          |                  | Used by Otter to communicate state changes to the parent.                                                                          |
+| `delegate`       | `{save: <Function>, editor_height_change: <Function>}` |          |                  | Used by Otter to communicate state changes to the parent.                                                                          |
 | `when_to_save`   | `Otter.Save.OnInput` or `.OnClick`              |          | `OnClick`        | Should otter call `delegate.save()` continuously on user input, or only when the user clicks a save button?                        |
 | `block_numbers`  | `<bool>`                                        |          | `false`          | Label each block with its 1-based index                                                                                            |
 | `add_block_msg`  | `<string>`                                      |          | `'Insert block'` | Label for the 'insert block' button                                                                                                |
@@ -72,7 +72,7 @@ const my_delegate = {
   save(data) {
     // e.g. kick off a request to update the database
   },
-  block_toggled() {
+  editor_height_change() {
     // e.g. reflow other parts of page layout if necessary
   },
 }
@@ -152,7 +152,7 @@ Each block should contain at least one field.
 {
   name: 'content',
   description: 'Content',
-  type: Otter.Fields.TextArea,
+  type: Otter.FieldTypes.TextArea,
 }
 ```
 
@@ -170,7 +170,7 @@ All fields have the following properties:
 
 (The `default_value` prop is not supported by TextEditor, WPMedia, NestedBlock, Repeater, or Searchable.)
 
-[Field type](#field-types) should be specified with the Otter-defined constants such as `Otter.Fields.TextInput`.
+[Field type](#field-types) should be specified with the Otter-defined constants such as `Otter.FieldTypes.TextInput`.
 
 With `display_if` you can show or hide the field based on the value of one or more of its siblings. Each `DisplayRule` specifies the name of the sibling and a value. You can test against more than one sibling field using an array of multiple `DisplayRule` objects.
 
@@ -179,7 +179,7 @@ With `display_if` you can show or hide the field based on the value of one or mo
 {
   name: 'url',
   description: 'URL',
-  type: Otter.Fields.TextInput,
+  type: Otter.FieldTypes.TextInput,
   display_if: {
     sibling: 'is_link',
     equal_to: true,

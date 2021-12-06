@@ -2,7 +2,7 @@ import test from 'ava'
 import test_data from './_test-data'
 import test_blocks from './_test-blocks'
 import * as Utils from '../core/definitions/utils'
-import Fields from '../core/fields/fields'
+import field_types from '../core/definitions/field-types'
 
 
 // uid
@@ -26,7 +26,7 @@ test('utils: retitle_field returns field with new name, description', t => {
   const field = {
     name:        'my_field',
     description: 'My field',
-    type:        Fields.TextInput,
+    type:        field_types.TextInput,
   }
 
   const f__new_name = Utils.retitle_field(field, 'a_field')
@@ -116,11 +116,11 @@ test('utils: find_block: handles nulls', t => {
 const find_field__fields = [
   {
     name: 'field_1',
-    type: Fields.TextInput,
+    type: field_types.TextInput,
   },
   {
     name: 'field_2',
-    type: Fields.Radios,
+    type: field_types.Radios,
   },
 ]
 

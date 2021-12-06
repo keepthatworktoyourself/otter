@@ -16,7 +16,7 @@ const delegate = {
     window.parent.postMessage({ 'otter--set-data': data });
   },
 
-  block_toggled() {
+  editor_height_change() {
     setTimeout(send_height_update, 10);
   },
 };
