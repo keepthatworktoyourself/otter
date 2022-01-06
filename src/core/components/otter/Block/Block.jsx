@@ -37,7 +37,6 @@ export default function Block({data_item, index, block_numbers}) {
   const block             = find_block(blocks, data_item.__type)
   const tabs              = block?.tabs && block?.tabs?.length > 0 && block.tabs
   const tab_btns          = tabs && tabs.map(tab => tab?.Icon || PlusSolid)
-  const contains_nested_blocks = has_nested_block(block?.fields)
 
   const [open, set_open]                                   = useState(true)
   const [show_confirm_deletion, set_show_confirm_deletion] = useState(false)
@@ -105,7 +104,7 @@ export default function Block({data_item, index, block_numbers}) {
                                             initialOverflowValue="visible"
                         >
                           {!tabs && (
-                            <BlockSection skip={contains_nested_blocks}>
+                            <BlockSection>
                               <RecursiveBlockRenderer data_item={data_item} blocks={blocks} />
                             </BlockSection>
                           )}
@@ -116,7 +115,7 @@ export default function Block({data_item, index, block_numbers}) {
 
                             return (
                               <TabsTab key={`tab--${i}`} index={i}>
-                                <BlockSection skip={has_nested_block(tab_fields)}>
+                                <BlockSection>
                                   <RecursiveBlockRenderer data_item={data_item}
                                                           block_fields={tab_fields}
                                                           blocks={blocks} />

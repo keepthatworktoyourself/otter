@@ -9,7 +9,8 @@ export default function OGroupedSelectorBtn({
   Icon,
   className,
   style,
-  ...props}) {
+  ...props
+}) {
   const theme_ctx = useThemeContext()
 
   return (
@@ -25,12 +26,12 @@ export default function OGroupedSelectorBtn({
        )}
        {...props}
     >
-      <div className={classNames(
-        active ?
-          theme_ctx.classes.skin.selector_btn.active :
-          theme_ctx.classes.skin.selector_btn.default,
-      )}
-           style={{padding: '0.3em 1.3em', ...style}}
+      <div style={{padding: '0.3em 1.3em', ...style}}
+           className={classNames(
+             active ?
+               theme_ctx.classes.skin.selector_btn.active :
+               theme_ctx.classes.skin.selector_btn.default,
+           )}
       >
         {Icon && (
           <span className="svg-font"

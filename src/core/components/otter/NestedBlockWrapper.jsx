@@ -4,7 +4,7 @@ import {humanify_str} from '../../definitions/utils'
 import BlockSection from './Block/BlockSection'
 
 export default function NestedBlockWrapper({field_def, index, containing_data_item, children}) {
-  const ctx                        = usePageData()
+  const ctx         = usePageData()
   const title       = field_def.description || humanify_str(field_def.name)
   const is_optional = field_def.optional
   const [is_enabled, set_is_enabled] = useState(containing_data_item[field_def.name]?.__enabled || true)
@@ -23,9 +23,9 @@ export default function NestedBlockWrapper({field_def, index, containing_data_it
     <BlockSection heading={title}
                   children={children}
                   withBorderTop={index !== 0}
+                  with_padding={false}
                   enabled={is_enabled}
                   optional={is_optional}
                   toggle_enabled={cb__toggle_enabled} />
   )
 }
-

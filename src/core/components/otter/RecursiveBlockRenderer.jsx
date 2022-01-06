@@ -142,29 +142,20 @@ export default function RecursiveBlockRenderer({
                       key={index} />
     }
 
-    // Render fields
+    // Render other fields
     else {
       const Field = FieldComponents[field_type]
-
-      if (Field) {
-        out =
-          <GridLayoutItem field_def={field_def}
-                          key={index}
-          >
-            <Field field_def={field_def}
-                   containing_data_item={item}
-                   is_display_if_target={is_display_if_target} />
-          </GridLayoutItem>
-      }
-      else {
-        const text = error_text__invalid_field_type_in_field_definition(field_name, field_type)
-        out =
-          <GridLayoutItem field_def={field_def}
-                          key={index}
-          >
-            <OErrorMessage text={text} />
-          </GridLayoutItem>
-      }
+      const error_text = error_text__invalid_field_type_in_field_definition(field_name, field_type)
+      out = (
+        <GridLayoutItem field_def={field_def}
+                        key={index}
+        >
+          {Field && <Field field_def={field_def}
+                           containing_data_item={item}
+                           is_display_if_target={is_display_if_target} />}
+          {!Field && <OErrorMessage text={error_text} />}
+        </GridLayoutItem>
+      )
     }
 
 

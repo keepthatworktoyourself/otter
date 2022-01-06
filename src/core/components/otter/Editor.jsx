@@ -141,22 +141,6 @@ function ctx_reducer(state, op) {
   return {data: state.data, blocks: state.blocks}
 }
 
-function Blocks({data, block_numbers}) {
-  return data.length >= 1 && (
-    <AnimatePresence initial={false}>
-      {data.map((data_item, index) => (
-        <motion.div key={data_item.__uid}
-                    {...animations.item_add_and_remove}
-        >
-          <Block data_item={data_item}
-                 index={index}
-                 block_numbers={block_numbers} />
-        </motion.div>
-      ))}
-    </AnimatePresence>
-  )
-}
-
 
 // Editor
 // -----------------------------------
@@ -294,39 +278,50 @@ export default function Editor({
           {load_state === State.Error && Msg(`Error loading post data`)}
           {load_state === State.Loading && Msg(`Loading...`)}
           {load_state === State.Loaded && (
-          <div className="mx-auto"
-               style={{
-                 minHeight: `${block_picker === false ? '20' : '50'}rem`,
-                 maxWidth:  '45rem',
-               }}
-          >
-            {when_to_save === Save.OnClick && (
-              <div className="save-button m-4">
-                <a className="button" onClick={do_save}>Save</a>
-              </div>
-            )}
-
-            {can_add_blocks && (
-              <div className="flex justify-center">
-                <AddBlockBtn index={0}
-                             suggest_add_block={n_items === 0}
-                             popup_direction={'down'} />
-              </div>
-            )}
-
-            <DragDropContext onDragEnd={drag => reorder_items(drag)}>
-              <Droppable droppableId="d-blocks"
-                         isDropDisabled={!can_add_blocks}
-                         type="block"
-              // eslint-disable-next-line no-unused-vars
-              >{prov => (
-                <div ref={prov.innerRef} {...prov.droppableProps}>
-                  <Blocks data={ctx.data} block_numbers={block_numbers} />
-                  {prov.placeholder}
+            <div className="mx-auto"
+                 style={{
+                   minHeight: `${block_picker === false ? '20' : '50'}rem`,
+                   maxWidth:  '45rem',
+                 }}
+            >
+              {when_to_save === Save.OnClick && (
+                <div className="save-button m-4">
+                  <a className="button" onClick={do_save}>Save</a>
                 </div>
-              )}</Droppable>
-            </DragDropContext>
-          </div>
+              )}
+
+              {can_add_blocks && (
+                <div className="flex justify-center">
+                  <AddBlockBtn index={0}
+                               suggest_add_block={n_items === 0}
+                               popup_direction={'down'} />
+                </div>
+              )}
+
+              <DragDropContext onDragEnd={drag => reorder_items(drag)}>
+                <Droppable droppableId="d-blocks"
+                           isDropDisabled={!can_add_blocks}
+                           type="block"
+                >{prov => (
+                  <div ref={prov.innerRef} {...prov.droppableProps}>
+                    {ctx.data.length && (
+                      <AnimatePresence initial={false}>
+                        {ctx.data.map((data_item, index) => (
+                          <motion.div key={data_item.__uid}
+                                      {...animations.item_add_and_remove}
+                          >
+                            <Block data_item={data_item}
+                                   index={index}
+                                   block_numbers={block_numbers} />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    )}
+                    {prov.placeholder}
+                  </div>
+                )}</Droppable>
+              </DragDropContext>
+            </div>
           )}
 
 
@@ -345,14 +340,14 @@ export default function Editor({
           )}
 
           {!picker_container_ref && (
-          <Modal isOpen={show_block_picker}
-                 close={() => close_block_picker()}
-          >
-            <BlockPicker block_index={block_picker}
-                         iframe_container_info={iframe_container_info}
-                         set_block_to_insert={set_block_to_insert}
-                         close={() => close_block_picker()} />
-          </Modal>
+            <Modal isOpen={show_block_picker}
+                   close={() => close_block_picker()}
+            >
+              <BlockPicker block_index={block_picker}
+                           iframe_container_info={iframe_container_info}
+                           set_block_to_insert={set_block_to_insert}
+                           close={() => close_block_picker()} />
+            </Modal>
           )}
 
         </div>

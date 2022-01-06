@@ -65,7 +65,7 @@ export default {
       secondary: 'border-gray-300 hover:border-gray-800 text-gray-900',
     },
     selector_btn: {
-      active:  'bg-gray-300',
+      active:  'bg-gray-300 text-gray-700',
       default: 'bg-white',
     },
     popup_menu:  'bg-white hover:bg-gray-50 border-gray-100',
@@ -75,4 +75,3 @@ export default {
     swatch_indicator_triangle: 'border-gray-900',
   },
 }
-

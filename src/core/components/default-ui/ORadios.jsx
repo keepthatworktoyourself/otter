@@ -11,7 +11,7 @@ const shared_triangle_border_styles = {
   borderRight: '5px solid transparent',
 }
 
-const Swatch = ({value, active, className, ...props}) => {
+function Swatch({value, active, className, ...props}) {
   const theme_ctx = useThemeContext()
   const is_hex = value.includes('#')
 
@@ -26,7 +26,6 @@ const Swatch = ({value, active, className, ...props}) => {
       className,
     )} {...props}
     >
-
       {active && (
         <div className={classNames_triangle}
              style={{
@@ -75,11 +74,11 @@ export default function ORadios({
   const color_swatches = field_def.swatches
 
   return (
-    <div className={classNames(
-      'relative flex items-center space-x-2',
-      className,
-    )}
-         style={{padding: color_swatches && '3px 0', ...style}}
+    <div style={{padding: color_swatches && '3px 0', ...style}}
+         className={classNames(
+           'relative flex items-center space-x-2',
+           className,
+         )}
          {...props}
     >
       {options && Object.keys(options).length > 0 && (
@@ -89,24 +88,24 @@ export default function ORadios({
         )}
         >
           {Object.entries(options)
-            .map(([opt_value, opt_label], i) => !color_swatches ?
+            .map(([opt_value, opt_label], i) => color_swatches ?
+              <Swatch key={`${id}--${i}`}
+                      value={opt_value}
+                      active={opt_value === value}
+                      className={i === 0 && `border-l ${theme_ctx.classes.skin.border_color}`}
+                      onClick={() => cb__click(opt_value)} /> :
               <OGroupedSelectorBtn key={`${id}--${i}`}
                                    label={opt_label}
                                    value={opt_value}
                                    Icon={icons && icons[opt_value] || null}
                                    active={opt_value === value}
-                                   onClick={() => cb__click(opt_value)} /> :
-              <Swatch key={`${id}--${i}`}
-                      value={opt_value}
-                      active={opt_value === value}
-                      className={i === 0 && `border-l ${theme_ctx.classes.skin.border_color}`}
-                      onClick={() => cb__click(opt_value)} />,
+                                   onClick={() => cb__click(opt_value)} />,
             )}
         </div>
       )}
 
       {cb__clear && field_def.clearable && (
-      <OClearSelectionBtn onClick={cb__clear} className="text-lg" />
+        <OClearSelectionBtn onClick={cb__clear} className="text-lg" />
       )}
     </div>
   )
