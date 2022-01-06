@@ -24,6 +24,7 @@ import BlockPicker from './other/BlockPicker'
 import animations from '../../definitions/animations'
 import classes from '../../definitions/classes'
 import {ThemeContext} from '../../contexts/ThemeContext'
+import {useOnFirstRender} from '../../hooks/useOnFirstRender'
 
 function export_data_item(data_item, blocks) {
   if (!data_item) {
@@ -167,6 +168,7 @@ export default function Editor({
   const [_, update] = useState({ })
   const initial_data = useMemo(() => copy(data), [])
   const [ctx, dispatch_ctx] = useReducer(ctx_reducer, {data: initial_data, blocks})
+  const first_render = useOnFirstRender()
 
   function enqueue_save_on_input() {
     setTimeout(do_save_on_input)
@@ -199,15 +201,11 @@ export default function Editor({
     set_block_picker(false)
   }
 
-  useEffect(() => dispatch_ctx({set_data: data}), [data])
-
   useEffect(() => {
-  // insert block before block picker modal
-  // has fully closed, so can't use onTransitionEnd etc
-    if (block_picker === false) {
-      setTimeout(insert_block, 150)
+    if (!first_render) {
+      dispatch_ctx({set_data: data})
     }
-  }, [block_picker])
+  }, [data])
 
   const ctx_interface = {
     update_height,
