@@ -1,8 +1,9 @@
 import React, {useState, useReducer, useEffect, useMemo} from 'react'
 import ReactDOM from 'react-dom'
 import * as DnD from 'react-beautiful-dnd'
+import {AnimatePresence, motion} from 'framer-motion'
 import {PageDataContext} from '../../contexts/PageDataContext'
-import fields_types from '../../field-interfaces/field-interfaces'
+import Fields from '../../definitions/fields'
 import {
   copy,
   evaluate,
@@ -20,9 +21,7 @@ import {classNames} from '../../helpers/style'
 import AddBlockBtn from './Block/AddBlockBtn'
 import Modal from '../primitives/Modal'
 import BlockPicker from './other/BlockPicker'
-import {AnimatePresence, motion} from 'framer-motion'
 import animations from '../../definitions/animations'
-import {useOnFirstRender} from '../../hooks/useOnFirstRender'
 import classes from '../../definitions/classes'
 import {ThemeContext} from '../../contexts/ThemeContext'
 
@@ -46,11 +45,11 @@ function export_data_item(data_item, blocks) {
     const field_type  = field_def.type
     const field_value = data_item[field_name]
 
-    if (field_type === fields_types.NestedBlock || field_type === fields_types.Repeater) {
-      if (field_type === fields_types.Repeater) {
+    if (field_type === Fields.NestedBlock || field_type === Fields.Repeater) {
+      if (field_type === Fields.Repeater) {
         carry[field_name] = (field_value || []).map(item => export_data_item(item, blocks))
       }
-      else if (field_type === fields_types.NestedBlock) {
+      else if (field_type === Fields.NestedBlock) {
         carry[field_name] = export_data_item(field_value, blocks)
       }
       if (field_def.optional) {
@@ -142,10 +141,8 @@ function ctx_reducer(state, op) {
   return {data: state.data, blocks: state.blocks}
 }
 
-function Blocks ({data, block_numbers}) {
-  const first_render = useOnFirstRender()
-
-  return !(first_render && data.length < 1) && (
+function Blocks({data, block_numbers}) {
+  return data.length >= 1 && (
     <AnimatePresence initial={false}>
       {data.map((data_item, index) => (
         <motion.div key={data_item.__uid}
@@ -186,7 +183,6 @@ export default function Editor({
   const [_, update] = useState({ })
   const initial_data = useMemo(() => copy(data), [])
   const [ctx, dispatch_ctx] = useReducer(ctx_reducer, {data: initial_data, blocks})
-  const first_render = useOnFirstRender()
 
   function enqueue_save_on_input() {
     setTimeout(do_save_on_input)
@@ -194,12 +190,12 @@ export default function Editor({
   function add_item(type, index) {
     dispatch_ctx({add_item: {type, index}})
     enqueue_save_on_input()
-    editor_height_change()
+    update_height()
   }
   function delete_item(index) {
     dispatch_ctx({delete_item: {index}})
     enqueue_save_on_input()
-    editor_height_change()
+    update_height()
   }
   function reorder_items(drag_result) {
     dispatch_ctx({reorder: drag_result})
@@ -208,8 +204,8 @@ export default function Editor({
   function redraw() {
     update({ })
   }
-  function editor_height_change() {
-    delegate?.editor_height_change?.()
+  function update_height() {
+    delegate?.update_height?.()
   }
   function open_block_picker(block_index) {
     set_block_to_insert({ })
@@ -230,7 +226,7 @@ export default function Editor({
   }, [block_picker])
 
   const ctx_interface = {
-    editor_height_change,
+    update_height,
     redraw,
     value_updated: enqueue_save_on_input,
     add_item,
@@ -247,7 +243,7 @@ export default function Editor({
   function set_block_picker_state(open) {
     set_block_picker(open)
     window.scrollY,
-    editor_height_change()
+    update_height()
   }
 
   function do_save_on_input() {
@@ -268,7 +264,7 @@ export default function Editor({
   ensure_display_ifs_are_arrays(ctx.blocks)
 
   if (load_state === State.Loaded && previous_load_state !== State.Loaded) {
-    editor_height_change()
+    update_height()
   }
   if (load_state !== previous_load_state) {
     set_previous_load_state(load_state)

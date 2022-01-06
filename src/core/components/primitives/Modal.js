@@ -1,5 +1,5 @@
+import React, {useRef} from 'react'
 import {AnimatePresence, motion} from 'framer-motion'
-import {useRef} from 'react'
 import XCircleSolid from 'simple-react-heroicons/icons/XCircleSolid'
 import {useThemeContext} from '../../contexts/ThemeContext'
 import {classNames} from '../../helpers/style'
@@ -9,11 +9,11 @@ const Backdrop = () => {
   const theme_ctx = useThemeContext()
 
   return (
-    <motion.div className={classNames(
-      'absolute-fill',
-      theme_ctx.classes.skin.modal.bg,
-    )}
-                initial={{opacity: 0}}
+    <motion.div initial={{opacity: 0}}
+                className={classNames(
+                  'absolute-fill',
+                  theme_ctx.classes.skin.modal.bg,
+                )}
                 animate={{
                   opacity:    0.8,
                   transition: {
@@ -59,11 +59,11 @@ const ModalLayout = ({children, close}) => {
   const theme_ctx = useThemeContext()
 
   return (
-    <div className={classNames(
-      'fixed top-0 right-0 bottom-0 left-0',
-      'flex items-center justify-center',
-    )}
-         style={{zIndex: 99999}}
+    <div style={{zIndex: 99999}}
+         className={classNames(
+           'fixed top-0 right-0 bottom-0 left-0',
+           'flex items-center justify-center',
+         )}
     >
       <Backdrop />
       <motion.div className="bg-white relative"
@@ -81,14 +81,14 @@ const ModalLayout = ({children, close}) => {
       >
         {children}
 
-        <div className={classNames(
-          'svg-font',
-          'cursor-pointer',
-          'text-xxl',
-          'absolute z-10 right-4 top-4',
-          theme_ctx.classes.skin.modal.close_btn,
-        )}
-             onClick={close}
+        <div onClick={close}
+             className={classNames(
+               'svg-font',
+               'cursor-pointer',
+               'text-xxl',
+               'absolute z-10 right-4 top-4',
+               theme_ctx.classes.skin.modal.close_btn,
+             )}
         >
           <XCircleSolid />
         </div>
@@ -100,11 +100,7 @@ const ModalLayout = ({children, close}) => {
 
 const Modal = ({isOpen, close, children, onExitComplete}) => (
   <AnimatePresence initial={true}
-    // Only render one component at a time.
-    // The exiting component will finish its exit
-    // animation before entering component is rendered
                    exitBeforeEnter={true}
-    // Fires when all exiting nodes have completed animating out
                    onExitComplete={onExitComplete}
   >
     {isOpen && (
@@ -116,8 +112,3 @@ const Modal = ({isOpen, close, children, onExitComplete}) => (
 )
 
 export default Modal
-
-
-
-
-

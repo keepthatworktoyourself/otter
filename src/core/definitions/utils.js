@@ -348,7 +348,7 @@ export function Err__BlockNoType(def) {
   return `Error: block without __type property!`
 }
 export function Err__BlockTypeNotFound(type) {
-  console.log(Err__BlockTypeNotFound, `${type}`)
+  console.log('Err__BlockTypeNotFound', `${type}`)
   return `Error: could not find block definition of desired type!`
 }
 export function Err__FieldNoType(def) {

@@ -1,5 +1,5 @@
 import React from 'react'
-import components from '../../definitions/components'
+import OFieldWrapper from '../default-ui/OFieldWrapper'
 import {humanify_str} from '../../definitions/utils'
 
 const class_map = {
@@ -19,11 +19,11 @@ export default function GridLayoutItem({field_def, children}) {
            flexBasis: 'calc(50% - 1rem)',
          } : {}}
     >
-      <components.FieldWrapper field_def={field_def}
-                               label={field_def.description || humanify_str(field_def.name)}
+      <OFieldWrapper field_def={field_def}
+                     label={field_def.description || humanify_str(field_def.name)}
       >
         {children}
-      </components.FieldWrapper>
+      </OFieldWrapper>
     </div>
   )
 }

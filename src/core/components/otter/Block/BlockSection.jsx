@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import design_options from '../../../definitions/design_options'
+import design_options from '../../../definitions/design-options'
 import {classNames} from '../../../helpers/style'
 import CollapseTransition from '../../primitives/CollapseTransition'
 import BlockSectionHeading from './BlockSectionHeading'

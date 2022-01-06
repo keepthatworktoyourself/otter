@@ -1,12 +1,11 @@
 import React from 'react'
 import ReactQuill from 'react-quill'
 import Quill from 'quill'
-import {uid} from '../definitions/utils'
-import {PageDataContext} from '../contexts/PageDataContext'
-import Icons from '../components/otter/other/Icons'
-import classes from '../definitions/classes'
-import {classNames} from '../helpers/style'
-import { ThemeContext } from '../contexts/ThemeContext'
+import Icons from '../otter/other/Icons'
+import {PageDataContext} from '../../contexts/PageDataContext'
+import {ThemeContext} from '../../contexts/ThemeContext'
+import {uid} from '../../definitions/utils'
+import {classNames} from '../../helpers/style'
 const Delta = Quill.import('delta')
 const BlockEmbed = Quill.import('blots/block/embed')
 
@@ -45,8 +44,6 @@ Quill.register(HRBlot)
 // ---------------------------------
 
 export default class TextEditor extends React.Component {
-  static contextType = ThemeContext
-
   constructor(props) {
     super(props)
 
@@ -85,8 +82,6 @@ export default class TextEditor extends React.Component {
   render() {
     const field_def            = this.props.field_def
     const containing_data_item = this.props.containing_data_item
-    const ContextConsumer      = this.props.consumer_component || PageDataContext.Consumer
-    const QuillComponent       = this.props.quill_component || ReactQuill
     const heading_levels       = field_def.heading_levels || this.default_headings
     const enable_bullets       = field_def.bullets !== false
     const enable_blockquote    = field_def.blockquote
@@ -101,12 +96,13 @@ export default class TextEditor extends React.Component {
     }
 
     return (
-      <ContextConsumer>{ctx => (this.ctx = ctx) && (
+      <ThemeContext.Consumer>{theme_ctx => (
+        <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
         <div style={{paddingBottom: '5px'}}>
 
           <div className={classNames(
             'border-t border-r border-l',
-            this.context.classes.skin.border_color,
+            theme_ctx.classes.skin.border_color,
           )}
           >
             <div className="editor-toolbar"
@@ -114,13 +110,13 @@ export default class TextEditor extends React.Component {
                  style={{border: 'none'}}
             >
               {heading_levels && heading_levels.length > 0 &&
-                <span className="ql-formats">
-                  <select className="ql-header">
-                    {heading_levels.map((n, i) => <option key={i} value={n}>Heading {n}</option>)}
-                    <option value="">Paragraph</option>
-                  </select>
-                </span>
-              }
+              <span className="ql-formats">
+                <select className="ql-header">
+                  {heading_levels.map((n, i) => <option key={i} value={n}>Heading {n}</option>)}
+                  <option value="">Paragraph</option>
+                </select>
+              </span>
+                  }
               <span className="ql-formats">
                 <button className="ql-bold"></button>
                 <button className="ql-italic"></button>
@@ -131,11 +127,11 @@ export default class TextEditor extends React.Component {
                 {enable_hr && <button className="ql-hr"><Icons.HR /></button>}
               </span>
               {(enable_bullets || enable_blockquote) && (
-                <span className="ql-formats">
-                  {enable_bullets && <button className="ql-list" value="ordered"></button>}
-                  {enable_bullets && <button className="ql-list" value="bullet"></button>}
-                  {enable_blockquote && <button className="ql-blockquote"></button>}
-                </span>
+              <span className="ql-formats">
+                {enable_bullets && <button className="ql-list" value="ordered"></button>}
+                {enable_bullets && <button className="ql-list" value="bullet"></button>}
+                {enable_blockquote && <button className="ql-blockquote"></button>}
+              </span>
               )}
               <span className="ql-formats">
                 <button className="ql-clean"></button>
@@ -144,17 +140,18 @@ export default class TextEditor extends React.Component {
           </div>
 
           <div className={classNames(
-            this.context.classes.skin.text_editor.bg,
+            theme_ctx.classes.skin.text_editor.bg,
             'border',
-            this.context.classes.skin.border_color,
+            theme_ctx.classes.skin.border_color,
           )}
           >
-            <QuillComponent defaultValue={value} onChange={this.cb__change} modules={this.modules} theme="snow"
-                            parent_uid={this.uid} />
+            <ReactQuill defaultValue={value} onChange={this.cb__change} modules={this.modules} theme="snow"
+                        parent_uid={this.uid} />
           </div>
 
         </div>
-      )}</ContextConsumer>
+        )}</PageDataContext.Consumer>
+      )}</ThemeContext.Consumer>
     )
   }
 }

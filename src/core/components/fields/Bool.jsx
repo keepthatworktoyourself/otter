@@ -1,7 +1,7 @@
 import React from 'react'
-import {usePageData} from '../contexts/PageDataContext'
-import {evaluate} from '../definitions/utils'
-import components from '../definitions/components'
+import OBool from '../default-ui/OBool'
+import {usePageData} from '../../contexts/PageDataContext'
+import {evaluate} from '../../definitions/utils'
 
 export default function Bool({field_def, containing_data_item}) {
   const ctx                  = usePageData()
@@ -23,10 +23,10 @@ export default function Bool({field_def, containing_data_item}) {
   }
 
   return (
-    <components.Bool yes_label={yes_label}
-                     no_label={no_label}
-                     onClick={cb__click}
-                     value={display_value} />
+    <OBool yes_label={yes_label}
+           no_label={no_label}
+           onClick={cb__click}
+           value={display_value} />
 
   )
 }

@@ -14,12 +14,12 @@ const blocks__header = [
       {
         name:        'title',
         description: 'Title',
-        type:        Otter.FieldTypes.TextInput,
+        type:        Otter.Fields.TextInput,
       },
       {
         name:        'author',
         description: 'Author',
-        type:        Otter.FieldTypes.TextInput,
+        type:        Otter.Fields.TextInput,
       },
     ],
   },
@@ -33,7 +33,7 @@ const blocks__content = [
       {
         name:        'content',
         description: 'Content',
-        type:        Otter.FieldTypes.TextArea,
+        type:        Otter.Fields.TextArea,
       },
     ],
   },
@@ -44,7 +44,7 @@ const blocks__content = [
       {
         name:        'image',
         description: 'Image',
-        type:        Otter.FieldTypes.WPMedia,
+        type:        Otter.Fields.WPMedia,
         media_types: [
           'png',
           'jpg',

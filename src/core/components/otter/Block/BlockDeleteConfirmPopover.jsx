@@ -4,7 +4,7 @@ import OBtn from '../../default-ui/OBtn'
 import {classNames} from '../../../helpers/style'
 import PopoverAnimation from '../../primitives/PopoverAnimation'
 import useOnClickOutside from '../../../hooks/useOnClickOutside'
-import design_options from '../../../definitions/design_options'
+import design_options from '../../../definitions/design-options'
 import {useThemeContext} from '../../../contexts/ThemeContext'
 
 function BlockDeleteConfirmPopover({close, delete_func, className}) {

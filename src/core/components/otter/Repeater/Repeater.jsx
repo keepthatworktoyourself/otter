@@ -9,19 +9,17 @@ import RepeaterItem from './RepeaterItem'
 import animations from '../../../definitions/animations'
 import {classNames} from '../../../helpers/style'
 import {AnimatePresence, motion} from 'framer-motion'
-import components from '../../../definitions/components'
 import {useThemeContext} from '../../../contexts/ThemeContext'
+import OErrorMessage from '../../default-ui/OErrorMessage'
 
 function get_block_type(str_or_obj) {
   return typeof str_or_obj === 'string' ? str_or_obj : str_or_obj.type
 }
 
-export default function Repeater({field_def, containing_data_item, ...props}) {
+export default function Repeater({field_def, containing_data_item}) {
   const ctx                          = usePageData()
   const theme_ctx                    = useThemeContext()
   const [show_picker_popup, set_show_picker_popup] = useState(false)
-  const DragDropContext              = props.drag_context_component  || DnD.DragDropContext
-  const Droppable                    = props.droppable_component     || DnD.Droppable
   const data_items                   = containing_data_item[field_def.name] || []
   const block_titles                 = field_def.block_titles
   const nested_block_types           = field_def.nested_block_types || []
@@ -58,7 +56,7 @@ export default function Repeater({field_def, containing_data_item, ...props}) {
 
     ctx.value_updated()
     ctx.redraw()
-    ctx.editor_height_change()
+    ctx.update_height()
   }
 
   function cb__delete(i) {
@@ -67,7 +65,7 @@ export default function Repeater({field_def, containing_data_item, ...props}) {
 
     ctx.value_updated()
     ctx.redraw()
-    ctx.editor_height_change()
+    ctx.update_height()
   }
 
   function cb__reorder(drag_result) {
@@ -84,7 +82,7 @@ export default function Repeater({field_def, containing_data_item, ...props}) {
 
     ctx.value_updated()
     ctx.redraw()
-    ctx.editor_height_change()
+    ctx.update_height()
   }
 
   const blocktypes__objects = nested_block_types.map(t => (
@@ -122,8 +120,8 @@ export default function Repeater({field_def, containing_data_item, ...props}) {
   return (
     <div className="w-full -mt-4">
 
-      <DragDropContext onDragEnd={cb__reorder}>
-        <Droppable droppableId={dnd_context_id} type={dnd_context_id}>
+      <DnD.DragDropContext onDragEnd={cb__reorder}>
+        <DnD.Droppable droppableId={dnd_context_id} type={dnd_context_id}>
           {prov => (
             <div ref={prov.innerRef} {...prov.droppableProps}>
               <AnimatePresence initial={false}>
@@ -146,7 +144,7 @@ export default function Repeater({field_def, containing_data_item, ...props}) {
                       >
                         {is_permitted ?
                           <RecursiveBlockRenderer data_item={data_item} blocks={ctx.blocks} /> :
-                          <components.ErrorMessage text={`Items of type ${data_item.__type} are not allowed in this repeater`} />
+                          <OErrorMessage text={`Items of type ${data_item.__type} are not allowed in this repeater`} />
                       }
                       </RepeaterItem>
                     </motion.div>
@@ -157,8 +155,8 @@ export default function Repeater({field_def, containing_data_item, ...props}) {
               {prov.placeholder}
             </div>
           )}
-        </Droppable>
-      </DragDropContext>
+        </DnD.Droppable>
+      </DnD.DragDropContext>
 
       {show_add_button && (
         <div className={classNames(

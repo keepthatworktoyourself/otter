@@ -6,4 +6,3 @@ export const ThemeContext = createContext({classes})
 export function useThemeContext() {
   return useContext(ThemeContext)
 }
-

@@ -1,7 +1,7 @@
 import React, {useRef} from 'react'
 import {classNames} from '../../helpers/style'
 import useOnClickOutside from '../../hooks/useOnClickOutside'
-import design_options from '../../definitions/design_options'
+import design_options from '../../definitions/design-options'
 import PopoverAnimation from '../primitives/PopoverAnimation'
 import {useThemeContext} from '../../contexts/ThemeContext'
 

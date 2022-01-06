@@ -1,8 +1,8 @@
 import React from 'react'
 
 function mk_stub(type) {
-  return function s(props) {
-    s.last_props = props
+  return function stub(props) {
+    stub.last_props = props
     return (
       <div type={type} {...props}>
         {props.children}

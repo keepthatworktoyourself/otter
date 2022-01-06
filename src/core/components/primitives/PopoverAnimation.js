@@ -1,3 +1,4 @@
+import React from 'react'
 import {AnimatePresence, motion} from 'framer-motion'
 
 export default function PopoverAnimation({
@@ -10,11 +11,7 @@ export default function PopoverAnimation({
 }) {
   return (
     <AnimatePresence initial={true}
-    // Only render one component at a time.
-    // The exiting component will finish its exit
-    // animation before entering component is rendered
                      exitBeforeEnter={true}
-    // Fires when all exiting nodes have completed animating out
                      onExitComplete={onExitComplete}
     >
       {isOpen && (

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import AddItemPillBtn from '../other/AddItemPillBtn'
-import design_options from '../../../definitions/design_options'
+import design_options from '../../../definitions/design-options'
 import {blocks_are_simple, humanify_str} from '../../../definitions/utils'
 import {classNames} from '../../../helpers/style'
 import {usePageData} from '../../../contexts/PageDataContext'

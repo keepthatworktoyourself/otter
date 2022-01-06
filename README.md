@@ -41,6 +41,7 @@ npm i -S otter-editor --legacy-peer-deps
   - [Searchable](#field-types)
 - [Demo](#demo)
 - [CSS and Tailwind](#css-and-tailwind)
+- [Selective importing](#selective-importing)
 - [Tests](#tests)
 - [License](#license)
 
@@ -61,7 +62,7 @@ The `<Otter.Editor />` element renders the editor.
 | `blocks`         | `<Array(Block)>`                                | Yes      |                  | Defines the [blocks](#blocks) available in the editor.                                                                             |
 | `data`           | Loaded data                                     |          |                  | The loaded page data.                                                                                                              |
 | `load_state`     | `Otter.State.Loading` or `.Loaded` or `.Error`  | Yes      |                  | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data.  |
-| `delegate`       | `{save: <Function>, editor_height_change: <Function>}` |          |                  | Used by Otter to communicate state changes to the parent.                                                                          |
+| `delegate`       | `{save: <Function>, update_height: <Function>}` |          |                  | Used by Otter to communicate state changes to the parent.                                                                          |
 | `when_to_save`   | `Otter.Save.OnInput` or `.OnClick`              |          | `OnClick`        | Should otter call `delegate.save()` continuously on user input, or only when the user clicks a save button?                        |
 | `block_numbers`  | `<bool>`                                        |          | `false`          | Label each block with its 1-based index                                                                                            |
 | `add_block_msg`  | `<string>`                                      |          | `'Insert block'` | Label for the 'insert block' button                                                                                                |
@@ -72,7 +73,7 @@ const my_delegate = {
   save(data) {
     // e.g. kick off a request to update the database
   },
-  editor_height_change() {
+  update_height() {
     // e.g. reflow other parts of page layout if necessary
   },
 }
@@ -152,7 +153,7 @@ Each block should contain at least one field.
 {
   name: 'content',
   description: 'Content',
-  type: Otter.FieldTypes.TextArea,
+  type: Otter.Fields.TextArea,
 }
 ```
 
@@ -170,7 +171,7 @@ All fields have the following properties:
 
 (The `default_value` prop is not supported by TextEditor, WPMedia, NestedBlock, Repeater, or Searchable.)
 
-[Field type](#field-types) should be specified with the Otter-defined constants such as `Otter.FieldTypes.TextInput`.
+[Field type](#field-types) should be specified with the Otter-defined constants such as `Otter.Fields.TextInput`.
 
 With `display_if` you can show or hide the field based on the value of one or more of its siblings. Each `DisplayRule` specifies the name of the sibling and a value. You can test against more than one sibling field using an array of multiple `DisplayRule` objects.
 
@@ -179,7 +180,7 @@ With `display_if` you can show or hide the field based on the value of one or mo
 {
   name: 'url',
   description: 'URL',
-  type: Otter.FieldTypes.TextInput,
+  type: Otter.Fields.TextInput,
   display_if: {
     sibling: 'is_link',
     equal_to: true,
@@ -278,7 +279,7 @@ import 'react-toggle/style.css'
 import 'otter/dist/css/otter.css'
 ```
 
-You can also import everything (including a full compiled copy of tailwind) in one go:
+You can also import all styles (including a full compiled copy of tailwind) in one go:
 
 ```js
 import 'otter/css/all.css
@@ -286,9 +287,26 @@ import 'otter/css/all.css
 
 
 
+## Selective importing
+
+Sometimes one of your application bundles may not need to import the whole of the Otter library.
+You can import the field type definitions separately:
+
+```js
+import Fields from 'otter-editor/dist/core/definitions/fields'
+```
+
+And with individual otter utils:
+
+```js
+import {set_dynamic_data} from 'otter-editor/dist/core/definitions/utils'
+```
+
+
+
 ## Tests
 
-Tests are implemented with ava, enzyme, and sinon. Changes should be unit tested. Ideally, tests should be written first.
+Tests are implemented with ava, and sinon. Ideally, tests should be written first.
 
 Run the tests:
 

@@ -1,12 +1,12 @@
 import Editor from './core/components/otter/Editor'
-import FieldTypes from './core/field-interfaces/field-interfaces'
+import Fields from './core/definitions/fields'
 import State from './core/definitions/state'
 import Save from './core/definitions/save'
 import * as Utils from './core/definitions/utils'
 
 export default {
   Editor,
-  FieldTypes,
+  Fields,
   State,
   Save,
   Utils,

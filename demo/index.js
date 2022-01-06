@@ -40,7 +40,7 @@ const blocks__grouped = {
   },
 }
 
-// load - fake ajax request
+// load - fake async request
 // -----------------------------------
 
 function load(post_id) {
@@ -101,25 +101,25 @@ function App({state, delegate}) {
           )}
           >
             <div className="absolute top-0 bottom-0 right-0 bg-gray-900"
-                 style={{left: '-100vw'}}
-            ></div>
+                 style={{left: '-100vw'}} />
             <div className="pt-32 relative">
-              {/* <img src="https://github.com/keepthatworktoyourself/otter/raw/int/files/otter.png"
-                   style={{maxWidth: '100px'}}
-                   className="mb-3" /> */}
+
               {/* <img src="https://res.cloudinary.com/drtjqpz13/image/upload/v1637173136/Wombat/otter-test.svg"
                    style={{maxWidth: '150px'}}
                    className="mb-3" /> */}
-              <h1 className={classNames(classes.typography.heading, 'mb-6')}
+              <h1 className={classNames(classes.typography.heading, 'mb-10')}
                   style={{
                     fontSize:      '50px',
                     fontWeight:    '800',
-                    letterSpacing: '-0.07em',
+                    letterSpacing: '-0.03em',
                     lineHeight:    '0.7',
                     color:         'white',
                   }}
               >
-                Otter.
+                Otter
+                <img src="https://github.com/keepthatworktoyourself/otter/raw/int/files/otter.png"
+                     style={{width: '80px', display: 'inline-block', verticalAlign: 'baseline', position: 'relative', top: '16px'}}
+                     className="ml-5" />
               </h1>
               <p className={classes.typography.sub_heading}
                  style={{
@@ -127,7 +127,7 @@ function App({state, delegate}) {
                    color:   'white',
                  }}
               >
-                Otter is perhaps the furriest, easiest way in the universe to
+                Otter is perhaps the <s>furriest</s> easiest way in the universe to
                 embed a content editor in your react/preact application.
               </p>
 
@@ -203,8 +203,8 @@ const state = {
 }
 
 const delegate = {
-  save:                 data => console.log('save()', JSON.stringify(data, null, 2)),
-  editor_height_change: () => console.log('block toggled'),
+  save:          data => console.log('save()', JSON.stringify(data, null, 2)),
+  update_height: () => console.log('height changed'),
 }
 
 render(state, delegate)

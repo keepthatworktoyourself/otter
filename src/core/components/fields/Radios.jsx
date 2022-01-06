@@ -1,16 +1,23 @@
 import React from 'react'
-import {usePageData} from '../contexts/PageDataContext'
-import {evaluate} from '../definitions/utils'
-import components from '../definitions/components'
+import ORadios from '../default-ui/ORadios'
+import {usePageData} from '../../contexts/PageDataContext'
+import {evaluate} from '../../definitions/utils'
 
-export default function Select({field_def, containing_data_item}) {
+export default function Radios({field_def, containing_data_item}) {
   const ctx           = usePageData()
   const uid           = `${containing_data_item.__uid}-${field_def.name}`
+  const input_name    = `radios-${uid}`
   const value         = containing_data_item[field_def.name]
   const opts_raw      = field_def.options || { }
   const opts          = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
   const default_value = evaluate(field_def.default_value)
   const display_value = (value === undefined ? default_value : value) || ''
+
+  function cb__click(new_value) {
+    containing_data_item[field_def.name] = new_value
+    ctx.value_updated()
+    ctx.redraw()   // For conditional rendering
+  }
 
   function cb__clear() {
     containing_data_item[field_def.name] = null
@@ -18,18 +25,12 @@ export default function Select({field_def, containing_data_item}) {
     ctx.redraw()   // For conditional rendering
   }
 
-  function cb__change(ev) {
-    containing_data_item[field_def.name] = ev.target.value
-    ctx.value_updated()
-    ctx.redraw()   // For conditional rendering
-  }
-
   return (
-    <components.Select id={uid}
-                       options={opts}
-                       value={display_value}
-                       cb__change={cb__change}
-                       cb__clear={cb__clear} />
-
+    <ORadios id={input_name}
+             options={opts}
+             value={display_value}
+             field_def={field_def}
+             cb__click={cb__click}
+             cb__clear={cb__clear} />
   )
 }

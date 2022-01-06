@@ -1,5 +1,5 @@
 import React from 'react'
-import components from '../../definitions/components'
+import OFieldLabel from './OFieldLabel'
 import {classNames} from '../../helpers/style'
 
 export default function OFieldWrapper({
@@ -22,9 +22,9 @@ export default function OFieldWrapper({
          {...props}
     >
       {label && with_label && (
-        <components.FieldLabel label={label}
-                               with_bottom_margin={!hori}
-                               style={hori && min_width_label ? {width: '80px'} : null} />
+        <OFieldLabel label={label}
+                     with_bottom_margin={!hori}
+                     style={hori && min_width_label ? {width: '80px'} : null} />
       )}
 
       {children}

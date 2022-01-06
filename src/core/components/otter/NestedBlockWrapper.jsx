@@ -15,7 +15,7 @@ export default function NestedBlockWrapper({field_def, index, containing_data_it
       set_is_enabled(!is_enabled)
       ctx.value_updated()
       ctx.redraw()
-      ctx.editor_height_change()
+      ctx.update_height()
     }
   }
 

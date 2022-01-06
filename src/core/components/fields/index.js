@@ -6,7 +6,6 @@ import Radios     from './Radios'
 import Select     from './Select'
 import WPMedia    from './WPMedia'
 import Searchable from './Searchable'
-import ErrorField from './ErrorField'
 
 export default {
   TextInput,
@@ -17,5 +16,4 @@ export default {
   Select,
   WPMedia,
   Searchable,
-  ErrorField,
 }

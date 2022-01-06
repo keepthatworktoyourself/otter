@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
-import {usePageData} from '../contexts/PageDataContext'
-import {evaluate} from '../definitions/utils'
-import components from '../definitions/components'
+import OTextarea from '../default-ui/OTextarea'
+import {usePageData} from '../../contexts/PageDataContext'
+import {evaluate} from '../../definitions/utils'
 
-export default function TextInput({
+export default function TextArea({
   field_def,
   containing_data_item,
   is_display_if_target,
@@ -11,6 +11,7 @@ export default function TextInput({
   const ctx           = usePageData()
   const [_, update]   = useState({})
   const value         = containing_data_item[field_def.name]
+  const mono          = field_def.mono || false
   const default_value = evaluate(field_def.default_value)
   const display_value = (value === undefined ? default_value : value) || ''
 
@@ -22,7 +23,8 @@ export default function TextInput({
   }
 
   return (
-    <components.Input value={display_value}
-                      onChange={cb__change} />
+    <OTextarea value={display_value}
+               onChange={cb__change}
+               monospaced={mono} />
   )
 }

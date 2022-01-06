@@ -4,7 +4,7 @@ import ChevronDownSolid from 'simple-react-heroicons/icons/ChevronDownSolid'
 import MinusCircleSolid from 'simple-react-heroicons/icons/MinusCircleSolid'
 import {usePageData} from '../../../contexts/PageDataContext'
 import {useThemeContext} from '../../../contexts/ThemeContext'
-import design_options from '../../../definitions/design_options'
+import design_options from '../../../definitions/design-options'
 import {classNames} from '../../../helpers/style'
 import CollapseTransition from '../../primitives/CollapseTransition'
 import AddItemPillBtn from '../other/AddItemPillBtn'
@@ -26,17 +26,15 @@ export default function RepeaterItem({
 }) {
   const ctx       = usePageData()
   const theme_ctx = useThemeContext()
-
-  const draggable_key                              = `draggable-repeater-item-${props.dnd_key || index}`
-  const Draggable                                  = props.draggable_component || DnD.Draggable
-  const [open, set_open]                           = useState(true)
+  const draggable_key    = `draggable-repeater-item-${props.dnd_key || index}`
+  const [open, set_open] = useState(true)
   const [show_picker_popup, set_show_picker_popup] = useState(false)
 
   return (
-    <Draggable key={draggable_key}
-               draggableId={draggable_key}
-               type={dnd_context_id}
-               index={index}
+    <DnD.Draggable key={draggable_key}
+                   draggableId={draggable_key}
+                   type={dnd_context_id}
+                   index={index}
     >
       {prov => (
         <div ref={prov.innerRef}
@@ -109,7 +107,7 @@ export default function RepeaterItem({
               )}
                    onClick={() => {
                      set_open(!open)
-                     ctx.editor_height_change()
+                     ctx.update_height()
                    }}
               >
                 <h1 style={{padding: '0.85em 0'}} className="flex items-center leading-none">
@@ -154,6 +152,6 @@ export default function RepeaterItem({
           </div>
         </div>
       )}
-    </Draggable>
+    </DnD.Draggable>
   )
 }

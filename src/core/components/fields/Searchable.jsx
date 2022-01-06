@@ -1,11 +1,11 @@
-import React, {useCallback, useState, useRef} from 'react'
-import {usePageData} from '../contexts/PageDataContext'
-import {debounce_promise} from '../definitions/utils'
-import components from '../definitions/components'
-import PopupMenuAnimated from '../components/otter/PopupMenu'
-import {classNames} from '../helpers/style'
+import React, {useCallback, useState} from 'react'
 import XCircleSolid from 'simple-react-heroicons/icons/XCircleSolid'
-import {useThemeContext} from '../contexts/ThemeContext'
+import OInput from '../default-ui/OInput'
+import PopupMenuAnimated from '../otter/PopupMenu'
+import {usePageData} from '../../contexts/PageDataContext'
+import {useThemeContext} from '../../contexts/ThemeContext'
+import {debounce_promise} from '../../definitions/utils'
+import {classNames} from '../../helpers/style'
 
 export default function Searchable({field_def, containing_data_item}) {
   const ctx                                  = usePageData()
@@ -13,7 +13,6 @@ export default function Searchable({field_def, containing_data_item}) {
   const [search_term, set_search_term]       = useState(null)
   const [search_results, set_search_results] = useState([])
   const [error, set_error]                   = useState(null)
-  const input_ref                            = useRef()
   const value         = containing_data_item[field_def.name]
   const debounce_ms   = field_def.debounce_ms || 500
   const search_func   = useCallback(debounce_promise(field_def.search, debounce_ms), [])
@@ -39,7 +38,6 @@ export default function Searchable({field_def, containing_data_item}) {
   function begin_search() {
     delete containing_data_item[field_def.name]
     set_search_term('')
-    setTimeout(() => input_ref.current.focus())
   }
 
   function end_search() {
@@ -51,10 +49,9 @@ export default function Searchable({field_def, containing_data_item}) {
   return (
     <div className="relative">
       {(search_term !== null || !value) && (
-        <components.Input type="text"
-                          value={search_term}
-                          onChange={cb__change}
-                          ref={input_ref} />
+        <OInput type="text"
+                value={search_term}
+                onChange={cb__change} />
       )}
 
       {value && search_term === null && (

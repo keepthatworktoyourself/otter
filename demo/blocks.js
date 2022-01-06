@@ -1,5 +1,5 @@
 import Otter from '../src/index'
-import field_types from '../src/core/field-interfaces/field-interfaces'
+import Fields from '../src/core/definitions/fields'
 import PencilSolid from 'simple-react-heroicons/icons/PencilSolid'
 import CogSolid from 'simple-react-heroicons/icons/CogSolid'
 import MenuAlt2Solid from 'simple-react-heroicons/icons/MenuAlt2Solid'
@@ -27,7 +27,7 @@ export const block_options = {
   fields: [
     {
       name:    'top_padding',
-      type:    field_types.Radios,
+      type:    Fields.Radios,
       align:   'horizontal',
       width:   'half',
       options: {
@@ -39,7 +39,7 @@ export const block_options = {
     },
     {
       name:    'bottom_padding',
-      type:    field_types.Radios,
+      type:    Fields.Radios,
       align:   'horizontal',
       width:   'half',
       options: {
@@ -51,14 +51,14 @@ export const block_options = {
     },
     {
       name:          'top_border',
-      type:          field_types.Bool,
+      type:          Fields.Bool,
       align:         'horizontal',
       width:         'half',
       default_value: false,
     },
     {
       name:          'bottom_border',
-      type:          field_types.Bool,
+      type:          Fields.Bool,
       align:         'horizontal',
       width:         'half',
       default_value: false,
@@ -70,7 +70,7 @@ export const block_options = {
         foo: 'foo',
         bar: 'bar',
       },
-      type:    Otter.FieldTypes.Radios,
+      type:    Otter.Fields.Radios,
       options: {
         light: 'Light',
         dark:  'Dark',
@@ -79,7 +79,7 @@ export const block_options = {
     },
     {
       name:          'color',
-      type:          field_types.Radios,
+      type:          Fields.Radios,
       swatches:      true,
       options:       dynamic_data('block_colors'),
       default_value: dynamic_data('default_block_color'),
@@ -90,16 +90,16 @@ export const block_options = {
 const header_block_fields = [
   {
     name: 'heading',
-    type: Otter.FieldTypes.TextInput,
+    type: Otter.Fields.TextInput,
   },
   {
     name:        'subheading',
     description: 'Catchy subheading',
-    type:        Otter.FieldTypes.TextInput,
+    type:        Otter.Fields.TextInput,
   },
   {
     name:          'align',
-    type:          Otter.FieldTypes.Radios,
+    type:          Otter.Fields.Radios,
     align:         'horizontal',
     description:   'Text alignment',
     default_value: 'right',
@@ -116,7 +116,7 @@ const header_block_fields = [
   },
   {
     name:          'display',
-    type:          Otter.FieldTypes.Radios,
+    type:          Otter.Fields.Radios,
     align:         'horizontal',
     description:   'Display',
     default_value: 'block',
@@ -154,7 +154,7 @@ export const text_block = {
     {
       name:           'content',
       description:    'Text content',
-      type:           Otter.FieldTypes.TextEditor,
+      type:           Otter.Fields.TextEditor,
       heading_levels: [1, 2, 3, 4, 5, 6],
       hr:             true,
       blockquote:     true,
@@ -162,12 +162,12 @@ export const text_block = {
     {
       name:          'fancy',
       description:   'Fancy lettering',
-      type:          Otter.FieldTypes.Bool,
+      type:          Otter.Fields.Bool,
       default_value: true,
     },
     {
       name:          'dropcap_color',
-      type:          Otter.FieldTypes.Radios,
+      type:          Otter.Fields.Radios,
       swatches:      true,
       default_value: '#4fc3f7',
       options:       {
@@ -185,7 +185,7 @@ export const text_block = {
     },
     {
       name:    'align',
-      type:    Otter.FieldTypes.Select,
+      type:    Otter.Fields.Select,
       options: {
         left:   'Left',
         right:  'Right',
@@ -202,7 +202,7 @@ export const html_block = {
     {
       name:        'html',
       description: 'HTML',
-      type:        Otter.FieldTypes.TextArea,
+      type:        Otter.Fields.TextArea,
       mono:        true,
     },
   ],
@@ -214,13 +214,13 @@ export const block_with_nested_block = {
   fields:      [
     {
       name:              'searchables',
-      type:              Otter.FieldTypes.NestedBlock,
+      type:              Otter.Fields.NestedBlock,
       nested_block_type: 'SearchablesDemo',  // Supports name of block defined elsewhere
       optional:          true,
     },
     {
       name:              'text_content',
-      type:              Otter.FieldTypes.NestedBlock,
+      type:              Otter.Fields.NestedBlock,
       nested_block_type: text_block,  // Supports inline block object
     },
   ],
@@ -233,7 +233,7 @@ export const block_with_repeater_one_type = {
     {
       name:               'content_items',
       description:        'Content:',
-      type:               Otter.FieldTypes.Repeater,
+      type:               Otter.Fields.Repeater,
       block_titles:       true,
       nested_block_types: [
         html_block,       // Supports name of block defined elsewhere
@@ -249,7 +249,7 @@ export const block_with_repeater = {
     {
       name:               'content_items',
       description:        'Content:',
-      type:               Otter.FieldTypes.Repeater,
+      type:               Otter.Fields.Repeater,
       block_titles:       true,
       nested_block_types: [
         'Text',       // Supports name of block defined elsewhere
@@ -266,7 +266,7 @@ export const searchables = {
     {
       name:        'my_searchable',
       description: 'Search Content Field',
-      type:        Otter.FieldTypes.Searchable,
+      type:        Otter.Fields.Searchable,
       search:      () => [
         {value: 'x', display: 'A search result'},
       ],
