@@ -331,7 +331,7 @@ Ideally, your application should compile Tailwind. In your tailwind config, note
 }
 ```
 
-Your app also must import Otter's small amount of its own CSS and that of the Quill editor:
+When using your own compiled Tailwind, your bundle must also must import Otter's small amount of its own CSS and that of the Quill editor:
 
 ```js
 import 'otter/dist/css/quill.snow.css'
@@ -339,11 +339,14 @@ import 'react-toggle/style.css'
 import 'otter/dist/css/otter.css'
 ```
 
-You can also import all styles (including a full compiled copy of tailwind) in one go:
+If you are not compiling tailwind yourself, you can instead import everything (including a compiled copy of tailwind) from otter/dist:
 
 ```js
-import 'otter/css/all.css
+import 'otter/dist/css/all.css
 ```
+
+(Note that while the all-in-one-go `all.css` method may be a quick way to get started, your project should ultimately take on the tailwind compilation instead of relying on Otter to do so.)
+
 
 
 ### Custom CSS classes
@@ -359,85 +362,7 @@ const custom_classes = {
 <Otter.Editor custom_classes={custom_classes} ... />
 ```
 
-Here is the full list of custom classes you can provide:
-
-```js
-typography: {
-  heading,
-  sub_heading,
-  copy,
-  input_label,
-}
-layout: {
-  block_headers: {
-    wrapper
-    x_pad
-  },
-},
-skin: {
-  border_color,
-  border_color_lighter,
-  border_focus,
-  switch: {
-    bg: {
-      on,
-      off,
-    },
-    btn,
-  },
-  block: {
-    bg,
-  },
-  input: {
-    bg,
-  },
-  block_headers: {
-    bg,
-    heading,
-  },
-  block_header_icon: {
-    always,
-    default,
-    negative,
-    active,
-    active_indicator: {
-      bg,
-      opacity,
-    },
-  },
-  add_block_btn: {
-    bg,
-    text,
-  },
-  add_repeater_item_btn: {
-    bg,
-  },
-  repeater_remove_item_btn,
-  repeater_item: {
-    bg,
-    header_bg,
-  },
-  clear_selection_btn,
-  modal: {
-    bg,
-    close_btn,
-  },
-  btns: {
-    primary,
-    negative,
-    secondary,
-  },
-  selector_btn: {
-    active,
-    default,
-  },
-  popup_menu,
-  text_editor: {
-    bg,
-  },
-  swatch_indicator_triangle,
-}
-```
+For the full set of class-overridable elements, see (/src/core/definitions/classes.js)[/src/core/definitions/classes.js].
 
 
 

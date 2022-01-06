@@ -9,4 +9,3 @@ rm dist/index*
 
 # For library use, just transpile into dist/ using babel
 npm run babel
-
