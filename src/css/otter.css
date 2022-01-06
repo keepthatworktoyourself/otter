@@ -1,68 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
 
 /******************************
-  Otter styles
+  Quill overrides
  ******************************/
-.monospace {
-  font-family: Hack, Consolas, Menlo, 'Source Code Pro', 'Lucida Sans Typewriter', 'Courier New', courier, sans-serif;
-}
-
-.c-svg {
-  display: block;
-  height: 1em;
-  width: 1em;
-}
-.c-svg--inline {
-  display: inline-block;
-}
-.c-svg svg {
-  display: block;
-  margin: 0;
-  max-height: inherit;
-  fill: inherit !important;
-  stroke: inherit !important;
-  width: 100%;
-  height: 100%;
-}
-.c-svg--toggler {
-  display: inline-block;
-  position: relative;
-  top: 0.12rem;
-  transition: transform 0.15s ease-in-out;
-}
-
-.select {
-  position: relative;
-}
-.select::after {
-  content: "⌄";
-  position: absolute;
-  right: 0.5rem;
-  top: 0.08rem;
-  font-size: 1.2em;
-}
-
-.react-toggle {
-  line-height: 1em !important;
-  height: 1em !important;
-}
-.react-toggle-track {
-  width: 24px !important;
-  height: 15px !important;
-  background-color: #a6a6a6 !important;
-}
-.react-toggle-thumb {
-  width: 13px !important;
-  height: 13px !important;
-}
-.react-toggle--checked .react-toggle-track {
-  background-color: #3a98e4 !important;
-}
-.react-toggle--checked .react-toggle-thumb {
-  left: 10px !important;
-}
 
 .ql-container,
 .ql-editor {
@@ -128,3 +74,155 @@
 .ql-editor h5 { font-size: 1.1rem !important; }
 .ql-editor h6 { font-size: 1rem   !important; }
 
+.ql-container.ql-snow {
+  border: none;
+}
+
+.ql-snow .ql-picker {
+  font-size: 12px;
+}
+
+
+/******************************
+  Otter styles
+ ******************************/
+
+.monospace {
+  font-family: Hack, Consolas, Menlo, 'Source Code Pro', 'Lucida Sans Typewriter', 'Courier New', courier, sans-serif;
+}
+
+.c-svg {
+  display: block;
+  height: 1em;
+  width: 1em;
+}
+.c-svg--inline {
+  display: inline-block;
+}
+.c-svg svg {
+  display: block;
+  margin: 0;
+  max-height: inherit;
+  fill: inherit !important;
+  stroke: inherit !important;
+  width: 100%;
+  height: 100%;
+}
+.c-svg--toggler {
+  display: inline-block;
+  position: relative;
+  top: 0.12rem;
+  transition: transform 0.15s ease-in-out;
+}
+
+
+.svg-wrap svg,
+.svg-font svg {
+  display: block;
+  margin: 0;
+  width: 100%;
+  height: auto;
+  max-height: inherit;
+}
+
+.svg-wrap-inherit-font-size svg,
+.svg-font svg {
+  height: 1em;
+  width: 1em;
+}
+
+.svg-wrap-inherit-color svg,
+.svg-wrap-inherit-color svg g,
+.svg-wrap-inherit-color svg path,
+.svg-wrap-inherit-color svg circle,
+.svg-font svg,
+.svg-font svg g,
+.svg-font svg path,
+.svg-font svg circle {
+  fill: inherit !important;
+  stroke: inherit !important;
+}
+
+.svg-wrap-current-color svg,
+.svg-wrap-current-color svg g,
+.svg-wrap-current-color svg path,
+.svg-wrap-current-color svg circle,
+.svg-font svg,
+.svg-font svg g,
+.svg-font svg path,
+.svg-font svg circle {
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+.absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.absolute-center-y {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.absolute-center-x {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.absolute-fill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.aspect-1x1 { padding-bottom: 100%; }
+.aspect-16x10 { padding-bottom: 62.5%; }
+
+.cursor-grabbing {
+  cursor: grabbing;
+}
+
+.select {
+  position: relative;
+}
+
+.select::after {
+  content: "⌄";
+  position: absolute;
+  right: 0.5rem;
+  top: 0.08rem;
+  font-size: 1.2em;
+}
+
+.react-toggle {
+  line-height: 1em !important;
+  height: 1em !important;
+}
+.react-toggle-track {
+  width: 24px !important;
+  height: 15px !important;
+  background-color: #a6a6a6 !important;
+}
+.react-toggle-thumb {
+  width: 13px !important;
+  height: 13px !important;
+}
+.react-toggle--checked .react-toggle-track {
+  background-color: #3a98e4 !important;
+}
+.react-toggle--checked .react-toggle-thumb {
+  left: 10px !important;
+}
+
+.draggable-fix, .draggable-fix__inner {
+  position: relative !important;
+  /* top: auto !important;
+  left: auto !important; */
+}

@@ -1,7 +1,5 @@
-const Save = {
+export default {
   OnInput: 'OnInput',
   OnClick: 'OnClick',
 }
-
-export default Save
 

@@ -1,8 +1,5 @@
-const State = {
+export default {
   Loading: 'loading',
   Loaded:  'loaded',
   Error:   'error',
 }
-
-export default State
-

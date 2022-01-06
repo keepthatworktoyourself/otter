@@ -2,7 +2,7 @@ import test from 'ava'
 import test_data from './_test-data'
 import test_blocks from './_test-blocks'
 import * as Utils from '../core/definitions/utils'
-import Fields from '../core/fields/fields'
+import Fields from '../core/definitions/fields'
 
 
 // uid

@@ -1,5 +1,5 @@
-import Editor from './core/Editor'
-import Fields from './core/fields/fields'
+import Editor from './core/components/otter/Editor'
+import Fields from './core/definitions/fields'
 import State from './core/definitions/state'
 import Save from './core/definitions/save'
 import * as Utils from './core/definitions/utils'

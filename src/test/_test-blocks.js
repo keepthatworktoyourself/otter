@@ -1,5 +1,5 @@
 import * as Utils from '../core/definitions/utils'
-import Fields from '../core/fields/fields'
+import Fields from '../core/definitions/fields'
 
 const blocks = [
   {type: 'B1'},
