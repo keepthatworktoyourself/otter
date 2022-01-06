@@ -31,8 +31,8 @@ const BlockHeaderIcon = ({
       <span className={classNames(
         'absolute-center overflow-hidden w-full',
         'rounded-full',
-        theme_ctx.classes.skin.block_header_icon.activeIndictor.bg,
-        !active ? 'opacity-0' : theme_ctx.classes.skin.block_header_icon.activeIndictor.opacity,
+        theme_ctx.classes.skin.block_header_icon.active_indicator.bg,
+        !active ? 'opacity-0' : theme_ctx.classes.skin.block_header_icon.active_indicator.opacity,
       )}
       >
         <span className="aspect-1x1 w-full block"></span>
@@ -61,7 +61,7 @@ export default function BlockHeader({
       'select-none',
       'relative flex justify-between',
       theme_ctx.classes.layout.block_headers.wrapper,
-      theme_ctx.classes.layout.block_headers.xPad,
+      theme_ctx.classes.layout.block_headers.x_pad,
       theme_ctx.classes.skin.block_headers.bg,
     )}
     >

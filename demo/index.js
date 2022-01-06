@@ -14,7 +14,9 @@ import {
 import OBtn from '../src/core/components/default-ui/OBtn'
 import classes from '../src/core/definitions/classes'
 import {classNames} from '../src/core/helpers/style'
-import demo_custom_classes from './demo-custom-classes'
+import data from './data'
+import custom_classes from './custom-classes'
+
 
 // blocksets
 // -----------------------------------
@@ -40,47 +42,16 @@ const blocks__grouped = {
   },
 }
 
+
 // load - fake async request
 // -----------------------------------
 
 function load(post_id) {
   return Promise.resolve({
-    json: () => [
-      {
-        __type:     'Header',
-        heading:    'Otters',
-        subheading: 'Otters? We got otters!',
-      },
-      {
-        __type:        'RepeaterDemo',
-        content_items: [
-          {
-            __type: 'Text',
-          },
-          {
-            __type: 'Text',
-          },
-        ],
-      },
-      {
-        __type:  'NestedBlockDemo',
-        heading: {
-          __type:     'Header',
-          heading:    'Nested Heading',
-          subheading: 'Nested Sub-Heading',
-        },
-        text_content: {
-          __type:  'Text',
-          content: '<p>Hi</p>',
-        },
-      },
-      {
-        __type: 'HTML',
-        html:   `<div>I'm a TextArea field with mono={true}!</div>`,
-      },
-    ],
+    json: () => data,
   })
 }
+
 
 // render
 // -----------------------------------
@@ -169,10 +140,8 @@ function App({state, delegate}) {
             <div className="px-12">
               <Otter.Editor key={picker_mode} // re-render on demo mode change
                             data={state.data}
-                            blocks={
-                  picker_mode === 'popover' ? blocks__flat : blocks__grouped
-                }
-                            custom_classes={test_custom_classes_enabled && demo_custom_classes}
+                            blocks={picker_mode === 'popover' ? blocks__flat : blocks__grouped}
+                            custom_classes={test_custom_classes_enabled && custom_classes}
                             load_state={state.load_state}
                             delegate={delegate}
                             when_to_save={Otter.Save.OnInput}

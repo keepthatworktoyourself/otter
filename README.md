@@ -67,6 +67,7 @@ The `<Otter.Editor />` element renders the editor.
 | `block_numbers`  | `<bool>`                                        |          | `false`          | Label each block with its 1-based index                                                                                            |
 | `add_block_msg`  | `<string>`                                      |          | `'Insert block'` | Label for the 'insert block' button                                                                                                |
 | `can_add_blocks` | `<bool>`                                        |          | `true`           | If set to false, the user cannot add or remove blocks. Useful if you want an editor with a single pre-programmed block.            |
+| `custom_classes` | `<Object>`                                      |          |                  | Allows you to specify custom CSS classes on a variety of editor elements. See [CSS](#css-and-tailwind) for details.                |
 
 ```js
 const my_delegate = {
@@ -108,9 +109,10 @@ An example Block of type `PageHeader` might contain the Fields: `title`, `subtit
 | `fields`      | `Array(<Field>)`   | Yes      |         | The [fields](#fields) in this block.                                                                                                                            |
 | `thumbnail`   | `<path>`           |          |         | Optional thumbnail for use in the [graphical block picker](#blocks-optionally-categorise-in-groups).                                                            |
 | `hidden`      | `<bool>`           |          | `false` | If `true`, don't display this block in the block picker. This allows you to define blocks at the top level which can only be used in a NestedBlock or Repeater. |
+| `tabs`        | `Array(<Tab>)`     |          |         | Allows you to arrange the block's fields into tabs. See [block tabs](#block-tabs).
 
 
-### Optionally group blocks for a richer block picker
+### Block picker
 
 When supplying your content blocks to Otter, (`<Otter.Editor blocks={blocks} />`), you can either use a **simple, flat array** of blocks, or **group them into categories**.
 
@@ -137,11 +139,62 @@ const blocks = {
 }
 ```
 
-Otter uses a different block picker depending on whether simple or grouped blocks are used. Grouped blocks can provide a much better user experience if your editor uses many types of blocks:
+- If simple blocks are provided, otter renders a popover-style block picker.
+- If grouped blocks are provided, otter renders a popup-style, graphical block picker. This can provide a better user experience:
 
-| Simple block picker | Grouped block picker |
-| :------------------ | :------------------- |
+| Popover (simple) block picker        | Popup (grouped) block picker          |
+| :----------------------------------- | :------------------------------------ |
 | <img src="files/picker--simple.png"> | <img src="files/picker--grouped.png"> |
+
+
+### Block tabs
+
+Within a block, you can optionally arrange fields into multiple tabs. This can help you keep the user experience clean when your blocks are somewhat complex.
+
+Example:
+
+```js
+export const header_block = {
+  type:      'Header',
+  thumbnail: 'https://res.cloudinary.com/drtjqpz13/image/upload/v1638776102/Wombat/Screenshot_2021-12-06_at_07.34.30.png',
+  fields:    [
+    {
+      name: 'heading',
+      type: Otter.Fields.TextInput,
+    },
+    {
+      name: 'subheading',
+      type: Otter.Fields.TextInput,
+    },
+    {
+      name: 'align',
+      type: Otter.Fields.Radios,
+      align: 'horizontal',
+      description: 'Text alignment',
+      default_value: 'right',
+      options:       {
+        left: 'Left',
+        center: 'Center',
+        right: 'Right',
+      },
+    },
+  ]
+  tabs: [
+    {
+      Icon: PencilSolid,
+      fields: ['heading', 'subheading'],
+    },
+    {
+      Icon:   CogSolid,
+      fields: ['align'],
+    },
+  ],
+}
+```
+
+In this example, the `align` field is moved into a separate tab with a cogwheel icon:
+
+<img src="https://github.com/keepthatworktoyourself/otter/raw/int/files/tabs.png" />
 
 
 
@@ -159,19 +212,21 @@ Each block should contain at least one field.
 
 ### Field properties
 
-All fields have the following properties:
+Properties on all field types:
 
-| Property        | Value                                   | Required   |                                                                                                          |
-| :-------------- | :-------------------------------------- | :--------- | :------------------------------------------------------------------------------------------------------- |
-| `name`          | `<string>`                              | Yes        | The block data save key.                                                                                 |
-| `description`   | `<string>`                              |            | Field label displayed to the user. If not present Otter will use a prettified version of the field name. |
-| `type`          | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).                                                                          |
-| `display_if`    | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s).                                            |
-| `default_value` | Any type, as appropriate                |            | A default value, used to set the field initially and to provide data on save if the field is empty       |
+| Property         | Value                                   | Required   |                                                                                                          |
+| :--------------- | :-------------------------------------- | :--------- | :------------------------------------------------------------------------------------------------------- |
+| `name`           | `<string>`                              | Yes        | The block data save key.                                                                                 |
+| `description`    | `<string>`                              |            | Field label displayed to the user. If not present Otter will use a prettified version of the field name. |
+| `type`           | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).                                                                          |
+| `display_if`     | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s).                                            |
+| `default_value`* | Any type, as appropriate                |            | A default value, used to set the field initially and to provide data on save if the field is empty       |
+| `align`**        | `undefined | "horizontal"`              |            | If set to `"horizontal"`, Otter will place this field in a horizontal flex layout.                       |
 
-(The `default_value` prop is not supported by TextEditor, WPMedia, NestedBlock, Repeater, or Searchable.)
+- *(`default_value` is supported on all fields except: TextEditor, WPMedia, NestedBlock, Repeater, Searchable.)
+- **(`align` is supported on all fields except: Repeater, NestedBlock.)
 
-[Field type](#field-types) should be specified with the Otter-defined constants such as `Otter.Fields.TextInput`.
+`type` should be specified using the Otter-defined constants: `type: Otter.Fields.TextInput`, etc. (See [field types](#field-types).)
 
 With `display_if` you can show or hide the field based on the value of one or more of its siblings. Each `DisplayRule` specifies the name of the sibling and a value. You can test against more than one sibling field using an array of multiple `DisplayRule` objects.
 
@@ -221,7 +276,8 @@ The supported field types and their options are documented below.
 |               |                                             | `yes_label` (string)           | `"No"`   | Label for `false` option                                                                       |
 | `Radios`      | Radio buttons                               |                                |          |                                                                                                |
 |               |                                             | `options` (object)             |          | Radio options. Key pairs are in the form `value: "Label"`.                                     |
-|               |                                             | `watches` (bool)               | `false`  | Render the options as color swatches. Option values must be a valid CSS color, e.g. '#343434'. |
+|               |                                             | `swatches` (bool)              | `false`  | Render as color swatches. Option values must be a valid CSS color, e.g. '#343434'.             |
+|               |                                             | `icons` (object)               |          | Use icons to label the radios instead of labels. Format: `{opt_value: IconComponent, ...}`     |
 | `Select`      | Select dropdown                             |                                |          |                                                                                                |
 |               |                                             | `options` (object)             |          | Select options. Key pairs are in the form `value: "Label"`.                                    |
 | `WPMedia`     | Wordpress media item (Wordpress only)       |                                |          |                                                                                                |
@@ -264,11 +320,13 @@ Otter uses Tailwind for styling.
 
 The ideal way is for Tailwind to be compiled by your application. Note that Otter needs the following variants enabled. (Also see Otter’s [tailwind config file](tailwind.config.js).)
 
-```
+```js
+{
   backgroundColor: ['active'],
   borderColor: ['active'],
   display: ['group-hover'],
   textColor: ['active'],
+}
 ```
 
 Your app also must import Otter's small amount of its own CSS and that of the Quill editor:
@@ -286,6 +344,100 @@ import 'otter/css/all.css
 ```
 
 
+### Custom CSS classes
+
+You can customise the look and feel of the editor by passing a nested object of CSS classes to the `<Editor />` `custom_classes` prop.
+
+```js
+const custom_classes = {
+  typography: {
+    heading: 'font-bold tracking-tight',
+  }
+}
+<Otter.Editor custom_classes={custom_classes} ... />
+```
+
+Here is the full list of custom classes you can provide:
+
+```js
+typography: {
+  heading,
+  sub_heading,
+  copy,
+  input_label,
+}
+layout: {
+  block_headers: {
+    wrapper
+    x_pad
+  },
+},
+skin: {
+  border_color,
+  border_color_lighter,
+  border_focus,
+  switch: {
+    bg: {
+      on,
+      off,
+    },
+    btn,
+  },
+  block: {
+    bg,
+  },
+  input: {
+    bg,
+  },
+  block_headers: {
+    bg,
+    heading,
+  },
+  block_header_icon: {
+    always,
+    default,
+    negative,
+    active,
+    active_indicator: {
+      bg,
+      opacity,
+    },
+  },
+  add_block_btn: {
+    bg,
+    text,
+  },
+  add_repeater_item_btn: {
+    bg,
+  },
+  repeater_remove_item_btn,
+  repeater_item: {
+    bg,
+    header_bg,
+  },
+  clear_selection_btn,
+  modal: {
+    bg,
+    close_btn,
+  },
+  btns: {
+    primary,
+    negative,
+    secondary,
+  },
+  selector_btn: {
+    active,
+    default,
+  },
+  popup_menu,
+  text_editor: {
+    bg,
+  },
+  swatch_indicator_triangle,
+}
+```
+
+
 
 ## Selective importing
 
@@ -296,7 +448,7 @@ You can import the field type definitions separately:
 import Fields from 'otter-editor/dist/core/definitions/fields'
 ```
 
-And with individual otter utils:
+And you can also import individual otter utils:
 
 ```js
 import {set_dynamic_data} from 'otter-editor/dist/core/definitions/utils'
@@ -306,13 +458,9 @@ import {set_dynamic_data} from 'otter-editor/dist/core/definitions/utils'
 
 ## Tests
 
-Tests are implemented with ava, and sinon. Ideally, tests should be written first.
-
-Run the tests:
-
 ```bash
-npm run t   # all tests
-npm run tw  # all tests, --watch
+npm run t   # run all tests
+npm run tw  # run all tests, --watch
 npm run ts src/test/<file>  # run a single test, --watch
 ```
 

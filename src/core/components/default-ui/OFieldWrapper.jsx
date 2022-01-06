@@ -16,7 +16,7 @@ export default function OFieldWrapper({
 
   return (
     <div className={classNames(
-      align === 'horizontal' && 'flex items-center justify-between',
+      hori && 'flex items-center justify-between',
       className,
     )}
          {...props}

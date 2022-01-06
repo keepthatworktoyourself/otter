@@ -1,10 +1,10 @@
-import Otter from '../src/index'
-import Fields from '../src/core/definitions/fields'
 import PencilSolid from 'simple-react-heroicons/icons/PencilSolid'
 import CogSolid from 'simple-react-heroicons/icons/CogSolid'
 import MenuAlt2Solid from 'simple-react-heroicons/icons/MenuAlt2Solid'
 import MenuSolid from 'simple-react-heroicons/icons/MenuSolid'
 import MenuAlt3Solid from 'simple-react-heroicons/icons/MenuAlt3Solid'
+import Otter from '../src/index'
+import Fields from '../src/core/definitions/fields'
 import {dynamic_data, set_dynamic_data} from '../src/core/definitions/utils'
 
 set_dynamic_data('block_colors', {
@@ -64,14 +64,10 @@ export const block_options = {
       default_value: false,
     },
     {
-      name:                'theme',
-      with_label:          false,
-      someKindaCustomData: {
-        foo: 'foo',
-        bar: 'bar',
-      },
-      type:    Otter.Fields.Radios,
-      options: {
+      name:       'theme',
+      with_label: false,
+      type:       Otter.Fields.Radios,
+      options:    {
         light: 'Light',
         dark:  'Dark',
       },

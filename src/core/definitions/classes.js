@@ -2,7 +2,7 @@ export default {
   layout: {
     block_headers: {
       wrapper: 'text-xs',
-      xPad:    'px-4',
+      x_pad:   'px-4',
     },
   },
   typography: {
@@ -33,11 +33,11 @@ export default {
       heading: 'text-gray-50 font-medium tracking-tight',
     },
     block_header_icon: {
-      always:         'text-gray-400',
-      default:        'hover:text-gray-200',
-      negative:       'hover:text-red-500',
-      active:         'text-white',
-      activeIndictor: {
+      always:           'text-gray-400',
+      default:          'hover:text-gray-200',
+      negative:         'hover:text-red-500',
+      active:           'text-white',
+      active_indicator: {
         bg:      'bg-gray-700',
         opacity: 'opacity-60',
       },

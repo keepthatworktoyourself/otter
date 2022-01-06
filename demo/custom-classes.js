@@ -2,7 +2,7 @@ export default {
   layout: {
     block_headers: {
       wrapper: 'text-xs',
-      xPad:    'px-4',
+      x_pad:   'px-4',
     },
   },
   typography: {
@@ -37,7 +37,7 @@ export default {
       default:        'hover:text-gray-200',
       negative:       'hover:text-red-500',
       active:         'text-white',
-      activeIndictor: {
+      active_indicator: {
         bg:      'bg-gray-700',
         opacity: 'opacity-60',
       },
@@ -75,4 +75,3 @@ export default {
     swatch_indicator_triangle: 'border-gray-900',
   },
 }
-
