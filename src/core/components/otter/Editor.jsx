@@ -16,7 +16,7 @@ import {
 } from '../../definitions/utils'
 import State from '../../definitions/state'
 import Save from '../../definitions/save'
-import Block from './block/Block'
+import Block from './Block/Block'
 import {classNames} from '../../helpers/style'
 import AddBlockBtn from './Block/AddBlockBtn'
 import Modal from '../primitives/Modal'

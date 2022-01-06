@@ -41,6 +41,7 @@ npm i -S otter-editor --legacy-peer-deps
   - [Searchable](#field-types)
 - [Demo](#demo)
 - [CSS and Tailwind](#css-and-tailwind)
+  - [Custom CSS Classes][#custom-css-classes]
 - [Selective importing](#selective-importing)
 - [Tests](#tests)
 - [License](#license)
@@ -318,14 +319,15 @@ npm run demo
 
 Otter uses Tailwind for styling.
 
-The ideal way is for Tailwind to be compiled by your application. Note that Otter needs the following variants enabled. (Also see Otter’s [tailwind config file](tailwind.config.js).)
+Ideally, your application should compile Tailwind. In your tailwind config, note that Otter needs the following variants enabled. (Also see Otter’s [tailwind config file](tailwind.config.js).)
 
 ```js
 {
   backgroundColor: ['active'],
-  borderColor: ['active'],
-  display: ['group-hover'],
-  textColor: ['active'],
+  borderColor:     ['active'],
+  display:         ['group-hover'],
+  padding:         ['group-hover'],
+  textColor:       ['active'],
 }
 ```
 

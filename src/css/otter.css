@@ -42,7 +42,8 @@ body {
 }
 
 
-.svg-wrap svg {
+.svg-wrap svg,
+.svg-font svg {
   display: block;
   margin: 0;
   width: 100%;
@@ -50,7 +51,8 @@ body {
   max-height: inherit;
 }
 
-.svg-wrap-inherit-font-size svg {
+.svg-wrap-inherit-font-size svg,
+.svg-font svg {
   height: 1em;
   width: 1em;
 }
@@ -58,7 +60,11 @@ body {
 .svg-wrap-inherit-color svg,
 .svg-wrap-inherit-color svg g,
 .svg-wrap-inherit-color svg path,
-.svg-wrap-inherit-color svg circle {
+.svg-wrap-inherit-color svg circle,
+.svg-font svg,
+.svg-font svg g,
+.svg-font svg path,
+.svg-font svg circle {
   fill: inherit !important;
   stroke: inherit !important;
 }
@@ -66,13 +72,13 @@ body {
 .svg-wrap-current-color svg,
 .svg-wrap-current-color svg g,
 .svg-wrap-current-color svg path,
-.svg-wrap-current-color svg circle {
+.svg-wrap-current-color svg circle,
+.svg-font svg,
+.svg-font svg g,
+.svg-font svg path,
+.svg-font svg circle {
   fill: currentColor !important;
   stroke: currentColor !important;
-}
-
-.svg-font {
-  @apply svg-wrap svg-wrap-inherit-font-size svg-wrap-current-color
 }
 
 .absolute-center {

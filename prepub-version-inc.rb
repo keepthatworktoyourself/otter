@@ -36,9 +36,9 @@ print "Incrementing version from #{version} to #{new_version}..."
 
 write_pkg_version(path_pkg, new_version)
 print "  ✔︎ otter"
-write_pkg_version(path_pkg__otter_wp, new_version)
-write_dependency_version(path_pkg__otter_wp, 'otter-editor', new_version)
-print "  ✔︎ otter-wp"
+# write_pkg_version(path_pkg__otter_wp, new_version)
+# write_dependency_version(path_pkg__otter_wp, 'otter-editor', new_version)
+# print "  ✔︎ otter-wp"
 puts
 
 

@@ -23,7 +23,9 @@ export default function CollapseTransition({
   const [overflow, set_overflow] = useState(initialOverflowValue) // having initial as hidden seems to fix a slight flicker on repeater item DND drop/move action
 
   useEffect(() => {
-    if (collapsed) set_overflow('hidden')
+    if (collapsed) {
+      set_overflow('hidden')
+    }
   }, [collapsed])
 
   return (

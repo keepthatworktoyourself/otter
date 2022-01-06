@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {usePageData} from '../../contexts/PageDataContext'
 import {humanify_str} from '../../definitions/utils'
-import BlockSection from './block/BlockSection'
+import BlockSection from './Block/BlockSection'
 
 export default function NestedBlockWrapper({field_def, index, containing_data_item, children}) {
   const ctx                        = usePageData()

@@ -33,10 +33,10 @@ export default {
       heading: 'text-gray-50 font-medium tracking-tight',
     },
     block_header_icon: {
-      always:         'text-pink-300',
-      default:        'hover:text-gray-200',
-      negative:       'hover:text-red-500',
-      active:         'text-white',
+      always:           'text-pink-300',
+      default:          'hover:text-gray-200',
+      negative:         'hover:text-red-500',
+      active:           'text-white',
       active_indicator: {
         bg:      'bg-gray-700',
         opacity: 'opacity-60',
