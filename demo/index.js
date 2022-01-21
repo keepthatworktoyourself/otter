@@ -52,17 +52,18 @@ function load(post_id) {
   })
 }
 
-
 // render
 // -----------------------------------
 
 function App({state, delegate}) {
-  const [picker_mode, set_picker_mode] = useState('popover')
+  const [picker_mode, set_picker_mode] = useState('modal')
   const [test_custom_classes_enabled, set_test_custom_classes_enabled] = useState(false)
   const modal_portal = useRef()
 
+  const output_blocks = picker_mode === 'popover' ? blocks__flat : blocks__grouped
+
   return (
-    <div className="px-20 bg-gray-50">
+    <div className="px-20 bg-zinc-50">
       <div className="max-w-7xl mx-auto">
         <div className="flex">
           <div className={classNames(
@@ -71,18 +72,14 @@ function App({state, delegate}) {
             'pr-20 min-h-screen',
           )}
           >
-            <div className="absolute top-0 bottom-0 right-0 bg-gray-900"
+            <div className="absolute top-0 bottom-0 right-0 bg-zinc-900"
                  style={{left: '-100vw'}} />
-            <div className="pt-32 relative">
-
-              {/* <img src="https://res.cloudinary.com/drtjqpz13/image/upload/v1637173136/Wombat/otter-test.svg"
-                   style={{maxWidth: '150px'}}
-                   className="mb-3" /> */}
+            <div className="pt-28 relative">
               <h1 className={classNames(classes.typography.heading, 'mb-10')}
                   style={{
                     fontSize:      '50px',
                     fontWeight:    '800',
-                    letterSpacing: '-0.03em',
+                    letterSpacing: '-0.05em',
                     lineHeight:    '0.7',
                     color:         'white',
                   }}
@@ -101,15 +98,6 @@ function App({state, delegate}) {
                 Otter is perhaps the <s>furriest</s> easiest way in the universe to
                 embed a content editor in your react/preact application.
               </p>
-
-              {/* <div className="relative flex-1 text-xxxs mt-10">
-                <div style={{maxWidth: '45rem', minHeight: '600px'}}
-                     className="absolute-fill overflow-scroll border px-4 pt-4 border-gray-200 bg-gray-100"
-                >
-                  <pre>data:{JSON.stringify(state.data, null, 2)}</pre>
-                  <pre>blocks:{JSON.stringify(blocks__grouped, null, 2)}</pre>
-                </div>
-              </div> */}
             </div>
           </div>
           <div className="w-7/12 min-h-screen">
@@ -140,7 +128,7 @@ function App({state, delegate}) {
             <div className="px-12">
               <Otter.Editor key={picker_mode} // re-render on demo mode change
                             data={state.data}
-                            blocks={picker_mode === 'popover' ? blocks__flat : blocks__grouped}
+                            blocks={output_blocks}
                             custom_classes={test_custom_classes_enabled && custom_classes}
                             load_state={state.load_state}
                             delegate={delegate}

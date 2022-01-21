@@ -22,9 +22,11 @@ import AddBlockBtn from './Block/AddBlockBtn'
 import Modal from '../primitives/Modal'
 import BlockPicker from './other/BlockPicker'
 import animations from '../../definitions/animations'
+import design_options from '../../definitions/design-options'
 import classes from '../../definitions/classes'
 import {ThemeContext} from '../../contexts/ThemeContext'
 import {useOnFirstRender} from '../../hooks/useOnFirstRender'
+import merge from '../../helpers/merge'
 
 function export_data_item(data_item, blocks) {
   if (!data_item) {
@@ -160,6 +162,7 @@ export default function Editor({
   picker_container_ref,
   iframe_container_info = { },
   custom_classes,
+  custom_design_options,
 }) {
   const valid_state = Object.values(State).includes(load_state)
   const [block_picker, set_block_picker] = useState(false)
@@ -200,12 +203,24 @@ export default function Editor({
   function close_block_picker() {
     set_block_picker(false)
   }
+  function insert_block() {
+    if (!block_to_insert?.type || (!block_to_insert?.index && block_to_insert.index !== 0)) return
+    add_item(block_to_insert.type, block_to_insert.index)
+  }
 
   useEffect(() => {
     if (!first_render) {
       dispatch_ctx({set_data: data})
     }
   }, [data])
+
+  useEffect(() => {
+    // Blocks are inserted AFTER the block picker
+    // closes, but BEFORE the closing animation has ended
+    if (block_picker === false) {
+      setTimeout(insert_block, 150)
+    }
+  }, [block_picker])
 
   const ctx_interface = {
     update_height,
@@ -236,12 +251,6 @@ export default function Editor({
     delegate && delegate.save && delegate.save(get_data())
   }
 
-  function insert_block() {
-    if (!block_to_insert?.type || (!block_to_insert?.index && block_to_insert.index !== 0)) return
-    add_item(block_to_insert.type, block_to_insert.index)
-    close_block_picker()
-  }
-
   ensure_uids(ctx.data)
   ensure_display_ifs_are_arrays(ctx.blocks)
 
@@ -262,16 +271,17 @@ export default function Editor({
   const n_items = ctx.data?.length || 0
 
   return (
-    <ThemeContext.Provider value={{classes: custom_classes || classes}}>
+    <ThemeContext.Provider value={{
+      classes:        merge(classes, custom_classes),
+      design_options: merge(design_options, custom_design_options),
+    }}
+    >
       <ContextProvider value={{
         ...ctx,
         ...ctx_interface,
       }}
       >
-        <div className={classNames(
-          'relative',
-        )}
-        >
+        <div className="relative">
           {!valid_state && Msg(`Unknown load state: ${load_state}`)}
           {load_state === State.Error && Msg(`Error loading post data`)}
           {load_state === State.Loading && Msg(`Loading...`)}
@@ -296,13 +306,13 @@ export default function Editor({
                 </div>
               )}
 
-              <DragDropContext onDragEnd={drag => reorder_items(drag)}>
-                <Droppable droppableId="d-blocks"
-                           isDropDisabled={!can_add_blocks}
-                           type="block"
-                >{prov => (
-                  <div ref={prov.innerRef} {...prov.droppableProps}>
-                    {ctx.data.length && (
+              {n_items > 0 && (
+                <DragDropContext onDragEnd={drag => reorder_items(drag)}>
+                  <Droppable droppableId="d-blocks"
+                             isDropDisabled={!can_add_blocks}
+                             type="block"
+                  >{prov => (
+                    <div ref={prov.innerRef} {...prov.droppableProps}>
                       <AnimatePresence initial={false}>
                         {ctx.data.map((data_item, index) => (
                           <motion.div key={data_item.__uid}
@@ -314,11 +324,11 @@ export default function Editor({
                           </motion.div>
                         ))}
                       </AnimatePresence>
-                    )}
-                    {prov.placeholder}
-                  </div>
-                )}</Droppable>
-              </DragDropContext>
+                      {prov.placeholder}
+                    </div>
+                  )}</Droppable>
+                </DragDropContext>
+              )}
             </div>
           )}
 

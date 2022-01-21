@@ -21,7 +21,7 @@ export default function Repeater({field_def, containing_data_item}) {
   const theme_ctx                    = useThemeContext()
   const [show_picker_popup, set_show_picker_popup] = useState(false)
   const data_items                   = containing_data_item[field_def.name] || []
-  const block_titles                 = field_def.block_titles
+  const block_titles                 = field_def.block_titles !== false && true
   const nested_block_types           = field_def.nested_block_types || []
   const max                          = field_def.max || -1
   const multiple_types               = nested_block_types.length !== 1
@@ -163,17 +163,14 @@ export default function Repeater({field_def, containing_data_item}) {
           'relative text-center w-full',
           !no_items && !show_picker_popup && 'opacity-0 hover:opacity-100 transition-opacity',
         )}
-             style={{
-               paddingTop:   !no_items && '2px',
-               marginBottom: !no_items && '-14px',
-             }}
+             style={{paddingTop: !no_items && '2px'}}
         >
 
           {no_items && (
             <h5 className={classNames(
               theme_ctx.classes.typography.sub_heading,
               'pt-4',
-              'mb-2',
+              'mb-1',
             )}
             >Add an item</h5>
           )}
@@ -184,7 +181,10 @@ export default function Repeater({field_def, containing_data_item}) {
               cb__block_added: () => set_show_picker_popup(false),
             })
           }}
-                          className="inline-flex"
+                          className={classNames(
+                            no_items && 'mb-2',
+                            'inline-flex',
+                          )}
                           classNameBg={theme_ctx.classes.skin.add_repeater_item_btn.bg}
                           size="md" />
 
@@ -192,7 +192,7 @@ export default function Repeater({field_def, containing_data_item}) {
           <div className="relative">
             <PopupMenuAnimated isOpen={show_picker_popup && multiple_types}
                                close={() => set_show_picker_popup(false)}
-                               className="absolute-center-x bottom-7"
+                               className="absolute-center-x bottom-4"
                                items={popup_items.map(popup_item => (
                                  {
                                    ...popup_item,

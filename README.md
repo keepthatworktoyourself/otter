@@ -317,25 +317,14 @@ npm run demo
 
 ## CSS and Tailwind
 
-Otter uses Tailwind for styling.
+Otter uses Tailwind (3.0) for styling.
 
-Ideally, your application should compile Tailwind. In your tailwind config, note that Otter needs the following variants enabled. (Also see Otter’s [tailwind config file](tailwind.config.js).)
+Ideally, your application should compile Tailwind.
 
-```js
-{
-  backgroundColor: ['active'],
-  borderColor:     ['active'],
-  display:         ['group-hover'],
-  padding:         ['group-hover'],
-  textColor:       ['active'],
-}
-```
-
-When using your own compiled Tailwind, your bundle must also must import Otter's small amount of its own CSS and that of the Quill editor:
+When using your own compiled Tailwind, your bundle must also must import Otter’s small amount of its own CSS and that of the Quill editor:
 
 ```js
 import 'otter/dist/css/quill.snow.css'
-import 'react-toggle/style.css'
 import 'otter/dist/css/otter.css'
 ```
 

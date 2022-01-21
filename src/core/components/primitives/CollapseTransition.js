@@ -17,7 +17,7 @@ export default function CollapseTransition({
   collapsed = false,
   style,
   children,
-  initialOverflowValue = 'hidden',
+  initialOverflowValue = 'visible',
   ...props
 }) {
   const [overflow, set_overflow] = useState(initialOverflowValue) // having initial as hidden seems to fix a slight flicker on repeater item DND drop/move action
@@ -29,7 +29,7 @@ export default function CollapseTransition({
   }, [collapsed])
 
   return (
-    <div style={{...style, overflow: overflow}} {...props}>
+    <div data-bla="blabla" style={{...style, overflow: overflow}} {...props}>
       <div style={collapsed ? collapsed_styles : not_collapsed_styles}
            onTransitionEnd={ev => {
              if (ev.propertyName === 'margin-bottom' && !collapsed) {

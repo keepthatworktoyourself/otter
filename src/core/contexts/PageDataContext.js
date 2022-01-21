@@ -5,4 +5,3 @@ export const PageDataContext = createContext()
 export function usePageData() {
   return useContext(PageDataContext)
 }
-

@@ -929,3 +929,86 @@
 .ql-container.ql-snow {
   border: 1px solid #ccc;
 }
+
+/******************************
+  Otter styling overrides
+ ******************************/
+
+.ql-container,
+.ql-editor {
+  height: auto;
+}
+.ql-editor {
+  max-height: 16rem;
+  resize: vertical;
+}
+.ql-editor[style*="height"] {
+  height: unset;
+  max-height: unset;
+}
+.ql-toolbar.ql-snow {
+  padding: 4px;
+}
+.ql-editor h1, h2 {
+  font-weight: 700 !important;
+}
+.ql-editor p,
+.ql-editor ul,
+.ql-editor li {
+  font-size: 15px;
+}
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6,
+.ql-editor p,
+.ql-editor ul,
+.ql-editor ol,
+.ql-editor blockquote {
+  margin-bottom: 1.1rem !important;
+}
+.ql-editor li {
+  margin-bottom: 0.6rem !important;
+}
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6 {
+  font-weight: 900;
+}
+.ql-editor h1:not(:first-child) {
+  margin-top: 2.5rem;
+}
+.ql-editor h2:not(:first-child),
+.ql-editor h3:not(:first-child),
+.ql-editor h4:not(:first-child),
+.ql-editor h5:not(:first-child),
+.ql-editor h6:not(:first-child) {
+  margin-top: 1.5rem
+}
+.ql-editor h1 + h2 {
+  margin-top: 0 !important;
+}
+.ql-editor h1 { font-size: 2rem   !important; }
+.ql-editor h2 { font-size: 1.6rem !important; }
+.ql-editor h3 { font-size: 1.3rem !important; }
+.ql-editor h4 { font-size: 1.175rem !important; }
+.ql-editor h5 { font-size: 1.1rem !important; }
+.ql-editor h6 { font-size: 1rem   !important; }
+.ql-container.ql-snow {
+  border: none;
+}
+.ql-snow .ql-picker {
+  font-size: 12px;
+}
+.ql-container.ql-snow {
+  border: none;
+}
+
+/******************************
+  !END Otter styling overrides
+ ******************************/

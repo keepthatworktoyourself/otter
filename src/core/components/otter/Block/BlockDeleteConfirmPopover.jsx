@@ -20,7 +20,7 @@ function BlockDeleteConfirmPopover({close, delete_func, className}) {
     )}
          ref={ref}
          style={{
-           boxShadow: design_options.floaty_blocks ? design_options.block_shadow : null,
+           boxShadow: theme_ctx.design_options.block_shadow,
          }}
     >
       <div className="p-4">

@@ -53,7 +53,8 @@ export default function AddBlockBtn({
     >
       <AddItemPillBtn className="absolute-center"
                       onClick={cb__toggle}
-                      style={design_options.floaty_blocks && {boxShadow: design_options.block_shadow}} />
+                      style={theme_ctx.design_options.floaty_blocks &&
+                        {boxShadow: theme_ctx.design_options.block_shadow}} />
     </div>
   )
 
@@ -87,8 +88,8 @@ export default function AddBlockBtn({
                                'absolute-center-x',
                                hover_effect_on && popup_direction === 'down' && 'top-1',
                                hover_effect_on && popup_direction !== 'down' && 'bottom-8',
-                               !hover_effect_on && popup_direction === 'down' && 'top-5',
-                               !hover_effect_on && popup_direction !== 'down' && 'bottom-6',
+                               !hover_effect_on && popup_direction === 'down' && 'top-2',
+                               !hover_effect_on && popup_direction !== 'down' && 'bottom-3',
                              )}
                              close={() => set_is_open(false)} />
         </div>

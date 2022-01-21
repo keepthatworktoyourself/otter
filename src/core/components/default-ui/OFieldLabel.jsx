@@ -16,13 +16,12 @@ export default function OFieldLabel({
     <div className={classNames(
       theme_ctx.classes.typography.input_label,
       'mr-2 whitespace-nowrap',
-      with_bottom_margin && 'mb-1',
+      'leading-none select-none',
+      'text-[0.85em]',
+      with_bottom_margin && 'mb-[0.75em]',
       className,
     )}
-         style={{
-           fontSize: '0.85em',
-           ...style,
-         }}
+         style={style}
          {...props}
     >
       <span>{label}</span>

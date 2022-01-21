@@ -17,7 +17,7 @@ const LinkExt = () => (
 )
 
 const Icon = ({Which, ...props}) => (
-  <span className="c-svg" {...props}>
+  <span className="svg-font" {...props}>
     <Which />
   </span>
 )

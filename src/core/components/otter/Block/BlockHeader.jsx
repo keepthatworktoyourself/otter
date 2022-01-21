@@ -73,14 +73,18 @@ export default function BlockHeader({
       )}
            onClick={toggle_open}
       >
-        <h1 style={{padding: '1em 0'}} className="flex items-center leading-none">
+        <h1 className={classNames(
+          'flex items-center leading-none',
+          theme_ctx.classes.skin.block_headers.y_pad,
+        )}
+        >
           {block_number && <span className="w-4">{block_number}</span>}
           <span>{heading}</span>
         </h1>
 
         <span className={classNames(
           'svg-font fill-current',
-          'transform transition-transform',
+          'transition-transform',
           'p-1',
           open && 'rotate-180',
         )}

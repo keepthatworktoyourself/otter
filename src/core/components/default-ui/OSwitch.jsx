@@ -36,7 +36,7 @@ export default function OSwitch({
             className={classNames(
               theme_ctx.classes.skin.switch.btn,
               'pointer-events-none rounded-full',
-              'transform transition-transform ease-in-out',
+              'transition-transform ease-in-out',
             )}
       ></span>
     </button>

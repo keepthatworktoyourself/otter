@@ -1,5 +1,4 @@
 import React from 'react'
-import ChevronDownSolid from 'simple-react-heroicons/icons/ChevronDownSolid'
 import {useThemeContext} from '../../contexts/ThemeContext'
 import {classNames} from '../../helpers/style'
 
@@ -25,7 +24,7 @@ export default function OSelect({
       <select onChange={cb__change}
               id={id}
               className={classNames(
-                'block pl-3 pr-10 py-1',
+                'block',
                 'appearance-none outline-none',
                 'focus:ring-transparent',
                 'border',
@@ -42,16 +41,6 @@ export default function OSelect({
           )),
         ]}
       </select>
-
-      <span className={classNames(
-        'absolute-center-y',
-        'pointer-events-none',
-        'svg-font fill-current',
-      )}
-            style={{right: '1em'}}
-      >
-        <ChevronDownSolid />
-      </span>
 
       {/* TODO cb__clear */}
     </div>

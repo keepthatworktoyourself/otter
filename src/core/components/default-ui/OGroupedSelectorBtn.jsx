@@ -20,6 +20,7 @@ export default function OGroupedSelectorBtn({
          'text-xxs',
          'block',
          'border-l',
+         'select-none',
          theme_ctx.classes.skin.border_color,
          theme_ctx.classes.typography.input_label,
          className,

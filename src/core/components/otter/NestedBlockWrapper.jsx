@@ -22,8 +22,8 @@ export default function NestedBlockWrapper({field_def, index, containing_data_it
   return (
     <BlockSection heading={title}
                   children={children}
-                  withBorderTop={index !== 0}
-                  with_padding={false}
+                  is_first={index === 0}
+                  with_x_pad={false}
                   enabled={is_enabled}
                   optional={is_optional}
                   toggle_enabled={cb__toggle_enabled} />
