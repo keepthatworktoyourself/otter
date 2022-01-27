@@ -2,9 +2,20 @@ import React, {forwardRef} from 'react'
 import {useThemeContext} from '../../contexts/ThemeContext'
 import {classNames} from '../../helpers/style'
 
-// eslint-disable-next-line react/display-name
 const OInput = forwardRef(({value, onChange, className, style, Icon, ...props}, ref) => {
+  // Note that the ref must be supplied by parent for cursor positioning to work
   const theme_ctx = useThemeContext()
+
+  function change(ev) {
+    const cursor = ev.target.selectionStart
+    onChange?.(ev)
+    setTimeout(() => {
+      if (ref?.current) {
+        ref.current.selectionStart = cursor
+        ref.current.selectionEnd = cursor
+      }
+    })
+  }
 
   return (
     <div className={classNames('relative', className)}>
@@ -26,8 +37,8 @@ const OInput = forwardRef(({value, onChange, className, style, Icon, ...props}, 
              )}
              ref={ref}
              style={style}
-             value={value === null ? '' : value}
-             onChange={onChange}
+             value={value || ''}
+             onChange={change}
              {...props} />
     </div>
   )

@@ -1,4 +1,4 @@
-set -e
+set -ex
 
 # Run the main build task solely to generate dist/index.*.css
 npm run build
