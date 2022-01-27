@@ -132,7 +132,6 @@ function App({state, delegate}) {
                             custom_classes={test_custom_classes_enabled && custom_classes}
                             load_state={state.load_state}
                             delegate={delegate}
-                            when_to_save={Otter.Save.OnInput}
                             picker_container_ref={modal_portal}
                             block_numbers={false} />
             </div>

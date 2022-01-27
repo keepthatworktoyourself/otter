@@ -7,7 +7,7 @@ import {useThemeContext} from '../../contexts/ThemeContext'
 
 function PopupMenu({items, className = 'absolute-center', close, style}) {
   const ref = useRef()
-  useOnClickOutside({ref, handler: () => close && close()})
+  useOnClickOutside({ref, handler: () => close?.()})
 
   const theme_ctx = useThemeContext()
 

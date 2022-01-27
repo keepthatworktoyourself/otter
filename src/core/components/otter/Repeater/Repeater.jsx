@@ -52,7 +52,7 @@ export default function Repeater({field_def, containing_data_item}) {
       containing_data_item[field_def.name].splice(index, 0, {__type: block_type})
     }
 
-    cb__block_added && cb__block_added()
+    cb__block_added?.()
 
     ctx.value_updated()
     ctx.redraw()

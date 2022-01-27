@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import OInput from '../default-ui/OInput'
 import {usePageData} from '../../contexts/PageDataContext'
 import {evaluate} from '../../definitions/utils'
@@ -13,6 +13,7 @@ export default function TextInput({
   const value         = containing_data_item[field_def.name]
   const default_value = evaluate(field_def.default_value)
   const display_value = (value === undefined ? default_value : value) || ''
+  const ref           = useRef()
 
   function cb__change(ev) {
     containing_data_item[field_def.name] = ev.target.value
@@ -23,6 +24,7 @@ export default function TextInput({
 
   return (
     <OInput value={display_value}
-            onChange={cb__change} />
+            onChange={cb__change}
+            ref={ref} />
   )
 }

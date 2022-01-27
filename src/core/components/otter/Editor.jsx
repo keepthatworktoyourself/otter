@@ -15,7 +15,6 @@ import {
   blocks_are_grouped,
 } from '../../definitions/utils'
 import State from '../../definitions/state'
-import Save from '../../definitions/save'
 import Block from './Block/Block'
 import {classNames} from '../../helpers/style'
 import AddBlockBtn from './Block/AddBlockBtn'
@@ -153,7 +152,6 @@ export default function Editor({
   data = [],
   delegate,
   load_state,
-  when_to_save = Save.OnClick,
   block_numbers = false,
   can_add_blocks = true,
   DragDropContext = DnD.DragDropContext,
@@ -174,7 +172,7 @@ export default function Editor({
   const first_render = useOnFirstRender()
 
   function enqueue_save_on_input() {
-    setTimeout(do_save_on_input)
+    setTimeout(do_save)
   }
   function add_item(type, index) {
     dispatch_ctx({add_item: {type, index}})
@@ -243,12 +241,8 @@ export default function Editor({
     update_height()
   }
 
-  function do_save_on_input() {
-    when_to_save === Save.OnInput && do_save()
-  }
-
   function do_save() {
-    delegate && delegate.save && delegate.save(get_data())
+    delegate?.save?.(get_data())
   }
 
   ensure_uids(ctx.data)
@@ -292,12 +286,6 @@ export default function Editor({
                    maxWidth:  '45rem',
                  }}
             >
-              {when_to_save === Save.OnClick && (
-                <div className="save-button m-4">
-                  <a className="button" onClick={do_save}>Save</a>
-                </div>
-              )}
-
               {can_add_blocks && (
                 <div className="flex justify-center">
                   <AddBlockBtn index={0}

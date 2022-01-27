@@ -54,7 +54,7 @@ const scaleIn = {
 
 const ModalLayout = ({children, close}) => {
   const ref = useRef()
-  useOnClickOutside({ref, handler: () => close && close()})
+  useOnClickOutside({ref, handler: () => close?.()})
 
   const theme_ctx = useThemeContext()
 

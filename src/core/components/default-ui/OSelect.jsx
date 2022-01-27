@@ -34,7 +34,7 @@ export default function OSelect({
               value={value}
               style={{fontSize: 'inherit', fontFamily: 'inherit'}}
       >
-        {options && Object.keys(options).length > 0 && [
+        {Object.keys(options || { }).length > 0 && [
           <option disabled key={`f${id}--disabled`} value="">Select an option</option>,
           ...Object.entries(options).map(([opt_value, opt_label], i) => (
             <option value={opt_value} key={`f${id}--${i}`}>{opt_label}</option>

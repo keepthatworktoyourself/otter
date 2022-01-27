@@ -29,7 +29,7 @@ export default function CollapseTransition({
   }, [collapsed])
 
   return (
-    <div data-bla="blabla" style={{...style, overflow: overflow}} {...props}>
+    <div data-bla="blabla" style={{...style, overflow}} {...props}>
       <div style={collapsed ? collapsed_styles : not_collapsed_styles}
            onTransitionEnd={ev => {
              if (ev.propertyName === 'margin-bottom' && !collapsed) {

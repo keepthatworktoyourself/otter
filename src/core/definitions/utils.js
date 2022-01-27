@@ -31,7 +31,7 @@ export function humanify_str(str) {
   str = str.replace(/ +/g, ' ')
   str = str.replace(/([a-z])([A-Z])/g, (_, c1, c2) => `${c1} ${c2.toLowerCase()}`)
   str = str.replace(/\s[a-z]$/, match => match.toUpperCase())
-  return `${str.slice(0,1).toUpperCase()}${str.slice(1)}`
+  return `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`
 }
 
 

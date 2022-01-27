@@ -9,7 +9,7 @@ import {useThemeContext} from '../../../contexts/ThemeContext'
 
 function BlockDeleteConfirmPopover({close, delete_func, className}) {
   const ref = useRef()
-  useOnClickOutside({ref, handler: () => close && close()})
+  useOnClickOutside({ref, handler: () => close?.()})
 
   const theme_ctx = useThemeContext()
 

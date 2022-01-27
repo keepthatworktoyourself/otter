@@ -64,7 +64,6 @@ The `<Otter.Editor />` element renders the editor.
 | `data`           | Loaded data                                     |          |                  | The loaded page data.                                                                                                              |
 | `load_state`     | `Otter.State.Loading` or `.Loaded` or `.Error`  | Yes      |                  | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data.  |
 | `delegate`       | `{save: <Function>, update_height: <Function>}` |          |                  | Used by Otter to communicate state changes to the parent.                                                                          |
-| `when_to_save`   | `Otter.Save.OnInput` or `.OnClick`              |          | `OnClick`        | Should otter call `delegate.save()` continuously on user input, or only when the user clicks a save button?                        |
 | `block_numbers`  | `<bool>`                                        |          | `false`          | Label each block with its 1-based index                                                                                            |
 | `add_block_msg`  | `<string>`                                      |          | `'Insert block'` | Label for the 'insert block' button                                                                                                |
 | `can_add_blocks` | `<bool>`                                        |          | `true`           | If set to false, the user cannot add or remove blocks. Useful if you want an editor with a single pre-programmed block.            |
@@ -73,6 +72,7 @@ The `<Otter.Editor />` element renders the editor.
 ```js
 const my_delegate = {
   save(data) {
+    // delegate.save() is called whenever the user changes a field value in the otter editor
     // e.g. kick off a request to update the database
   },
   update_height() {

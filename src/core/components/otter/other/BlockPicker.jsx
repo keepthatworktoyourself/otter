@@ -51,7 +51,7 @@ export default function BlockPicker({
                           type:  ev.currentTarget.getAttribute('data-block-type'),
                           index: block_index,
                         })
-                        close && close()
+                        close?.()
                       }}
                       data-block-type={block.type}
               >

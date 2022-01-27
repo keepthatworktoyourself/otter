@@ -86,8 +86,10 @@ export default function RecursiveBlockRenderer({
 
   return field_defs.map((field_def, index) => {
     if (!field_def || typeof field_def !== 'object') {
-      return <OErrorMessage text={error_text__field_not_object(index, field_def)}
-                            key={index} />
+      return (
+        <OErrorMessage text={error_text__field_not_object(index, field_def)}
+                       key={index} />
+      )
     }
 
     const field_name = field_def.name
@@ -102,8 +104,10 @@ export default function RecursiveBlockRenderer({
       !field_name && 'name',
     ].filter(Boolean)
     if (errors.length) {
-      return <OErrorMessage text={error_text__missing_field_props(index, errors)}
-                            key={index} />
+      return (
+        <OErrorMessage text={error_text__missing_field_props(index, errors)}
+                       key={index} />
+      )
     }
 
 
@@ -111,8 +115,10 @@ export default function RecursiveBlockRenderer({
     const di = display_if(block, field_name, item)
     if (di.errors.length) {
       const text = error_text__invalid_display_if(field_name, di.errors)
-      return <OErrorMessage text={text}
-                            key={index} />
+      return (
+        <OErrorMessage text={text}
+                       key={index} />
+      )
     }
     if (!di.display) {
       return null
@@ -122,7 +128,7 @@ export default function RecursiveBlockRenderer({
     // Render NestedBlocks
     if (field_type === Fields.NestedBlock) {
       ensure_nested_block_data(item, field_def)
-      out =
+      out = (
         <NestedBlockWrapper field_def={field_def}
                             containing_data_item={item}
                             key={index}
@@ -132,14 +138,17 @@ export default function RecursiveBlockRenderer({
                                   field_name={field_name}
                                   blocks={blocks} />
         </NestedBlockWrapper>
+      )
     }
 
     // Render Repeaters
     else if (field_type === Fields.Repeater) {
       ensure_nested_block_data(item, field_def)
-      out = <Repeater field_def={field_def}
-                      containing_data_item={item}
-                      key={index} />
+      out = (
+        <Repeater field_def={field_def}
+                  containing_data_item={item}
+                  key={index} />
+      )
     }
 
     // Render other fields
@@ -150,14 +159,15 @@ export default function RecursiveBlockRenderer({
         <GridLayoutItem field_def={field_def}
                         key={index}
         >
-          {Field && <Field field_def={field_def}
-                           containing_data_item={item}
-                           is_display_if_target={is_display_if_target} />}
+          {Field && (
+            <Field field_def={field_def}
+                   containing_data_item={item}
+                   is_display_if_target={is_display_if_target} />
+          )}
           {!Field && <OErrorMessage text={error_text} />}
         </GridLayoutItem>
       )
     }
-
 
     return out
   })
