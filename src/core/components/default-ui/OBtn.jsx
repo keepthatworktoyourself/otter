@@ -24,7 +24,7 @@ export default function OBtn({
          type={type}
          className={classNames(
            'relative inline-flex justify-center ',
-           'border border-transparent focus:outline-none',
+           'border focus:outline-none',
            disabled ? 'opacity-30 pointer-events-none cursor-not-allowed' : 'cursor-pointer',
            'select-none',
            theme_ctx.classes.skin.btns[buttonStyle],

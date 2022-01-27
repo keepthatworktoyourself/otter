@@ -10,8 +10,6 @@ import CollapseTransition from '../../primitives/CollapseTransition'
 import {TabsProvider, TabsTab} from '../../primitives/Tabs'
 import {usePageData} from '../../../contexts/PageDataContext'
 import {find_block, humanify_str} from '../../../definitions/utils'
-import Fields from '../../../definitions/fields'
-import design_options from '../../../definitions/design-options'
 import {classNames} from '../../../helpers/style'
 import {useThemeContext} from '../../../contexts/ThemeContext'
 
@@ -23,10 +21,6 @@ function get_drag_styles(provided, snapshot) {
     ...custom_styles,
     ...provided.draggableProps.style,
   }
-}
-
-function has_nested_block(fields) {
-  return (fields || []).some(field => field.type === Fields.NestedBlock)
 }
 
 export default function Block({data_item, index, block_numbers}) {
@@ -56,16 +50,19 @@ export default function Block({data_item, index, block_numbers}) {
                className="outline-none"
                style={get_drag_styles(prov, snap)}
           >
-            <div className="relative"
+            <div className={classNames('relative', !ctx.can_add_blocks && 'pb-8')}
                  data-blocktype={data_item.__type}
             >
 
               <div className={classNames(
                 theme_ctx.classes.skin.block.bg,
+                !theme_ctx.design_options.floaty_blocks && 'border',
+                !theme_ctx.design_options.floaty_blocks && theme_ctx.classes.skin.border_color,
               )}
                    style={{
-                     boxShadow: design_options.floaty_blocks && design_options.block_shadow,
-                     minWidth:  design_options.block_min_width,
+                     boxShadow: theme_ctx.design_options.floaty_blocks &&
+                      theme_ctx.design_options.block_shadow,
+                     minWidth: theme_ctx.design_options.block_min_width,
                    }}
               >
 

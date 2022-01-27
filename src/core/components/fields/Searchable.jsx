@@ -1,5 +1,5 @@
-import React, {useCallback, useState} from 'react'
-import XCircleSolid from 'simple-react-heroicons/icons/XCircleSolid'
+import React, {useCallback, useRef, useState} from 'react'
+import SearchSolid from 'simple-react-heroicons/icons/SearchSolid'
 import OInput from '../default-ui/OInput'
 import PopupMenuAnimated from '../otter/PopupMenu'
 import {usePageData} from '../../contexts/PageDataContext'
@@ -16,6 +16,7 @@ export default function Searchable({field_def, containing_data_item}) {
   const value         = containing_data_item[field_def.name]
   const debounce_ms   = field_def.debounce_ms || 500
   const search_func   = useCallback(debounce_promise(field_def.search, debounce_ms), [])
+  const input_ref = useRef(null)
 
   function cb__change(ev) {
     const val = ev.target.value
@@ -35,53 +36,20 @@ export default function Searchable({field_def, containing_data_item}) {
     end_search()
   }
 
-  function begin_search() {
-    delete containing_data_item[field_def.name]
-    set_search_term('')
-  }
-
   function end_search() {
-    set_search_term(null)
+    set_search_term(containing_data_item[field_def.name]?.display || '')
     set_search_results([])
     ctx.value_updated()
+    input_ref.current.blur()
   }
 
   return (
     <div className="relative">
-      {(search_term !== null || !value) && (
-        <OInput type="text"
-                value={search_term}
-                onChange={cb__change} />
-      )}
-
-      {value && search_term === null && (
-        <div className="flex items-start space-x-1">
-          <div type="text"
-               className={classNames(
-                 'cursor-text inline-flex',
-                 'text-xxs whitespace-nowrap',
-                 'leading-none',
-                 'outline-none',
-                 'rounded-full',
-                 'bg-gray-300',
-                 theme_ctx.classes.typography.input_label,
-               )}
-               style={{padding: '0.7em 1.8em'}}
-          >
-            {value?.display || ''}
-          </div>
-
-          <div className={classNames(
-            'svg-font',
-            'text-xl cursor-pointer',
-            theme_ctx.classes.skin.repeater_remove_item_btn,
-          )}
-               onClick={begin_search}
-          >
-            <XCircleSolid />
-          </div>
-        </div>
-      )}
+      <OInput type="text"
+              Icon={SearchSolid}
+              value={value && search_term === null ? value?.display : search_term}
+              onChange={cb__change}
+              ref={input_ref} />
 
 
       <PopupMenuAnimated isOpen={search_results.length > 0}
@@ -89,7 +57,8 @@ export default function Searchable({field_def, containing_data_item}) {
                            label:   item.display,
                            onClick: () => cb__select(i),
                          }))}
-                         className="absolute left-0 w-full -bottom-5" />
+                         close={end_search}
+                         className="absolute left-0 w-full top-5 z-10" />
 
 
       {error && (

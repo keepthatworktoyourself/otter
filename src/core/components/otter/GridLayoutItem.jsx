@@ -20,7 +20,8 @@ export default function GridLayoutItem({field_def, children}) {
          } : {}}
     >
       <OFieldWrapper field_def={field_def}
-                     label={field_def.description || humanify_str(field_def.name)}
+                     label={field_def?.with_label !== false && (field_def.description || humanify_str(field_def.name))}
+                     className={field_def?.className}
       >
         {children}
       </OFieldWrapper>

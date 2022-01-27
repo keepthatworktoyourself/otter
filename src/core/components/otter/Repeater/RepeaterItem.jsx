@@ -4,7 +4,6 @@ import ChevronDownSolid from 'simple-react-heroicons/icons/ChevronDownSolid'
 import MinusCircleSolid from 'simple-react-heroicons/icons/MinusCircleSolid'
 import {usePageData} from '../../../contexts/PageDataContext'
 import {useThemeContext} from '../../../contexts/ThemeContext'
-import design_options from '../../../definitions/design-options'
 import {classNames} from '../../../helpers/style'
 import CollapseTransition from '../../primitives/CollapseTransition'
 import AddItemPillBtn from '../other/AddItemPillBtn'
@@ -65,7 +64,7 @@ export default function RepeaterItem({
                                  close={() => set_show_picker_popup(false)}
                                  className={classNames(
                                    'absolute-center-x',
-                                   index === 0 ? 'top-2' : 'bottom-7',
+                                   index === 0 ? 'top-1' : 'bottom-4',
                                  )}
                                  items={popup_items.map(popup_item => ({
                                    ...popup_item,
@@ -83,7 +82,7 @@ export default function RepeaterItem({
           <div className={classNames(
             'border-t border-r border-l',
             open && 'border-b',
-            'relative overflow-hidden',
+            'relative',
             'cursor-grab active:cursor-grabbing',
             'group-direct-decendent-opacity-1-onHover',
             'group-first-of-type-opacity-1-onHover',
@@ -93,31 +92,31 @@ export default function RepeaterItem({
           )}
           >
             <div className={classNames(
-              'tracking-tighter',
               'relative flex items-center',
               'border-b pl-4 pr-3 justify-between',
               'group',
+              'select-none',
+              'leading-none',
               theme_ctx.classes.skin.repeater_item.header_bg,
               theme_ctx.classes.skin.border_color,
               theme_ctx.classes.typography.heading,
             )}
             >
-              <div className={classNames(
-                'flex items-center cursor-pointer',
-              )}
+              <div className="flex items-center cursor-pointer py-[0.5em]"
                    onClick={() => {
                      set_open(!open)
                      ctx.update_height()
                    }}
               >
-                <h1 style={{padding: '0.85em 0'}} className="flex items-center leading-none">
-                  {with_numbers && <span className="w-4">{index + 1}</span>}
-                  <span>{title}</span>
-                </h1>
+                {title || with_numbers && (
+                  <h1 style={{padding: '0.85em 0'}} className="flex items-center leading-none">
+                    {with_numbers && <span className="w-4">{index + 1}</span>}
+                    <span>{title}</span>
+                  </h1>
+                )}
                 <span className={classNames(
-                  'svg-font fill-current',
-                  'transform transition-transform',
-                  'p-1',
+                  'svg-font fill-current p-1',
+                  'transition-transform',
                   open && 'rotate-180',
                 )}
                 >

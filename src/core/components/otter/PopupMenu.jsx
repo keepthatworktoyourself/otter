@@ -27,7 +27,7 @@ function PopupMenu({items, className = 'absolute-center', close, style}) {
       )}
            style={{
              minWidth:  '10rem',
-             boxShadow: design_options.floaty_blocks ? design_options.block_shadow : null,
+             boxShadow: theme_ctx.design_options.block_shadow,
              ...style,
            }}
       >

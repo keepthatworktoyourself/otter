@@ -9,18 +9,18 @@ import {dynamic_data, set_dynamic_data} from '../src/core/definitions/utils'
 
 set_dynamic_data('block_colors', {
   'bg-white':    'white',
-  'bg-gray-50':  'gray-50',
-  'bg-gray-100': 'gray-100',
-  'bg-gray-200': 'gray-200',
-  'bg-gray-300': 'gray-300',
-  'bg-gray-400': 'gray-400',
-  'bg-gray-500': 'gray-500',
-  'bg-gray-600': 'gray-600',
-  'bg-gray-700': 'gray-700',
-  'bg-gray-800': 'gray-800',
-  'bg-gray-900': 'gray-900',
+  'bg-zinc-50':  'zinc-50',
+  'bg-zinc-100': 'zinc-100',
+  'bg-zinc-200': 'zinc-200',
+  'bg-zinc-300': 'zinc-300',
+  'bg-zinc-400': 'zinc-400',
+  'bg-zinc-500': 'zinc-500',
+  'bg-zinc-600': 'zinc-600',
+  'bg-zinc-700': 'zinc-700',
+  'bg-zinc-800': 'zinc-800',
+  'bg-zinc-900': 'zinc-900',
 })
-set_dynamic_data('default_block_color', 'bg-gray-50')
+set_dynamic_data('default_block_color', 'bg-zinc-50')
 
 export const block_options = {
   type:   'BlockOptions',
@@ -64,10 +64,11 @@ export const block_options = {
       default_value: false,
     },
     {
-      name:       'theme',
-      with_label: false,
-      type:       Otter.Fields.Radios,
-      options:    {
+      name:    'theme',
+      type:    Otter.Fields.Radios,
+      align:   'horizontal',
+      width:   'half',
+      options: {
         light: 'Light',
         dark:  'Dark',
       },
@@ -146,19 +147,41 @@ export const header_block = {
 export const text_block = {
   type:        'Text',
   description: 'Text content',
+  className:   'block',
   fields:      [
     {
       name:           'content',
       description:    'Text content',
+      with_label:     false,
       type:           Otter.Fields.TextEditor,
       heading_levels: [1, 2, 3, 4, 5, 6],
       hr:             true,
       blockquote:     true,
+      className:      'pt-2',
+    },
+    {
+      name:           'align',
+      type:           Otter.Fields.Radios,
+      align:          'horizontal',
+      classNameLabel: 'opacity-40',
+      width:          'half',
+      options:        {
+        left:   'Left',
+        center: 'Center',
+        right:  'Right',
+      },
+      icons: {
+        left:   MenuAlt2Solid,
+        center: MenuSolid,
+        right:  MenuAlt3Solid,
+      },
     },
     {
       name:          'fancy',
       description:   'Fancy lettering',
       type:          Otter.Fields.Bool,
+      align:         'horizontal',
+      width:         'half',
       default_value: true,
     },
     {
@@ -166,6 +189,8 @@ export const text_block = {
       type:          Otter.Fields.Radios,
       swatches:      true,
       default_value: '#4fc3f7',
+      align:         'horizontal',
+      width:         'half',
       options:       {
         '#f06292': 'pink',
         '#9575cd': 'purple',
@@ -177,15 +202,6 @@ export const text_block = {
       display_if: {
         sibling:  'fancy',
         equal_to: true,
-      },
-    },
-    {
-      name:    'align',
-      type:    Otter.Fields.Select,
-      options: {
-        left:   'Left',
-        right:  'Right',
-        center: 'Center',
       },
     },
   ],
@@ -209,7 +225,7 @@ export const block_with_nested_block = {
   description: 'Nested Blocks',
   fields:      [
     {
-      name:              'searchables',
+      name:              'searchable',
       type:              Otter.Fields.NestedBlock,
       nested_block_type: 'SearchablesDemo',  // Supports name of block defined elsewhere
       optional:          true,
@@ -230,7 +246,6 @@ export const block_with_repeater_one_type = {
       name:               'content_items',
       description:        'Content:',
       type:               Otter.Fields.Repeater,
-      block_titles:       true,
       nested_block_types: [
         html_block,       // Supports name of block defined elsewhere
       ],
@@ -246,7 +261,6 @@ export const block_with_repeater = {
       name:               'content_items',
       description:        'Content:',
       type:               Otter.Fields.Repeater,
-      block_titles:       true,
       nested_block_types: [
         'Text',       // Supports name of block defined elsewhere
         html_block,   // Supports inline block object
@@ -262,6 +276,7 @@ export const searchables = {
     {
       name:        'my_searchable',
       description: 'Search Content Field',
+      with_label:  false,
       type:        Otter.Fields.Searchable,
       search:      () => [
         {value: 'x', display: 'A search result'},

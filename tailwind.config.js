@@ -1,19 +1,8 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
-  purge: {
-    content: ['src/**/*/.js', 'src/**/*/.jsx'],
-  },
-  variants: {
-    extend: {
-      backgroundColor: ['active'],
-      borderColor:     ['active'],
-      display:         ['group-hover'],
-      padding:         ['group-hover'],
-      textColor:       ['active'],
-    },
-  },
-  theme: {
+  content: ['./src/**/*.{js,jsx}', './demo/**/*.{js,jsx}'],
+  theme:   {
     fontSize: {
       xxxs: '8px',
       xxs:  '10px',
@@ -29,7 +18,7 @@ module.exports = {
       transparent: 'transparent',
       white:       'white',
       red:         colors.red,
-      gray:        colors.trueGray,
+      zinc:        colors.zinc,
       pink:        colors.pink, // just for demo
     },
   },

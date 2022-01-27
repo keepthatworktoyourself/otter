@@ -10,7 +10,7 @@ export default function OFieldWrapper({
   className,
   ...props
 }) {
-  const {align} = field_def
+  const {align, classNameLabel} = field_def
   const hori = align === 'horizontal'
   const min_width_label = false
 
@@ -24,7 +24,8 @@ export default function OFieldWrapper({
       {label && with_label && (
         <OFieldLabel label={label}
                      with_bottom_margin={!hori}
-                     style={hori && min_width_label ? {width: '80px'} : null} />
+                     style={hori && min_width_label ? {width: '80px'} : null}
+                     className={classNameLabel} />
       )}
 
       {children}
