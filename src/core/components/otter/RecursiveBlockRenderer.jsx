@@ -82,7 +82,7 @@ export default function RecursiveBlockRenderer({
     .map(field_def => field_def && field_def.display_if)
     .filter(display_if => display_if && display_if.constructor === Array)
     .map(display_if => display_if.map(rule => rule.sibling))
-  z    .flat()
+    .flat()
 
   return field_defs.map((field_def, index) => {
     if (!field_def || typeof field_def !== 'object') {
