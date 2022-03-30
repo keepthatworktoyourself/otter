@@ -43,23 +43,23 @@ export default function OBtn({
         'OBtn__text',
       )}
       >
-        {LeadingIcon && <LeadingIcon aria-hidden="true"
-                                     className={classNames(
-                                       'OBtn__icon',
-                                     )}
-                                     style={{
-                                       fontSize:    '1.3em',
-                                       marginRight: '0.33em',
-                                     }} />}
+        {LeadingIcon && (
+          <LeadingIcon aria-hidden="true"
+                       className="OBtn__icon"
+                       style={{
+                         fontSize:    '1.3em',
+                         marginRight: '0.33em',
+                       }} />
+        )}
         <span className="font-semibold">{label}</span>
-        {TrailingIcon && <TrailingIcon aria-hidden="true"
-                                       className={classNames(
-                                         'OBtn__icon',
-                                       )}
-                                       style={{
-                                         fontSize:   '1.3em',
-                                         marginLeft: '0.33em',
-                                       }} />}
+        {TrailingIcon && (
+          <TrailingIcon aria-hidden="true"
+                        className="OBtn__icon"
+                        style={{
+                          fontSize:   '1.3em',
+                          marginLeft: '0.33em',
+                        }} />
+        )}
       </div>
     </Tag>
   )

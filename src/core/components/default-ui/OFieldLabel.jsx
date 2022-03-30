@@ -16,7 +16,7 @@ export default function OFieldLabel({
     <div className={classNames(
       theme_ctx.classes.typography.input_label,
       'mr-2 whitespace-nowrap',
-      'leading-none select-none',
+      'leading-5 select-none',
       'text-[0.85em]',
       with_bottom_margin && 'mb-[0.75em]',
       className,

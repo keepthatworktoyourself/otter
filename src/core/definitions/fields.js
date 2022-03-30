@@ -5,7 +5,7 @@ const Fields = {
   Bool:        'Bool',
   Radios:      'Radios',
   Select:      'Select',
-  WPMedia:     'WPMedia',
+  MediaPicker: 'MediaPicker',
   NestedBlock: 'NestedBlock',
   Repeater:    'Repeater',
   Searchable:  'Searchable',

@@ -55,7 +55,7 @@ function load(post_id) {
 // render
 // -----------------------------------
 
-function App({state, delegate}) {
+function App({state}) {
   const [picker_mode, set_picker_mode] = useState('modal')
   const [test_custom_classes_enabled, set_test_custom_classes_enabled] = useState(false)
   const modal_portal = useRef()
@@ -131,7 +131,9 @@ function App({state, delegate}) {
                             blocks={output_blocks}
                             custom_classes={test_custom_classes_enabled && custom_classes}
                             load_state={state.load_state}
-                            delegate={delegate}
+                            save={save}
+                            update_height={update_height}
+                            open_media_library={open_media_library}
                             picker_container_ref={modal_portal}
                             block_numbers={false} />
             </div>
@@ -146,9 +148,9 @@ function App({state, delegate}) {
   )
 }
 
-function render(state, delegate) {
+function render(state) {
   ReactDOM.render(
-    <App state={state} delegate={delegate} />,
+    <App state={state} />,
     document.querySelector('#otter-container'),
   )
 }
@@ -158,20 +160,33 @@ const state = {
   load_state: Otter.State.Loading,
 }
 
-const delegate = {
-  save:          data => console.log('save()', JSON.stringify(data, null, 2)),
-  update_height: () => console.log('height changed'),
+function save(data) {
+  console.log('save()', JSON.stringify(data, null, 2))
 }
 
-render(state, delegate)
+function update_height() {
+  console.log('height changed')
+}
+
+function open_media_library(set_value) {
+  console.log('open media library')
+  setTimeout(() => {
+    set_value({
+      url:       'http://placekitten.com/500/400',
+      thumbnail: 'http://placekitten.com/500/400',
+    })
+  })
+}
+
+render(state)
 load(state.post_id)
   .then(response => {
     state.data = response.json()
     state.load_state = Otter.State.Loaded
-    render(state, delegate)
+    render(state)
   })
   .catch(err => {
     console.log(err)
     state.load_state = Otter.State.Error
-    render(state, delegate)
+    render(state)
   })

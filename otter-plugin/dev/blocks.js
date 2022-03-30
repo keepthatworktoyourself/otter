@@ -44,7 +44,7 @@ const blocks__content = [
       {
         name:        'image',
         description: 'Image',
-        type:        Otter.Fields.WPMedia,
+        type:        Otter.Fields.MediaPicker,
         media_types: [
           'png',
           'jpg',

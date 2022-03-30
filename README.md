@@ -58,28 +58,18 @@ The `<Otter.Editor />` element renders the editor.
               load_state={Otter.State.Loaded} />
 ```
 
-| Property         | Value                                           | Required | Default          |                                                                                                                                    |
-| :--------------- | :---------------------------------------------  | :------- | :--------------- | :--------------------------------------------------------------------------------------------------------------------------------- |
-| `blocks`         | `<Array(Block)>`                                | Yes      |                  | Defines the [blocks](#blocks) available in the editor.                                                                             |
-| `data`           | Loaded data                                     |          |                  | The loaded page data.                                                                                                              |
-| `load_state`     | `Otter.State.Loading` or `.Loaded` or `.Error`  | Yes      |                  | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data.  |
-| `delegate`       | `{save: <Function>, update_height: <Function>}` |          |                  | Used by Otter to communicate state changes to the parent.                                                                          |
-| `block_numbers`  | `<bool>`                                        |          | `false`          | Label each block with its 1-based index                                                                                            |
-| `add_block_msg`  | `<string>`                                      |          | `'Insert block'` | Label for the 'insert block' button                                                                                                |
-| `can_add_blocks` | `<bool>`                                        |          | `true`           | If set to false, the user cannot add or remove blocks. Useful if you want an editor with a single pre-programmed block.            |
-| `custom_classes` | `<Object>`                                      |          |                  | Allows you to specify custom CSS classes on a variety of editor elements. See [CSS](#css-and-tailwind) for details.                |
-
-```js
-const my_delegate = {
-  save(data) {
-    // delegate.save() is called whenever the user changes a field value in the otter editor
-    // e.g. kick off a request to update the database
-  },
-  update_height() {
-    // e.g. reflow other parts of page layout if necessary
-  },
-}
-```
+| Property             | Value                                           | Required | Default          |                                                                                                                                    |
+| :---------------     | :---------------------------------------------  | :------- | :--------------- | :--------------------------------------------------------------------------------------------------------------------------------- |
+| `blocks`             | array of blocks                                 | Yes      |                  | Defines the [blocks](#blocks) available in the editor.                                                                             |
+| `data`               | Loaded document data                            |          |                  | The loaded page data.                                                                                                              |
+| `load_state`         | `Otter.State.Loading` or `.Loaded` or `.Error`  | Yes      |                  | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data.  |
+| `block_numbers`      | `bool`                                          |          | `false`          | Label each block with its 1-based index                                                                                            |
+| `add_block_msg`      | `string`                                        |          | `'Insert block'` | Label for the 'insert block' button                                                                                                |
+| `can_add_blocks`     | `bool`                                          |          | `true`           | If set to false, the user cannot add or remove blocks. Useful if you want an editor with a single pre-programmed block.            |
+| `custom_classes`     | `Object`                                        |          |                  | Allows you to specify custom CSS classes on a variety of editor elements. See [CSS](#css-and-tailwind) for details.                |
+| `save`               | `function(data)`                                |          |                  | Save the document.                                                                                                                 |
+| `update_height`      | `function(new_height_in_pixels)`                |          |                  | Called by Otter when the editor height changes, in case this is useful to you.                                                     |
+| `open_media_library` | `function(set_value)`                           |          |                  | Called by Otter when a `MediaPicker` button is clicked. Call `set_value` to set the picked item.                                   |
 
 
 
@@ -261,39 +251,39 @@ Note that using `matches` and `doesnt_match` may impact the performance of typin
 
 The supported field types and their options are documented below.
 
-| Type          | Description                                 | Options                        | Default  |                                                                                                |
-| :------------ | :------------------------------------------ | :----------------------------- | :------- | :--------------------------------------------------------------------------------------------- |
-| `TextInput`   | Plain text input                            |                                |          |                                                                                                |
-| `TextArea`    | Textarea (multi-line plain text)            |                                |          |                                                                                                |
-|               |                                             | `mono` (bool)                  | `false`  | Use a monospace font                                                                           |
-| `TextEditor`  | Rich text editor                            |                                |          |                                                                                                |
-|               |                                             | `heading_levels` (array)       | `[1, 2]` | Heading types to display in the paragraph style dropdown                                       |
-|               |                                             | `bullets` (bool)               | `true`   | Enable bullets                                                                                 |
-|               |                                             | `blockquote` (bool)            | `false`  | Enable blockquote                                                                              |
-|               |                                             | `hr` (bool)                    | `false`  | Enable horizontal rule                                                                         |
-|               |                                             | `paste_as_plain_text`          | `false`  | Clear text formatting on paste                                                                 |
-| `Bool`        | A toggle                                    |                                |          |                                                                                                |
-|               |                                             | `no_label` (string)            | `"Yes"`  | Label for `true` option                                                                        |
-|               |                                             | `yes_label` (string)           | `"No"`   | Label for `false` option                                                                       |
-| `Radios`      | Radio buttons                               |                                |          |                                                                                                |
-|               |                                             | `options` (object)             |          | Radio options. Key pairs are in the form `value: "Label"`.                                     |
-|               |                                             | `swatches` (bool)              | `false`  | Render as color swatches. Option values must be a valid CSS color, e.g. '#343434'.             |
-|               |                                             | `icons` (object)               |          | Use icons to label the radios instead of labels. Format: `{opt_value: IconComponent, ...}`     |
-| `Select`      | Select dropdown                             |                                |          |                                                                                                |
-|               |                                             | `options` (object)             |          | Select options. Key pairs are in the form `value: "Label"`.                                    |
-| `WPMedia`     | Wordpress media item (Wordpress only)       |                                |          |                                                                                                |
-|               |                                             | `media_types` (array)          | `[ ]`    | File types to include in the media browser. Supported: `jpg`, `png`, `gif`, `mov`, `mp4`, `svg`, `pdf`, `csv`. If omitted or an empty array, all files are included. |
-| `NestedBlock` | Embed another block into this block.        |                                |          |                                                                                                |
+| Type          | Description                                 | Options                        | Default    |                                                                                                |
+| :------------ | :------------------------------------------ | :----------------------------- | :--------- | :--------------------------------------------------------------------------------------------- |
+| `TextInput`   | Plain text input                            |                                |            |                                                                                                |
+| `TextArea`    | Textarea (multi-line plain text)            |                                |            |                                                                                                |
+|               |                                             | `mono` (bool)                  | `false`    | Use a monospace font                                                                           |
+| `TextEditor`  | Rich text editor                            |                                |            |                                                                                                |
+|               |                                             | `heading_levels` (array)       | `[1, 2]`   | Heading types to display in the paragraph style dropdown                                       |
+|               |                                             | `bullets` (bool)               | `true`     | Enable bullets                                                                                 |
+|               |                                             | `blockquote` (bool)            | `false`    | Enable blockquote                                                                              |
+|               |                                             | `hr` (bool)                    | `false`    | Enable horizontal rule                                                                         |
+|               |                                             | `paste_as_plain_text`          | `false`    | Clear text formatting on paste                                                                 |
+| `Bool`        | A toggle                                    |                                |            |                                                                                                |
+|               |                                             | `no_label` (string)            | `"Yes"`    | Label for `true` option                                                                        |
+|               |                                             | `yes_label` (string)           | `"No"`     | Label for `false` option                                                                       |
+| `Radios`      | Radio buttons                               |                                |            |                                                                                                |
+|               |                                             | `options` (object)             |            | Radio options. Key pairs are in the form `value: "Label"`.                                     |
+|               |                                             | `swatches` (bool)              | `false`    | Render as color swatches. Option values must be a valid CSS color, e.g. '#343434'.             |
+|               |                                             | `icons` (object)               |            | Use icons to label the radios instead of labels. Format: `{opt_value: IconComponent, ...}`     |
+| `Select`      | Select dropdown                             |                                |            |                                                                                                |
+|               |                                             | `options` (object)             |            | Select options. Key pairs are in the form `value: "Label"`.                                    |
+| `NestedBlock` | Embed another block into this block         |                                |            |                                                                                                |
 |               |                                             | `nested_block_type` (string or Block object)  | | The block to embed inside this block. May be either a Block object or the string name of a block defined elsewhere in the blockset. |
-|               |                                             | `optional` (bool)              | `false`  | If true, render a toggle that enables/disables the Nested Block                                |
-| `Repeater`    | Embed an array of blocks within this block. |                                |          |                                                                                                |
-|               |                                             | `nested_block_types` (array: strings or Block objects)  | | The blocks available in this Repeater. Value is an array of either Block objects or name strings of blocks defined elsewhere in the blockset. |
-|               |                                             | `optional` (bool)              | `false`  | If true, render a toggle that enables/disables the Repeater                                    |
-|               |                                             | `max` (number)                 | No limit | Optionally limit the number of items the user can add                                          |
-|               |                                             | `block_titles` (bool)          | `false`  | If true, render the block type/description as title for each item in the repeater              |
-| `Searchable`  | Text input with custom search.              |                                |          |                                                                                                |
-|               |                                             | `search` (function -> promise) |          | A function that takes a search term as its argument, performs a search, and returns a promise. The promise should `resolve()` to an array of search results in the form `{value, display}`. The promise can also `reject()`, returning an error message string which will be displayed to the user below the search field. |
-|               |                                             | `debounce_ms` (number)         | `500`    | Calling of your `search` callback is rate-limited with a debounce function: use `debounce_ms` to adjust the debounce delay. |
+|               |                                             | `optional` (bool)              | `false`    | If true, render a toggle that enables/disables the Nested Block                                |
+| `Repeater`    | Embed an array of blocks within this block  |                                |            |                                                                                                |
+|               |                                             | `nested_block_types` (array: strings or Bl  ock objects)  | | The blocks available in this Repeater. Value is an array of either Block objects or name strings of blocks defined elsewhere in the blockset. |
+|               |                                             | `optional` (bool)              | `false`    | If true, render a toggle that enables/disables the Repeater                                    |
+|               |                                             | `max` (number)                 | No limit   | Optionally limit the number of items the user can add                                          |
+|               |                                             | `block_titles` (bool)          | `false`    | If true, render the block type/description as title for each item in the repeater              |
+| `Searchable`  | Text input with custom search               |                                |            |                                                                                                |
+|               |                                             | `search` (function -> promise) |            | A function that takes a search term as its argument, performs a search, and returns a promise. The promise should resolve to an array of search results in the form `{value, display}`. If the promise rejects, it should return an error message string which will be displayed to the user below the search field. |
+|               |                                             | `debounce_ms` (number)         | `500`      | Adjust `search` callback rate limiting.                                                        |
+| `MediaPicker` | Select item from media library              |                                |            | (Note: you must implement a media library, Otter does not include one.)                        |
+|               |                                             | `label` (string)               | `"Select"` | Button label.                                                                                  |
 
 ### Testing for optional repeaters and nested blocks
 
@@ -326,7 +316,7 @@ When using your own compiled Tailwind, your bundle must also must import Otterâ€
 ```js
 import 'otter/dist/css/quill.snow.css'
 import 'otter/dist/css/otter.css'
-```
+``
 
 If you are not compiling tailwind yourself, you can instead import everything (including a compiled copy of tailwind) from otter/dist:
 
@@ -378,6 +368,23 @@ import {set_dynamic_data} from 'otter-editor/dist/core/definitions/utils'
 npm run t   # run all tests
 npm run tw  # run all tests, --watch
 npm run ts src/test/<file>  # run a single test, --watch
+```
+
+
+
+## Local development within another project
+
+- Delete `your-app/node_modules/otter-editor`
+- From otter, run a build to generate CSS and initial JS:
+
+```bash
+DIST=/path/to/my-app/node_modules/otter-editor/dist LOCALDEV=yes bash scripts/build.sh
+```
+
+- If desired, then begin live-compiling from otter into DIST:
+
+```bash
+DIST=/path/to/my-app/node_modules/otter-editor/dist LOCALDEV=yes WATCH=y bash scripts/babel.sh
 ```
 
 

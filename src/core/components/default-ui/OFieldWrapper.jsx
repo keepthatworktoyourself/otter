@@ -16,7 +16,7 @@ export default function OFieldWrapper({
 
   return (
     <div className={classNames(
-      hori && 'flex items-center justify-between',
+      hori && 'flex items-start justify-between',
       className,
     )}
          {...props}

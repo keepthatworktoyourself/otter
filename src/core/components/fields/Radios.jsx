@@ -8,8 +8,7 @@ export default function Radios({field_def, containing_data_item}) {
   const uid           = `${containing_data_item.__uid}-${field_def.name}`
   const input_name    = `radios-${uid}`
   const value         = containing_data_item[field_def.name]
-  const opts_raw      = field_def.options || { }
-  const opts          = (opts_raw.constructor === Function ? opts_raw() : opts_raw) || { }
+  const opts          = evaluate(field_def.options || { })
   const default_value = evaluate(field_def.default_value)
   const display_value = (value === undefined ? default_value : value) || ''
 
