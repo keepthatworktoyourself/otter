@@ -33,16 +33,14 @@ function Swatch({value, active, className, ...props}) {
                borderTopWidth: '5px',
                borderBottom:   'none',
                ...shared_triangle_border_styles,
-             }}
-        ></div>
+             }} />
       )}
 
-      <div className={classNames(
-        'w-6 h-6 cursor-pointer',
-        !is_hex && value,
-      )}
-           style={{backgroundColor: is_hex && value}}
-      ></div>
+      <div style={{backgroundColor: is_hex && value}}
+           className={classNames(
+             'w-6 h-6 cursor-pointer',
+             !is_hex && value,
+           )} />
 
       {active && (
         <div className={classNames_triangle}
@@ -51,8 +49,7 @@ function Swatch({value, active, className, ...props}) {
                borderBottomWidth: '5px',
                borderTop:         'none',
                ...shared_triangle_border_styles,
-             }}
-        ></div>
+             }} />
       )}
     </div>
   )
@@ -89,18 +86,22 @@ export default function ORadios({
         >
           {Object.entries(options)
             .map(([opt_value, opt_label], i) => color_swatches ?
-              <Swatch key={`${id}--${i}`}
-                      value={opt_value}
-                      active={opt_value === value}
-                      className={i === 0 && `border-l ${theme_ctx.classes.skin.border_color}`}
-                      onClick={() => cb__click(opt_value)} /> :
-              <OGroupedSelectorBtn key={`${id}--${i}`}
-                                   label={opt_label}
-                                   value={opt_value}
-                                   Icon={icons && icons[opt_value] || null}
-                                   active={opt_value === value}
-                                   onClick={() => cb__click(opt_value)} />,
-            )}
+              (
+                <Swatch key={`${id}--${i}`}
+                        value={opt_value}
+                        active={opt_value === value}
+                        className={i === 0 && `border-l ${theme_ctx.classes.skin.border_color}`}
+                        onClick={() => cb__click(opt_value)} />
+              ) : (
+                <OGroupedSelectorBtn key={`${id}--${i}`}
+                                     label={opt_label}
+                                     value={opt_value}
+                                     Icon={icons && icons[opt_value] || null}
+                                     active={opt_value === value}
+                                     onClick={() => cb__click(opt_value)} />
+              ),
+            )
+          }
         </div>
       )}
 

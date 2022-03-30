@@ -150,7 +150,6 @@ function ctx_reducer(state, op) {
 export default function Editor({
   blocks = [],
   data = [],
-  delegate,
   load_state,
   block_numbers = false,
   can_add_blocks = true,
@@ -161,6 +160,9 @@ export default function Editor({
   iframe_container_info = { },
   custom_classes,
   custom_design_options,
+  save,
+  update_height,
+  open_media_library,
 }) {
   const valid_state = Object.values(State).includes(load_state)
   const [block_picker, set_block_picker] = useState(false)
@@ -177,12 +179,12 @@ export default function Editor({
   function add_item(type, index) {
     dispatch_ctx({add_item: {type, index}})
     enqueue_save_on_input()
-    update_height()
+    do_update_height()
   }
   function delete_item(index) {
     dispatch_ctx({delete_item: {index}})
     enqueue_save_on_input()
-    update_height()
+    do_update_height()
   }
   function reorder_items(drag_result) {
     dispatch_ctx({reorder: drag_result})
@@ -191,8 +193,11 @@ export default function Editor({
   function redraw() {
     update({ })
   }
-  function update_height() {
-    delegate?.update_height?.()
+  function do_update_height() {
+    update_height?.()
+  }
+  function do_open_media_library(set_value_callback) {
+    open_media_library?.(set_value_callback)
   }
   function open_block_picker(block_index) {
     set_block_to_insert({ })
@@ -221,9 +226,10 @@ export default function Editor({
   }, [block_picker])
 
   const ctx_interface = {
-    update_height,
+    update_height:      do_update_height,
+    value_updated:      enqueue_save_on_input,
+    open_media_library: do_open_media_library,
     redraw,
-    value_updated: enqueue_save_on_input,
     add_item,
     delete_item,
     open_block_picker,
@@ -238,18 +244,18 @@ export default function Editor({
   function set_block_picker_state(open) {
     set_block_picker(open)
     window.scrollY,
-    update_height()
+    do_update_height()
   }
 
   function do_save() {
-    delegate?.save?.(get_data())
+    save?.(get_data())
   }
 
   ensure_uids(ctx.data)
   ensure_display_ifs_are_arrays(ctx.blocks)
 
   if (load_state === State.Loaded && previous_load_state !== State.Loaded) {
-    update_height()
+    do_update_height()
   }
   if (load_state !== previous_load_state) {
     set_previous_load_state(load_state)

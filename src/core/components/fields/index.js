@@ -1,11 +1,11 @@
-import TextArea   from './TextArea'
-import TextInput  from './TextInput'
-import TextEditor from './TextEditor'
-import Bool       from './Bool'
-import Radios     from './Radios'
-import Select     from './Select'
-import WPMedia    from './WPMedia'
-import Searchable from './Searchable'
+import TextArea    from './TextArea'
+import TextInput   from './TextInput'
+import TextEditor  from './TextEditor'
+import Bool        from './Bool'
+import Radios      from './Radios'
+import Select      from './Select'
+import MediaPicker from './MediaPicker'
+import Searchable  from './Searchable'
 
 export default {
   TextInput,
@@ -14,6 +14,6 @@ export default {
   Bool,
   Radios,
   Select,
-  WPMedia,
+  MediaPicker,
   Searchable,
 }

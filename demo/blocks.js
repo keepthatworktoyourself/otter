@@ -123,6 +123,11 @@ const header_block_fields = [
       flex:  'Flex',
     },
   },
+  {
+    name:  'media_item',
+    type:  Otter.Fields.MediaPicker,
+    align: 'horizontal',
+  },
 ]
 
 const header_block_field_names = header_block_fields.map(field => field.name)
@@ -160,12 +165,12 @@ export const text_block = {
       className:      'pt-2',
     },
     {
-      name:           'align',
-      type:           Otter.Fields.Radios,
-      align:          'horizontal',
-      classNameLabel: 'opacity-40',
-      width:          'half',
-      options:        {
+      name:    'align',
+      type:    Otter.Fields.Radios,
+      align:   'horizontal',
+      // classNameLabel: 'opacity-40',
+      width:   'half',
+      options: {
         left:   'Left',
         center: 'Center',
         right:  'Right',

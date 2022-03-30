@@ -3,6 +3,10 @@ export default [
     __type:     'Header',
     heading:    'Otters',
     subheading: 'Otters? We got otters!',
+    media_item: {
+      url:       'muffins.pdf',
+      thumbnail: 'http://placekitten.com/230/230',
+    },
   },
   {
     __type:        'RepeaterDemo',

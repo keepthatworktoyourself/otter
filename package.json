@@ -1,7 +1,7 @@
 {
   "name": "otter-editor",
   "description": "Content editor with declaratively defined content blocks.",
-  "version": "1.0.4",
+  "version": "1.0.8",
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://github.com/keepthatworktoyourself/otter",
@@ -18,9 +18,7 @@
   "scripts": {
     "demo": "parcel demo/index.html",
     "clean": "rm -rf dist demo/dist .parcel-cache",
-    "build": "npm run clean && parcel build --no-source-maps demo/index.html --target default",
-    "babel": "babel src/index.js -d dist --presets=@babel/preset-env,@babel/preset-react && babel src/core -d dist/core --presets=@babel/preset-env,@babel/preset-react",
-    "dev--plugin": "babel -w src/index.js -d otter-plugin/dev/deps/otter-editor & babel -w src/core -d otter-plugin/dev/deps/otter-editor/core",
+    "build": "parcel build --no-source-maps demo/index.html --target default",
     "t": "ava -c 1 --verbose src/test/*",
     "tw": "ava -c 1 --watch src/test/*",
     "ts": "ava -c 1 --watch",
