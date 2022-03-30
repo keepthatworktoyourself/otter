@@ -44,6 +44,7 @@ npm i -S otter-editor --legacy-peer-deps
   - [Custom CSS Classes][#custom-css-classes]
 - [Selective importing](#selective-importing)
 - [Tests](#tests)
+- [Local development within another project](#local-development-within-another-project)
 - [License](#license)
 
 

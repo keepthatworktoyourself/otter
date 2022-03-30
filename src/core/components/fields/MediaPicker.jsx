@@ -26,34 +26,40 @@ function MediaPickerImagePreviewIcon({Icon, theme_ctx}) {
 
 
 function MediaPickerImagePreview({value}) {
-  if (!value?.url) {
-    return null
-  }
-
-  if (value.thumbnail) {
-    return <img src={value.thumbnail} />
-  }
-
   const url_components = value.url.split('.')
-  if (url_components.length === 0) {
-    return <MediaPickerImagePreviewIcon Icon={DocumentOutline} />
+  const ext = url_components[url_components.length - 1].toLowerCase()
+  const directly_previewed_types = ['jpeg', 'jpg', 'png', 'gif']
+  let inner
+
+  if (!value?.url) {
+    inner = null
   }
 
-  const ext = url_components[url_components.length - 1].toLowerCase()
-  const Icon = {
-    pdf:  DocumentReportOutline,
-    doc:  DocumentTextOutline,
-    docx: DocumentTextOutline,
-    xls:  ChartSquareBarOutline,
-    xlsx: ChartSquareBarOutline,
-    ppt:  PresentationChartBarOutline,
-    pptx: PresentationChartBarOutline,
-    mov:  FilmOutline,
-    mp4:  FilmOutline,
-    webp: FilmOutline,
-  }[ext] || DocumentOutline
+  else if (value.thumbnail) {
+    inner = <img src={value.thumbnail} className="object-contain w-full h-full" />
+  }
 
-  return <MediaPickerImagePreviewIcon Icon={Icon} />
+  else if (directly_previewed_types.includes(ext)) {
+    inner = <img src={value.url} className="object-contain w-full h-full" />
+  }
+
+  else {
+    const Icon = {
+      pdf:  DocumentReportOutline,
+      doc:  DocumentTextOutline,
+      docx: DocumentTextOutline,
+      xls:  ChartSquareBarOutline,
+      xlsx: ChartSquareBarOutline,
+      ppt:  PresentationChartBarOutline,
+      pptx: PresentationChartBarOutline,
+      mov:  FilmOutline,
+      mp4:  FilmOutline,
+      webp: FilmOutline,
+    }[ext] || DocumentOutline
+    inner = <MediaPickerImagePreviewIcon Icon={Icon} />
+  }
+
+  return inner
 }
 
 
@@ -86,7 +92,7 @@ export default function MediaPicker({field_def, containing_data_item}) {
       )}
       >
         {value && (
-          <div className="text-center mb-1 rounded overflow-hidden" style={{maxWidth: '6rem'}}>
+          <div className="text-center mb-1 rounded overflow-hidden w-20 h-20">
             <MediaPickerImagePreview value={value} />
           </div>
         )}
