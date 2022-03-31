@@ -58,7 +58,8 @@ export default function Searchable({field_def, containing_data_item}) {
                            onClick: () => cb__select(i),
                          }))}
                          close={end_search}
-                         className="absolute left-0 w-full top-5 z-10" />
+                         className="absolute left-0 w-full top-4 z-10"
+                         classNameTypography={theme_ctx.classes.typography.input_label} />
 
 
       {error && (

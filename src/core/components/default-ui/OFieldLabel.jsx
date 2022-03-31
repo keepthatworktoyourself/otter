@@ -4,9 +4,8 @@ import {classNames} from '../../helpers/style'
 
 export default function OFieldLabel({
   label,
-  with_bottom_margin = true,
   min_width,
-  className,
+  className = 'mr-2 mb-[0.75em]',
   style,
   ...props
 }) {
@@ -15,10 +14,9 @@ export default function OFieldLabel({
   return (
     <div className={classNames(
       theme_ctx.classes.typography.input_label,
-      'mr-2 whitespace-nowrap',
-      'leading-5 select-none',
+      'whitespace-nowrap',
+      'leading-none select-none',
       'text-[0.85em]',
-      with_bottom_margin && 'mb-[0.75em]',
       className,
     )}
          style={style}

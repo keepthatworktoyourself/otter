@@ -33,6 +33,8 @@ const OInput = forwardRef(({value, onChange, className, style, Icon, ...props}, 
                theme_ctx.classes.skin.input.bg,
                theme_ctx.classes.skin.border_color,
                theme_ctx.classes.skin.border_focus,
+               theme_ctx.classes.skin.border_radius_default,
+               theme_ctx.classes.typography.input,
                Icon && 'pl-[2.5em]',
              )}
              ref={ref}

@@ -1,11 +1,12 @@
-import TextArea    from './TextArea'
-import TextInput   from './TextInput'
-import TextEditor  from './TextEditor'
-import Bool        from './Bool'
-import Radios      from './Radios'
-import Select      from './Select'
+import TextArea   from './TextArea'
+import TextInput  from './TextInput'
+import TextEditor from './TextEditor'
+import Bool       from './Bool'
+import Radios     from './Radios'
+import Select     from './Select'
+import SelectMini from './SelectMini'
+import Searchable from './Searchable'
 import MediaPicker from './MediaPicker'
-import Searchable  from './Searchable'
 
 export default {
   TextInput,
@@ -14,6 +15,7 @@ export default {
   Bool,
   Radios,
   Select,
-  MediaPicker,
+  SelectMini,
   Searchable,
+  MediaPicker,
 }

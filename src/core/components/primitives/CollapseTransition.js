@@ -1,44 +1,31 @@
-import React, {useEffect, useState} from 'react'
-
-const collapsed_styles = {
-  marginBottom: '-2000px',
-  visibility:   'hidden',
-  maxHeight:    '0',
-  transition:   'margin-bottom 0.3s cubic-bezier(1, 0, 1, 1), visibility 0s 0.3s, max-height 0s 0.3s',
-}
-
-const not_collapsed_styles = {
-  marginBottom: '0',
-  maxHeight:    '1000000px',
-  transition:   'margin-bottom 0.3s cubic-bezier(0, 0, 0, 1)',
-}
+import React from 'react'
+import {AnimatePresence, motion} from 'framer-motion'
+import {classNames} from '../../helpers/style'
 
 export default function CollapseTransition({
   collapsed = false,
   style,
   children,
-  initialOverflowValue = 'visible',
+  className,
   ...props
 }) {
-  const [overflow, set_overflow] = useState(initialOverflowValue) // having initial as hidden seems to fix a slight flicker on repeater item DND drop/move action
-
-  useEffect(() => {
-    if (collapsed) {
-      set_overflow('hidden')
-    }
-  }, [collapsed])
-
   return (
-    <div data-bla="blabla" style={{...style, overflow}} {...props}>
-      <div style={collapsed ? collapsed_styles : not_collapsed_styles}
-           onTransitionEnd={ev => {
-             if (ev.propertyName === 'margin-bottom' && !collapsed) {
-               set_overflow('visible')
-             }
-           }}
-      >
-        {children}
-      </div>
+    <div style={style} className={classNames('w-full', className)} {...props}>
+      <AnimatePresence initial={false}>
+        {!collapsed && (
+        <motion.section initial="collapsed"
+                        animate="open"
+                        exit="collapsed"
+                        variants={{
+                          open:      {opacity: 1, height: 'auto', overflow: 'visible'},
+                          collapsed: {opacity: 0, height: 0, overflow: 'hidden'},
+                        }}
+                        transition={{duration: 0.175}}
+        >
+          {children}
+        </motion.section>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

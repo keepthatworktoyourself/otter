@@ -16,8 +16,9 @@ export default function OBool({
 
   return (
     <div className={classNames(
-      'inline-flex border-t border-r border-b',
+      'inline-flex border overflow-hidden',
       theme_ctx.classes.skin.border_color,
+      theme_ctx.classes.skin.border_radius_default,
       className,
     )}
          {...props}
@@ -25,10 +26,12 @@ export default function OBool({
       <OGroupedSelectorBtn label={yes_label}
                            onClick={onClick}
                            data-value="yes"
+                           index={0}
                            active={value} />
       <OGroupedSelectorBtn label={no_label}
                            onClick={onClick}
                            data-value="no"
+                           index={1}
                            active={!value} />
     </div>
   )

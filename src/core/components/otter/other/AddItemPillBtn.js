@@ -15,6 +15,7 @@ export default function AddItemPillBtn({
 
   return (
     <div className={classNames(
+      'inline-flex',
       'cursor-pointer svg-font',
       'rounded-3xl py-1',
       size === 'md' && 'px-4',

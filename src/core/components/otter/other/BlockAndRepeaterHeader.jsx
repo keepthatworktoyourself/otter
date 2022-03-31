@@ -5,23 +5,24 @@ import {classNames} from '../../../helpers/style'
 import {TabsBtn} from '../../primitives/Tabs'
 import {useThemeContext} from '../../../contexts/ThemeContext'
 
-const BlockHeaderIcon = ({
+export const TabIcon = ({
   Icon,
   active,
   negativeAction = false,
   onClick,
   className,
+  iconThemeClassNamesObj = {},
   is_last,
 }) => {
-  const theme_ctx = useThemeContext()
-
   return (
     <div className={classNames(
       'px-2',
       'relative svg-font',
       'flex items-center cursor-pointer',
-      active ? theme_ctx.classes.skin.block_header_icon.active : theme_ctx.classes.skin.block_header_icon.always,
-      negativeAction ? theme_ctx.classes.skin.block_header_icon.negative : theme_ctx.classes.skin.block_header_icon.default,
+      iconThemeClassNamesObj.always,
+      active && !negativeAction && iconThemeClassNamesObj.active,
+      negativeAction && iconThemeClassNamesObj.negative,
+      !active && !negativeAction && iconThemeClassNamesObj.default,
       is_last && '-mr-2',
       className,
     )}
@@ -30,9 +31,9 @@ const BlockHeaderIcon = ({
 
       <span className={classNames(
         'absolute-center overflow-hidden w-full',
-        'rounded-full',
-        theme_ctx.classes.skin.block_header_icon.active_indicator.bg,
-        !active ? 'opacity-0' : theme_ctx.classes.skin.block_header_icon.active_indicator.opacity,
+        iconThemeClassNamesObj.active_indicator.border_radius,
+        iconThemeClassNamesObj.active_indicator.bg,
+        !active ? 'opacity-0' : iconThemeClassNamesObj.active_indicator.opacity,
       )}
       >
         <span className="aspect-1x1 w-full block"></span>
@@ -45,14 +46,20 @@ const BlockHeaderIcon = ({
   )
 }
 
-export default function BlockHeader({
+export default function BlockAndRepeaterHeader({
   heading,
   block_number,
   tab_btn_icons,
   open,
   toggle_open,
   show_confirm_deletion,
-  reveal_show_confirm_deletion,
+  delete_func,
+  classNameBorderRadius,
+  classNameBorder,
+  classNameBg,
+  classNameHeading,
+  classNameYPad,
+  iconThemeClassNamesObj,
 }) {
   const theme_ctx = useThemeContext()
 
@@ -60,22 +67,26 @@ export default function BlockHeader({
     <header className={classNames(
       'select-none',
       'relative flex justify-between',
-      theme_ctx.classes.layout.block_headers.wrapper,
-      theme_ctx.classes.layout.block_headers.x_pad,
-      theme_ctx.classes.skin.block_headers.bg,
+      'text-xs',
+      'px-4',
+      open ? 'rounded-b-none' : '!border-transparent',
+      theme_ctx.classes.skin.border_color,
+      classNameBorderRadius,
+      classNameBorder,
+      classNameBg,
     )}
     >
       <div className={classNames(
         'flex items-center cursor-pointer',
-        theme_ctx.classes.typography.heading,
-        theme_ctx.classes.skin.block_headers.heading,
         show_confirm_deletion && 'pointer-events-none',
+        theme_ctx.classes.typography.heading,
+        classNameHeading,
       )}
            onClick={toggle_open}
       >
         <h1 className={classNames(
           'flex items-center leading-none',
-          theme_ctx.classes.skin.block_headers.y_pad,
+          classNameYPad,
         )}
         >
           {block_number && <span className="w-4">{block_number}</span>}
@@ -95,24 +106,26 @@ export default function BlockHeader({
 
       <div className="flex svg-font items-center" style={{fontSize: '1.25em'}}>
 
-        {tab_btn_icons && tab_btn_icons.length && tab_btn_icons.map((Icon, i) => (
+        {tab_btn_icons && tab_btn_icons.map((Icon, i) => (
           <TabsBtn  key={`tab-btn--${i}`}
                     index={i}
                     render={({active}) => (
-                      <BlockHeaderIcon Icon={Icon}
-                                       active={active}
-                                       onClick={() => !open && toggle_open()} />
+                      <TabIcon Icon={Icon}
+                               active={active}
+                               iconThemeClassNamesObj={iconThemeClassNamesObj}
+                               onClick={() => !open && toggle_open()} />
                     )} />
         ))}
 
-        {reveal_show_confirm_deletion && (
-          <BlockHeaderIcon negativeAction={true}
-                           Icon={TrashSolid}
-                           onClick={reveal_show_confirm_deletion}
-                           is_last={true}
-                           className={classNames(
-                             show_confirm_deletion && 'opacity-20 pointer-events-none',
-                           )} />
+        {delete_func && (
+          <TabIcon negativeAction={true}
+                   Icon={TrashSolid}
+                   onClick={delete_func}
+                   is_last={true}
+                   iconThemeClassNamesObj={iconThemeClassNamesObj}
+                   className={classNames(
+                     show_confirm_deletion && 'opacity-20 pointer-events-none',
+                   )} />
         )}
       </div>
     </header>

@@ -1,8 +1,9 @@
 export default [
   {
     __type:     'Header',
-    heading:    'Otters',
-    subheading: 'Otters? We got otters!',
+    label:      'Definition',
+    heading:    'Otters are mammals',
+    // text:    'We have have otters galore in our store.', // TODO: Formating of text inside Quill looks pretty nasty - but possibly deal with it when replacing Quill?
     media_item: {
       url:       'muffins.pdf',
       thumbnail: 'http://placekitten.com/230/230',
@@ -15,7 +16,10 @@ export default [
         __type: 'Text',
       },
       {
-        __type: 'Text',
+        __type: 'TextWithIconTabs',
+      },
+      {
+        __type: 'TextWithNormalTabs',
       },
     ],
   },

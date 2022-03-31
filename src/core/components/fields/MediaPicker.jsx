@@ -5,10 +5,11 @@ import DocumentReportOutline from 'simple-react-heroicons/icons/DocumentReportOu
 import FilmOutline from 'simple-react-heroicons/icons/FilmOutline'
 import ChartSquareBarOutline from 'simple-react-heroicons/icons/ChartSquareBarOutline'
 import PresentationChartBarOutline from 'simple-react-heroicons/icons/PresentationChartBarOutline'
-import XCircleOutline from 'simple-react-heroicons/icons/XCircleOutline'
 import {useThemeContext} from '../../contexts/ThemeContext'
 import {classNames} from '../../helpers/style'
 import {usePageData} from '../../contexts/PageDataContext'
+import AddItemPillBtn from '../otter/other/AddItemPillBtn'
+import MinusCircleSolid from 'simple-react-heroicons/icons/MinusCircleSolid'
 
 
 function MediaPickerImagePreviewIcon({Icon, theme_ctx}) {
@@ -25,10 +26,12 @@ function MediaPickerImagePreviewIcon({Icon, theme_ctx}) {
 }
 
 
-function MediaPickerImagePreview({value}) {
+function MediaPickerImagePreview({value, className}) {
   const url_components = value.url.split('.')
   const ext = url_components[url_components.length - 1].toLowerCase()
   const directly_previewed_types = ['jpeg', 'jpg', 'png', 'gif']
+  const Img = ({src, className}) => <img src={src} className={className} />
+
   let inner
 
   if (!value?.url) {
@@ -36,11 +39,11 @@ function MediaPickerImagePreview({value}) {
   }
 
   else if (value.thumbnail) {
-    inner = <img src={value.thumbnail} className="object-contain w-full h-full" />
+    inner = <Img src={value.thumbnail} className={className} />
   }
 
   else if (directly_previewed_types.includes(ext)) {
-    inner = <img src={value.url} className="object-contain w-full h-full" />
+    inner = <Img src={value.url} className={className} />
   }
 
   else {
@@ -82,37 +85,56 @@ export default function MediaPicker({field_def, containing_data_item}) {
   }
 
   return (
-    <div className="flex">
-      <div className={classNames(
-        'border-2 rounded-md border-dashed',
-        value ? 'p-4 pt-5' : 'p-3',
-        'cursor-default',
-        'relative',
-        theme_ctx.classes.skin.border_color,
-      )}
-      >
-        {value && (
-          <div className="text-center mb-1 rounded overflow-hidden w-20 h-20">
-            <MediaPickerImagePreview value={value} />
-          </div>
-        )}
-
-        {value && <p>{value.url.replace(/.*\//, '')}</p>}
-
-        {value && (
-          <XCircleOutline className="absolute text-zinc-400 cursor-pointer top-1 right-1"
-                          style={{width: '1rem', height: '1rem', display: 'inline-block'}}
-                          onClick={clear} />
-        )}
-
-        {!value && (
-          <p className="text-xxs hover:underline cursor-pointer"
-             onClick={() => ctx.open_media_library(set_value_callback)}
+    <div className={classNames(
+      value ? 'p-4 pt-5' : 'p-3',
+      'cursor-default',
+      'relative',
+      'border border-dashed',
+      'text-center',
+      theme_ctx.classes.skin.border_color,
+      theme_ctx.classes.skin.border_radius_default,
+    )}
+    >
+      {value && (
+        <div className="text-center relative max-w-[400px] inline-block">
+          <div className={classNames(
+            'overflow-hidden relative mb-1 h-[100px] border',
+            theme_ctx.classes.skin.media_picker.bg,
+            theme_ctx.classes.skin.border_radius_default,
+            theme_ctx.classes.skin.border_color_lighter,
+          )}
           >
-            {txt_open}
-          </p>
-        )}
-      </div>
+            <MediaPickerImagePreview value={value} className="opacity-0" />
+            <div className="absolute-fill">
+              <MediaPickerImagePreview value={value} className="object-contain h-full w-full" />
+            </div>
+          </div>
+          <p className={classNames(
+            '-mb-1',
+            theme_ctx.classes.typography.copy,
+          )}
+          >{value.url.replace(/.*\//, '')}</p>
+
+          <div className={classNames(
+            'svg-font text-lg cursor-pointer',
+            'absolute  top-1 right-1',
+            theme_ctx.classes.skin.media_picker.remove_item_btn,
+          )}
+               onClick={clear}
+          >
+            <MinusCircleSolid />
+          </div>
+        </div>
+      )}
+
+      {!value && (
+        <div className="space-y-1">
+          <p className={theme_ctx.classes.typography.sub_heading}>{txt_open}</p>
+          <AddItemPillBtn classNameBg={theme_ctx.classes.skin.media_picker.add_btn.bg}
+                          size="md"
+                          onClick={() => ctx.open_media_library(set_value_callback)} />
+        </div>
+      )}
     </div>
   )
 }

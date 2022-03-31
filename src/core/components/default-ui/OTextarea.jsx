@@ -11,6 +11,9 @@ export default function OTextarea({monospaced, className, style, ...props}) {
       'outline-none',
       'border',
       theme_ctx.classes.skin.border_color,
+      theme_ctx.classes.skin.border_radius_default,
+      theme_ctx.classes.typography.input,
+      theme_ctx.classes.skin.border_focus,
       monospaced && 'monospace',
       className,
     )}

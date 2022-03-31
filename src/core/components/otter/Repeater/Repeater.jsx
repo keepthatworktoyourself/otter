@@ -7,7 +7,6 @@ import AddItemPillBtn from '../other/AddItemPillBtn'
 import PopupMenuAnimated from '../PopupMenu'
 import RepeaterItem from './RepeaterItem'
 import animations from '../../../definitions/animations'
-import {classNames} from '../../../helpers/style'
 import {AnimatePresence, motion} from 'framer-motion'
 import {useThemeContext} from '../../../contexts/ThemeContext'
 import OErrorMessage from '../../default-ui/OErrorMessage'
@@ -16,17 +15,30 @@ function get_block_type(str_or_obj) {
   return typeof str_or_obj === 'string' ? str_or_obj : str_or_obj.type
 }
 
-export default function Repeater({field_def, containing_data_item}) {
-  const ctx                          = usePageData()
-  const theme_ctx                    = useThemeContext()
-  const [show_picker_popup, set_show_picker_popup] = useState(false)
-  const data_items                   = containing_data_item[field_def.name] || []
-  const block_titles                 = field_def.block_titles !== false && true
-  const nested_block_types           = field_def.nested_block_types || []
-  const max                          = field_def.max || -1
-  const multiple_types               = nested_block_types.length !== 1
-  const dnd_context_id               = `d-${containing_data_item.__uid}-${field_def.name}`
-  const show_add_button              = max === -1 || data_items.length < max
+const AddBtn = ({theme_ctx, set_show_popover, cb__add}) => (
+  <AddItemPillBtn onClick={() => {
+    cb__add({
+      show_popup_func: () => set_show_popover(true),
+      cb__block_added: () => set_show_popover(false),
+    })
+  }}
+                  classNameBg={theme_ctx.classes.skin.add_repeater_item_btn.bg}
+                  size="md" />
+)
+
+export default function Repeater({field_def, field_name, containing_data_item, blocks}) {
+  const ctx                              = usePageData()
+  const theme_ctx                        = useThemeContext()
+  const [show_popover, set_show_popover] = useState(false)
+  const data_items                       = containing_data_item[field_name] || []
+  const block_titles                     = field_def.block_titles !== false && true
+  const nested_block_types               = field_def.nested_block_types || []
+  const max                              = field_def.max || -1
+  const multiple_types                   = nested_block_types.length !== 1
+  const dnd_context_id                   = `d-${containing_data_item.__uid}-${field_name}`
+  const show_add_button                  = max === -1 || data_items.length < max
+  const item_headers                     = field_def.item_headers
+  const add_label                        = field_def.add_item_label || 'Add an item'
 
   function cb__add({
     show_popup_func,
@@ -41,15 +53,15 @@ export default function Repeater({field_def, containing_data_item}) {
 
     block_type = block_type || get_block_type(field_def.nested_block_types[0])
 
-    if (!containing_data_item[field_def.name]) {
-      containing_data_item[field_def.name] = []
+    if (!containing_data_item[field_name]) {
+      containing_data_item[field_name] = []
     }
 
     if (!index && index !== 0) {
-      containing_data_item[field_def.name].push({__type: block_type})
+      containing_data_item[field_name].push({__type: block_type})
     }
     else {
-      containing_data_item[field_def.name].splice(index, 0, {__type: block_type})
+      containing_data_item[field_name].splice(index, 0, {__type: block_type})
     }
 
     cb__block_added?.()
@@ -60,7 +72,7 @@ export default function Repeater({field_def, containing_data_item}) {
   }
 
   function cb__delete(i) {
-    const data_items = containing_data_item[field_def.name]
+    const data_items = containing_data_item[field_name]
     data_items.splice(i, 1)
 
     ctx.value_updated()
@@ -76,7 +88,7 @@ export default function Repeater({field_def, containing_data_item}) {
       return
     }
 
-    const data_items = containing_data_item[field_def.name]
+    const data_items = containing_data_item[field_name]
     const [item] = data_items.splice(drag_result.source.index, 1)
     data_items.splice(drag_result.destination.index, 0, item)
 
@@ -86,7 +98,7 @@ export default function Repeater({field_def, containing_data_item}) {
   }
 
   const blocktypes__objects = nested_block_types.map(t => (
-    typeof t === 'string' ? find_block(ctx.blocks, t) : t
+    typeof t === 'string' ? find_block(blocks, t) : t
   ))
 
   const invalid_blocktypes = blocktypes__objects.reduce((carry, block, index) => {
@@ -118,95 +130,82 @@ export default function Repeater({field_def, containing_data_item}) {
   const no_items = data_items.length < 1
 
   return (
-    <div className="w-full -mt-4">
+    <div className="w-full">
+      <div className="-mt-4"> {/* Negative margin to offset repeater item padding-top */}
+        <DnD.DragDropContext onDragEnd={cb__reorder}>
+          <DnD.Droppable droppableId={dnd_context_id} type={dnd_context_id}>
+            {prov => (
+              <div ref={prov.innerRef} {...prov.droppableProps}>
+                <AnimatePresence initial={false}>
+                  {data_items.map((data_item, index) => {
+                    const is_permitted = blocktypes__strings.includes(data_item.__type)
+                    const block = blocktypes__objects.find(t => t.type === data_item.__type)
 
-      <DnD.DragDropContext onDragEnd={cb__reorder}>
-        <DnD.Droppable droppableId={dnd_context_id} type={dnd_context_id}>
-          {prov => (
-            <div ref={prov.innerRef} {...prov.droppableProps}>
-              <AnimatePresence initial={false}>
-                {data_items.map((data_item, index) => {
-                  const is_permitted = blocktypes__strings.includes(data_item.__type)
-                  const block = blocktypes__objects.find(t => t.type === data_item.__type)
-
-                  return (
-                    <motion.div key={data_item.__uid || index}
-                                {...animations.item_add_and_remove}
-                                className="w-full"
-                    >
-                      <RepeaterItem index={index}
-                                    popup_items={popup_items}
-                                    dnd_context_id={dnd_context_id}
-                                    dnd_key={data_item.__uid}
-                                    title={block_titles && (block.description || humanify_str(block.type))}
-                                    cb__add={cb__add}
-                                    cb__delete={cb__delete}
+                    return (
+                      <motion.div key={data_item.__uid || index}
+                                  {...animations.item_add_and_remove}
+                                  className="w-full relative"
                       >
-                        {is_permitted ?
-                          <RecursiveBlockRenderer data_item={data_item} blocks={ctx.blocks} /> :
-                          <OErrorMessage text={`Items of type ${data_item.__type} are not allowed in this repeater`} />
+                        <RepeaterItem index={index}
+                                      popup_items={popup_items}
+                                      dnd_context_id={dnd_context_id}
+                                      dnd_key={data_item.__uid}
+                                      title={block_titles && (block.description || humanify_str(block.type))}
+                                      cb__add={cb__add}
+                                      cb__delete={cb__delete}
+                                      with_collapsible_header_bar={item_headers}
+                                      block={block}
+                                      blocks={blocks}
+                                      containing_data_item={containing_data_item}
+                                      field_def={field_def}
+                                      field_name={field_name}
+                                      data_item={data_item}
+                        >
+                          {is_permitted ?
+                            <RecursiveBlockRenderer data_item={data_item} blocks={blocks} /> :
+                            <OErrorMessage text={`Items of type ${data_item.__type} are not allowed in this repeater`} />
                       }
-                      </RepeaterItem>
-                    </motion.div>
-                  )
-                })}
-              </AnimatePresence>
+                        </RepeaterItem>
+                      </motion.div>
+                    )
+                  })}
+                </AnimatePresence>
 
-              {prov.placeholder}
-            </div>
-          )}
-        </DnD.Droppable>
-      </DnD.DragDropContext>
-
-      {show_add_button && (
-        <div className={classNames(
-          'relative text-center w-full',
-          !no_items && !show_picker_popup && 'opacity-0 hover:opacity-100 transition-opacity',
-        )}
-             style={{paddingTop: !no_items && '2px'}}
-        >
-
-          {no_items && (
-            <h5 className={classNames(
-              theme_ctx.classes.typography.sub_heading,
-              'pt-4',
-              'mb-1',
+                {prov.placeholder}
+              </div>
             )}
-            >Add an item</h5>
-          )}
+          </DnD.Droppable>
+        </DnD.DragDropContext>
 
-          <AddItemPillBtn onClick={() => {
-            cb__add({
-              show_popup_func: () => set_show_picker_popup(true),
-              cb__block_added: () => set_show_picker_popup(false),
-            })
-          }}
-                          className={classNames(
-                            no_items && 'mb-2',
-                            'inline-flex',
-                          )}
-                          classNameBg={theme_ctx.classes.skin.add_repeater_item_btn.bg}
-                          size="md" />
+        {show_add_button && (
+          <div className="relative text-center w-full">
 
+            <div className="mt-3 -mb-[2px] space-y-1">
+              {no_items && (
+                <p className={theme_ctx.classes.typography.sub_heading}>{add_label}</p>
+              )}
+              <AddBtn {...{theme_ctx, set_show_popover, cb__add}} />
+            </div>
 
-          <div className="relative">
-            <PopupMenuAnimated isOpen={show_picker_popup && multiple_types}
-                               close={() => set_show_picker_popup(false)}
-                               className="absolute-center-x bottom-4"
-                               items={popup_items.map(popup_item => (
-                                 {
-                                   ...popup_item,
-                                   onClick: () => cb__add({
-                                     block_type:      popup_item.block_type,
-                                     cb__block_added: () => set_show_picker_popup(false),
-                                   }),
-                                 }
-                               ))} />
+            <div className="relative">
+              <PopupMenuAnimated isOpen={show_popover && multiple_types}
+                                 close={() => set_show_popover(false)}
+                                 className="absolute-center-x bottom-4"
+                                 items={popup_items.map(popup_item => (
+                                   {
+                                     ...popup_item,
+                                     onClick: () => cb__add({
+                                       block_type:      popup_item.block_type,
+                                       cb__block_added: () => set_show_popover(false),
+                                     }),
+                                   }
+                                 ))} />
+
+            </div>
 
           </div>
-
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

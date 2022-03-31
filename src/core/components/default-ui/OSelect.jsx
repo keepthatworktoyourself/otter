@@ -10,13 +10,15 @@ export default function OSelect({
   cb__clear,
   className,
   field_def,
+  mini,
   ...props
 }) {
   const theme_ctx = useThemeContext()
 
   return (
     <div className={classNames(
-      'relative inline-flex',
+      'relative',
+      mini && 'text-xxs',
       className,
     )}
          {...props}
@@ -24,12 +26,15 @@ export default function OSelect({
       <select onChange={cb__change}
               id={id}
               className={classNames(
-                'block',
+                'block w-full',
                 'appearance-none outline-none',
                 'focus:ring-transparent',
                 'border',
                 theme_ctx.classes.skin.border_color,
                 theme_ctx.classes.skin.border_focus,
+                theme_ctx.classes.skin.border_radius_default,
+                theme_ctx.classes.typography.input,
+                mini && 'px-[1.3em] py-[0.3em]',
               )}
               value={value}
               style={{fontSize: 'inherit', fontFamily: 'inherit'}}

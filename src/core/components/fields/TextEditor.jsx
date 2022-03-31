@@ -55,7 +55,7 @@ export default class TextEditor extends React.Component {
       toolbar: {
         container: `#${this.toolbar}`,
         handlers:  {
-          hr: function() {
+          hr() {
             const cursor_pos = this.quill.getSelection().index
             this.quill.insertText(cursor_pos, '\n', Quill.sources.USER)
             this.quill.insertEmbed(cursor_pos + 1, 'hr', true, Quill.sources.USER)
@@ -98,25 +98,27 @@ export default class TextEditor extends React.Component {
     return (
       <ThemeContext.Consumer>{theme_ctx => (
         <PageDataContext.Consumer>{ctx => (this.ctx = ctx) && (
-        <div style={{paddingBottom: '5px'}}>
+        <div>
 
           <div className={classNames(
             'border-t border-r border-l',
             theme_ctx.classes.skin.border_color,
+            theme_ctx.classes.skin.border_radius_default,
+            'rounded-b-none',
           )}
           >
             <div className="editor-toolbar"
                  id={this.toolbar}
                  style={{border: 'none'}}
             >
-              {heading_levels && heading_levels.length > 0 &&
-              <span className="ql-formats">
-                <select className="ql-header">
-                  {heading_levels.map((n, i) => <option key={i} value={n}>Heading {n}</option>)}
-                  <option value="">Paragraph</option>
-                </select>
-              </span>
-                  }
+              {heading_levels && heading_levels.length > 0 && (
+                <span className="ql-formats">
+                  <select className="ql-header">
+                    {heading_levels.map((n, i) => <option key={i} value={n}>Heading {n}</option>)}
+                    <option value="">Paragraph</option>
+                  </select>
+                </span>
+              )}
               <span className="ql-formats">
                 <button className="ql-bold"></button>
                 <button className="ql-italic"></button>
@@ -143,6 +145,8 @@ export default class TextEditor extends React.Component {
             theme_ctx.classes.skin.text_editor.bg,
             'border',
             theme_ctx.classes.skin.border_color,
+            theme_ctx.classes.skin.border_radius_default,
+            'rounded-t-none',
           )}
           >
             <ReactQuill defaultValue={value} onChange={this.cb__change} modules={this.modules} theme="snow"

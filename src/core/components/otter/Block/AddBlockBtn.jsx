@@ -52,9 +52,7 @@ export default function AddBlockBtn({
          style={hover_effect_on ? {transitionDelay: '0.075s'} : {}}
     >
       <AddItemPillBtn className="absolute-center"
-                      onClick={cb__toggle}
-                      style={theme_ctx.design_options.floaty_blocks &&
-                        {boxShadow: theme_ctx.design_options.block_shadow}} />
+                      onClick={cb__toggle} />
     </div>
   )
 
@@ -65,6 +63,7 @@ export default function AddBlockBtn({
         'border border-dashed w-full text-center mt-6',
         'pt-4 pb-7',
         theme_ctx.classes.skin.border_color,
+        theme_ctx.classes.skin.border_radius_default,
         theme_ctx.classes.skin.block.bg,
       ),
       !suggest_add_block && 'py-4',

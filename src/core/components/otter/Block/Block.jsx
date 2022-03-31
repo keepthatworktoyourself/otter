@@ -1,8 +1,7 @@
 import React, {useState} from 'react'
 import * as DnD from 'react-beautiful-dnd'
-import PlusSolid from 'simple-react-heroicons/icons/PlusSolid'
 import RecursiveBlockRenderer from '../RecursiveBlockRenderer'
-import BlockHeader from './BlockHeader'
+import BlockAndRepeaterHeader from '../other/BlockAndRepeaterHeader'
 import BlockSection from './BlockSection'
 import AddBlockBtn from './AddBlockBtn'
 import BlockDeleteConfirmPopoverAnimated from './BlockDeleteConfirmPopover'
@@ -12,6 +11,7 @@ import {usePageData} from '../../../contexts/PageDataContext'
 import {find_block, humanify_str} from '../../../definitions/utils'
 import {classNames} from '../../../helpers/style'
 import {useThemeContext} from '../../../contexts/ThemeContext'
+import TabBtns from '../other/TabBtns'
 
 const drag_styles = { }
 
@@ -30,7 +30,11 @@ export default function Block({data_item, index, block_numbers}) {
   const draggable_key     = `block-${data_item.__uid}`
   const block             = find_block(blocks, data_item.__type)
   const tabs              = block?.tabs && block?.tabs?.length > 0 && block.tabs
-  const tab_btns          = tabs && tabs.map(tab => tab?.Icon || PlusSolid)
+  const icon_tab_btns     = tabs && tabs.every(t => !!t.Icon)
+
+  const tab_btns = tabs && tabs.map(tab => {
+    return icon_tab_btns ? tab.Icon : tab.label
+  })
 
   const [open, set_open]                                   = useState(true)
   const [show_confirm_deletion, set_show_confirm_deletion] = useState(false)
@@ -56,12 +60,12 @@ export default function Block({data_item, index, block_numbers}) {
 
               <div className={classNames(
                 theme_ctx.classes.skin.block.bg,
-                !theme_ctx.design_options.floaty_blocks && 'border',
-                !theme_ctx.design_options.floaty_blocks && theme_ctx.classes.skin.border_color,
+                theme_ctx.classes.skin.block.border,
+                theme_ctx.classes.skin.block.border_radius,
+                theme_ctx.classes.skin.border_color,
+                theme_ctx.classes.skin.block.shadow,
               )}
                    style={{
-                     boxShadow: theme_ctx.design_options.floaty_blocks &&
-                      theme_ctx.design_options.block_shadow,
                      minWidth: theme_ctx.design_options.block_min_width,
                    }}
               >
@@ -78,32 +82,36 @@ export default function Block({data_item, index, block_numbers}) {
                 <div className={classNames('relative', !open && 'overflow-hidden')}>
 
                   {block && (
-                    <div className={
-                      classNames(
-                        'relative',
-                      )}
-                    >
+                    <div className="relative">
+                      <BlockAndRepeaterHeader heading={block.description || humanify_str(block.type)}
+                                              block_number={block_numbers && index + 1}
+                                              show_confirm_deletion={show_confirm_deletion}
+                                              delete_func={ctx.can_add_blocks ? () => set_show_confirm_deletion(true) : null}
+                                              open={open}
+                                              tab_btn_icons={icon_tab_btns && tab_btns}
+                                              toggle_open={() => {
+                                                ctx.update_height()
+                                                set_open(!open)
+                                              }}
+                                              classNameBorderRadius={theme_ctx.classes.skin.block.border_radius}
+                                              classNameBorder={theme_ctx.classes.skin.block_header.border}
+                                              classNameBg={theme_ctx.classes.skin.block_header.bg}
+                                              classNameYPad={theme_ctx.classes.skin.block_header.y_pad}
+                                              classNameHeading={theme_ctx.classes.skin.block_header.heading}
+                                              iconThemeClassNamesObj={theme_ctx.classes.skin.block_header_icon} />
 
-                      <BlockHeader heading={block.description || humanify_str(block.type)}
-                                   block_number={block_numbers && index + 1}
-                                   show_confirm_deletion={show_confirm_deletion}
-                                   reveal_show_confirm_deletion={ctx.can_add_blocks ? () => set_show_confirm_deletion(true) : null}
-                                   open={open}
-                                   tab_btn_icons={tab_btns}
-                                   toggle_open={() => {
-                                     ctx.update_height()
-                                     set_open(!open)
-                                   }} />
-
-                      <div style={{position: 'relative'}}>
+                      <div className="relative text-xs">
                         <CollapseTransition collapsed={!open}
-                                            className="text-xs relative"
-                                            initialOverflowValue="visible"
+                                            className="relative"
                         >
                           {!tabs && (
-                            <BlockSection>
+                            <BlockSection bordered={false}>
                               <RecursiveBlockRenderer data_item={data_item} blocks={blocks} />
                             </BlockSection>
+                          )}
+
+                          {tabs && !icon_tab_btns && (
+                            <TabBtns tabs={tabs} className="pt-4 px-4 pb-1" />
                           )}
 
                           {tabs && tabs.map((tab, i) => {
@@ -112,11 +120,12 @@ export default function Block({data_item, index, block_numbers}) {
 
                             return (
                               <TabsTab key={`tab--${i}`} index={i}>
-                                <BlockSection>
-                                  <RecursiveBlockRenderer data_item={data_item}
-                                                          block_fields={tab_fields}
-                                                          blocks={blocks} />
-                                </BlockSection>
+                                <BlockSection bordered={false}
+                                              children={(
+                                                <RecursiveBlockRenderer data_item={data_item}
+                                                                        block_fields={tab_fields}
+                                                                        blocks={blocks} />
+                                  )} />
                               </TabsTab>
                             )
                           })}
