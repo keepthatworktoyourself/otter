@@ -15,13 +15,14 @@ function BlockDeleteConfirmPopover({close, delete_func, className}) {
 
   return (
     <div className={classNames(
+      'border',
       theme_ctx.classes.skin.block.bg,
+      theme_ctx.classes.skin.popup_menu.shadow,
+      theme_ctx.classes.skin.border_color,
+      theme_ctx.classes.skin.border_radius_default,
       className,
     )}
          ref={ref}
-         style={{
-           boxShadow: theme_ctx.design_options.block_shadow,
-         }}
     >
       <div className="p-4">
         <div className="flex space-x-2 text-xxxs">
@@ -46,9 +47,11 @@ export default function BlockDeleteConfirmPopoverAnimated({
   ...props
 }) {
   return (
-    <PopoverAnimation Component={<BlockDeleteConfirmPopover close={close}
-                                                            delete_func={delete_func}
-                                                            {...props} />}
+    <PopoverAnimation Component={(
+      <BlockDeleteConfirmPopover close={close}
+                                 delete_func={delete_func}
+                                 {...props} />
+)}
                       isOpen={isOpen}
                       onExitComplete={onExitComplete}
                       transformOrigin={transformOrigin} />

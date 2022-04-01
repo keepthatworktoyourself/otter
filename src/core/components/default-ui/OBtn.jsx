@@ -13,10 +13,12 @@ export default function OBtn({
   disabled = false,
   newTab = false,
   Tag = 'div',
-  style,
+  style = {padding: '1em 2.2em'},
+  themeClasses,
   ...props
 }) {
   const theme_ctx = useThemeContext()
+  const classes = themeClasses || theme_ctx.classes
 
   return (
     <Tag href={!disabled && href}
@@ -25,14 +27,15 @@ export default function OBtn({
          className={classNames(
            'relative inline-flex justify-center ',
            'border focus:outline-none',
-           disabled ? 'opacity-30 pointer-events-none cursor-not-allowed' : 'cursor-pointer',
            'select-none',
-           theme_ctx.classes.skin.btns[buttonStyle],
+           disabled ? 'opacity-30 pointer-events-none cursor-not-allowed' : 'cursor-pointer',
+           classes.skin.btns[buttonStyle],
+           classes.skin.border_radius_default,
            className,
          )}
          target={newTab ? '_blank' : null}
          rel={newTab ? 'noopener noreferrer' : null}
-         style={{padding: '1em 2.2em', ...style}}
+         style={style}
          {...props}
     >
       <div className={classNames(

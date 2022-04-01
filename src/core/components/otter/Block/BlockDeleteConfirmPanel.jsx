@@ -8,7 +8,11 @@ export default function BlockDeleteConfirmPanel({set_show_confirm_deletion, dele
   const theme_ctx = useThemeContext()
 
   return (
-    <div className={classNames(theme_ctx.classes.block.theme.bg, 'absolute-fill text-center')}>
+    <div className={classNames(
+      theme_ctx.classes.block.theme.bg,
+      'absolute-fill text-center',
+    )}
+    >
       <div className="absolute-center px-8">
         <div className={classNames(
           theme_ctx.classes.typography.sub_heading,

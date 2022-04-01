@@ -19,7 +19,8 @@ module.exports = {
       white:       'white',
       red:         colors.red,
       zinc:        colors.zinc,
-      pink:        colors.pink, // just for demo
+      slate:       colors.slate, // just for demo
+      blue:        colors.indigo, // just for demo
     },
   },
   plugins: [],

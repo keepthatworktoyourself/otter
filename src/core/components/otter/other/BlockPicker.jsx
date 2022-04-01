@@ -8,13 +8,7 @@ export default function BlockPicker({
   set_block_to_insert,
   close,
   block_index,
-  // iframe_container_info,
 }) {
-  // TODO: Is this needed/remove?
-  // const container  = iframe_container_info || {
-  //   y:      0,
-  //   height: 0,
-  // }
   const ctx              = usePageData()
   const theme_ctx        = useThemeContext()
   const blocks           = ctx.blocks

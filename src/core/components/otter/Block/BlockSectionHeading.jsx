@@ -10,12 +10,10 @@ export default function BlockSectionHeading({
   heading_align = 'right',
   className = classes.skin.block.bg,
   open,
-  with_x_pad,
-  with_top_pad = true,
+  set_open,
   onClick,
-  is_enabled,
-  enabled,
   optional,
+  enabled,
   toggle_enabled,
   ...props
 }) {
@@ -23,14 +21,13 @@ export default function BlockSectionHeading({
 
   return (
     <div className={classNames(
+      'mb-2',
       'select-none',
       'flex items-center',
       'text-xs',
       !optional && 'cursor-pointer',
       heading_align === 'right' && 'justify-end',
       heading_align === 'center' && 'justify-center',
-      with_top_pad ? 'pt-5 pb-3' : 'pt-1 pb-3',
-      with_x_pad && 'px-4',
       theme_ctx.classes.typography.heading,
       className,
     )}
@@ -39,25 +36,36 @@ export default function BlockSectionHeading({
     >
       <div className="flex items-center justify-between space-x-2 w-full">
 
-        <div className={classNames(
-          'inline-flex items-center',
-          'space-x-1 cursor-pointer',
-          !enabled && 'opacity-30 pointer-events-none',
-        )}
-             onClick={optional ? onClick : null}
-        >
-          <span>{heading}</span>
-          <span className={classNames(
-            'svg-font fill-current',
-            'transition-transform',
-            open && 'rotate-180',
+        <div className={enabled ? '' : 'cursor-not-allowed'}>
+          <div className={classNames(
+            'inline-flex items-center',
+            'space-x-1 cursor-pointer',
+            !enabled && 'opacity-40 pointer-events-none',
           )}
+               onClick={optional ? onClick : null}
           >
-            <ChevronDownSolid />
-          </span>
+            <span>{heading}</span>
+            {enabled && (
+              <span className={classNames(
+                'svg-font fill-current',
+                'transition-transform',
+                open && 'rotate-180',
+              )}
+              >
+                <ChevronDownSolid />
+              </span>
+            )}
+          </div>
         </div>
 
-        {optional && <OSwitch on={enabled} set_on={() => toggle_enabled(!enabled)} />}
+        {optional && (
+          <OSwitch on={enabled}
+                   className="text-[1.1em]"
+                   set_on={() => {
+                     toggle_enabled(!enabled)
+                     set_open(enabled ? false : true)
+                   }} />
+        )}
 
       </div>
     </div>

@@ -7,6 +7,7 @@ export default function OGroupedSelectorBtn({
   label,
   active,
   Icon,
+  index,
   className,
   style,
   ...props
@@ -19,7 +20,7 @@ export default function OGroupedSelectorBtn({
          'cursor-pointer',
          'text-xxs',
          'block',
-         'border-l',
+         index !== 0 && 'border-l',
          'select-none',
          theme_ctx.classes.skin.border_color,
          theme_ctx.classes.typography.input_label,
@@ -27,8 +28,9 @@ export default function OGroupedSelectorBtn({
        )}
        {...props}
     >
-      <div style={{padding: '0.3em 1.3em', ...style}}
+      <div style={style}
            className={classNames(
+             'px-[1.3em] py-[0.3em]',
              active ?
                theme_ctx.classes.skin.selector_btn.active :
                theme_ctx.classes.skin.selector_btn.default,

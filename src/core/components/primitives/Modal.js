@@ -66,7 +66,10 @@ const ModalLayout = ({children, close}) => {
          )}
     >
       <Backdrop />
-      <motion.div className="bg-white relative"
+      <motion.div className={classNames(
+        'bg-white relative',
+        theme_ctx.classes.skin.border_radius_default,
+      )}
                   variants={scaleIn}
                   initial="hidden"
                   animate="visible"

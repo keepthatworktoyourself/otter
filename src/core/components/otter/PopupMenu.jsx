@@ -5,7 +5,7 @@ import design_options from '../../definitions/design-options'
 import PopoverAnimation from '../primitives/PopoverAnimation'
 import {useThemeContext} from '../../contexts/ThemeContext'
 
-function PopupMenu({items, className = 'absolute-center', close, style}) {
+function PopupMenu({items, className = 'absolute-center', close, classNameTypography, style}) {
   const ref = useRef()
   useOnClickOutside({ref, handler: () => close?.()})
 
@@ -23,11 +23,12 @@ function PopupMenu({items, className = 'absolute-center', close, style}) {
         'text-left',
         'overflow-hidden',
         'border',
+        theme_ctx.classes.skin.popup_menu.border_radius,
+        theme_ctx.classes.skin.popup_menu.shadow,
         theme_ctx.classes.skin.border_color,
       )}
            style={{
-             minWidth:  '10rem',
-             boxShadow: theme_ctx.design_options.block_shadow,
+             minWidth: '10rem',
              ...style,
            }}
       >
@@ -37,8 +38,9 @@ function PopupMenu({items, className = 'absolute-center', close, style}) {
              className={classNames(
                'block p-2 cursor-pointer',
                i !== 0 && 'border-t',
-               theme_ctx.classes.typography.sub_heading,
-               theme_ctx.classes.skin.popup_menu,
+               classNameTypography || theme_ctx.classes.typography.sub_heading,
+               theme_ctx.classes.skin.popup_menu_item.border_color,
+               theme_ctx.classes.skin.popup_menu_item.bg,
              )}
           >
             {item.label}
@@ -49,9 +51,13 @@ function PopupMenu({items, className = 'absolute-center', close, style}) {
   )
 }
 
-export default function PopupMenuAnimated({isOpen, close, onExitComplete, ...props}) {
+export default function PopupMenuAnimated({isOpen, close, onExitComplete, classNameTypography, ...props}) {
   return (
-    <PopoverAnimation Component={<PopupMenu close={close} {...props} />}
+    <PopoverAnimation Component={(
+      <PopupMenu close={close}
+                 classNameTypography={classNameTypography}
+                 {...props} />
+)}
                       isOpen={isOpen}
                       onExitComplete={onExitComplete}
                       {...props} />

@@ -1,11 +1,11 @@
 import React from 'react'
 import NestedBlockWrapper from './NestedBlockWrapper'
 import Repeater from './Repeater/Repeater'
-import GridLayoutItem from './GridLayoutItem'
 import FieldComponents from '../fields'
 import OErrorMessage from '../default-ui/OErrorMessage'
 import Fields from '../../definitions/fields'
 import {find_block, display_if} from '../../definitions/utils'
+import OFieldWrapper from '../default-ui/OFieldWrapper'
 
 
 // Errors
@@ -129,9 +129,11 @@ export default function RecursiveBlockRenderer({
     if (field_type === Fields.NestedBlock) {
       ensure_nested_block_data(item, field_def)
       out = (
-        <NestedBlockWrapper field_def={field_def}
+        <NestedBlockWrapper key={index}
                             containing_data_item={item}
-                            key={index}
+                            field_name={field_name}
+                            field_def={field_def}
+                            blocks={blocks}
                             index={index}
         >
           <RecursiveBlockRenderer containing_data_item={item}
@@ -146,6 +148,8 @@ export default function RecursiveBlockRenderer({
       ensure_nested_block_data(item, field_def)
       out = (
         <Repeater field_def={field_def}
+                  field_name={field_name}
+                  blocks={blocks}
                   containing_data_item={item}
                   key={index} />
       )
@@ -156,8 +160,8 @@ export default function RecursiveBlockRenderer({
       const Field = FieldComponents[field_type]
       const error_text = error_text__invalid_field_type_in_field_definition(field_name, field_type)
       out = (
-        <GridLayoutItem field_def={field_def}
-                        key={index}
+        <OFieldWrapper field_def={field_def}
+                       key={index}
         >
           {Field && (
             <Field field_def={field_def}
@@ -165,7 +169,7 @@ export default function RecursiveBlockRenderer({
                    is_display_if_target={is_display_if_target} />
           )}
           {!Field && <OErrorMessage text={error_text} />}
-        </GridLayoutItem>
+        </OFieldWrapper>
       )
     }
 

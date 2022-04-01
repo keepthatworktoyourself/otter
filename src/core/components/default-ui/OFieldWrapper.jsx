@@ -1,34 +1,25 @@
 import React from 'react'
+import {humanify_str} from '../../definitions/utils'
 import OFieldLabel from './OFieldLabel'
-import {classNames} from '../../helpers/style'
 
 export default function OFieldWrapper({
-  label,
-  with_label = true,
   children,
   field_def = {},
-  className,
   ...props
 }) {
-  const {align, classNameLabel} = field_def
-  const hori = align === 'horizontal'
-  const min_width_label = false
+  const {wrapper_class, label_class, field_class} = field_def
+  const label = field_def?.with_label !== false && (field_def.description || humanify_str(field_def.name))
 
   return (
-    <div className={classNames(
-      hori && 'flex items-start justify-between',
-      className,
-    )}
+    <div className={wrapper_class || 'w-full'}
          {...props}
     >
-      {label && with_label && (
+      {label && (
         <OFieldLabel label={label}
-                     with_bottom_margin={!hori}
-                     style={hori && min_width_label ? {width: '80px'} : null}
-                     className={classNameLabel} />
+                     className={label_class} />
       )}
 
-      {children}
+      <div className={field_class}>{children}</div>
     </div>
   )
 }

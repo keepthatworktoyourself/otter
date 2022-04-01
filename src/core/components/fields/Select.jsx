@@ -3,7 +3,7 @@ import OSelect from '../default-ui/OSelect'
 import {usePageData} from '../../contexts/PageDataContext'
 import {evaluate} from '../../definitions/utils'
 
-export default function Select({field_def, containing_data_item}) {
+export default function Select({field_def, containing_data_item, ...props}) {
   const ctx           = usePageData()
   const uid           = `${containing_data_item.__uid}-${field_def.name}`
   const value         = containing_data_item[field_def.name]
@@ -29,7 +29,8 @@ export default function Select({field_def, containing_data_item}) {
              options={opts}
              value={display_value}
              cb__change={cb__change}
-             cb__clear={cb__clear} />
+             cb__clear={cb__clear}
+             {...props} />
 
   )
 }

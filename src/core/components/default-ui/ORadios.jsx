@@ -11,7 +11,7 @@ const shared_triangle_border_styles = {
   borderRight: '5px solid transparent',
 }
 
-function Swatch({value, active, className, ...props}) {
+function Swatch({value, is_first, is_last, active, ...props}) {
   const theme_ctx = useThemeContext()
   const is_hex = value.includes('#')
 
@@ -21,11 +21,7 @@ function Swatch({value, active, className, ...props}) {
   )
 
   return (
-    <div className={classNames(
-      'relative flex flex-col items-center',
-      className,
-    )} {...props}
-    >
+    <div className="relative flex flex-col items-center" {...props}>
       {active && (
         <div className={classNames_triangle}
              style={{
@@ -38,9 +34,14 @@ function Swatch({value, active, className, ...props}) {
 
       <div style={{backgroundColor: is_hex && value}}
            className={classNames(
-             'w-6 h-6 cursor-pointer',
+             'w-[21px] h-[21px] cursor-pointer',
+             theme_ctx.classes.skin.border_radius_default,
+             !is_first && !is_last && '!rounded-none',
+             is_first && 'rounded-r-none',
+             is_last && 'rounded-l-none',
              !is_hex && value,
-           )} />
+           )}
+      ></div>
 
       {active && (
         <div className={classNames_triangle}
@@ -80,28 +81,30 @@ export default function ORadios({
     >
       {options && Object.keys(options).length > 0 && (
         <div className={classNames(
-          'inline-flex border-t border-r border-b',
+          'inline-flex border',
           theme_ctx.classes.skin.border_color,
+          theme_ctx.classes.skin.border_radius_default,
+          !color_swatches && 'overflow-hidden',
         )}
         >
           {Object.entries(options)
-            .map(([opt_value, opt_label], i) => color_swatches ?
-              (
-                <Swatch key={`${id}--${i}`}
-                        value={opt_value}
-                        active={opt_value === value}
-                        className={i === 0 && `border-l ${theme_ctx.classes.skin.border_color}`}
-                        onClick={() => cb__click(opt_value)} />
-              ) : (
-                <OGroupedSelectorBtn key={`${id}--${i}`}
-                                     label={opt_label}
-                                     value={opt_value}
-                                     Icon={icons && icons[opt_value] || null}
-                                     active={opt_value === value}
-                                     onClick={() => cb__click(opt_value)} />
-              ),
-            )
-          }
+            .map(([opt_value, opt_label], i) => color_swatches ? (
+              <Swatch key={`${id}--${i}`}
+                      is_first={i === 0}
+                      is_last={i === Object.entries(options).length - 1}
+                      value={opt_value}
+                      active={opt_value === value}
+                      onClick={() => cb__click(opt_value)} />
+            ) : (
+              <OGroupedSelectorBtn key={`${id}--${i}`}
+                                   index={i}
+                                   label={opt_label}
+                                   value={opt_value}
+                                   Icon={icons && icons[opt_value] || null}
+                                   active={opt_value === value}
+                                   onClick={() => cb__click(opt_value)} />
+            ),
+            )}
         </div>
       )}
 
