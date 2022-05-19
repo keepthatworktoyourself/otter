@@ -28,9 +28,9 @@ export default function OSwitch({
     >
       <span className="sr-only pointer-events-none">{label}</span>
       <span aria-hidden="true"
-            style={on && {
+            style={on ? {
               transform: 'translateX(calc(150% - 4px))',
-            }}
+            } : {}}
             className={classNames(
               theme_ctx.classes.skin.switch.btn,
               'w-[1em] h-[1em]',
