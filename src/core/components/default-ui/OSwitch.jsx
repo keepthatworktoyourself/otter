@@ -26,15 +26,14 @@ export default function OSwitch({
             style={{width: '2.5em', ...style}}
             {...props}
     >
-      <span className="sr-only">{label}</span>
+      <span className="sr-only pointer-events-none">{label}</span>
       <span aria-hidden="true"
-            style={{
-              width:     '1em',
-              height:    '1em',
-              transform: on && 'translateX(calc(150% - 4px))',
+            style={on && {
+              transform: 'translateX(calc(150% - 4px))',
             }}
             className={classNames(
               theme_ctx.classes.skin.switch.btn,
+              'w-[1em] h-[1em]',
               'pointer-events-none rounded-full',
               'transition-transform ease-in-out',
             )}
