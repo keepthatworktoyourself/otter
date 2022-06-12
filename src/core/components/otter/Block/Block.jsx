@@ -10,8 +10,18 @@ import {TabsProvider, TabsTab} from '../../primitives/Tabs'
 import {usePageData} from '../../../contexts/PageDataContext'
 import {find_block, humanify_str} from '../../../definitions/utils'
 import {classNames} from '../../../helpers/style'
+import deep_clean_obj from '../../../helpers/deep-clean-obj'
 import {useThemeContext} from '../../../contexts/ThemeContext'
 import TabBtns from '../other/TabBtns'
+
+
+function dev_mode_copy_block_data_to_clipboard(raw_block_data) {
+  navigator.clipboard
+    .writeText(JSON.stringify(deep_clean_obj(raw_block_data, ['__uid']), null, 4))
+    .then(() =>
+      console.log('dev_mode: copied block data to clipboard...'),
+    )
+}
 
 const drag_styles = { }
 
@@ -82,7 +92,10 @@ export default function Block({data_item, index, block_numbers}) {
                 <div className={classNames('relative', !open && 'overflow-hidden')}>
 
                   {block && (
-                    <div className="relative">
+                    <div className="relative"
+                         onClick={ctx.dev_mode ?
+                           () => dev_mode_copy_block_data_to_clipboard(ctx.data[index]) : null}
+                    >
                       <BlockAndRepeaterHeader heading={block.description || humanify_str(block.type)}
                                               block_number={block_numbers && index + 1}
                                               show_confirm_deletion={show_confirm_deletion}

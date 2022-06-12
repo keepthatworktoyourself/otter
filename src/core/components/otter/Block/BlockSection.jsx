@@ -54,9 +54,9 @@ export default function BlockSection({
       {heading && (
         <BlockSectionHeading heading={heading}
                              heading_align={heading_align}
-                             onClick={() => set_open(!open)}
                              open={open}
                              enabled={enabled}
+                             toggle_open={() => set_open(!open)}
                              toggle_enabled={toggle_enabled}
                              set_open={set_open}
                              optional={optional} />

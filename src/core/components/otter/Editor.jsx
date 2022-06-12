@@ -46,6 +46,7 @@ function export_data_item(data_item, blocks) {
     const field_name  = field_def.name
     const field_type  = field_def.type
     const field_value = data_item[field_name]
+    const supports_empty_string_value = [Fields.TextInput, Fields.TextArea].includes(field_type)
 
     if (field_type === Fields.NestedBlock || field_type === Fields.Repeater) {
       if (field_type === Fields.Repeater) {
@@ -60,7 +61,11 @@ function export_data_item(data_item, blocks) {
     }
 
     else {
-      const use_default = field_value === null || field_value === undefined || field_value === ''
+      const use_default =
+        field_value === null ||
+        field_value === undefined ||
+       (field_value === '' && !supports_empty_string_value)
+
       carry[field_name] = use_default ?
         evaluate(field_def.default_value) :
         field_value
@@ -68,7 +73,7 @@ function export_data_item(data_item, blocks) {
 
     const val = carry[field_name]
     const remove = (
-      val === '' ||
+      (val === '' && !supports_empty_string_value) ||
       val === null ||
       val === undefined ||
       val.constructor === Array && val.length === 0 ||
@@ -115,8 +120,10 @@ function ctx_reducer(state, op) {
   }
 
   else if (op?.add_item) {
-    const {type, index} = op.add_item
-    const data_item = {__type: type}
+    const {type, index, blocks} = op.add_item
+    const block = find_block(blocks, type)
+    const initial_data = block.initial_data || {}
+    const data_item = {...initial_data, __type: type}
 
     typeof index === 'number' ?
       state.data.splice(index, 0, data_item) :
@@ -163,6 +170,7 @@ export default function Editor({
   save,
   update_height,
   open_media_library,
+  dev_mode = false,
 }) {
   const valid_state = Object.values(State).includes(load_state)
   const [block_picker, set_block_picker] = useState(false)
@@ -177,7 +185,7 @@ export default function Editor({
     setTimeout(do_save)
   }
   function add_item(type, index) {
-    dispatch_ctx({add_item: {type, index}})
+    dispatch_ctx({add_item: {type, index, blocks}})
     enqueue_save_on_input()
     do_update_height()
   }
@@ -235,6 +243,7 @@ export default function Editor({
     open_block_picker,
     close_block_picker,
     can_add_blocks,
+    dev_mode,
   }
 
   function get_data() {

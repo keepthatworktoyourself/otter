@@ -72,6 +72,7 @@ The `<Otter.Editor />` element renders the editor.
 | `save`               | `function(data)`                                |          |                  | Save the document.                                                                                                                 |
 | `update_height`      | `function(new_height_in_pixels)`                |          |                  | Called by Otter when the editor height changes, in case this is useful to you.                                                     |
 | `open_media_library` | `function(set_value)`                           |          |                  | Called by Otter when a `MediaPicker` button is clicked. Call `set_value` to set the picked item.                                   |
+| `dev_mode`           | `bool`                                          |          | `false`          | When true, clicking on a block copies its data to your clipboard. Useful when you want to scaffold out a blocks `initial_data`.   |
 
 
 
@@ -100,6 +101,7 @@ An example Block of type `PageHeader` might contain the Fields: `title`, `subtit
 | `type`        | `<string>`         | Yes      |         | The block type identifier. Each block's `type` string must be unique within the editor.                                                                         |
 | `description` | `<string>`         |          |         | A human-readable name for the block, identifying it clearly to the user. If not present Otter will use a prettified version of the block type.                  |
 | `fields`      | `Array(<Field>)`   | Yes      |         | The [fields](#fields) in this block.                                                                                                                            |
+| `initial_data`| `<object>`         |          |         | Optionally, provide initial data for the block.                                                                                                                 |
 | `thumbnail`   | `<path>`           |          |         | Optional thumbnail for use in the [graphical block picker](#blocks-optionally-categorise-in-groups).                                                            |
 | `hidden`      | `<bool>`           |          | `false` | If `true`, don't display this block in the block picker. This allows you to define blocks at the top level which can only be used in a NestedBlock or Repeater. |
 | `tabs`        | `Array(<Tab>)`     |          |         | Allows you to arrange the block's fields into tabs. See [block tabs](#block-tabs).
@@ -216,7 +218,8 @@ Properties on all field types:
 | `description`      | `<string>`                              |            | Field label displayed to the user. If not present Otter will use a prettified version of the field name. |
 | `type`             | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).                                                                          |
 | `display_if`       | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s).                                            |
-| `default_value`*   | Any type, as appropriate                |            | A default value, used to set the field initially and to provide data on save if the field is empty       |
+| `default_value`*   | Any type, as appropriate                |            | A default value, used to set the field initially and to provide data on save if the field is empty.      |
+| `placeholder`      | `<string>`                              |            | For text and textarea inputs.                                                                            |
 | `wrapper_class`**  | `<string>`                              |            | Add custom classes to the field wrapper. See [custom layout](#custom-layout)                             |
 | `label_class`**    | `<string>`                              |            | Add custom classes to the field label. See [custom layout](#custom-layout)                               |
 | `field_class`**    | `<string>`                              |            | Add custom classes to the input or other field element. See [custom layout](#custom-layout)              |

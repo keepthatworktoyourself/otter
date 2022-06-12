@@ -14,6 +14,7 @@ export default function TextArea({
   const mono          = field_def.mono || false
   const default_value = evaluate(field_def.default_value)
   const display_value = (value === undefined ? default_value : value) || ''
+  const placeholder   = field_def.placeholder
 
   function cb__change(ev) {
     containing_data_item[field_def.name] = ev.target.value
@@ -25,6 +26,7 @@ export default function TextArea({
   return (
     <OTextarea value={display_value}
                onChange={cb__change}
+               placeholder={placeholder}
                monospaced={mono} />
   )
 }

@@ -13,6 +13,7 @@ export default function TextInput({
   const value         = containing_data_item[field_def.name]
   const default_value = evaluate(field_def.default_value)
   const display_value = (value === undefined ? default_value : value) || ''
+  const placeholder   = field_def.placeholder
   const ref           = useRef()
 
   function cb__change(ev) {
@@ -25,6 +26,7 @@ export default function TextInput({
   return (
     <OInput value={display_value}
             onChange={cb__change}
+            placeholder={placeholder}
             ref={ref} />
   )
 }
