@@ -10,18 +10,8 @@ import {TabsProvider, TabsTab} from '../../primitives/Tabs'
 import {usePageData} from '../../../contexts/PageDataContext'
 import {find_block, humanify_str} from '../../../definitions/utils'
 import {classNames} from '../../../helpers/style'
-import deep_clean_obj from '../../../helpers/deep-clean-obj'
 import {useThemeContext} from '../../../contexts/ThemeContext'
 import TabBtns from '../other/TabBtns'
-
-
-function dev_mode_copy_block_data_to_clipboard(raw_block_data) {
-  navigator.clipboard
-    .writeText(JSON.stringify(deep_clean_obj(raw_block_data, ['__uid']), null, 4))
-    .then(() =>
-      console.log('dev_mode: copied block data to clipboard...'),
-    )
-}
 
 const drag_styles = { }
 
@@ -79,7 +69,6 @@ export default function Block({data_item, index, block_numbers}) {
                      minWidth: theme_ctx.design_options.block_min_width,
                    }}
               >
-
                 <BlockDeleteConfirmPopoverAnimated delete_func={() => ctx.delete_item(index)}
                                                    isOpen={show_confirm_deletion}
                                                    close={() => set_show_confirm_deletion(false)}
@@ -92,12 +81,10 @@ export default function Block({data_item, index, block_numbers}) {
                 <div className={classNames('relative', !open && 'overflow-hidden')}>
 
                   {block && (
-                    <div className="relative"
-                         onClick={ctx.dev_mode ?
-                           () => dev_mode_copy_block_data_to_clipboard(ctx.data[index]) : null}
-                    >
+                    <div className="relative">
                       <BlockAndRepeaterHeader heading={block.description || humanify_str(block.type)}
-                                              block_number={block_numbers && index + 1}
+                                              index={index}
+                                              block_numbers={block_numbers}
                                               show_confirm_deletion={show_confirm_deletion}
                                               delete_func={ctx.can_add_blocks ? () => set_show_confirm_deletion(true) : null}
                                               open={open}

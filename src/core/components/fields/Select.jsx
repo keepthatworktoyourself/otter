@@ -3,7 +3,7 @@ import OSelect from '../default-ui/OSelect'
 import {usePageData} from '../../contexts/PageDataContext'
 import {evaluate} from '../../definitions/utils'
 
-export default function Select({field_def, containing_data_item, ...props}) {
+export default function Select({field_def, containing_data_item, is_display_if_target, ...props}) {
   const ctx           = usePageData()
   const uid           = `${containing_data_item.__uid}-${field_def.name}`
   const value         = containing_data_item[field_def.name]

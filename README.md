@@ -72,7 +72,7 @@ The `<Otter.Editor />` element renders the editor.
 | `save`               | `function(data)`                                |          |                  | Save the document.                                                                                                                 |
 | `update_height`      | `function(new_height_in_pixels)`                |          |                  | Called by Otter when the editor height changes, in case this is useful to you.                                                     |
 | `open_media_library` | `function(set_value)`                           |          |                  | Called by Otter when a `MediaPicker` button is clicked. Call `set_value` to set the picked item.                                   |
-| `dev_mode`           | `bool`                                          |          | `false`          | When true, clicking on a block copies its data to your clipboard. Useful when you want to scaffold out a blocks `initial_data`.   |
+| `dev_mode`           | `bool`                                          |          | `false`          | Add a button to copy a block's data to your clipboard. This lets you easily obtain a block's `initial_data`.                       |
 
 
 

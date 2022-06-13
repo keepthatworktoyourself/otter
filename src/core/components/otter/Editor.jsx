@@ -158,7 +158,7 @@ export default function Editor({
   blocks = [],
   data = [],
   load_state,
-  block_numbers = false,
+  block_numbers,
   can_add_blocks = true,
   DragDropContext = DnD.DragDropContext,
   Droppable = DnD.Droppable,
@@ -170,7 +170,7 @@ export default function Editor({
   save,
   update_height,
   open_media_library,
-  dev_mode = false,
+  dev_mode,
 }) {
   const valid_state = Object.values(State).includes(load_state)
   const [block_picker, set_block_picker] = useState(false)
