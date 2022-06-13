@@ -121,7 +121,8 @@ export default function RepeaterItem({
                                                      )}
                                                      transformOrigin="right" />
                   <BlockAndRepeaterHeader heading={title}
-                                          block_number={index + 1}
+                                          index={index}
+                                          block_numbers={true}
                                           show_confirm_deletion={show_confirm_deletion}
                                           delete_func={() => set_show_confirm_deletion(true)}
                                           open={open}

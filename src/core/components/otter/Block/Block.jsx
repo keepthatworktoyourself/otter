@@ -69,7 +69,6 @@ export default function Block({data_item, index, block_numbers}) {
                      minWidth: theme_ctx.design_options.block_min_width,
                    }}
               >
-
                 <BlockDeleteConfirmPopoverAnimated delete_func={() => ctx.delete_item(index)}
                                                    isOpen={show_confirm_deletion}
                                                    close={() => set_show_confirm_deletion(false)}
@@ -84,7 +83,8 @@ export default function Block({data_item, index, block_numbers}) {
                   {block && (
                     <div className="relative">
                       <BlockAndRepeaterHeader heading={block.description || humanify_str(block.type)}
-                                              block_number={block_numbers && index + 1}
+                                              index={index}
+                                              block_numbers={block_numbers}
                                               show_confirm_deletion={show_confirm_deletion}
                                               delete_func={ctx.can_add_blocks ? () => set_show_confirm_deletion(true) : null}
                                               open={open}

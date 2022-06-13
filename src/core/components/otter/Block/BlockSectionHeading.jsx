@@ -11,9 +11,9 @@ export default function BlockSectionHeading({
   className = classes.skin.block.bg,
   open,
   set_open,
-  onClick,
   optional,
   enabled,
+  toggle_open,
   toggle_enabled,
   ...props
 }) {
@@ -31,7 +31,7 @@ export default function BlockSectionHeading({
       theme_ctx.classes.typography.heading,
       className,
     )}
-         onClick={!optional ? onClick : null}
+         onClick={!optional ? toggle_open : null}
          {...props}
     >
       <div className="flex items-center justify-between space-x-2 w-full">
@@ -42,7 +42,7 @@ export default function BlockSectionHeading({
             'space-x-1 cursor-pointer',
             !enabled && 'opacity-40 pointer-events-none',
           )}
-               onClick={optional ? onClick : null}
+               onClick={optional ? toggle_open : null}
           >
             <span>{heading}</span>
             {enabled && (
