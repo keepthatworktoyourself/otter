@@ -172,6 +172,7 @@ export default function Editor({
   update_height,
   open_media_library,
   dev_mode,
+  design_tags,
 }) {
   const [block_picker_open, set_block_picker_open] = useState(false)
   const [block_to_insert, set_block_to_insert] = useState({insert_at_index: 0, type: null})
@@ -265,10 +266,14 @@ export default function Editor({
 
   const n_items = ctx.data?.length || 0
 
+  // Temp
+  useEffect(() => set_block_picker_state(true), [])
+
   return (
     <ThemeContext.Provider value={{
       classes:        merge(classes, custom_classes),
       design_options: merge(design_options, custom_design_options),
+      design_tags,
     }}
     >
       <ContextProvider value={{
@@ -321,6 +326,7 @@ export default function Editor({
             ReactDOM.createPortal(
               <Modal isOpen={show_block_picker}
                      close={() => close_block_picker()}
+                     overflow={design_tags && 'hidden'}
               >
                 <BlockPicker insert_at_index={block_to_insert?.insert_at_index || 0}
                              iframe_container_info={iframe_container_info}
@@ -334,6 +340,7 @@ export default function Editor({
           {!picker_container_ref && (
             <Modal isOpen={show_block_picker}
                    close={() => close_block_picker()}
+                   overflow={design_tags && 'hidden'}
             >
               <BlockPicker insert_at_index={block_to_insert?.insert_at_index || 0}
                            iframe_container_info={iframe_container_info}
