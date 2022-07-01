@@ -31,6 +31,7 @@ export default function Block({data_item, index, block_numbers}) {
   const block             = find_block(blocks, data_item.__type)
   const tabs              = block?.tabs && block?.tabs?.length > 0 && block.tabs
   const icon_tab_btns     = tabs && tabs.every(t => !!t.Icon)
+  const seamless          = !!block?.seamless
 
   const tab_btns = tabs && tabs.map(tab => {
     return icon_tab_btns ? tab.Icon : tab.label
@@ -60,52 +61,55 @@ export default function Block({data_item, index, block_numbers}) {
 
               <div className={classNames(
                 theme_ctx.classes.skin.block.bg,
-                theme_ctx.classes.skin.block.border,
                 theme_ctx.classes.skin.block.border_radius,
                 theme_ctx.classes.skin.border_color,
-                theme_ctx.classes.skin.block.shadow,
+                !seamless && theme_ctx.classes.skin.block.border,
+                !seamless && theme_ctx.classes.skin.block.shadow,
               )}
                    style={{
                      minWidth: theme_ctx.design_options.block_min_width,
                    }}
               >
-                <BlockDeleteConfirmPopoverAnimated delete_func={() => ctx.delete_item(index)}
-                                                   isOpen={show_confirm_deletion}
-                                                   close={() => set_show_confirm_deletion(false)}
-                                                   className={classNames(
-                                                     'absolute right-4 top-4',
-                                                     'z-10',
-                                                   )}
-                                                   transformOrigin="right" />
+                {ctx.can_add_blocks && (
+                  <BlockDeleteConfirmPopoverAnimated delete_func={() => ctx.delete_item(index)}
+                                                     isOpen={show_confirm_deletion}
+                                                     close={() => set_show_confirm_deletion(false)}
+                                                     className={classNames(
+                                                       'absolute right-4 top-4',
+                                                       'z-10',
+                                                     )}
+                                                     transformOrigin="right" />
+                )}
 
                 <div className={classNames('relative', !open && 'overflow-hidden')}>
-
                   {block && (
                     <div className="relative">
-                      <BlockAndRepeaterHeader heading={block.description || humanify_str(block.type)}
-                                              index={index}
-                                              block_numbers={block_numbers}
-                                              show_confirm_deletion={show_confirm_deletion}
-                                              delete_func={ctx.can_add_blocks ? () => set_show_confirm_deletion(true) : null}
-                                              open={open}
-                                              tab_btn_icons={icon_tab_btns && tab_btns}
-                                              toggle_open={() => {
-                                                ctx.update_height()
-                                                set_open(!open)
-                                              }}
-                                              classNameBorderRadius={theme_ctx.classes.skin.block.border_radius}
-                                              classNameBorder={theme_ctx.classes.skin.block_header.border}
-                                              classNameBg={theme_ctx.classes.skin.block_header.bg}
-                                              classNameYPad={theme_ctx.classes.skin.block_header.y_pad}
-                                              classNameHeading={theme_ctx.classes.skin.block_header.heading}
-                                              iconThemeClassNamesObj={theme_ctx.classes.skin.block_header_icon} />
+                      {!seamless && (
+                        <BlockAndRepeaterHeader heading={block.description || humanify_str(block.type)}
+                                                index={index}
+                                                block_numbers={block_numbers}
+                                                show_confirm_deletion={show_confirm_deletion}
+                                                delete_func={ctx.can_add_blocks ? () => set_show_confirm_deletion(true) : null}
+                                                open={open}
+                                                tab_btn_icons={icon_tab_btns && tab_btns}
+                                                toggle_open={() => {
+                                                  ctx.update_height()
+                                                  set_open(!open)
+                                                }}
+                                                classNameBorderRadius={theme_ctx.classes.skin.block.border_radius}
+                                                classNameBorder={theme_ctx.classes.skin.block_header.border}
+                                                classNameBg={theme_ctx.classes.skin.block_header.bg}
+                                                classNameYPad={theme_ctx.classes.skin.block_header.y_pad}
+                                                classNameHeading={theme_ctx.classes.skin.block_header.heading}
+                                                iconThemeClassNamesObj={theme_ctx.classes.skin.block_header_icon} />
+                      )}
 
                       <div className="relative text-xs">
                         <CollapseTransition collapsed={!open}
                                             className="relative"
                         >
                           {!tabs && (
-                            <BlockSection bordered={false}>
+                            <BlockSection bordered={false} seamless={seamless}>
                               <RecursiveBlockRenderer data_item={data_item} blocks={blocks} />
                             </BlockSection>
                           )}
@@ -121,6 +125,7 @@ export default function Block({data_item, index, block_numbers}) {
                             return (
                               <TabsTab key={`tab--${i}`} index={i}>
                                 <BlockSection bordered={false}
+                                              seamless={seamless}
                                               children={(
                                                 <RecursiveBlockRenderer data_item={data_item}
                                                                         block_fields={tab_fields}
