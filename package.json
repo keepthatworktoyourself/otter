@@ -1,7 +1,7 @@
 {
   "name": "otter-editor",
   "description": "Content editor with declaratively defined content blocks.",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "author": "Ben Hallstein <ben@ben.am> (https://ben.am/)",
   "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://github.com/keepthatworktoyourself/otter",
@@ -36,6 +36,7 @@
     "autoprefixer": "^10.4.2",
     "ava": "^4.0.1",
     "browser-env": "^3.3.0",
+    "buffer": "^6.0.3",
     "cssnano": "^5.0.16",
     "eslint": "^8.7.0",
     "eslint-config-react-app": "^7.0.0",
