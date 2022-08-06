@@ -3,21 +3,21 @@ import OInput from '../default-ui/OInput'
 import {usePageData} from '../../contexts/PageDataContext'
 import {evaluate} from '../../definitions/utils'
 
-export default function TextInput({
+export default function NumberInput({
   field_def,
   containing_data_item,
   is_display_if_target,
 }) {
   const ctx           = usePageData()
   const [_, update]   = useState({})
-  const {name, placeholder, mini} = field_def
+  const {name, min, max, step, mini} = field_def
   const value         = containing_data_item[name]
   const default_value = evaluate(field_def.default_value)
   const display_value = (value === undefined ? default_value : value) || ''
   const ref           = useRef()
 
   function cb__change(ev) {
-    containing_data_item[field_def.name] = ev.target.value
+    containing_data_item[name] = ev.target.value
     update({})
     ctx.value_updated()
     is_display_if_target && ctx.redraw()
@@ -25,8 +25,11 @@ export default function TextInput({
 
   return (
     <OInput value={display_value}
+            type="number"
+            min={min}
+            max={max}
+            step={step}
             onChange={cb__change}
-            placeholder={placeholder}
             ref={ref}
             mini={mini} />
   )

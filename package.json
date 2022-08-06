@@ -16,7 +16,7 @@
   ],
   "main": "dist/index.js",
   "scripts": {
-    "demo": "parcel demo/index.html",
+    "demo": "parcel demo/index.html -p 3002",
     "clean": "rm -rf dist demo/dist .parcel-cache",
     "build": "parcel build --no-source-maps demo/index.html --target default",
     "t": "ava -c 1 --verbose src/test/*",

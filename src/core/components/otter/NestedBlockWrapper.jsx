@@ -5,9 +5,10 @@ import BlockSection from './Block/BlockSection'
 
 export default function NestedBlockWrapper({field_def, field_name, blocks, index, containing_data_item, children}) {
   const ctx                    = usePageData()
-  const title                  = field_def.description || humanify_str(field_def.name)
   const seamless               = field_def.seamless === true
-  const optional               = field_def.optional === true && !seamless
+  const collapsible            = field_def?.collapsible !== false
+  const optional               = field_def.optional === true && !seamless && collapsible
+  const title                  = collapsible && (field_def.description || humanify_str(field_def.name))
   const initially_open         = (field_def.initially_open || seamless) || false
   const [enabled, set_enabled] = useState(!optional ? true : containing_data_item[field_name]?.__enabled)
 
