@@ -5,7 +5,6 @@ const Fields = {
   Bool:        'Bool',
   Radios:      'Radios',
   Select:      'Select',
-  SelectMini:  'SelectMini',
   MediaPicker: 'MediaPicker',
   NestedBlock: 'NestedBlock',
   Repeater:    'Repeater',

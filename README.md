@@ -210,7 +210,7 @@ Each block should contain at least one field.
 
 ### Field properties
 
-Properties on all field types:
+Properties on fields:
 
 | Property           | Value                                   | Required   |                                                                                                          |
 | :----------------- | :-------------------------------------- | :--------- | :------------------------------------------------------------------------------------------------------- |
@@ -223,6 +223,7 @@ Properties on all field types:
 | `wrapper_class`**  | `<string>`                              |            | Add custom classes to the field wrapper. See [custom layout](#custom-layout)                             |
 | `label_class`**    | `<string>`                              |            | Add custom classes to the field label. See [custom layout](#custom-layout)                               |
 | `field_class`**    | `<string>`                              |            | Add custom classes to the input or other field element. See [custom layout](#custom-layout)              |
+| `mini`             | `<bool>`                                |            | Currently only supported on Select, TextInput and Number fields. Useful in combination with Radios etc.  |
 
 - *(`default_value` is supported on all fields except: TextEditor, MediaPicker, NestedBlock, Repeater, Searchable.)
 - **(`wrapper_class`, `label_class` & `field_class` are supported on all fields except: Repeater, NestedBlock. [See custom layout](#custom-layout).)

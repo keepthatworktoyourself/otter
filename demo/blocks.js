@@ -113,7 +113,8 @@ const btn_block = {
     },
     {
       name:          'newTab',
-      type:          Otter.Fields.SelectMini,
+      type:          Otter.Fields.Select,
+      mini:          true,
       wrapper_class: `w-[calc(50%-0.5rem)] pt-1 flex items-center`,
       label_class:   'mr-[10px]',
       field_class:   'flex-1 w-full',
@@ -235,7 +236,8 @@ export const text_block = {
     {
       name:          'display_if_example_target',
       description:   'If is true',
-      type:          Otter.Fields.SelectMini,
+      type:          Otter.Fields.Select,
+      mini:          true,
       wrapper_class: 'pb-2 w-full',
       swatches:      true,
       default_value: 'here_are',

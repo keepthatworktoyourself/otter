@@ -2,7 +2,16 @@ import React, {forwardRef} from 'react'
 import {useThemeContext} from '../../contexts/ThemeContext'
 import {classNames} from '../../helpers/style'
 
-const OInput = forwardRef(({value, onChange, className, style, Icon, ...props}, ref) => {
+const OInput = forwardRef(({
+  value,
+  onChange,
+  className,
+  style,
+  Icon,
+  type = 'text',
+  mini = false,
+  ...props},
+ref) => {
   // Note that the ref must be supplied by parent for cursor positioning to work
   const theme_ctx = useThemeContext()
 
@@ -18,14 +27,17 @@ const OInput = forwardRef(({value, onChange, className, style, Icon, ...props}, 
   }
 
   return (
-    <div className={classNames('relative', className)}>
+    <div className={classNames('relative', mini && 'text-xxs', className)}>
       {Icon && (
         <div className="svg-font absolute-center-y pl-[0.75em] opacity-30">
           <Icon className="text-[1.2em]" />
         </div>
       )}
-
-      <input type="text"
+      <input type={type}
+             ref={ref}
+             style={style}
+             value={value || ''}
+             onChange={change}
              className={classNames(
                'w-full',
                'outline-none',
@@ -36,11 +48,9 @@ const OInput = forwardRef(({value, onChange, className, style, Icon, ...props}, 
                theme_ctx.classes.skin.border_radius_default,
                theme_ctx.classes.typography.input,
                Icon && 'pl-[2.5em]',
+               mini && 'pl-[1.3em] py-[0.285em]',
+               mini && type !== 'number' && 'pr-[1.3em]',
              )}
-             ref={ref}
-             style={style}
-             value={value || ''}
-             onChange={change}
              {...props} />
     </div>
   )
