@@ -219,6 +219,15 @@ const header_block_fields = [
     blockquote:     true,
   },
   {
+    name:          'width',
+    description:   'Width',
+    type:          Otter.Fields.NumberInput,
+    default_value: 2,
+    min:           1,
+    max:           5,
+    step:          1,
+  },
+  {
     name:        'media_item',
     description: 'Image',
     type:        Otter.Fields.MediaPicker,
