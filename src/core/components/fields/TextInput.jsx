@@ -10,10 +10,10 @@ export default function TextInput({
 }) {
   const ctx           = usePageData()
   const [_, update]   = useState({})
-  const value         = containing_data_item[field_def.name]
+  const {name, placeholder, mini} = field_def
+  const value         = containing_data_item[name]
   const default_value = evaluate(field_def.default_value)
   const display_value = (value === undefined ? default_value : value) || ''
-  const placeholder   = field_def.placeholder
   const ref           = useRef()
 
   function cb__change(ev) {
@@ -27,6 +27,7 @@ export default function TextInput({
     <OInput value={display_value}
             onChange={cb__change}
             placeholder={placeholder}
-            ref={ref} />
+            ref={ref}
+            mini={mini} />
   )
 }

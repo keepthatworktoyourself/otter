@@ -6,7 +6,6 @@ const Fields = {
   Radios:            'Radios',
   ColorSwatchRadios: 'ColorSwatchRadios',
   Select:            'Select',
-  SelectMini:        'SelectMini',
   MediaPicker:       'MediaPicker',
   NestedBlock:       'NestedBlock',
   Repeater:          'Repeater',
