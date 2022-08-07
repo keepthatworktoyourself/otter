@@ -9,19 +9,73 @@ import {dynamic_data, set_dynamic_data} from '../src/core/definitions/utils'
 
 const horizontal_field_layout_classes = 'flex items-center justify-between'
 
-set_dynamic_data('block_colors', {
-  'bg-white':    'white',
-  'bg-zinc-50':  'zinc-50',
-  'bg-zinc-100': 'zinc-100',
-  'bg-zinc-200': 'zinc-200',
-  'bg-zinc-300': 'zinc-300',
-  'bg-zinc-400': 'zinc-400',
-  'bg-zinc-500': 'zinc-500',
-  'bg-zinc-600': 'zinc-600',
-  'bg-zinc-700': 'zinc-700',
-  'bg-zinc-800': 'zinc-800',
-  'bg-zinc-900': 'zinc-900',
-})
+set_dynamic_data('block_colors', [
+  {
+    label:  'Greys',
+    colors: [
+      {
+        value:               'bg-white',
+        output_class_or_hex: 'bg-white',
+      },
+      {
+        value:               'bg-zinc-50',
+        output_class_or_hex: 'bg-zinc-50',
+      },
+      {
+        value:               'bg-zinc-100',
+        output_class_or_hex: 'bg-zinc-100',
+      },
+      {
+        value:               'bg-zinc-200',
+        output_class_or_hex: 'bg-zinc-200',
+      },
+      {
+        value:               'bg-zinc-300',
+        output_class_or_hex: 'bg-zinc-300',
+      },
+      {
+        value:               'bg-zinc-400',
+        output_class_or_hex: 'bg-zinc-400',
+      },
+    ],
+  },
+])
+set_dynamic_data('block_colors_multi_row', [
+  {
+    label:  'Greys Part 1',
+    colors: [
+      {
+        value:               'bg-white',
+        output_class_or_hex: 'bg-white',
+      },
+      {
+        value:               'bg-zinc-50',
+        output_class_or_hex: 'bg-zinc-50',
+      },
+      {
+        value:               'bg-zinc-100',
+        output_class_or_hex: 'bg-zinc-100',
+      },
+    ],
+  },
+  {
+    label:  'Greys Part 2',
+    colors: [
+      {
+        value:               'bg-zinc-200',
+        output_class_or_hex: 'bg-zinc-200',
+      },
+      {
+        value:               'bg-zinc-300',
+        output_class_or_hex: 'bg-zinc-300',
+      },
+      {
+        value:               'bg-zinc-400',
+        output_class_or_hex: 'bg-zinc-400',
+      },
+    ],
+  },
+])
 set_dynamic_data('default_block_color', 'bg-zinc-50')
 
 const block_option_field_layout_classes = `pr-[30%] w-full ${horizontal_field_layout_classes}`
@@ -32,6 +86,7 @@ export const block_options = {
     {
       name:          'top_padding',
       type:          Fields.Radios,
+      label_class:   'mb-0',
       wrapper_class: block_option_field_layout_classes,
       options:       {
         small:  'Small',
@@ -43,6 +98,7 @@ export const block_options = {
     {
       name:          'bottom_padding',
       type:          Fields.Radios,
+      label_class:   'mb-0',
       wrapper_class: block_option_field_layout_classes,
       options:       {
         small:  'Small',
@@ -54,20 +110,23 @@ export const block_options = {
     {
       name:          'top_border',
       type:          Fields.Bool,
+      label_class:   'mb-0',
       wrapper_class: block_option_field_layout_classes,
       default_value: false,
     },
     {
       name:          'bottom_border',
       type:          Fields.Bool,
+      label_class:   'mb-0',
       wrapper_class: block_option_field_layout_classes,
       default_value: false,
     },
     {
-      name:      'theme',
-      type:      Otter.Fields.Radios,
-      className: block_option_field_layout_classes,
-      options:   {
+      name:          'theme',
+      type:          Otter.Fields.Radios,
+      label_class:   'mb-0',
+      wrapper_class: block_option_field_layout_classes,
+      options:       {
         light: 'Light',
         dark:  'Dark',
       },
@@ -75,10 +134,10 @@ export const block_options = {
     },
     {
       name:          'color',
-      type:          Fields.Radios,
-      swatches:      true,
-      className:     block_option_field_layout_classes,
-      options:       dynamic_data('block_colors'),
+      type:          Fields.ColorSwatchRadios,
+      label_class:   'mb-0',
+      wrapper_class: block_option_field_layout_classes,
+      palette:       dynamic_data('block_colors'),
       default_value: dynamic_data('default_block_color'),
     },
   ],
@@ -239,7 +298,6 @@ export const text_block = {
       type:          Otter.Fields.Select,
       mini:          true,
       wrapper_class: 'pb-2 w-full',
-      swatches:      true,
       default_value: 'here_are',
       options:       {
         'here_are':  'Here are',
@@ -340,6 +398,7 @@ const tabs_demo_block = {
     {
       name:          'theme',
       type:          Otter.Fields.Radios,
+      label_class:   'mb-0',
       wrapper_class: block_option_field_layout_classes,
       options:       {
         light: 'Light',
@@ -349,10 +408,10 @@ const tabs_demo_block = {
     },
     {
       name:          'color',
-      type:          Fields.Radios,
-      swatches:      true,
+      type:          Fields.ColorSwatchRadios,
+      label_class:   'mb-0',
       wrapper_class: block_option_field_layout_classes,
-      options:       dynamic_data('block_colors'),
+      palette:       dynamic_data('block_colors_multi_row'),
       default_value: dynamic_data('default_block_color'),
     },
   ],
