@@ -2,6 +2,7 @@ const Fields = {
   TextInput:         'TextInput',
   TextArea:          'TextArea',
   TextEditor:        'TextEditor',
+  NumberInput:       'NumberInput',
   Bool:              'Bool',
   Radios:            'Radios',
   ColorSwatchRadios: 'ColorSwatchRadios',
