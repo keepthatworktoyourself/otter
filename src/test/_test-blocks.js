@@ -24,8 +24,8 @@ const blocks = [
     type:   'B3',
     fields: [
       {
-        name:              'content_item',
-        type:              Fields.NestedBlock,
+        name:         'content_item',
+        type:         Fields.NestedBlock,
         nested_block: 'AContentItem',
       },
     ],
@@ -34,8 +34,8 @@ const blocks = [
     type:   'B4',
     fields: [
       {
-        name:               'content_items',
-        type:               Fields.Repeater,
+        name:          'content_items',
+        type:          Fields.Repeater,
         nested_blocks: [
           'AnotherContentItem',
           'OneMoreContentItem',

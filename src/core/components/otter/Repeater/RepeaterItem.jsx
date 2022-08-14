@@ -59,8 +59,8 @@ export default function RepeaterItem({
   with_numbers = true,
   field_def,
   field_name,
-  block,
-  blocks,
+  block_def,
+  block_defs,
   containing_data_item,
   data_item,
   ...props
@@ -68,7 +68,7 @@ export default function RepeaterItem({
   const ctx              = usePageData()
   const theme_ctx        = useThemeContext()
   const draggable_key    = `draggable-repeater-item-${props.dnd_key || index}`
-  const tabs             = block?.tabs || []
+  const tabs             = block_def?.tabs || []
   const has_tabs         = tabs && tabs?.length > 0
   const icon_tab_btns    = has_tabs && with_collapsible_header_bar && tabs.every(t => !!t.Icon)
 
@@ -144,13 +144,13 @@ export default function RepeaterItem({
                     {!icon_tab_btns &&  <TabBtns tabs={tabs} />}
 
                     {tabs.map((tab, i) => {
-                      const block_fields = block.fields
+                      const block_fields = block_def.fields
                       const tab_fields = block_fields.filter(field => tab.fields.includes(field.name))
                       return (
                         <TabsTab key={i} index={i}>
                           <Inner {...{children, contains_nested_repeater}} padding_disabled={true}>
                             <RecursiveBlockRenderer block_fields={tab_fields}
-                                                    blocks={blocks}
+                                                    block_defs={block_defs}
                                                     containing_data_item={containing_data_item}
                                                     field_name={field_name}
                                                     data_item={data_item} />

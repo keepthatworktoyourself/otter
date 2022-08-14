@@ -28,7 +28,7 @@ const delegate = {
 const state = {
   load_state: Otter.State.Loading,
   data: [ ],
-  blocks: null,
+  block_defs: null,
   iframe_container_info: { },
 };
 
@@ -36,7 +36,7 @@ function render() {
   render.component = ReactDOM.render(
     <Otter.Editor data={state.data}
                   load_state={state.load_state}
-                  blocks={state.blocks}
+                  blocks={state.block_defs}
                   block_numbers={true}
                   delegate={delegate}
                   when_to_save={Otter.Save.OnInput}
@@ -112,7 +112,7 @@ function init(blocks) {
   setInterval(send_height_update, 5000);
 
   render();
-  state.blocks = blocks;
+  state.block_defs = blocks;
   load();
 }
 

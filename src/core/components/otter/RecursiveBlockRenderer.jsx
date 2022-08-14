@@ -71,12 +71,12 @@ export default function RecursiveBlockRenderer({
   data_item,
   containing_data_item,
   field_name,
-  blocks,
+  block_defs,
   block_fields,
 }) {
   const item       = data_item || containing_data_item[field_name]
-  const block      = find_block_def(blocks, item.__type)
-  const field_defs = block_fields || (block?.fields || [])
+  const block_def  = find_block_def(block_defs, item.__type)
+  const field_defs = block_fields || (block_def?.fields || [])
 
   const display_if_targets = field_defs
     .map(field_def => field_def && field_def.display_if)
@@ -112,7 +112,7 @@ export default function RecursiveBlockRenderer({
 
 
     // Conditional rendering
-    const di = display_if(block, field_name, item)
+    const di = display_if(block_def, field_name, item)
     if (di.errors.length) {
       const text = error_text__invalid_display_if(field_name, di.errors)
       return (
@@ -133,12 +133,12 @@ export default function RecursiveBlockRenderer({
                             containing_data_item={item}
                             field_name={field_name}
                             field_def={field_def}
-                            blocks={blocks}
+                            block_defs={block_defs}
                             index={index}
         >
           <RecursiveBlockRenderer containing_data_item={item}
                                   field_name={field_name}
-                                  blocks={blocks} />
+                                  block_defs={block_defs} />
         </NestedBlockWrapper>
       )
     }
@@ -149,7 +149,7 @@ export default function RecursiveBlockRenderer({
       out = (
         <Repeater field_def={field_def}
                   field_name={field_name}
-                  blocks={blocks}
+                  block_defs={block_defs}
                   containing_data_item={item}
                   key={index} />
       )

@@ -191,10 +191,10 @@ const btns_block = {
   type:   'Btns',
   fields: [
     {
-      name:               'btns__btn',
-      type:               Otter.Fields.Repeater,
-      add_item_label:     'Add a button',
-      nested_blocks: [
+      name:           'btns__btn',
+      type:           Otter.Fields.Repeater,
+      add_item_label: 'Add a button',
+      nested_blocks:  [
         btn_block,
       ],
     },
@@ -236,7 +236,7 @@ const header_block_fields = [
     name:                    'btns',
     description:             'Buttons (optional nested block)',
     type:                    Otter.Fields.NestedBlock,
-    nested_block:       btns_block, // Supports name of block defined elsewhere
+    nested_block:            btns_block, // Supports name of block defined elsewhere
     seamless:                false,
     __enabled_default_value: false,
     optional:                true,
@@ -431,25 +431,25 @@ export const block_with_nested_block = {
   description: 'Nested Blocks',
   fields:      [
     {
-      name:              'tabs_demo',
-      description:       'Tabs',
-      type:              Otter.Fields.NestedBlock,
-      nested_block: tabs_demo_block, // Supports inline block object
-      seamless:          true,
-      initially_open:    false,
+      name:           'tabs_demo',
+      description:    'Tabs',
+      type:           Otter.Fields.NestedBlock,
+      nested_block:   tabs_demo_block, // Supports inline block object
+      seamless:       true,
+      initially_open: false,
     },
     {
-      name:              'text_content',
-      type:              Otter.Fields.NestedBlock,
-      nested_block: text_block, // Supports inline block object
-      seamless:          false,
-      initially_open:    false,
+      name:           'text_content',
+      type:           Otter.Fields.NestedBlock,
+      nested_block:   text_block, // Supports inline block object
+      seamless:       false,
+      initially_open: false,
     },
     {
       name:                    'searchable',
       type:                    Otter.Fields.NestedBlock,
       description:             'Searchable (Seamless Nested Block)',
-      nested_block:       'SearchablesDemo', // Supports name of block defined elsewhere
+      nested_block:            'SearchablesDemo', // Supports name of block defined elsewhere
       optional:                true,
       seamless:                true,
       __enabled_default_value: false,
@@ -462,9 +462,9 @@ export const block_with_repeater_one_type = {
   description: 'Repeater Fields (Just One Type)',
   fields:      [
     {
-      name:               'content_items',
-      description:        'Content:',
-      type:               Otter.Fields.Repeater,
+      name:          'content_items',
+      description:   'Content:',
+      type:          Otter.Fields.Repeater,
       nested_blocks: [
         html_block, // Supports name of block defined elsewhere
       ],
@@ -477,10 +477,10 @@ export const block_with_repeater = {
   description: 'Repeater Fields',
   fields:      [
     {
-      name:               'content_items',
-      description:        'Content:',
-      item_headers:       true,
-      type:               Otter.Fields.Repeater,
+      name:          'content_items',
+      description:   'Content:',
+      item_headers:  true,
+      type:          Otter.Fields.Repeater,
       nested_blocks: [
         'Text', // Supports name of block defined elsewhere
         text_block_with_icon_tabs,

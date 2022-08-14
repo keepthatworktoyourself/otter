@@ -106,8 +106,8 @@ function ensure_uids(data) {
   })
 }
 
-function ensure_display_ifs_are_arrays(blocks) {
-  iterate(blocks, item => {
+function ensure_display_ifs_are_arrays(block_defs) {
+  iterate(block_defs, item => {
     if (item && item.display_if && item.display_if.constructor !== Array) {
       item.display_if = [item.display_if]
     }
@@ -130,9 +130,9 @@ function ctx_reducer(state, op) {
   }
 
   else if (op?.add_item) {
-    const {type, index, blocks} = op.add_item
-    const block = find_block_def(blocks, type)
-    const initial_data = block.initial_data || {}
+    const {type, index, block_defs} = op.add_item
+    const block_def = find_block_def(block_defs, type)
+    const initial_data = block_def.initial_data || {}
     const data_item = {...initial_data, __type: type}
 
     typeof index === 'number' ?
@@ -157,7 +157,7 @@ function ctx_reducer(state, op) {
     }
   }
 
-  return {data: state.data, blocks: state.blocks}
+  return {data: state.data, block_defs: state.block_defs}
 }
 
 
@@ -165,7 +165,7 @@ function ctx_reducer(state, op) {
 // -----------------------------------
 
 export default function Editor({
-  blocks = [],
+  blocks: block_defs = [],
   data = [],
   load_state,
   block_numbers,
@@ -188,14 +188,14 @@ export default function Editor({
   const [previous_load_state, set_previous_load_state] = useState(null)
   const [_, update] = useState({ })
   const initial_data = useMemo(() => copy(data), [])
-  const [ctx, dispatch_ctx] = useReducer(ctx_reducer, {data: initial_data, blocks})
+  const [ctx, dispatch_ctx] = useReducer(ctx_reducer, {data: initial_data, block_defs})
   const first_render = useOnFirstRender()
 
   function enqueue_save_on_input() {
     setTimeout(do_save)
   }
   function add_item(type, index) {
-    dispatch_ctx({add_item: {type, index, blocks}})
+    dispatch_ctx({add_item: {type, index, block_defs}})
     enqueue_save_on_input()
     do_update_height()
   }
@@ -258,7 +258,7 @@ export default function Editor({
 
   function get_data() {
     console.log('ctx.data', ctx.data)
-    return (ctx.data || []).map(block_data => export_block_data(block_data, ctx.blocks))
+    return (ctx.data || []).map(block_data => export_block_data(block_data, ctx.block_defs))
   }
 
   function set_block_picker_state(open) {
@@ -272,7 +272,7 @@ export default function Editor({
   }
 
   ensure_uids(ctx.data)
-  ensure_display_ifs_are_arrays(ctx.blocks)
+  ensure_display_ifs_are_arrays(ctx.block_defs)
 
   if (load_state === State.Loaded && previous_load_state !== State.Loaded) {
     do_update_height()
@@ -285,7 +285,7 @@ export default function Editor({
     can_add_blocks &&
     load_state === State.Loaded &&
     block_picker !== false &&
-    blocks_are_grouped(ctx.blocks)
+    blocks_are_grouped(ctx.block_defs)
   )
 
   const n_items = ctx.data?.length || 0

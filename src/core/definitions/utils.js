@@ -110,8 +110,8 @@ export function recursive_find(obj, func) {
 // find_block -> block or null
 // -----------------------------------
 
-export function find_block_def(blocks, type) {
-  const defs = (blocks && blocks.constructor === Array) ? blocks : [blocks]
+export function find_block_def(block_defs, type) {
+  const defs = (block_defs && block_defs.constructor === Array) ? block_defs : [block_defs]
 
   return recursive_find(
     defs,
@@ -271,12 +271,12 @@ export function display_if(block_def, field_name, block_data) {
 // blocks_are_grouped
 // -----------------------------------
 
-export function blocks_are_simple(blocks) {
-  return blocks && blocks.constructor === Array
+export function blocks_are_simple(block_defs) {
+  return block_defs && block_defs.constructor === Array
 }
 
-export function blocks_are_grouped(blocks) {
-  return blocks && blocks.constructor === Object
+export function blocks_are_grouped(block_defs) {
+  return block_defs && block_defs.constructor === Object
 }
 
 

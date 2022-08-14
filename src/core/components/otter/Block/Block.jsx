@@ -26,9 +26,9 @@ function get_drag_styles(provided, snapshot) {
 export default function Block({data_item, index, block_numbers}) {
   const ctx               = usePageData()
   const theme_ctx         = useThemeContext()
-  const blocks            = ctx.blocks
+  const block_defs        = ctx.block_defs
   const draggable_key     = `block-${data_item.__uid}`
-  const block             = find_block_def(blocks, data_item.__type)
+  const block             = find_block_def(block_defs, data_item.__type)
   const tabs              = block?.tabs && block?.tabs?.length > 0 && block.tabs
   const icon_tab_btns     = tabs && tabs.every(t => !!t.Icon)
   const seamless          = !!block?.seamless
@@ -110,7 +110,7 @@ export default function Block({data_item, index, block_numbers}) {
                         >
                           {!tabs && (
                             <BlockSection bordered={false} seamless={seamless}>
-                              <RecursiveBlockRenderer data_item={data_item} blocks={blocks} />
+                              <RecursiveBlockRenderer data_item={data_item} blocks_defs={block_defs} />
                             </BlockSection>
                           )}
 
@@ -119,7 +119,7 @@ export default function Block({data_item, index, block_numbers}) {
                           )}
 
                           {tabs && tabs.map((tab, i) => {
-                            const block_fields = find_block_def(blocks, data_item.__type).fields
+                            const block_fields = find_block_def(block_defs, data_item.__type).fields
                             const tab_fields = block_fields.filter(field => tab.fields.includes(field.name))
 
                             return (
@@ -129,7 +129,7 @@ export default function Block({data_item, index, block_numbers}) {
                                               children={(
                                                 <RecursiveBlockRenderer data_item={data_item}
                                                                         block_fields={tab_fields}
-                                                                        blocks={blocks} />
+                                                                        block_defs={block_defs} />
                                   )} />
                               </TabsTab>
                             )
