@@ -53,32 +53,33 @@ function export_block_data(block_data, block_defs) {
 
   return fields__displayed.reduce((carry, field_def) => {
     const {name: field_name, type: field_type} = field_def
-    const field_data                           = block_data[field_name]
+    const field_value                          = block_data[field_name]
     const supports_empty_string_value          = field_type_supports_empty_string_value(field_type)
 
     if (field_type === Fields.NestedBlock || field_type === Fields.Repeater) {
       if (field_type === Fields.Repeater) {
-        carry[field_name] = (field_data || []).map(sub_field_data => {
-          return export_block_data(sub_field_data, block_defs)
+        carry[field_name] = (field_value || []).map(block_data => {
+          return export_block_data(block_data, block_defs)
         })
       }
       else if (field_type === Fields.NestedBlock) {
-        carry[field_name] = export_block_data(field_data, block_defs)
+        carry[field_name] = export_block_data(field_value, block_defs)
       }
+
       if (field_def.optional) {
-        carry[field_name]['__enabled'] = !!field_data['__enabled']
+        carry[field_name]['__enabled'] = !!field_value['__enabled']
       }
     }
 
     else {
       const use_default =
-        field_data === null ||
-        field_data === undefined ||
-       (field_data === '' && !supports_empty_string_value)
+        field_value === null ||
+        field_value === undefined ||
+       (field_value === '' && !supports_empty_string_value)
 
       carry[field_name] = use_default ?
         evaluate(field_def.default_value) :
-        field_data
+        field_value
     }
 
     const val = carry[field_name]
