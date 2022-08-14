@@ -154,10 +154,10 @@ export default function Repeater({field_def, field_name, parent_block_data}) {
                                       cb__delete={cb__delete}
                                       with_collapsible_header_bar={item_headers}
                                       block_def={block_def}
-                                      parent_block_data={parent_block_data}
                                       field_def={field_def}
                                       field_name={field_name}
                                       block_data={block_data}
+                                      parent_block_data={parent_block_data}
                                       title={block_titles && (
                                         block_def.description || humanify_str(block_def.type)
                                       )}
