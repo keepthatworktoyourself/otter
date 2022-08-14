@@ -184,8 +184,8 @@ export default function Editor({
   dev_mode,
 }) {
   const valid_state = Object.values(State).includes(load_state)
-  const [block_picker, set_block_picker] = useState(false)
-  const [block_to_insert, set_block_to_insert] = useState({index: 0, type: null})
+  const [block_picker_open, set_block_picker_open] = useState(false)
+  const [block_to_insert, set_block_to_insert] = useState({insert_at_index: 0, type: null})
   const [previous_load_state, set_previous_load_state] = useState(null)
   const [_, update] = useState({ })
   const initial_data = useMemo(() => copy(data), [])
@@ -219,15 +219,15 @@ export default function Editor({
     open_media_library?.(set_value_callback)
   }
   function open_block_picker(block_index) {
-    set_block_to_insert({ })
-    set_block_picker_state(block_index)
+    set_block_to_insert({insert_at_index: block_index})
+    do_set_block_picker_open(true)
   }
   function close_block_picker() {
-    set_block_picker(false)
+    do_set_block_picker_open(false)
   }
   function insert_block() {
-    if (!block_to_insert?.type || (!block_to_insert?.index && block_to_insert.index !== 0)) return
-    add_item(block_to_insert.type, block_to_insert.index)
+    if (!block_to_insert?.type || (!block_to_insert?.insert_at_index && block_to_insert.insert_at_index !== 0)) return
+    add_item(block_to_insert.type, block_to_insert.insert_at_index)
   }
 
   useEffect(() => {
@@ -239,10 +239,10 @@ export default function Editor({
   useEffect(() => {
     // Blocks are inserted AFTER the block picker
     // closes, but BEFORE the closing animation has ended
-    if (block_picker === false) {
+    if (block_picker_open === false) {
       setTimeout(insert_block, 150)
     }
-  }, [block_picker])
+  }, [block_picker_open])
 
   const ctx_interface = {
     update_height:      do_update_height,
@@ -261,8 +261,8 @@ export default function Editor({
     return (ctx.data || []).map(block_data => export_block_data(block_data, ctx.block_defs))
   }
 
-  function set_block_picker_state(open) {
-    set_block_picker(open)
+  function do_set_block_picker_open(open) {
+    set_block_picker_open(open)
     window.scrollY,
     do_update_height()
   }
@@ -284,7 +284,7 @@ export default function Editor({
   const show_block_picker = (
     can_add_blocks &&
     load_state === State.Loaded &&
-    block_picker !== false &&
+    block_picker_open !== false &&
     blocks_are_grouped(ctx.block_defs)
   )
 
@@ -308,7 +308,7 @@ export default function Editor({
           {load_state === State.Loaded && (
             <div className="mx-auto"
                  style={{
-                   minHeight: `${block_picker === false ? '20' : '50'}rem`,
+                   minHeight: `${block_picker_open === false ? '20' : '50'}rem`,
                    maxWidth:  '45rem',
                  }}
             >
@@ -352,7 +352,7 @@ export default function Editor({
               <Modal isOpen={show_block_picker}
                      close={() => close_block_picker()}
               >
-                <BlockPicker block_index={block_picker}
+                <BlockPicker insert_at_index={block_to_insert?.insert_at_index || 0}
                              iframe_container_info={iframe_container_info}
                              set_block_to_insert={set_block_to_insert}
                              close={() => close_block_picker()} />
@@ -365,7 +365,7 @@ export default function Editor({
             <Modal isOpen={show_block_picker}
                    close={() => close_block_picker()}
             >
-              <BlockPicker block_index={block_picker}
+              <BlockPicker insert_at_index={block_to_insert?.insert_at_index || 0}
                            iframe_container_info={iframe_container_info}
                            set_block_to_insert={set_block_to_insert}
                            close={() => close_block_picker()} />

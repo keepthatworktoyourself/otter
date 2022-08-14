@@ -6,8 +6,8 @@ import {useThemeContext} from '../../../contexts/ThemeContext'
 
 export default function BlockPicker({
   set_block_to_insert,
+  insert_at_index,
   close,
-  block_index,
 }) {
   const ctx              = usePageData()
   const theme_ctx        = useThemeContext()
@@ -43,8 +43,8 @@ export default function BlockPicker({
                         key={block.type}
                         onClick={ev => {
                           set_block_to_insert({
-                            type:  ev.currentTarget.getAttribute('data-block-type'),
-                            index: block_index,
+                            type: ev.currentTarget.getAttribute('data-block-type'),
+                            insert_at_index,
                           })
                           close?.()
                         }}
