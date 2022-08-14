@@ -150,7 +150,6 @@ export default function RepeaterItem({
                         <TabsTab key={i} index={i}>
                           <Inner {...{children, contains_nested_repeater}} padding_disabled={true}>
                             <RecursiveBlockRenderer block_fields={tab_fields}
-                                                    block_defs={block_defs}
                                                     containing_data_item={containing_data_item}
                                                     field_name={field_name}
                                                     data_item={data_item} />

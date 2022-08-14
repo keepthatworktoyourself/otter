@@ -35,7 +35,6 @@ export default function BlockSection({
   disable_bottom_pad = false,
   field_def,
   containing_data_item,
-  block_defs,
   field_name,
   ...props
 }) {
@@ -76,7 +75,6 @@ export default function BlockSection({
                     <TabsTab key={i} index={i}>
                       <Inner seamless={true}>
                         <RecursiveBlockRenderer block_fields={tab_fields}
-                                                block_defs={block_defs}
                                                 containing_data_item={containing_data_item}
                                                 field_name={field_name} />
                       </Inner>

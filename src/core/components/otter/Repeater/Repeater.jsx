@@ -154,7 +154,6 @@ export default function Repeater({field_def, field_name, containing_data_item, b
                                       cb__delete={cb__delete}
                                       with_collapsible_header_bar={item_headers}
                                       block_def={block_def}
-                                      block_defs={block_defs}
                                       containing_data_item={containing_data_item}
                                       field_def={field_def}
                                       field_name={field_name}
@@ -164,7 +163,7 @@ export default function Repeater({field_def, field_name, containing_data_item, b
                                       )}
                         >
                           {is_permitted ?
-                            <RecursiveBlockRenderer data_item={data_item} block_defs={block_defs} /> :
+                            <RecursiveBlockRenderer data_item={data_item} /> :
                             <OErrorMessage text={`Items of type ${data_item.__type} are not allowed in this repeater`} />
                       }
                         </RepeaterItem>

@@ -3,7 +3,7 @@ import {usePageData} from '../../contexts/PageDataContext'
 import {humanify_str} from '../../definitions/utils'
 import BlockSection from './Block/BlockSection'
 
-export default function NestedBlockWrapper({field_def, field_name, block_defs, index, containing_data_item, children}) {
+export default function NestedBlockWrapper({field_def, field_name, index, containing_data_item, children}) {
   const ctx                    = usePageData()
   const title                  = field_def.description || humanify_str(field_def.name)
   const seamless               = field_def.seamless === true
@@ -25,7 +25,6 @@ export default function NestedBlockWrapper({field_def, field_name, block_defs, i
     <BlockSection heading={title}
                   field_def={field_def.nested_block}
                   field_name={field_name}
-                  block_defs={block_defs}
                   children={children}
                   is_first={index === 0}
                   disable_bottom_pad={true}

@@ -195,7 +195,7 @@ export default function Editor({
     setTimeout(do_save)
   }
   function add_item(type, index) {
-    dispatch_ctx({add_item: {type, index, block_defs}})
+    dispatch_ctx({add_item: {type, index, block_defs: ctx.block_defs}})
     enqueue_save_on_input()
     do_update_height()
   }

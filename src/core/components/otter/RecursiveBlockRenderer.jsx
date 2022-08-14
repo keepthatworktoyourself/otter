@@ -6,6 +6,7 @@ import OErrorMessage from '../default-ui/OErrorMessage'
 import Fields from '../../definitions/fields'
 import {find_block_def, display_if} from '../../definitions/utils'
 import OFieldWrapper from '../default-ui/OFieldWrapper'
+import {usePageData} from '../../contexts/PageDataContext'
 
 
 // Errors
@@ -71,11 +72,11 @@ export default function RecursiveBlockRenderer({
   data_item,
   containing_data_item,
   field_name,
-  block_defs,
   block_fields,
 }) {
+  const ctx        = usePageData()
   const item       = data_item || containing_data_item[field_name]
-  const block_def  = find_block_def(block_defs, item.__type)
+  const block_def  = find_block_def(ctx.block_defs, item.__type)
   const field_defs = block_fields || (block_def?.fields || [])
 
   const display_if_targets = field_defs
@@ -133,12 +134,10 @@ export default function RecursiveBlockRenderer({
                             containing_data_item={item}
                             field_name={field_name}
                             field_def={field_def}
-                            block_defs={block_defs}
                             index={index}
         >
           <RecursiveBlockRenderer containing_data_item={item}
-                                  field_name={field_name}
-                                  block_defs={block_defs} />
+                                  field_name={field_name} />
         </NestedBlockWrapper>
       )
     }
@@ -149,7 +148,6 @@ export default function RecursiveBlockRenderer({
       out = (
         <Repeater field_def={field_def}
                   field_name={field_name}
-                  block_defs={block_defs}
                   containing_data_item={item}
                   key={index} />
       )
