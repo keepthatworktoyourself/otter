@@ -59,9 +59,8 @@ export default function RepeaterItem({
   with_numbers = true,
   field_name,
   block_def,
-  block_defs,
-  containing_data_item,
-  data_item,
+  parent_block_data,
+  block_data,
   ...props
 }) {
   const ctx              = usePageData()
@@ -149,9 +148,9 @@ export default function RepeaterItem({
                         <TabsTab key={i} index={i}>
                           <Inner {...{children, contains_nested_repeater}} padding_disabled={true}>
                             <RecursiveBlockRenderer block_fields={tab_fields}
-                                                    containing_data_item={containing_data_item}
+                                                    parent_block_data={parent_block_data}
                                                     field_name={field_name}
-                                                    data_item={data_item} />
+                                                    block_data={block_data} />
                           </Inner>
                         </TabsTab>
                       )

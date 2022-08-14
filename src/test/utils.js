@@ -138,17 +138,17 @@ test('Utils.find_field: copes with nulls', t => {
 })
 
 
-// is_data_item
+// is_block_data
 // ------------------------------------
 
-test('utils: is_data_item fails if not object or has no __type', t => {
-  t.is(false, Utils.is_data_item('x'))
-  t.is(false, Utils.is_data_item(true))
-  t.is(false, Utils.is_data_item({lemurs: 6}))
+test('utils: is_block_data fails if not object or has no __type', t => {
+  t.is(false, Utils.is_block_data('x'))
+  t.is(false, Utils.is_block_data(true))
+  t.is(false, Utils.is_block_data({lemurs: 6}))
 })
 
-test('utils: is_data_item succeeds if is object with __type', t => {
-  t.is(true, Utils.is_data_item({__type: 'MyBlock'}))
+test('utils: is_block_data succeeds if is object with __type', t => {
+  t.is(true, Utils.is_block_data({__type: 'MyBlock'}))
 })
 
 

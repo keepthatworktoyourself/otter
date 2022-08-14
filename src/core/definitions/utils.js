@@ -128,10 +128,10 @@ export function find_field(fields, name) {
 }
 
 
-// is_data_item
+// is_block_data
 // -----------------------------------
 
-export function is_data_item(obj) {
+export function is_block_data(obj) {
   return !!(obj && obj.constructor === Object && obj.__type)
 }
 
@@ -158,7 +158,7 @@ export function iterate(data, func) {
 // -----------------------------------
 
 export function iterate_data(data, func) {
-  iterate(data, item => is_data_item(item) && func(item))
+  iterate(data, item => is_block_data(item) && func(item))
 }
 
 

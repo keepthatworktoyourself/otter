@@ -34,7 +34,7 @@ export default function BlockSection({
   bordered = !seamless,
   disable_bottom_pad = false,
   field_def,
-  containing_data_item,
+  parent_block_data,
   field_name,
   ...props
 }) {
@@ -75,7 +75,7 @@ export default function BlockSection({
                     <TabsTab key={i} index={i}>
                       <Inner seamless={true}>
                         <RecursiveBlockRenderer block_fields={tab_fields}
-                                                containing_data_item={containing_data_item}
+                                                parent_block_data={parent_block_data}
                                                 field_name={field_name} />
                       </Inner>
                     </TabsTab>

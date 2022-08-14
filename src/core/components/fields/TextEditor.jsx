@@ -71,7 +71,7 @@ export default class TextEditor extends React.Component {
 
 
   cb__change(html, _, event_origin) {
-    this.props.containing_data_item[this.props.field_def.name] = html
+    this.props.parent_block_data[this.props.field_def.name] = html
     if (event_origin === 'user') {
       this.ctx.value_updated()
       this.props.is_display_if_target && this.ctx.redraw()
@@ -81,13 +81,13 @@ export default class TextEditor extends React.Component {
 
   render() {
     const field_def            = this.props.field_def
-    const containing_data_item = this.props.containing_data_item
+    const parent_block_data = this.props.parent_block_data
     const heading_levels       = field_def.heading_levels || this.default_headings
     const enable_bullets       = field_def.bullets !== false
     const enable_blockquote    = field_def.blockquote
     const enable_hr            = field_def.hr
     const paste_as_plain_text  = field_def.paste_as_plain_text
-    const value                = containing_data_item[field_def.name]
+    const value                = parent_block_data[field_def.name]
 
     if (paste_as_plain_text) {
       this.modules.clipboard.matchers = [

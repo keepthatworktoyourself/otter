@@ -46,21 +46,21 @@ function error_text__invalid_field_type_in_field_definition(field_name, field_ty
 // ensure_nested_block_data
 // ------------------------------------
 
-function ensure_nested_block_data(containing_data_item, field_def) {
-  const current_nested_data = containing_data_item[field_def.name]
+function ensure_nested_block_data(parent_block_data, field_def) {
+  const current_nested_data = parent_block_data[field_def.name]
   if (current_nested_data) {
     return
   }
 
   else if (field_def.type === Fields.Repeater) {
-    containing_data_item[field_def.name] = []
+    parent_block_data[field_def.name] = []
   }
 
   else if (field_def.type === Fields.NestedBlock) {
     const __type = typeof field_def.nested_block === 'string' ?
       field_def.nested_block :
       field_def.nested_block.type
-    containing_data_item[field_def.name] = {__type}
+    parent_block_data[field_def.name] = {__type}
   }
 }
 
@@ -69,13 +69,13 @@ function ensure_nested_block_data(containing_data_item, field_def) {
 // ------------------------------------
 
 export default function RecursiveBlockRenderer({
-  data_item,
-  containing_data_item,
+  block_data,
+  parent_block_data,
   field_name,
   block_fields,
 }) {
   const ctx        = usePageData()
-  const item       = data_item || containing_data_item[field_name]
+  const item       = block_data || parent_block_data[field_name]
   const block_def  = find_block_def(ctx.block_defs, item.__type)
   const field_defs = block_fields || (block_def?.fields || [])
 
@@ -131,12 +131,12 @@ export default function RecursiveBlockRenderer({
       ensure_nested_block_data(item, field_def)
       out = (
         <NestedBlockWrapper key={index}
-                            containing_data_item={item}
+                            parent_block_data={item}
                             field_name={field_name}
                             field_def={field_def}
                             index={index}
         >
-          <RecursiveBlockRenderer containing_data_item={item}
+          <RecursiveBlockRenderer parent_block_data={item}
                                   field_name={field_name} />
         </NestedBlockWrapper>
       )
@@ -148,7 +148,7 @@ export default function RecursiveBlockRenderer({
       out = (
         <Repeater field_def={field_def}
                   field_name={field_name}
-                  containing_data_item={item}
+                  parent_block_data={item}
                   key={index} />
       )
     }
@@ -163,7 +163,7 @@ export default function RecursiveBlockRenderer({
         >
           {Field && (
             <Field field_def={field_def}
-                   containing_data_item={item}
+                   parent_block_data={item}
                    is_display_if_target={is_display_if_target} />
           )}
           {!Field && <OErrorMessage text={error_text} />}

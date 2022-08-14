@@ -32,17 +32,17 @@ function prep_nested_block_defs(nested_block_defs, block_defs) {
   ))
 }
 
-export default function Repeater({field_def, field_name, containing_data_item, block_defs}) {
+export default function Repeater({field_def, field_name, parent_block_data}) {
   const ctx                              = usePageData()
   const theme_ctx                        = useThemeContext()
   const [show_popover, set_show_popover] = useState(false)
-  const data_items                       = containing_data_item[field_name] || []
+  const block_datas                       = parent_block_data[field_name] || []
   const block_titles                     = field_def.block_titles !== false && true
-  const nested_block_defs                = prep_nested_block_defs(field_def.nested_blocks || [], block_defs)
+  const nested_block_defs                = prep_nested_block_defs(field_def.nested_blocks || [], ctx.block_defs)
   const max                              = field_def.max || -1
   const multiple_types                   = nested_block_defs.length !== 1
-  const dnd_context_id                   = `d-${containing_data_item.__uid}-${field_name}`
-  const show_add_button                  = max === -1 || data_items.length < max
+  const dnd_context_id                   = `d-${parent_block_data.__uid}-${field_name}`
+  const show_add_button                  = max === -1 || block_datas.length < max
   const item_headers                     = field_def.item_headers
   const add_label                        = field_def.add_item_label || 'Add an item'
 
@@ -59,15 +59,15 @@ export default function Repeater({field_def, field_name, containing_data_item, b
 
     block_type = block_type || get_block_type(nested_block_defs[0])
 
-    if (!containing_data_item[field_name]) {
-      containing_data_item[field_name] = []
+    if (!parent_block_data[field_name]) {
+      parent_block_data[field_name] = []
     }
 
     if (!index && index !== 0) {
-      containing_data_item[field_name].push({__type: block_type})
+      parent_block_data[field_name].push({__type: block_type})
     }
     else {
-      containing_data_item[field_name].splice(index, 0, {__type: block_type})
+      parent_block_data[field_name].splice(index, 0, {__type: block_type})
     }
 
     cb__block_added?.()
@@ -78,8 +78,8 @@ export default function Repeater({field_def, field_name, containing_data_item, b
   }
 
   function cb__delete(i) {
-    const data_items = containing_data_item[field_name]
-    data_items.splice(i, 1)
+    const block_datas = parent_block_data[field_name]
+    block_datas.splice(i, 1)
 
     ctx.value_updated()
     ctx.redraw()
@@ -94,9 +94,9 @@ export default function Repeater({field_def, field_name, containing_data_item, b
       return
     }
 
-    const data_items = containing_data_item[field_name]
-    const [item] = data_items.splice(drag_result.source.index, 1)
-    data_items.splice(drag_result.destination.index, 0, item)
+    const block_datas = parent_block_data[field_name]
+    const [item] = block_datas.splice(drag_result.source.index, 1)
+    block_datas.splice(drag_result.destination.index, 0, item)
 
     ctx.value_updated()
     ctx.redraw()
@@ -137,34 +137,34 @@ export default function Repeater({field_def, field_name, containing_data_item, b
             {prov => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
                 <AnimatePresence initial={false}>
-                  {data_items.map((data_item, index) => {
-                    const is_permitted = nested_block_types.includes(data_item.__type)
-                    const block_def = nested_block_defs.find(t => t.type === data_item.__type)
+                  {block_datas.map((block_data, index) => {
+                    const is_permitted = nested_block_types.includes(block_data.__type)
+                    const block_def = nested_block_defs.find(t => t.type === block_data.__type)
 
                     return (
-                      <motion.div key={data_item.__uid || index}
+                      <motion.div key={block_data.__uid || index}
                                   {...animations.item_add_and_remove}
                                   className="w-full relative"
                       >
                         <RepeaterItem index={index}
                                       popup_items={popup_items}
                                       dnd_context_id={dnd_context_id}
-                                      dnd_key={data_item.__uid}
+                                      dnd_key={block_data.__uid}
                                       cb__add={cb__add}
                                       cb__delete={cb__delete}
                                       with_collapsible_header_bar={item_headers}
                                       block_def={block_def}
-                                      containing_data_item={containing_data_item}
+                                      parent_block_data={parent_block_data}
                                       field_def={field_def}
                                       field_name={field_name}
-                                      data_item={data_item}
+                                      block_data={block_data}
                                       title={block_titles && (
                                         block_def.description || humanify_str(block_def.type)
                                       )}
                         >
                           {is_permitted ?
-                            <RecursiveBlockRenderer data_item={data_item} /> :
-                            <OErrorMessage text={`Items of type ${data_item.__type} are not allowed in this repeater`} />
+                            <RecursiveBlockRenderer block_data={block_data} /> :
+                            <OErrorMessage text={`Items of type ${block_data.__type} are not allowed in this repeater`} />
                       }
                         </RepeaterItem>
                       </motion.div>
@@ -182,7 +182,7 @@ export default function Repeater({field_def, field_name, containing_data_item, b
           <div className="relative text-center w-full">
 
             <div className="mt-3 -mb-[2px] space-y-1">
-              {data_items.length < 1 && (
+              {block_datas.length < 1 && (
                 <p className={theme_ctx.classes.typography.sub_heading}>{add_label}</p>
               )}
               <AddBtn {...{theme_ctx, set_show_popover, cb__add}} />

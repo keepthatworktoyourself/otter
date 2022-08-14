@@ -99,9 +99,9 @@ function export_block_data(block_data, block_defs) {
 }
 
 function ensure_uids(data) {
-  iterate_data(data, data_item => {
-    if (data_item && !data_item.__uid) {
-      data_item.__uid = uid()
+  iterate_data(data, block_data => {
+    if (block_data && !block_data.__uid) {
+      block_data.__uid = uid()
     }
   })
 }
@@ -133,11 +133,11 @@ function ctx_reducer(state, op) {
     const {type, index, block_defs} = op.add_item
     const block_def = find_block_def(block_defs, type)
     const initial_data = block_def.initial_data || {}
-    const data_item = {...initial_data, __type: type}
+    const block_data = {...initial_data, __type: type}
 
     typeof index === 'number' ?
-      state.data.splice(index, 0, data_item) :
-      state.data.push(data_item)
+      state.data.splice(index, 0, block_data) :
+      state.data.push(block_data)
   }
 
   else if (op?.delete_item) {
@@ -327,11 +327,11 @@ export default function Editor({
                   >{prov => (
                     <div ref={prov.innerRef} {...prov.droppableProps}>
                       <AnimatePresence initial={false}>
-                        {ctx.data.map((data_item, index) => (
-                          <motion.div key={data_item.__uid}
+                        {ctx.data.map((block_data, index) => (
+                          <motion.div key={block_data.__uid}
                                       {...animations.item_add_and_remove}
                           >
-                            <Block data_item={data_item}
+                            <Block block_data={block_data}
                                    index={index}
                                    block_numbers={block_numbers} />
                           </motion.div>
