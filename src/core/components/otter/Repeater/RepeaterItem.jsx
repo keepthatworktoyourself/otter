@@ -57,7 +57,6 @@ export default function RepeaterItem({
   contains_nested_repeater = false,
   with_collapsible_header_bar = false,
   with_numbers = true,
-  field_def,
   field_name,
   block_def,
   block_defs,

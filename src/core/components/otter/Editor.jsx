@@ -45,7 +45,7 @@ function export_block_data(block_data, block_defs) {
     const {display, errors} = display_if(block_def, field_def.name, block_data)
 
     if (errors.length > 0) {
-      errors.forEach(err => console.log(err))
+      errors.forEach(err => console.error(err))
     }
 
     return display === true
@@ -257,7 +257,6 @@ export default function Editor({
   }
 
   function get_data() {
-    console.log('ctx.data', ctx.data)
     return (ctx.data || []).map(block_data => export_block_data(block_data, ctx.block_defs))
   }
 
