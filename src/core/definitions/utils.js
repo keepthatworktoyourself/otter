@@ -110,7 +110,7 @@ export function recursive_find(obj, func) {
 // find_block -> block or null
 // -----------------------------------
 
-export function find_block(blocks, type) {
+export function find_block_def(blocks, type) {
   const defs = (blocks && blocks.constructor === Array) ? blocks : [blocks]
 
   return recursive_find(
@@ -225,8 +225,8 @@ export function check_display_if(block, field) {
 // display_if
 // -----------------------------------
 
-export function display_if(block, field_name, data_item) {
-  const field = find_field(block.fields, field_name)
+export function display_if(block_def, field_name, block_data) {
+  const field = find_field(block_def.fields, field_name)
 
   if (!field.display_if) {
     return {
@@ -235,7 +235,7 @@ export function display_if(block, field_name, data_item) {
     }
   }
 
-  const errors = check_display_if(block, field)
+  const errors = check_display_if(block_def, field)
   if (errors.length) {
     return {
       errors,
@@ -243,7 +243,7 @@ export function display_if(block, field_name, data_item) {
   }
 
   const display = field.display_if.reduce((carry, rule) => {
-    const sibling_value = data_item[rule.sibling]
+    const sibling_value = block_data[rule.sibling]
     let out = carry
 
     if (rule.equal_to !== undefined) {

@@ -8,7 +8,7 @@ import BlockDeleteConfirmPopoverAnimated from './BlockDeleteConfirmPopover'
 import CollapseTransition from '../../primitives/CollapseTransition'
 import {TabsProvider, TabsTab} from '../../primitives/Tabs'
 import {usePageData} from '../../../contexts/PageDataContext'
-import {find_block, humanify_str} from '../../../definitions/utils'
+import {find_block_def, humanify_str} from '../../../definitions/utils'
 import {classNames} from '../../../helpers/style'
 import {useThemeContext} from '../../../contexts/ThemeContext'
 import TabBtns from '../other/TabBtns'
@@ -28,7 +28,7 @@ export default function Block({data_item, index, block_numbers}) {
   const theme_ctx         = useThemeContext()
   const blocks            = ctx.blocks
   const draggable_key     = `block-${data_item.__uid}`
-  const block             = find_block(blocks, data_item.__type)
+  const block             = find_block_def(blocks, data_item.__type)
   const tabs              = block?.tabs && block?.tabs?.length > 0 && block.tabs
   const icon_tab_btns     = tabs && tabs.every(t => !!t.Icon)
   const seamless          = !!block?.seamless
@@ -119,7 +119,7 @@ export default function Block({data_item, index, block_numbers}) {
                           )}
 
                           {tabs && tabs.map((tab, i) => {
-                            const block_fields = find_block(blocks, data_item.__type).fields
+                            const block_fields = find_block_def(blocks, data_item.__type).fields
                             const tab_fields = block_fields.filter(field => tab.fields.includes(field.name))
 
                             return (

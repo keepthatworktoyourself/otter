@@ -7,7 +7,7 @@ import Fields from '../../definitions/fields'
 import {
   copy,
   evaluate,
-  find_block,
+  find_block_def,
   display_if,
   uid,
   iterate,
@@ -27,48 +27,58 @@ import {ThemeContext} from '../../contexts/ThemeContext'
 import {useOnFirstRender} from '../../hooks/useOnFirstRender'
 import merge from '../../helpers/merge'
 
-function export_data_item(data_item, blocks) {
-  if (!data_item) {
+function field_type_supports_empty_string_value(field_type) {
+  return [Fields.TextInput, Fields.TextArea].includes(field_type)
+}
+
+function export_block_data(block_data, block_defs) {
+  if (!block_data) {
     return null
   }
 
-  const block = find_block(blocks, data_item.__type)
-  if (!block) {
+  const block_def = find_block_def(block_defs, block_data.__type)
+  if (!block_def) {
     return null
   }
 
-  const fields__displayed = (block.fields || []).filter(field_def => {
-    const di = display_if(block, field_def.name, data_item)
-    return di.display === true
+  const fields__displayed = (block_def.fields || []).filter(field_def => {
+    const {display, errors} = display_if(block_def, field_def.name, block_data)
+
+    if (errors.length > 0) {
+      errors.forEach(err => console.log(err))
+    }
+
+    return display === true
   })
 
   return fields__displayed.reduce((carry, field_def) => {
-    const field_name  = field_def.name
-    const field_type  = field_def.type
-    const field_value = data_item[field_name]
-    const supports_empty_string_value = [Fields.TextInput, Fields.TextArea].includes(field_type)
+    const {name: field_name, type: field_type} = field_def
+    const field_data                           = block_data[field_name]
+    const supports_empty_string_value          = field_type_supports_empty_string_value(field_type)
 
     if (field_type === Fields.NestedBlock || field_type === Fields.Repeater) {
       if (field_type === Fields.Repeater) {
-        carry[field_name] = (field_value || []).map(item => export_data_item(item, blocks))
+        carry[field_name] = (field_data || []).map(sub_field_data => {
+          return export_block_data(sub_field_data, block_defs)
+        })
       }
       else if (field_type === Fields.NestedBlock) {
-        carry[field_name] = export_data_item(field_value, blocks)
+        carry[field_name] = export_block_data(field_data, block_defs)
       }
       if (field_def.optional) {
-        carry[field_name]['__enabled'] = !!field_value['__enabled']
+        carry[field_name]['__enabled'] = !!field_data['__enabled']
       }
     }
 
     else {
       const use_default =
-        field_value === null ||
-        field_value === undefined ||
-       (field_value === '' && !supports_empty_string_value)
+        field_data === null ||
+        field_data === undefined ||
+       (field_data === '' && !supports_empty_string_value)
 
       carry[field_name] = use_default ?
         evaluate(field_def.default_value) :
-        field_value
+        field_data
     }
 
     const val = carry[field_name]
@@ -85,7 +95,7 @@ function export_data_item(data_item, blocks) {
     }
 
     return carry
-  }, {__type: block.type})
+  }, {__type: block_def.type})
 }
 
 function ensure_uids(data) {
@@ -121,7 +131,7 @@ function ctx_reducer(state, op) {
 
   else if (op?.add_item) {
     const {type, index, blocks} = op.add_item
-    const block = find_block(blocks, type)
+    const block = find_block_def(blocks, type)
     const initial_data = block.initial_data || {}
     const data_item = {...initial_data, __type: type}
 
@@ -247,7 +257,8 @@ export default function Editor({
   }
 
   function get_data() {
-    return (ctx.data || []).map(item => export_data_item(item, ctx.blocks))
+    console.log('ctx.data', ctx.data)
+    return (ctx.data || []).map(block_data => export_block_data(block_data, ctx.blocks))
   }
 
   function set_block_picker_state(open) {

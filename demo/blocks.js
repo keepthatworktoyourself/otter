@@ -86,8 +86,8 @@ export const block_options = {
     {
       name:          'top_padding',
       type:          Fields.Radios,
-      label_class:   'mb-0',
-      wrapper_class: block_option_field_layout_classes,
+      class_label:   'mb-0',
+      class_wrapper: block_option_field_layout_classes,
       options:       {
         small:  'Small',
         medium: 'Medium',
@@ -98,8 +98,8 @@ export const block_options = {
     {
       name:          'bottom_padding',
       type:          Fields.Radios,
-      label_class:   'mb-0',
-      wrapper_class: block_option_field_layout_classes,
+      class_label:   'mb-0',
+      class_wrapper: block_option_field_layout_classes,
       options:       {
         small:  'Small',
         medium: 'Medium',
@@ -110,22 +110,22 @@ export const block_options = {
     {
       name:          'top_border',
       type:          Fields.Bool,
-      label_class:   'mb-0',
-      wrapper_class: block_option_field_layout_classes,
+      class_label:   'mb-0',
+      class_wrapper: block_option_field_layout_classes,
       default_value: false,
     },
     {
       name:          'bottom_border',
       type:          Fields.Bool,
-      label_class:   'mb-0',
-      wrapper_class: block_option_field_layout_classes,
+      class_label:   'mb-0',
+      class_wrapper: block_option_field_layout_classes,
       default_value: false,
     },
     {
       name:          'theme',
       type:          Otter.Fields.Radios,
-      label_class:   'mb-0',
-      wrapper_class: block_option_field_layout_classes,
+      class_label:   'mb-0',
+      class_wrapper: block_option_field_layout_classes,
       options:       {
         light: 'Light',
         dark:  'Dark',
@@ -135,8 +135,8 @@ export const block_options = {
     {
       name:          'color',
       type:          Fields.ColorSwatchRadios,
-      label_class:   'mb-0',
-      wrapper_class: block_option_field_layout_classes,
+      class_label:   'mb-0',
+      class_wrapper: block_option_field_layout_classes,
       palette:       dynamic_data('block_colors'),
       default_value: dynamic_data('default_block_color'),
     },
@@ -161,8 +161,8 @@ const btn_block = {
     {
       name:          'style',
       type:          Otter.Fields.Radios,
-      wrapper_class: `w-[calc(50%-0.5rem)] pt-1 mr-[1rem] flex items-center`,
-      label_class:   'mr-[10px]',
+      class_wrapper: `w-[calc(50%-0.5rem)] pt-1 mr-[1rem] flex items-center`,
+      class_label:   'mr-[10px]',
       description:   'Style',
       default_value: 'secondary',
       options:       {
@@ -174,9 +174,9 @@ const btn_block = {
       name:          'newTab',
       type:          Otter.Fields.Select,
       mini:          true,
-      wrapper_class: `w-[calc(50%-0.5rem)] pt-1 flex items-center`,
-      label_class:   'mr-[10px]',
-      field_class:   'flex-1 w-full',
+      class_wrapper: `w-[calc(50%-0.5rem)] pt-1 flex items-center`,
+      class_label:   'mr-[10px]',
+      class_field:   'flex-1 w-full',
       description:   'New tab',
       default_value: 'no',
       options:       {
@@ -194,7 +194,7 @@ const btns_block = {
       name:               'btns__btn',
       type:               Otter.Fields.Repeater,
       add_item_label:     'Add a button',
-      nested_block_types: [
+      nested_blocks: [
         btn_block,
       ],
     },
@@ -236,7 +236,7 @@ const header_block_fields = [
     name:                    'btns',
     description:             'Buttons (optional nested block)',
     type:                    Otter.Fields.NestedBlock,
-    nested_block_type:       btns_block, // Supports name of block defined elsewhere
+    nested_block:       btns_block, // Supports name of block defined elsewhere
     seamless:                false,
     __enabled_default_value: false,
     optional:                true,
@@ -280,8 +280,8 @@ export const text_block = {
     {
       name:          'align',
       type:          Otter.Fields.Radios,
-      wrapper_class: 'flex items-center space-x-4 pt-3 pb-1 mr-6',
-      label_class:   'mb-0',
+      class_wrapper: 'flex items-center space-x-4 pt-3 pb-1 mr-6',
+      class_label:   'mb-0',
       options:       {
         left:   'Left',
         center: 'Center',
@@ -297,8 +297,8 @@ export const text_block = {
       name:          'display_if_example',
       description:   'Display if?',
       type:          Otter.Fields.Bool,
-      wrapper_class: 'flex items-center space-x-4 pt-3 pb-1',
-      label_class:   'mb-0',
+      class_wrapper: 'flex items-center space-x-4 pt-3 pb-1',
+      class_label:   'mb-0',
       default_value: false,
     },
     {
@@ -306,7 +306,7 @@ export const text_block = {
       description:   'If is true',
       type:          Otter.Fields.Select,
       mini:          true,
-      wrapper_class: 'pb-2 w-full',
+      class_wrapper: 'pb-2 w-full',
       default_value: 'here_are',
       options:       {
         'here_are':  'Here are',
@@ -407,8 +407,8 @@ const tabs_demo_block = {
     {
       name:          'theme',
       type:          Otter.Fields.Radios,
-      label_class:   'mb-0',
-      wrapper_class: block_option_field_layout_classes,
+      class_label:   'mb-0',
+      class_wrapper: block_option_field_layout_classes,
       options:       {
         light: 'Light',
         dark:  'Dark',
@@ -418,8 +418,8 @@ const tabs_demo_block = {
     {
       name:          'color',
       type:          Fields.ColorSwatchRadios,
-      label_class:   'mb-0',
-      wrapper_class: block_option_field_layout_classes,
+      class_label:   'mb-0',
+      class_wrapper: block_option_field_layout_classes,
       palette:       dynamic_data('block_colors_multi_row'),
       default_value: dynamic_data('default_block_color'),
     },
@@ -434,14 +434,14 @@ export const block_with_nested_block = {
       name:              'tabs_demo',
       description:       'Tabs',
       type:              Otter.Fields.NestedBlock,
-      nested_block_type: tabs_demo_block, // Supports inline block object
+      nested_block: tabs_demo_block, // Supports inline block object
       seamless:          true,
       initially_open:    false,
     },
     {
       name:              'text_content',
       type:              Otter.Fields.NestedBlock,
-      nested_block_type: text_block, // Supports inline block object
+      nested_block: text_block, // Supports inline block object
       seamless:          false,
       initially_open:    false,
     },
@@ -449,7 +449,7 @@ export const block_with_nested_block = {
       name:                    'searchable',
       type:                    Otter.Fields.NestedBlock,
       description:             'Searchable (Seamless Nested Block)',
-      nested_block_type:       'SearchablesDemo', // Supports name of block defined elsewhere
+      nested_block:       'SearchablesDemo', // Supports name of block defined elsewhere
       optional:                true,
       seamless:                true,
       __enabled_default_value: false,
@@ -465,7 +465,7 @@ export const block_with_repeater_one_type = {
       name:               'content_items',
       description:        'Content:',
       type:               Otter.Fields.Repeater,
-      nested_block_types: [
+      nested_blocks: [
         html_block, // Supports name of block defined elsewhere
       ],
     },
@@ -481,7 +481,7 @@ export const block_with_repeater = {
       description:        'Content:',
       item_headers:       true,
       type:               Otter.Fields.Repeater,
-      nested_block_types: [
+      nested_blocks: [
         'Text', // Supports name of block defined elsewhere
         text_block_with_icon_tabs,
         text_block_with_normal_tabs,

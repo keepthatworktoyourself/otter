@@ -26,7 +26,7 @@ const blocks = [
       {
         name:              'content_item',
         type:              Fields.NestedBlock,
-        nested_block_type: 'AContentItem',
+        nested_block: 'AContentItem',
       },
     ],
   },
@@ -36,7 +36,7 @@ const blocks = [
       {
         name:               'content_items',
         type:               Fields.Repeater,
-        nested_block_types: [
+        nested_blocks: [
           'AnotherContentItem',
           'OneMoreContentItem',
         ],

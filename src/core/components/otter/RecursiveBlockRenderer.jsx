@@ -4,7 +4,7 @@ import Repeater from './Repeater/Repeater'
 import FieldComponents from '../fields'
 import OErrorMessage from '../default-ui/OErrorMessage'
 import Fields from '../../definitions/fields'
-import {find_block, display_if} from '../../definitions/utils'
+import {find_block_def, display_if} from '../../definitions/utils'
 import OFieldWrapper from '../default-ui/OFieldWrapper'
 
 
@@ -56,9 +56,9 @@ function ensure_nested_block_data(containing_data_item, field_def) {
   }
 
   else if (field_def.type === Fields.NestedBlock) {
-    const __type = typeof field_def.nested_block_type === 'string' ?
-      field_def.nested_block_type :
-      field_def.nested_block_type.type
+    const __type = typeof field_def.nested_block === 'string' ?
+      field_def.nested_block :
+      field_def.nested_block.type
     containing_data_item[field_def.name] = {__type}
   }
 }
@@ -75,7 +75,7 @@ export default function RecursiveBlockRenderer({
   block_fields,
 }) {
   const item       = data_item || containing_data_item[field_name]
-  const block      = find_block(blocks, item.__type)
+  const block      = find_block_def(blocks, item.__type)
   const field_defs = block_fields || (block?.fields || [])
 
   const display_if_targets = field_defs

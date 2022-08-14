@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import * as DnD from 'react-beautiful-dnd'
-import {find_block, humanify_str} from '../../../definitions/utils'
+import {find_block_def, humanify_str} from '../../../definitions/utils'
 import {usePageData} from '../../../contexts/PageDataContext'
 import RecursiveBlockRenderer from '../RecursiveBlockRenderer'
 import AddItemPillBtn from '../other/AddItemPillBtn'
@@ -32,9 +32,9 @@ export default function Repeater({field_def, field_name, containing_data_item, b
   const [show_popover, set_show_popover] = useState(false)
   const data_items                       = containing_data_item[field_name] || []
   const block_titles                     = field_def.block_titles !== false && true
-  const nested_block_types               = field_def.nested_block_types || []
+  const nested_blocks               = field_def.nested_blocks || []
   const max                              = field_def.max || -1
-  const multiple_types                   = nested_block_types.length !== 1
+  const multiple_types                   = nested_blocks.length !== 1
   const dnd_context_id                   = `d-${containing_data_item.__uid}-${field_name}`
   const show_add_button                  = max === -1 || data_items.length < max
   const item_headers                     = field_def.item_headers
@@ -46,12 +46,12 @@ export default function Repeater({field_def, field_name, containing_data_item, b
     block_type,
     cb__block_added,
   }) {
-    if (show_popup_func && nested_block_types.length !== 1) {
+    if (show_popup_func && nested_blocks.length !== 1) {
       show_popup_func()
       return
     }
 
-    block_type = block_type || get_block_type(field_def.nested_block_types[0])
+    block_type = block_type || get_block_type(field_def.nested_blocks[0])
 
     if (!containing_data_item[field_name]) {
       containing_data_item[field_name] = []
@@ -97,8 +97,8 @@ export default function Repeater({field_def, field_name, containing_data_item, b
     ctx.update_height()
   }
 
-  const blocktypes__objects = nested_block_types.map(t => (
-    typeof t === 'string' ? find_block(blocks, t) : t
+  const blocktypes__objects = nested_blocks.map(t => (
+    typeof t === 'string' ? find_block_def(blocks, t) : t
   ))
 
   const invalid_blocktypes = blocktypes__objects.reduce((carry, block, index) => {
@@ -110,7 +110,7 @@ export default function Repeater({field_def, field_name, containing_data_item, b
     const multiple = invalid_blocktypes.length > 1
     return (
       <p className="repeater-error">{`
-        Error: the value${multiple ? 's' : ''} of nested_block_types at
+        Error: the value${multiple ? 's' : ''} of nested_blocks at
         index${multiple ? 'es' : ''}
         ${invalid_blocktypes.join(',')}
         ${multiple ? 'were' : 'was'} invalid

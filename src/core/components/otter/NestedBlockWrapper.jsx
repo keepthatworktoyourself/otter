@@ -23,7 +23,7 @@ export default function NestedBlockWrapper({field_def, field_name, blocks, index
 
   return (
     <BlockSection heading={title}
-                  field_def={field_def.nested_block_type}
+                  field_def={field_def.nested_block}
                   field_name={field_name}
                   blocks={blocks}
                   children={children}
