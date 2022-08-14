@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom'
 import * as DnD from 'react-beautiful-dnd'
 import {AnimatePresence, motion} from 'framer-motion'
 import {PageDataContext} from '../../contexts/PageDataContext'
-import Fields from '../../definitions/fields'
+import FieldTypes from '../../definitions/field-types'
 import {
   copy,
   evaluate,
-  find_block,
+  find_block_def,
   display_if,
   uid,
   iterate,
@@ -27,34 +27,45 @@ import {ThemeContext} from '../../contexts/ThemeContext'
 import {useOnFirstRender} from '../../hooks/useOnFirstRender'
 import merge from '../../helpers/merge'
 
-function export_data_item(data_item, blocks) {
-  if (!data_item) {
+function field_type_supports_empty_string_value(field_type) {
+  return [FieldTypes.TextInput, FieldTypes.TextArea].includes(field_type)
+}
+
+function export_block_data(block_data, block_defs) {
+  if (!block_data) {
     return null
   }
 
-  const block = find_block(blocks, data_item.__type)
-  if (!block) {
+  const block_def = find_block_def(block_defs, block_data.__type)
+  if (!block_def) {
     return null
   }
 
-  const fields__displayed = (block.fields || []).filter(field_def => {
-    const di = display_if(block, field_def.name, data_item)
-    return di.display === true
+  const fields__displayed = (block_def.fields || []).filter(field_def => {
+    const {display, errors} = display_if(block_def, field_def.name, block_data)
+
+    if (errors.length > 0) {
+      errors.forEach(err => console.error(err))
+    }
+
+    return display === true
   })
 
   return fields__displayed.reduce((carry, field_def) => {
-    const field_name  = field_def.name
-    const field_type  = field_def.type
-    const field_value = data_item[field_name]
-    const supports_empty_string_value = [Fields.TextInput, Fields.TextArea].includes(field_type)
+    const {name: field_name, type: field_type} = field_def
+    const field_value                          = block_data[field_name]
+    const supports_empty_string_value          = field_type_supports_empty_string_value(field_type)
 
-    if (field_type === Fields.NestedBlock || field_type === Fields.Repeater) {
-      if (field_type === Fields.Repeater) {
-        carry[field_name] = (field_value || []).map(item => export_data_item(item, blocks))
+    if (field_type === FieldTypes.NestedBlock || field_type === FieldTypes.Repeater) {
+      if (field_type === FieldTypes.Repeater) {
+        carry[field_name] = (field_value || []).map(block_data => {
+          return export_block_data(block_data, block_defs)
+        })
       }
-      else if (field_type === Fields.NestedBlock) {
-        carry[field_name] = export_data_item(field_value, blocks)
+      else if (field_type === FieldTypes.NestedBlock) {
+        carry[field_name] = export_block_data(field_value, block_defs)
       }
+
       if (field_def.optional) {
         carry[field_name]['__enabled'] = !!field_value['__enabled']
       }
@@ -85,19 +96,19 @@ function export_data_item(data_item, blocks) {
     }
 
     return carry
-  }, {__type: block.type})
+  }, {__type: block_def.type})
 }
 
 function ensure_uids(data) {
-  iterate_data(data, data_item => {
-    if (data_item && !data_item.__uid) {
-      data_item.__uid = uid()
+  iterate_data(data, block_data => {
+    if (block_data && !block_data.__uid) {
+      block_data.__uid = uid()
     }
   })
 }
 
-function ensure_display_ifs_are_arrays(blocks) {
-  iterate(blocks, item => {
+function ensure_display_ifs_are_arrays(block_defs) {
+  iterate(block_defs, item => {
     if (item && item.display_if && item.display_if.constructor !== Array) {
       item.display_if = [item.display_if]
     }
@@ -120,14 +131,14 @@ function ctx_reducer(state, op) {
   }
 
   else if (op?.add_item) {
-    const {type, index, blocks} = op.add_item
-    const block = find_block(blocks, type)
-    const initial_data = block.initial_data || {}
-    const data_item = {...initial_data, __type: type}
+    const {type, index, block_defs} = op.add_item
+    const block_def = find_block_def(block_defs, type)
+    const initial_data = block_def.initial_data || {}
+    const block_data = {...initial_data, __type: type}
 
     typeof index === 'number' ?
-      state.data.splice(index, 0, data_item) :
-      state.data.push(data_item)
+      state.data.splice(index, 0, block_data) :
+      state.data.push(block_data)
   }
 
   else if (op?.delete_item) {
@@ -147,7 +158,7 @@ function ctx_reducer(state, op) {
     }
   }
 
-  return {data: state.data, blocks: state.blocks}
+  return {data: state.data, block_defs: state.block_defs}
 }
 
 
@@ -155,11 +166,11 @@ function ctx_reducer(state, op) {
 // -----------------------------------
 
 export default function Editor({
-  blocks = [],
+  blocks: block_defs = [],
   data = [],
   load_state,
   block_numbers,
-  can_add_blocks = true,
+  can_add_and_remove_blocks = true,
   DragDropContext = DnD.DragDropContext,
   Droppable = DnD.Droppable,
   ContextProvider = PageDataContext.Provider,
@@ -173,19 +184,19 @@ export default function Editor({
   dev_mode,
 }) {
   const valid_state = Object.values(State).includes(load_state)
-  const [block_picker, set_block_picker] = useState(false)
-  const [block_to_insert, set_block_to_insert] = useState({index: 0, type: null})
+  const [block_picker_open, set_block_picker_open] = useState(false)
+  const [block_to_insert, set_block_to_insert] = useState({insert_at_index: 0, type: null})
   const [previous_load_state, set_previous_load_state] = useState(null)
   const [_, update] = useState({ })
   const initial_data = useMemo(() => copy(data), [])
-  const [ctx, dispatch_ctx] = useReducer(ctx_reducer, {data: initial_data, blocks})
+  const [ctx, dispatch_ctx] = useReducer(ctx_reducer, {data: initial_data, block_defs})
   const first_render = useOnFirstRender()
 
   function enqueue_save_on_input() {
     setTimeout(do_save)
   }
   function add_item(type, index) {
-    dispatch_ctx({add_item: {type, index, blocks}})
+    dispatch_ctx({add_item: {type, index, block_defs: ctx.block_defs}})
     enqueue_save_on_input()
     do_update_height()
   }
@@ -208,15 +219,15 @@ export default function Editor({
     open_media_library?.(set_value_callback)
   }
   function open_block_picker(block_index) {
-    set_block_to_insert({ })
-    set_block_picker_state(block_index)
+    set_block_to_insert({insert_at_index: block_index})
+    do_set_block_picker_open(true)
   }
   function close_block_picker() {
-    set_block_picker(false)
+    do_set_block_picker_open(false)
   }
   function insert_block() {
-    if (!block_to_insert?.type || (!block_to_insert?.index && block_to_insert.index !== 0)) return
-    add_item(block_to_insert.type, block_to_insert.index)
+    if (!block_to_insert?.type || (!block_to_insert?.insert_at_index && block_to_insert.insert_at_index !== 0)) return
+    add_item(block_to_insert.type, block_to_insert.insert_at_index)
   }
 
   useEffect(() => {
@@ -228,10 +239,10 @@ export default function Editor({
   useEffect(() => {
     // Blocks are inserted AFTER the block picker
     // closes, but BEFORE the closing animation has ended
-    if (block_picker === false) {
+    if (block_picker_open === false) {
       setTimeout(insert_block, 150)
     }
-  }, [block_picker])
+  }, [block_picker_open])
 
   const ctx_interface = {
     update_height:      do_update_height,
@@ -242,16 +253,16 @@ export default function Editor({
     delete_item,
     open_block_picker,
     close_block_picker,
-    can_add_blocks,
+    can_add_and_remove_blocks,
     dev_mode,
   }
 
   function get_data() {
-    return (ctx.data || []).map(item => export_data_item(item, ctx.blocks))
+    return (ctx.data || []).map(block_data => export_block_data(block_data, ctx.block_defs))
   }
 
-  function set_block_picker_state(open) {
-    set_block_picker(open)
+  function do_set_block_picker_open(open) {
+    set_block_picker_open(open)
     window.scrollY,
     do_update_height()
   }
@@ -261,7 +272,7 @@ export default function Editor({
   }
 
   ensure_uids(ctx.data)
-  ensure_display_ifs_are_arrays(ctx.blocks)
+  ensure_display_ifs_are_arrays(ctx.block_defs)
 
   if (load_state === State.Loaded && previous_load_state !== State.Loaded) {
     do_update_height()
@@ -271,10 +282,10 @@ export default function Editor({
   }
 
   const show_block_picker = (
-    can_add_blocks &&
+    can_add_and_remove_blocks &&
     load_state === State.Loaded &&
-    block_picker !== false &&
-    blocks_are_grouped(ctx.blocks)
+    block_picker_open !== false &&
+    blocks_are_grouped(ctx.block_defs)
   )
 
   const n_items = ctx.data?.length || 0
@@ -297,11 +308,11 @@ export default function Editor({
           {load_state === State.Loaded && (
             <div className="mx-auto"
                  style={{
-                   minHeight: `${block_picker === false ? '20' : '50'}rem`,
+                   minHeight: `${block_picker_open === false ? '20' : '50'}rem`,
                    maxWidth:  '45rem',
                  }}
             >
-              {can_add_blocks && (
+              {can_add_and_remove_blocks && (
                 <div className="flex justify-center">
                   <AddBlockBtn index={0}
                                suggest_add_block={n_items === 0}
@@ -312,16 +323,16 @@ export default function Editor({
               {n_items > 0 && (
                 <DragDropContext onDragEnd={drag => reorder_items(drag)}>
                   <Droppable droppableId="d-blocks"
-                             isDropDisabled={!can_add_blocks}
+                             isDropDisabled={!can_add_and_remove_blocks}
                              type="block"
                   >{prov => (
                     <div ref={prov.innerRef} {...prov.droppableProps}>
                       <AnimatePresence initial={false}>
-                        {ctx.data.map((data_item, index) => (
-                          <motion.div key={data_item.__uid}
+                        {ctx.data.map((block_data, index) => (
+                          <motion.div key={block_data.__uid}
                                       {...animations.item_add_and_remove}
                           >
-                            <Block data_item={data_item}
+                            <Block block_data={block_data}
                                    index={index}
                                    block_numbers={block_numbers} />
                           </motion.div>
@@ -341,7 +352,7 @@ export default function Editor({
               <Modal isOpen={show_block_picker}
                      close={() => close_block_picker()}
               >
-                <BlockPicker block_index={block_picker}
+                <BlockPicker insert_at_index={block_to_insert?.insert_at_index || 0}
                              iframe_container_info={iframe_container_info}
                              set_block_to_insert={set_block_to_insert}
                              close={() => close_block_picker()} />
@@ -354,7 +365,7 @@ export default function Editor({
             <Modal isOpen={show_block_picker}
                    close={() => close_block_picker()}
             >
-              <BlockPicker block_index={block_picker}
+              <BlockPicker insert_at_index={block_to_insert?.insert_at_index || 0}
                            iframe_container_info={iframe_container_info}
                            set_block_to_insert={set_block_to_insert}
                            close={() => close_block_picker()} />

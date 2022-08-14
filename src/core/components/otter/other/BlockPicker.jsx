@@ -6,13 +6,13 @@ import {useThemeContext} from '../../../contexts/ThemeContext'
 
 export default function BlockPicker({
   set_block_to_insert,
+  insert_at_index,
   close,
-  block_index,
 }) {
   const ctx              = usePageData()
   const theme_ctx        = useThemeContext()
-  const blocks           = ctx.blocks
-  const block_group_keys = Object.keys(blocks)
+  const block_defs       = ctx.block_defs
+  const block_group_keys = Object.keys(block_defs)
 
   return (
     <div className="relative p-10 bg-white"
@@ -34,17 +34,17 @@ export default function BlockPicker({
               theme_ctx.classes.typography.heading,
             )}
             >
-              {blocks[k].name || k}
+              {block_defs[k].name || k}
             </h3>
 
             <div className="grid grid-cols-4 gap-10">
-              {blocks[k].blocks.map(block => (
+              {block_defs[k].blocks.map(block => (
                 <figure className="cursor-pointer"
                         key={block.type}
                         onClick={ev => {
                           set_block_to_insert({
-                            type:  ev.currentTarget.getAttribute('data-block-type'),
-                            index: block_index,
+                            type: ev.currentTarget.getAttribute('data-block-type'),
+                            insert_at_index,
                           })
                           close?.()
                         }}

@@ -8,7 +8,7 @@ import BlockDeleteConfirmPopoverAnimated from './BlockDeleteConfirmPopover'
 import CollapseTransition from '../../primitives/CollapseTransition'
 import {TabsProvider, TabsTab} from '../../primitives/Tabs'
 import {usePageData} from '../../../contexts/PageDataContext'
-import {find_block, humanify_str} from '../../../definitions/utils'
+import {find_block_def, humanify_str} from '../../../definitions/utils'
 import {classNames} from '../../../helpers/style'
 import {useThemeContext} from '../../../contexts/ThemeContext'
 import TabBtns from '../other/TabBtns'
@@ -23,12 +23,11 @@ function get_drag_styles(provided, snapshot) {
   }
 }
 
-export default function Block({data_item, index, block_numbers}) {
+export default function Block({block_data, index, block_numbers}) {
   const ctx               = usePageData()
   const theme_ctx         = useThemeContext()
-  const blocks            = ctx.blocks
-  const draggable_key     = `block-${data_item.__uid}`
-  const block             = find_block(blocks, data_item.__type)
+  const draggable_key     = `block-${block_data.__uid}`
+  const block             = find_block_def(ctx.block_defs, block_data.__type)
   const tabs              = block?.tabs && block?.tabs?.length > 0 && block.tabs
   const icon_tab_btns     = tabs && tabs.every(t => !!t.Icon)
   const seamless          = !!block?.seamless
@@ -46,7 +45,7 @@ export default function Block({data_item, index, block_numbers}) {
                      draggableId={draggable_key}
                      index={index}
                      type="block"
-                     isDragDisabled={!ctx.can_add_blocks}
+                     isDragDisabled={!ctx.can_add_and_remove_blocks}
       >
         {(prov, snap) => (
           <div ref={prov.innerRef}
@@ -55,8 +54,8 @@ export default function Block({data_item, index, block_numbers}) {
                className="outline-none"
                style={get_drag_styles(prov, snap)}
           >
-            <div className={classNames('relative', !ctx.can_add_blocks && 'pb-8')}
-                 data-blocktype={data_item.__type}
+            <div className={classNames('relative', !ctx.can_add_and_remove_blocks && 'pb-8')}
+                 data-blocktype={block_data.__type}
             >
 
               <div className={classNames(
@@ -70,7 +69,7 @@ export default function Block({data_item, index, block_numbers}) {
                      minWidth: theme_ctx.design_options.block_min_width,
                    }}
               >
-                {ctx.can_add_blocks && (
+                {ctx.can_add_and_remove_blocks && (
                   <BlockDeleteConfirmPopoverAnimated delete_func={() => ctx.delete_item(index)}
                                                      isOpen={show_confirm_deletion}
                                                      close={() => set_show_confirm_deletion(false)}
@@ -89,7 +88,7 @@ export default function Block({data_item, index, block_numbers}) {
                                                 index={index}
                                                 block_numbers={block_numbers}
                                                 show_confirm_deletion={show_confirm_deletion}
-                                                delete_func={ctx.can_add_blocks ? () => set_show_confirm_deletion(true) : null}
+                                                delete_func={ctx.can_add_and_remove_blocks ? () => set_show_confirm_deletion(true) : null}
                                                 open={open}
                                                 tab_btn_icons={icon_tab_btns && tab_btns}
                                                 toggle_open={() => {
@@ -110,7 +109,7 @@ export default function Block({data_item, index, block_numbers}) {
                         >
                           {!tabs && (
                             <BlockSection bordered={false} seamless={seamless}>
-                              <RecursiveBlockRenderer data_item={data_item} blocks={blocks} />
+                              <RecursiveBlockRenderer block_data={block_data} />
                             </BlockSection>
                           )}
 
@@ -119,7 +118,7 @@ export default function Block({data_item, index, block_numbers}) {
                           )}
 
                           {tabs && tabs.map((tab, i) => {
-                            const block_fields = find_block(blocks, data_item.__type).fields
+                            const block_fields = find_block_def(ctx.block_defs, block_data.__type).fields
                             const tab_fields = block_fields.filter(field => tab.fields.includes(field.name))
 
                             return (
@@ -127,9 +126,8 @@ export default function Block({data_item, index, block_numbers}) {
                                 <BlockSection bordered={false}
                                               seamless={seamless}
                                               children={(
-                                                <RecursiveBlockRenderer data_item={data_item}
-                                                                        block_fields={tab_fields}
-                                                                        blocks={blocks} />
+                                                <RecursiveBlockRenderer block_data={block_data}
+                                                                        block_fields={tab_fields} />
                                   )} />
                               </TabsTab>
                             )
@@ -141,13 +139,13 @@ export default function Block({data_item, index, block_numbers}) {
                   )}
 
                   {!block && (
-                    <h3>{`Unknown block type: '${data_item.__type}'`}</h3>
+                    <h3>{`Unknown block type: '${block_data.__type}'`}</h3>
                   )}
 
                 </div>
               </div>
 
-              {ctx.can_add_blocks && block && (
+              {ctx.can_add_and_remove_blocks && block && (
                 <AddBlockBtn index={index + 1}
                              popup_direction={index > 1 ? 'up' : 'down'} />
               )}

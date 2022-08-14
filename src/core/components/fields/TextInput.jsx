@@ -5,19 +5,19 @@ import {evaluate} from '../../definitions/utils'
 
 export default function TextInput({
   field_def,
-  containing_data_item,
+  parent_block_data,
   is_display_if_target,
 }) {
   const ctx           = usePageData()
   const [_, update]   = useState({})
   const {name, placeholder, mini} = field_def
-  const value         = containing_data_item[name]
+  const value         = parent_block_data[name]
   const default_value = evaluate(field_def.default_value)
   const display_value = (value === undefined ? default_value : value) || ''
   const ref           = useRef()
 
   function cb__change(ev) {
-    containing_data_item[field_def.name] = ev.target.value
+    parent_block_data[field_def.name] = ev.target.value
     update({})
     ctx.value_updated()
     is_display_if_target && ctx.redraw()
