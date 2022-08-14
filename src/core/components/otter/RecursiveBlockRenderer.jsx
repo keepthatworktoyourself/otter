@@ -75,8 +75,8 @@ export default function RecursiveBlockRenderer({
   block_fields,
 }) {
   const ctx        = usePageData()
-  const item       = block_data || parent_block_data[field_name]
-  const block_def  = find_block_def(ctx.block_defs, item.__type)
+  const data       = block_data || parent_block_data[field_name]
+  const block_def  = find_block_def(ctx.block_defs, data.__type)
   const field_defs = block_fields || (block_def?.fields || [])
 
   const display_if_targets = field_defs
@@ -113,7 +113,7 @@ export default function RecursiveBlockRenderer({
 
 
     // Conditional rendering
-    const di = display_if(block_def, field_name, item)
+    const di = display_if(block_def, field_name, data)
     if (di.errors.length) {
       const text = error_text__invalid_display_if(field_name, di.errors)
       return (
@@ -128,15 +128,15 @@ export default function RecursiveBlockRenderer({
 
     // Render NestedBlocks
     if (field_type === Fields.NestedBlock) {
-      ensure_nested_block_data(item, field_def)
+      ensure_nested_block_data(data, field_def)
       out = (
         <NestedBlockWrapper key={index}
-                            parent_block_data={item}
+                            parent_block_data={data}
                             field_name={field_name}
                             field_def={field_def}
                             index={index}
         >
-          <RecursiveBlockRenderer parent_block_data={item}
+          <RecursiveBlockRenderer parent_block_data={data}
                                   field_name={field_name} />
         </NestedBlockWrapper>
       )
@@ -144,11 +144,11 @@ export default function RecursiveBlockRenderer({
 
     // Render Repeaters
     else if (field_type === Fields.Repeater) {
-      ensure_nested_block_data(item, field_def)
+      ensure_nested_block_data(data, field_def)
       out = (
         <Repeater field_def={field_def}
                   field_name={field_name}
-                  parent_block_data={item}
+                  parent_block_data={data}
                   key={index} />
       )
     }
@@ -163,7 +163,7 @@ export default function RecursiveBlockRenderer({
         >
           {Field && (
             <Field field_def={field_def}
-                   parent_block_data={item}
+                   parent_block_data={data}
                    is_display_if_target={is_display_if_target} />
           )}
           {!Field && <OErrorMessage text={error_text} />}

@@ -36,13 +36,13 @@ export default function Repeater({field_def, field_name, parent_block_data}) {
   const ctx                              = usePageData()
   const theme_ctx                        = useThemeContext()
   const [show_popover, set_show_popover] = useState(false)
-  const block_datas                       = parent_block_data[field_name] || []
+  const block_data                       = parent_block_data[field_name] || []
   const block_titles                     = field_def.block_titles !== false && true
   const nested_block_defs                = prep_nested_block_defs(field_def.nested_blocks || [], ctx.block_defs)
   const max                              = field_def.max || -1
   const multiple_types                   = nested_block_defs.length !== 1
   const dnd_context_id                   = `d-${parent_block_data.__uid}-${field_name}`
-  const show_add_button                  = max === -1 || block_datas.length < max
+  const show_add_button                  = max === -1 || block_data.length < max
   const item_headers                     = field_def.item_headers
   const add_label                        = field_def.add_item_label || 'Add an item'
 
@@ -78,8 +78,8 @@ export default function Repeater({field_def, field_name, parent_block_data}) {
   }
 
   function cb__delete(i) {
-    const block_datas = parent_block_data[field_name]
-    block_datas.splice(i, 1)
+    const block_data = parent_block_data[field_name]
+    block_data.splice(i, 1)
 
     ctx.value_updated()
     ctx.redraw()
@@ -94,9 +94,9 @@ export default function Repeater({field_def, field_name, parent_block_data}) {
       return
     }
 
-    const block_datas = parent_block_data[field_name]
-    const [item] = block_datas.splice(drag_result.source.index, 1)
-    block_datas.splice(drag_result.destination.index, 0, item)
+    const block_data = parent_block_data[field_name]
+    const [item] = block_data.splice(drag_result.source.index, 1)
+    block_data.splice(drag_result.destination.index, 0, item)
 
     ctx.value_updated()
     ctx.redraw()
@@ -137,7 +137,7 @@ export default function Repeater({field_def, field_name, parent_block_data}) {
             {prov => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
                 <AnimatePresence initial={false}>
-                  {block_datas.map((block_data, index) => {
+                  {block_data.map((block_data, index) => {
                     const is_permitted = nested_block_types.includes(block_data.__type)
                     const block_def = nested_block_defs.find(t => t.type === block_data.__type)
 
@@ -182,7 +182,7 @@ export default function Repeater({field_def, field_name, parent_block_data}) {
           <div className="relative text-center w-full">
 
             <div className="mt-3 -mb-[2px] space-y-1">
-              {block_datas.length < 1 && (
+              {block_data.length < 1 && (
                 <p className={theme_ctx.classes.typography.sub_heading}>{add_label}</p>
               )}
               <AddBtn {...{theme_ctx, set_show_popover, cb__add}} />
