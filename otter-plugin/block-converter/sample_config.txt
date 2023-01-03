@@ -1,5 +1,0 @@
-wp_config=/Users/ben/Sites/bw/wp-load.php
-select_query=select ID as post_id from wp_posts where post_type = 'bw_landing_page' order by post_id desc
-update_query=update wp_postmeta set meta_value = ? where post_id = ? and meta_key = 'otter-content'
-insert_query=insert into wp_postmeta (post_id, meta_key, meta_value) values (?, 'otter-content', ?)
-load_function=PBModel::load
