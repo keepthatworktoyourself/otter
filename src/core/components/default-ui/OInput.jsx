@@ -10,20 +10,23 @@ const OInput = forwardRef(({
   Icon,
   type = 'text',
   mini = false,
-  ...props},
-ref) => {
+  ...props
+}, ref) => {
   // Note that the ref must be supplied by parent for cursor positioning to work
   const theme_ctx = useThemeContext()
 
   function change(ev) {
     const cursor = ev.target.selectionStart
     onChange?.(ev)
-    setTimeout(() => {
-      if (ref?.current) {
-        ref.current.selectionStart = cursor
-        ref.current.selectionEnd = cursor
-      }
-    })
+
+    if (type !== 'number') {
+      setTimeout(() => {
+        if (ref?.current) {
+          ref.current.selectionStart = cursor
+          ref.current.selectionEnd = cursor
+        }
+      })
+    }
   }
 
   return (

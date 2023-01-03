@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import * as DnD from 'react-beautiful-dnd'
-import {find_block, humanify_str} from '../../../definitions/utils'
+import {find_block_def, humanify_str} from '../../../definitions/utils'
 import {usePageData} from '../../../contexts/PageDataContext'
 import RecursiveBlockRenderer from '../RecursiveBlockRenderer'
 import AddItemPillBtn from '../other/AddItemPillBtn'
@@ -26,17 +26,23 @@ const AddBtn = ({theme_ctx, set_show_popover, cb__add}) => (
                   size="md" />
 )
 
-export default function Repeater({field_def, field_name, containing_data_item, blocks}) {
+function prep_nested_block_defs(nested_block_defs, block_defs) {
+  return nested_block_defs.map(block_def => (
+    typeof block_def === 'string' ? find_block_def(block_defs, block_def) : block_def
+  ))
+}
+
+export default function Repeater({field_def, field_name, parent_block_data}) {
   const ctx                              = usePageData()
   const theme_ctx                        = useThemeContext()
   const [show_popover, set_show_popover] = useState(false)
-  const data_items                       = containing_data_item[field_name] || []
+  const block_data                       = parent_block_data[field_name] || []
   const block_titles                     = field_def.block_titles !== false && true
-  const nested_block_types               = field_def.nested_block_types || []
+  const nested_block_defs                = prep_nested_block_defs(field_def.nested_blocks || [], ctx.block_defs)
   const max                              = field_def.max || -1
-  const multiple_types                   = nested_block_types.length !== 1
-  const dnd_context_id                   = `d-${containing_data_item.__uid}-${field_name}`
-  const show_add_button                  = max === -1 || data_items.length < max
+  const multiple_types                   = nested_block_defs.length !== 1
+  const dnd_context_id                   = `d-${parent_block_data.__uid}-${field_name}`
+  const show_add_button                  = max === -1 || block_data.length < max
   const item_headers                     = field_def.item_headers
   const add_label                        = field_def.add_item_label || 'Add an item'
 
@@ -46,22 +52,22 @@ export default function Repeater({field_def, field_name, containing_data_item, b
     block_type,
     cb__block_added,
   }) {
-    if (show_popup_func && nested_block_types.length !== 1) {
+    if (show_popup_func && nested_block_defs.length !== 1) {
       show_popup_func()
       return
     }
 
-    block_type = block_type || get_block_type(field_def.nested_block_types[0])
+    block_type = block_type || get_block_type(nested_block_defs[0])
 
-    if (!containing_data_item[field_name]) {
-      containing_data_item[field_name] = []
+    if (!parent_block_data[field_name]) {
+      parent_block_data[field_name] = []
     }
 
     if (!index && index !== 0) {
-      containing_data_item[field_name].push({__type: block_type})
+      parent_block_data[field_name].push({__type: block_type})
     }
     else {
-      containing_data_item[field_name].splice(index, 0, {__type: block_type})
+      parent_block_data[field_name].splice(index, 0, {__type: block_type})
     }
 
     cb__block_added?.()
@@ -72,8 +78,8 @@ export default function Repeater({field_def, field_name, containing_data_item, b
   }
 
   function cb__delete(i) {
-    const data_items = containing_data_item[field_name]
-    data_items.splice(i, 1)
+    const block_data = parent_block_data[field_name]
+    block_data.splice(i, 1)
 
     ctx.value_updated()
     ctx.redraw()
@@ -88,46 +94,40 @@ export default function Repeater({field_def, field_name, containing_data_item, b
       return
     }
 
-    const data_items = containing_data_item[field_name]
-    const [item] = data_items.splice(drag_result.source.index, 1)
-    data_items.splice(drag_result.destination.index, 0, item)
+    const block_data = parent_block_data[field_name]
+    const [item] = block_data.splice(drag_result.source.index, 1)
+    block_data.splice(drag_result.destination.index, 0, item)
 
     ctx.value_updated()
     ctx.redraw()
     ctx.update_height()
   }
 
-  const blocktypes__objects = nested_block_types.map(t => (
-    typeof t === 'string' ? find_block(blocks, t) : t
-  ))
-
-  const invalid_blocktypes = blocktypes__objects.reduce((carry, block, index) => {
+  const invalid_block_defs = nested_block_defs.reduce((carry, block, index) => {
     const is_valid = block && typeof block === 'object' && block.type
     return is_valid ? carry : carry.concat(index)
   }, [])
 
-  if (invalid_blocktypes.length > 0) {
-    const multiple = invalid_blocktypes.length > 1
+  if (invalid_block_defs.length > 0) {
+    const multiple = invalid_block_defs.length > 1
     return (
       <p className="repeater-error">{`
-        Error: the value${multiple ? 's' : ''} of nested_block_types at
+        Error: the value${multiple ? 's' : ''} of nested_blocks at
         index${multiple ? 'es' : ''}
-        ${invalid_blocktypes.join(',')}
+        ${invalid_block_defs.join(',')}
         ${multiple ? 'were' : 'was'} invalid
       `}</p>
     )
   }
 
-  const blocktypes__strings = blocktypes__objects.map(item => item.type)
-  const popup_items = blocktypes__objects.map(block => {
+  const nested_block_types = nested_block_defs.map(item => item.type)
+  const popup_items = nested_block_defs.map(block_def => {
     return ({
-      key:        block.type,
-      block_type: block.type,
-      label:      block.description || humanify_str(block.type),
+      key:        block_def.type,
+      block_type: block_def.type,
+      label:      block_def.description || humanify_str(block_def.type),
     })
   })
-
-  const no_items = data_items.length < 1
 
   return (
     <div className="w-full">
@@ -137,33 +137,34 @@ export default function Repeater({field_def, field_name, containing_data_item, b
             {prov => (
               <div ref={prov.innerRef} {...prov.droppableProps}>
                 <AnimatePresence initial={false}>
-                  {data_items.map((data_item, index) => {
-                    const is_permitted = blocktypes__strings.includes(data_item.__type)
-                    const block = blocktypes__objects.find(t => t.type === data_item.__type)
+                  {block_data.map((block_data, index) => {
+                    const is_permitted = nested_block_types.includes(block_data.__type)
+                    const block_def = nested_block_defs.find(t => t.type === block_data.__type)
 
                     return (
-                      <motion.div key={data_item.__uid || index}
+                      <motion.div key={block_data.__uid || index}
                                   {...animations.item_add_and_remove}
                                   className="w-full relative"
                       >
                         <RepeaterItem index={index}
                                       popup_items={popup_items}
                                       dnd_context_id={dnd_context_id}
-                                      dnd_key={data_item.__uid}
-                                      title={block_titles && (block.description || humanify_str(block.type))}
+                                      dnd_key={block_data.__uid}
                                       cb__add={cb__add}
                                       cb__delete={cb__delete}
                                       with_collapsible_header_bar={item_headers}
-                                      block={block}
-                                      blocks={blocks}
-                                      containing_data_item={containing_data_item}
+                                      block_def={block_def}
                                       field_def={field_def}
                                       field_name={field_name}
-                                      data_item={data_item}
+                                      block_data={block_data}
+                                      parent_block_data={parent_block_data}
+                                      title={block_titles && (
+                                        block_def.description || humanify_str(block_def.type)
+                                      )}
                         >
                           {is_permitted ?
-                            <RecursiveBlockRenderer data_item={data_item} blocks={blocks} /> :
-                            <OErrorMessage text={`Items of type ${data_item.__type} are not allowed in this repeater`} />
+                            <RecursiveBlockRenderer block_data={block_data} /> :
+                            <OErrorMessage text={`Items of type ${block_data.__type} are not allowed in this repeater`} />
                       }
                         </RepeaterItem>
                       </motion.div>
@@ -181,7 +182,7 @@ export default function Repeater({field_def, field_name, containing_data_item, b
           <div className="relative text-center w-full">
 
             <div className="mt-3 -mb-[2px] space-y-1">
-              {no_items && (
+              {block_data.length < 1 && (
                 <p className={theme_ctx.classes.typography.sub_heading}>{add_label}</p>
               )}
               <AddBtn {...{theme_ctx, set_show_popover, cb__add}} />

@@ -1,4 +1,4 @@
-import * as Utils from '../core/definitions/utils'
+import * as Utils from '../../core/definitions/utils.js'
 
 
 const test_data = [

@@ -7,13 +7,13 @@ import {useThemeContext} from '../../contexts/ThemeContext'
 import {debounce_promise} from '../../definitions/utils'
 import {classNames} from '../../helpers/style'
 
-export default function Searchable({field_def, containing_data_item}) {
+export default function Searchable({field_def, parent_block_data}) {
   const ctx                                  = usePageData()
   const theme_ctx                            = useThemeContext()
   const [search_term, set_search_term]       = useState(null)
   const [search_results, set_search_results] = useState([])
   const [error, set_error]                   = useState(null)
-  const value         = containing_data_item[field_def.name]
+  const value         = parent_block_data[field_def.name]
   const debounce_ms   = field_def.debounce_ms || 500
   const search_func   = useCallback(debounce_promise(field_def.search, debounce_ms), [])
   const input_ref = useRef(null)
@@ -32,12 +32,12 @@ export default function Searchable({field_def, containing_data_item}) {
   }
 
   function cb__select(i) {
-    containing_data_item[field_def.name] = search_results[i]
+    parent_block_data[field_def.name] = search_results[i]
     end_search()
   }
 
   function end_search() {
-    set_search_term(containing_data_item[field_def.name]?.display || '')
+    set_search_term(parent_block_data[field_def.name]?.display || '')
     set_search_results([])
     ctx.value_updated()
     input_ref.current.blur()

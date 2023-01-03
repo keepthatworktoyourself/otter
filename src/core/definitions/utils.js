@@ -110,8 +110,8 @@ export function recursive_find(obj, func) {
 // find_block -> block or null
 // -----------------------------------
 
-export function find_block(blocks, type) {
-  const defs = (blocks && blocks.constructor === Array) ? blocks : [blocks]
+export function find_block_def(block_defs, type) {
+  const defs = (block_defs && block_defs.constructor === Array) ? block_defs : [block_defs]
 
   return recursive_find(
     defs,
@@ -128,10 +128,10 @@ export function find_field(fields, name) {
 }
 
 
-// is_data_item
+// is_block_data
 // -----------------------------------
 
-export function is_data_item(obj) {
+export function is_block_data(obj) {
   return !!(obj && obj.constructor === Object && obj.__type)
 }
 
@@ -158,7 +158,7 @@ export function iterate(data, func) {
 // -----------------------------------
 
 export function iterate_data(data, func) {
-  iterate(data, item => is_data_item(item) && func(item))
+  iterate(data, item => is_block_data(item) && func(item))
 }
 
 
@@ -225,8 +225,8 @@ export function check_display_if(block, field) {
 // display_if
 // -----------------------------------
 
-export function display_if(block, field_name, data_item) {
-  const field = find_field(block.fields, field_name)
+export function display_if(block_def, field_name, block_data) {
+  const field = find_field(block_def.fields, field_name)
 
   if (!field.display_if) {
     return {
@@ -235,7 +235,7 @@ export function display_if(block, field_name, data_item) {
     }
   }
 
-  const errors = check_display_if(block, field)
+  const errors = check_display_if(block_def, field)
   if (errors.length) {
     return {
       errors,
@@ -243,7 +243,7 @@ export function display_if(block, field_name, data_item) {
   }
 
   const display = field.display_if.reduce((carry, rule) => {
-    const sibling_value = data_item[rule.sibling]
+    const sibling_value = block_data[rule.sibling]
     let out = carry
 
     if (rule.equal_to !== undefined) {
@@ -271,12 +271,12 @@ export function display_if(block, field_name, data_item) {
 // blocks_are_grouped
 // -----------------------------------
 
-export function blocks_are_simple(blocks) {
-  return blocks && blocks.constructor === Array
+export function blocks_are_simple(block_defs) {
+  return block_defs && block_defs.constructor === Array
 }
 
-export function blocks_are_grouped(blocks) {
-  return blocks && blocks.constructor === Object
+export function blocks_are_grouped(block_defs) {
+  return block_defs && block_defs.constructor === Object
 }
 
 

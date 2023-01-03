@@ -1,11 +1,11 @@
 import Editor from './core/components/otter/Editor'
-import Fields from './core/definitions/fields'
+import FieldTypes from './core/definitions/field-types'
 import State from './core/definitions/state'
 import * as Utils from './core/definitions/utils'
 
 export default {
   Editor,
-  Fields,
+  Fields: FieldTypes,
   State,
   Utils,
 }

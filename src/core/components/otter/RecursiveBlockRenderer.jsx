@@ -3,9 +3,10 @@ import NestedBlockWrapper from './NestedBlockWrapper'
 import Repeater from './Repeater/Repeater'
 import FieldComponents from '../fields'
 import OErrorMessage from '../default-ui/OErrorMessage'
-import Fields from '../../definitions/fields'
-import {find_block, display_if} from '../../definitions/utils'
+import FieldTypes from '../../definitions/field-types'
+import {find_block_def, display_if} from '../../definitions/utils'
 import OFieldWrapper from '../default-ui/OFieldWrapper'
+import {usePageData} from '../../contexts/PageDataContext'
 
 
 // Errors
@@ -45,21 +46,21 @@ function error_text__invalid_field_type_in_field_definition(field_name, field_ty
 // ensure_nested_block_data
 // ------------------------------------
 
-function ensure_nested_block_data(containing_data_item, field_def) {
-  const current_nested_data = containing_data_item[field_def.name]
+function ensure_nested_block_data(parent_block_data, field_def) {
+  const current_nested_data = parent_block_data[field_def.name]
   if (current_nested_data) {
     return
   }
 
-  else if (field_def.type === Fields.Repeater) {
-    containing_data_item[field_def.name] = []
+  else if (field_def.type === FieldTypes.Repeater) {
+    parent_block_data[field_def.name] = []
   }
 
-  else if (field_def.type === Fields.NestedBlock) {
-    const __type = typeof field_def.nested_block_type === 'string' ?
-      field_def.nested_block_type :
-      field_def.nested_block_type.type
-    containing_data_item[field_def.name] = {__type}
+  else if (field_def.type === FieldTypes.NestedBlock) {
+    const __type = typeof field_def.nested_block === 'string' ?
+      field_def.nested_block :
+      field_def.nested_block.type
+    parent_block_data[field_def.name] = {__type}
   }
 }
 
@@ -68,15 +69,15 @@ function ensure_nested_block_data(containing_data_item, field_def) {
 // ------------------------------------
 
 export default function RecursiveBlockRenderer({
-  data_item,
-  containing_data_item,
+  block_data,
+  parent_block_data,
   field_name,
-  blocks,
   block_fields,
 }) {
-  const item       = data_item || containing_data_item[field_name]
-  const block      = find_block(blocks, item.__type)
-  const field_defs = block_fields || (block?.fields || [])
+  const ctx        = usePageData()
+  const data       = block_data || parent_block_data[field_name]
+  const block_def  = find_block_def(ctx.block_defs, data.__type)
+  const field_defs = block_fields || (block_def?.fields || [])
 
   const display_if_targets = field_defs
     .map(field_def => field_def && field_def.display_if)
@@ -112,7 +113,7 @@ export default function RecursiveBlockRenderer({
 
 
     // Conditional rendering
-    const di = display_if(block, field_name, item)
+    const di = display_if(block_def, field_name, data)
     if (di.errors.length) {
       const text = error_text__invalid_display_if(field_name, di.errors)
       return (
@@ -126,31 +127,28 @@ export default function RecursiveBlockRenderer({
 
 
     // Render NestedBlocks
-    if (field_type === Fields.NestedBlock) {
-      ensure_nested_block_data(item, field_def)
+    if (field_type === FieldTypes.NestedBlock) {
+      ensure_nested_block_data(data, field_def)
       out = (
         <NestedBlockWrapper key={index}
-                            containing_data_item={item}
+                            parent_block_data={data}
                             field_name={field_name}
                             field_def={field_def}
-                            blocks={blocks}
                             index={index}
         >
-          <RecursiveBlockRenderer containing_data_item={item}
-                                  field_name={field_name}
-                                  blocks={blocks} />
+          <RecursiveBlockRenderer parent_block_data={data}
+                                  field_name={field_name} />
         </NestedBlockWrapper>
       )
     }
 
     // Render Repeaters
-    else if (field_type === Fields.Repeater) {
-      ensure_nested_block_data(item, field_def)
+    else if (field_type === FieldTypes.Repeater) {
+      ensure_nested_block_data(data, field_def)
       out = (
         <Repeater field_def={field_def}
                   field_name={field_name}
-                  blocks={blocks}
-                  containing_data_item={item}
+                  parent_block_data={data}
                   key={index} />
       )
     }
@@ -165,7 +163,7 @@ export default function RecursiveBlockRenderer({
         >
           {Field && (
             <Field field_def={field_def}
-                   containing_data_item={item}
+                   parent_block_data={data}
                    is_display_if_target={is_display_if_target} />
           )}
           {!Field && <OErrorMessage text={error_text} />}

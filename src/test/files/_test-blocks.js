@@ -1,5 +1,5 @@
-import * as Utils from '../core/definitions/utils'
-import Fields from '../core/definitions/fields'
+import * as Utils from '../../core/definitions/utils.js'
+import FieldTypes from '../../core/definitions/field-types.js'
 
 const blocks = [
   {type: 'B1'},
@@ -8,7 +8,7 @@ const blocks = [
     fields: [
       {
         name:    'size',
-        type:    Fields.Radios,
+        type:    FieldTypes.Radios,
         options: {
           regular: 'Regular',
           large:   'Large',
@@ -16,7 +16,7 @@ const blocks = [
       },
       {
         name: 'text',
-        type: Fields.TextInput,
+        type: FieldTypes.TextInput,
       },
     ],
   },
@@ -24,9 +24,9 @@ const blocks = [
     type:   'B3',
     fields: [
       {
-        name:              'content_item',
-        type:              Fields.NestedBlock,
-        nested_block_type: 'AContentItem',
+        name:         'content_item',
+        type:         FieldTypes.NestedBlock,
+        nested_block: 'AContentItem',
       },
     ],
   },
@@ -34,18 +34,18 @@ const blocks = [
     type:   'B4',
     fields: [
       {
-        name:               'content_items',
-        type:               Fields.Repeater,
-        nested_block_types: [
+        name:          'content_items',
+        type:          FieldTypes.Repeater,
+        nested_blocks: [
           'AnotherContentItem',
           'OneMoreContentItem',
         ],
       },
     ],
   },
-  {type: 'AContentItem',       fields: [{name: 'f', type: Fields.TextInput}]},
-  {type: 'AnotherContentItem', fields: [{name: 'f', type: Fields.TextInput}]},
-  {type: 'OneMoreContentItem', fields: [{name: 'f', type: Fields.TextInput}]},
+  {type: 'AContentItem',       fields: [{name: 'f', type: FieldTypes.TextInput}]},
+  {type: 'AnotherContentItem', fields: [{name: 'f', type: FieldTypes.TextInput}]},
+  {type: 'OneMoreContentItem', fields: [{name: 'f', type: FieldTypes.TextInput}]},
 ]
 
 

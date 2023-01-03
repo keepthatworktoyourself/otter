@@ -66,20 +66,20 @@ function MediaPickerImagePreview({value, className}) {
 }
 
 
-export default function MediaPicker({field_def, containing_data_item}) {
+export default function MediaPicker({field_def, parent_block_data}) {
   const ctx = usePageData()
   const theme_ctx = useThemeContext()
-  const value = containing_data_item[field_def.name]
+  const value = parent_block_data[field_def.name]
   const txt_open = field_def.open_library_text || 'Select media item'
 
   function clear() {
-    containing_data_item[field_def.name] = null
+    parent_block_data[field_def.name] = null
     ctx.value_updated()
     ctx.redraw()
   }
 
   function set_value_callback(value) {
-    containing_data_item[field_def.name] = value
+    parent_block_data[field_def.name] = value
     ctx.value_updated()
     ctx.redraw()
   }

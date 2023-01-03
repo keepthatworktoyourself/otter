@@ -7,19 +7,19 @@ export default function OFieldWrapper({
   field_def = {},
   ...props
 }) {
-  const {wrapper_class, label_class, field_class} = field_def
+  const {class_wrapper, class_label, class_field} = field_def
   const label = field_def?.with_label !== false && (field_def.description || humanify_str(field_def.name))
 
   return (
-    <div className={wrapper_class || 'w-full'}
+    <div className={class_wrapper || 'w-full'}
          {...props}
     >
       {label && (
         <OFieldLabel label={label}
-                     className={label_class} />
+                     className={class_label} />
       )}
 
-      <div className={field_class}>{children}</div>
+      <div className={class_field}>{children}</div>
     </div>
   )
 }

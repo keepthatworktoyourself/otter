@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import AddItemPillBtn from '../other/AddItemPillBtn'
-import design_options from '../../../definitions/design-options'
 import {blocks_are_simple, humanify_str} from '../../../definitions/utils'
 import {classNames} from '../../../helpers/style'
 import {usePageData} from '../../../contexts/PageDataContext'
@@ -17,14 +16,16 @@ export default function AddBlockBtn({
 }) {
   const ctx                    = usePageData()
   const theme_ctx              = useThemeContext()
-  const blocks                 = ctx?.blocks || []
+  const block_defs             = ctx?.block_defs || []
   const [is_open, set_is_open] = useState(false)
-  const is_flat                = blocks_are_simple(blocks)
-  const displayed_blocks = is_flat && blocks.filter(item => item && item.hidden !== true)
-  const popup_items      = is_flat && displayed_blocks.map((block, i) => ({
-    label:   block.description || humanify_str(block.type),
-    onClick: () => cb__select(i),
-  }))
+  const is_flat                = blocks_are_simple(block_defs)
+  const displayed_blocks       = is_flat && block_defs.filter(item => item && item.hidden !== true)
+  const popup_items            = is_flat && displayed_blocks.map((block_def, i) => {
+    return ({
+      label:   block_def.description || humanify_str(block_def.type),
+      onClick: () => cb__select(i),
+    })
+  })
 
   function cb__toggle() {
     if (is_flat) {
