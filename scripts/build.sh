@@ -8,8 +8,8 @@ mkdir -p "$DIST/css"
 
 # Use the main build task to generate css file(s)
 npm run build
-cp dist/index*.css $DIST/css/all.css
-cp -R src/css/*.css $DIST/css/
+cat dist/index*.css > $DIST/css/all.css
+cp src/css/*.css $DIST/css/
 rm dist/index*
 
 # For library use, just transpile into dist using babel
