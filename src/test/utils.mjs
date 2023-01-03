@@ -1,8 +1,8 @@
 import test from 'ava'
-import test_data from './_test-data'
-import test_blocks from './_test-blocks'
-import * as Utils from '../core/definitions/utils'
-import FieldTypes from '../core/definitions/field-types'
+import test_data from './files/_test-data.js'
+import test_blocks from './files/_test-blocks.js'
+import * as Utils from '../core/definitions/utils.js'
+import FieldTypes from '../core/definitions/field-types.js'
 
 
 // uid
@@ -93,11 +93,11 @@ test('utils: recursive_find: can only be used to find objects', t => {
 // ------------------------------------
 
 test('utils: find_block: finds block in block array given type', t => {
-  t.is('B3', Utils.find_block(test_blocks(), 'B3').type)
+  t.is('B3', Utils.find_block_def(test_blocks(), 'B3').type)
 })
 
 test('utils: find_block: returns null if not found', t => {
-  t.is(null, Utils.find_block(test_blocks(), 'Nonexistent'))
+  t.is(null, Utils.find_block_def(test_blocks(), 'Nonexistent'))
 })
 
 test('utils: find_block: handles nulls', t => {
@@ -106,7 +106,7 @@ test('utils: find_block: handles nulls', t => {
       { },  [6, 7, 8],  null,
     ],
   }
-  t.is(null, Utils.find_block(obj, 'X'))
+  t.is(null, Utils.find_block_def(obj, 'X'))
 })
 
 

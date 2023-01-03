@@ -1,5 +1,5 @@
-import * as Utils from '../core/definitions/utils'
-import FieldTypes from '../core/definitions/field-types'
+import * as Utils from '../../core/definitions/utils.js'
+import FieldTypes from '../../core/definitions/field-types.js'
 
 const blocks = [
   {type: 'B1'},
