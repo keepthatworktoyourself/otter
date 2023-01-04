@@ -204,7 +204,7 @@ Each block should contain at least one field.
 {
   name: 'content',
   description: 'Content',
-  type: Otter.Fields.TextArea,
+  type: Otter.FieldTypes.TextArea,
 }
 ```
 
@@ -228,7 +228,7 @@ Properties on fields:
 - *(`default_value` is supported on all fields except: TextEditor, MediaPicker, NestedBlock, Repeater, Searchable.)
 - **(`class_wrapper`, `class_label` & `class_field` are supported on all fields except: Repeater, NestedBlock. [See custom layout](#custom-layout).)
 
-`type` should be specified using the Otter-defined constants: `type: Otter.Fields.TextInput`, etc. (See [field types](#field-types).)
+`type` should be specified using the Otter-defined constants: `type: Otter.FieldTypes.TextInput`, etc. (See [field types](#field-types).)
 
 With `display_if` you can show or hide the field based on the value of one or more of its siblings. Each `DisplayRule` specifies the name of the
 sibling and a value. You can test against more than one sibling field using an array of multiple `DisplayRule` objects.
@@ -238,7 +238,7 @@ sibling and a value. You can test against more than one sibling field using an a
 {
   name: 'url',
   description: 'URL',
-  type: Otter.Fields.TextInput,
+  type: Otter.FieldTypes.TextInput,
   display_if: {
     sibling: 'is_link',
     equal_to: true,

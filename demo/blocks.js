@@ -123,7 +123,7 @@ export const block_options = {
     },
     {
       name:          'theme',
-      type:          Otter.Fields.Radios,
+      type:          Otter.FieldTypes.Radios,
       class_label:   'mb-0',
       class_wrapper: block_option_field_layout_classes,
       options:       {
@@ -152,15 +152,15 @@ const btn_block = {
   fields:      [
     {
       name: 'label',
-      type: Otter.Fields.TextInput,
+      type: Otter.FieldTypes.TextInput,
     },
     {
       name: 'url',
-      type: Otter.Fields.TextInput,
+      type: Otter.FieldTypes.TextInput,
     },
     {
       name:          'style',
-      type:          Otter.Fields.Radios,
+      type:          Otter.FieldTypes.Radios,
       class_wrapper: `w-[calc(50%-0.5rem)] pt-1 mr-[1rem] flex items-center`,
       class_label:   'mr-[10px]',
       description:   'Style',
@@ -172,7 +172,7 @@ const btn_block = {
     },
     {
       name:          'newTab',
-      type:          Otter.Fields.Select,
+      type:          Otter.FieldTypes.Select,
       mini:          true,
       class_wrapper: `w-[calc(50%-0.5rem)] pt-1 flex items-center`,
       class_label:   'mr-[10px]',
@@ -192,7 +192,7 @@ const btns_block = {
   fields: [
     {
       name:           'btns__btn',
-      type:           Otter.Fields.Repeater,
+      type:           Otter.FieldTypes.Repeater,
       add_item_label: 'Add a button',
       nested_blocks:  [
         btn_block,
@@ -204,16 +204,16 @@ const btns_block = {
 const header_block_fields = [
   {
     name: 'label',
-    type: Otter.Fields.TextInput,
+    type: Otter.FieldTypes.TextInput,
   },
   {
     name: 'heading',
-    type: Otter.Fields.TextInput,
+    type: Otter.FieldTypes.TextInput,
   },
   {
     name:           'text',
     description:    'Text',
-    type:           Otter.Fields.TextEditor,
+    type:           Otter.FieldTypes.TextEditor,
     heading_levels: [1, 2, 3, 4, 5, 6],
     hr:             true,
     blockquote:     true,
@@ -221,7 +221,7 @@ const header_block_fields = [
   {
     name:          'width',
     description:   'Width',
-    type:          Otter.Fields.NumberInput,
+    type:          Otter.FieldTypes.NumberInput,
     default_value: 2,
     min:           1,
     max:           5,
@@ -230,12 +230,12 @@ const header_block_fields = [
   {
     name:        'media_item',
     description: 'Image',
-    type:        Otter.Fields.MediaPicker,
+    type:        Otter.FieldTypes.MediaPicker,
   },
   {
     name:                    'btns',
     description:             'Buttons (optional nested block)',
-    type:                    Otter.Fields.NestedBlock,
+    type:                    Otter.FieldTypes.NestedBlock,
     nested_block:            btns_block, // Supports name of block defined elsewhere
     seamless:                false,
     __enabled_default_value: false,
@@ -272,14 +272,14 @@ export const text_block = {
       name:           'text_editor',
       description:    'Text',
       with_label:     false,
-      type:           Otter.Fields.TextEditor,
+      type:           Otter.FieldTypes.TextEditor,
       heading_levels: [1, 2, 3, 4, 5, 6],
       hr:             true,
       blockquote:     true,
     },
     {
       name:          'align',
-      type:          Otter.Fields.Radios,
+      type:          Otter.FieldTypes.Radios,
       class_wrapper: 'flex items-center space-x-4 pt-3 pb-1 mr-6',
       class_label:   'mb-0',
       options:       {
@@ -296,7 +296,7 @@ export const text_block = {
     {
       name:          'display_if_example',
       description:   'Display if?',
-      type:          Otter.Fields.Bool,
+      type:          Otter.FieldTypes.Bool,
       class_wrapper: 'flex items-center space-x-4 pt-3 pb-1',
       class_label:   'mb-0',
       default_value: false,
@@ -304,7 +304,7 @@ export const text_block = {
     {
       name:          'display_if_example_target',
       description:   'If is true',
-      type:          Otter.Fields.Select,
+      type:          Otter.FieldTypes.Select,
       mini:          true,
       class_wrapper: 'pb-2 w-full',
       default_value: 'here_are',
@@ -362,7 +362,7 @@ export const html_block = {
     {
       name:        'html',
       description: 'HTML',
-      type:        Otter.Fields.TextArea,
+      type:        Otter.FieldTypes.TextArea,
       mono:        true,
     },
   ],
@@ -384,20 +384,20 @@ const tabs_demo_block = {
   fields: [
     {
       name: 'label',
-      type: Otter.Fields.TextInput,
+      type: Otter.FieldTypes.TextInput,
     },
     {
       name: 'heading',
-      type: Otter.Fields.TextInput,
+      type: Otter.FieldTypes.TextInput,
     },
     {
       name: 'text',
-      type: Otter.Fields.TextArea,
+      type: Otter.FieldTypes.TextArea,
     },
     {
       name:        'some_select',
       description: 'Select',
-      type:        Otter.Fields.Select,
+      type:        Otter.FieldTypes.Select,
       options:     {
         one: 'Option 1',
         two: 'Option 2',
@@ -406,7 +406,7 @@ const tabs_demo_block = {
     },
     {
       name:          'theme',
-      type:          Otter.Fields.Radios,
+      type:          Otter.FieldTypes.Radios,
       class_label:   'mb-0',
       class_wrapper: block_option_field_layout_classes,
       options:       {
@@ -433,21 +433,21 @@ export const block_with_nested_block = {
     {
       name:           'tabs_demo',
       description:    'Tabs',
-      type:           Otter.Fields.NestedBlock,
+      type:           Otter.FieldTypes.NestedBlock,
       nested_block:   tabs_demo_block, // Supports inline block object
       seamless:       true,
       initially_open: false,
     },
     {
       name:           'text_content',
-      type:           Otter.Fields.NestedBlock,
+      type:           Otter.FieldTypes.NestedBlock,
       nested_block:   text_block, // Supports inline block object
       seamless:       false,
       initially_open: false,
     },
     {
       name:                    'searchable',
-      type:                    Otter.Fields.NestedBlock,
+      type:                    Otter.FieldTypes.NestedBlock,
       description:             'Searchable (Seamless Nested Block)',
       nested_block:            'SearchablesDemo', // Supports name of block defined elsewhere
       optional:                true,
@@ -464,7 +464,7 @@ export const block_with_repeater_one_type = {
     {
       name:          'content_items',
       description:   'Content:',
-      type:          Otter.Fields.Repeater,
+      type:          Otter.FieldTypes.Repeater,
       nested_blocks: [
         html_block, // Supports name of block defined elsewhere
       ],
@@ -480,7 +480,7 @@ export const block_with_repeater = {
       name:          'content_items',
       description:   'Content:',
       item_headers:  true,
-      type:          Otter.Fields.Repeater,
+      type:          Otter.FieldTypes.Repeater,
       nested_blocks: [
         'Text', // Supports name of block defined elsewhere
         text_block_with_icon_tabs,
@@ -499,7 +499,7 @@ export const searchables = {
       name:        'my_searchable',
       description: 'Search Content Field',
       with_label:  false,
-      type:        Otter.Fields.Searchable,
+      type:        Otter.FieldTypes.Searchable,
       search:      () => [{value: 'x', display: 'A search result'}],
     },
   ],

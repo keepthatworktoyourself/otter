@@ -2,5 +2,6 @@
 [[ -z $WATCH ]] || WATCH="-w"
 mkdir -p $DIST
 
-npx babel src/index.js $WATCH -d $DIST --presets=@babel/preset-env,@babel/preset-react &
-npx babel src/core $WATCH -d $DIST/core --presets=@babel/preset-env,@babel/preset-react
+npx browserslist@latest --update-db
+npx babel src/index.js $WATCH -d $DIST --config-file ./scripts/.babelrc
+npx babel src/core $WATCH -d $DIST/core --config-file ./scripts/.babelrc

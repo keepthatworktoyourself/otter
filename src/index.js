@@ -5,7 +5,7 @@ import * as Utils from './core/definitions/utils'
 
 export default {
   Editor,
-  Fields: FieldTypes,
+  FieldTypes,
   State,
   Utils,
 }
