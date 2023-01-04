@@ -1,7 +1,7 @@
 {
   "name": "otter-editor",
   "description": "Content editor with declaratively defined content blocks.",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "author": "Benjamin Hall and Peter Rundle (https://github.com/keepthatworktoyourself)",
   "license": "MIT",
   "homepage": "https://github.com/keepthatworktoyourself/otter",
@@ -12,14 +12,15 @@
     "dist"
   ],
   "main": "dist/index.js",
-  "type": "module",
   "scripts": {
     "demo": "parcel demo/index.html",
     "clean": "rm -rf dist demo/dist .parcel-cache",
     "build": "parcel build --no-source-maps demo/index.html --target default",
-    "t": "ava -c 1 --verbose src/test/*",
-    "tw": "ava -c 1 --watch src/test/*",
-    "ts": "ava -c 1 --watch",
+    "test-prep": "echo '{\"type\": \"module\"}' > src/package.json",
+    "test-cleanup": "rm src/package.json",
+    "t":  "npm run test-prep; ava -c 1 --verbose src/test/*; npm run test-cleanup",
+    "tw": "npm run test-prep; ava -c 1 --watch src/test/*; npm run test-cleanup",
+    "ts": "npm run test-prep; ava -c 1 --watch; npm run test-cleanup",
     "test": "npm run t",
     "lint": "eslint --fix .",
     "lint-check": "eslint .",
