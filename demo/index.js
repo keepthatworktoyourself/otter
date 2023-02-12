@@ -43,19 +43,10 @@ const blocks__grouped = {
 }
 
 
-// load - fake async request
-// -----------------------------------
-
-function load(post_id) {
-  return Promise.resolve({
-    json: () => data,
-  })
-}
-
 // render
 // -----------------------------------
 
-function App({state}) {
+function App({data}) {
   const [picker_mode, set_picker_mode] = useState('modal')
   const [custom_brand_enabled, set_custom_brand_enabled] = useState(false)
   const classes = custom_brand_enabled ? custom_classes : default_classes
@@ -132,10 +123,9 @@ function App({state}) {
             </div>
             <div className="pl-12">
               <Otter.Editor key={picker_mode} // re-render on demo mode change
-                            data={state.data}
+                            initial_data={data}
                             blocks={output_blocks}
                             custom_classes={custom_brand_enabled && custom_classes}
-                            load_state={state.load_state}
                             save={save}
                             update_height={update_height}
                             open_media_library={open_media_library}
@@ -153,20 +143,8 @@ function App({state}) {
   )
 }
 
-function render(state) {
-  ReactDOM.render(
-    <App state={state} />,
-    document.querySelector('#otter-container'),
-  )
-}
-
-const state = {
-  data:       [],
-  load_state: Otter.State.Loading,
-}
-
 function save(data) {
-  console.log('save()', JSON.stringify(data, null, 2))
+  console.log('save()', data)
 }
 
 function update_height() {
@@ -183,15 +161,13 @@ function open_media_library(set_value) {
   })
 }
 
-render(state)
-load(state.post_id)
-  .then(response => {
-    state.data = response.json()
-    state.load_state = Otter.State.Loaded
-    render(state)
-  })
-  .catch(err => {
-    console.log(err)
-    state.load_state = Otter.State.Error
-    render(state)
-  })
+// load - fake async request
+// -----------------------------------
+
+function render() {
+  ReactDOM.render(
+    <App data={data} />,
+    document.querySelector('#otter-container'),
+  )
+}
+render()

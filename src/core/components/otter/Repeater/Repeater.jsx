@@ -16,14 +16,14 @@ function get_block_type(str_or_obj) {
 }
 
 const AddBtn = ({theme_ctx, set_show_popover, cb__add}) => (
-  <AddItemPillBtn onClick={() => {
-    cb__add({
-      show_popup_func: () => set_show_popover(true),
-      cb__block_added: () => set_show_popover(false),
-    })
-  }}
-                  classNameBg={theme_ctx.classes.skin.add_repeater_item_btn.bg}
-                  size="md" />
+  <AddItemPillBtn classNameBg={theme_ctx.classes.skin.add_repeater_item_btn.bg}
+                  size="md"
+                  onClick={() => {
+                    cb__add({
+                      show_popup_func: () => set_show_popover(true),
+                      cb__block_added: () => set_show_popover(false),
+                    })
+                  }} />
 )
 
 function prep_nested_block_defs(nested_block_defs, block_defs) {
@@ -135,7 +135,9 @@ export default function Repeater({field_def, field_name, parent_block_data}) {
         <DnD.DragDropContext onDragEnd={cb__reorder}>
           <DnD.Droppable droppableId={dnd_context_id} type={dnd_context_id}>
             {prov => (
-              <div ref={prov.innerRef} {...prov.droppableProps}>
+              <div ref={prov.innerRef}
+                   {...prov.droppableProps}
+              >
                 <AnimatePresence initial={false}>
                   {block_data.map((block_data, index) => {
                     const is_permitted = nested_block_types.includes(block_data.__type)

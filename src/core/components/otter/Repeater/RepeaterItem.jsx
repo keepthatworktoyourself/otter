@@ -92,7 +92,7 @@ export default function RepeaterItem({
         <div ref={prov.innerRef}
              {...prov.draggableProps}
              {...prov.dragHandleProps}
-             className="pt-4" // all repeater items have same padding-top regardless of index to stop animation issues
+             className="pt-4"
         >
           <div className={classNames(
             'relative',

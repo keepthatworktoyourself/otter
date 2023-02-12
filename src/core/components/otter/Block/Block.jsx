@@ -58,16 +58,14 @@ export default function Block({block_data, index, block_numbers}) {
                  data-blocktype={block_data.__type}
             >
 
-              <div className={classNames(
-                theme_ctx.classes.skin.block.bg,
-                theme_ctx.classes.skin.block.border_radius,
-                theme_ctx.classes.skin.border_color,
-                !seamless && theme_ctx.classes.skin.block.border,
-                !seamless && theme_ctx.classes.skin.block.shadow,
-              )}
-                   style={{
-                     minWidth: theme_ctx.design_options.block_min_width,
-                   }}
+              <div style={{minWidth: theme_ctx.design_options.block_min_width}}
+                   className={classNames(
+                     theme_ctx.classes.skin.block.bg,
+                     theme_ctx.classes.skin.block.border_radius,
+                     theme_ctx.classes.skin.border_color,
+                     !seamless && theme_ctx.classes.skin.block.border,
+                     !seamless && theme_ctx.classes.skin.block.shadow,
+                   )}
               >
                 {ctx.can_add_and_remove_blocks && (
                   <BlockDeleteConfirmPopoverAnimated delete_func={() => ctx.delete_item(index)}
@@ -125,10 +123,10 @@ export default function Block({block_data, index, block_numbers}) {
                               <TabsTab key={`tab--${i}`} index={i}>
                                 <BlockSection bordered={false}
                                               seamless={seamless}
-                                              children={(
-                                                <RecursiveBlockRenderer block_data={block_data}
-                                                                        block_fields={tab_fields} />
-                                  )} />
+                                >
+                                  <RecursiveBlockRenderer block_data={block_data}
+                                                          block_fields={tab_fields} />
+                                </BlockSection>
                               </TabsTab>
                             )
                           })}
@@ -157,4 +155,3 @@ export default function Block({block_data, index, block_numbers}) {
     </TabsProvider>
   )
 }
-

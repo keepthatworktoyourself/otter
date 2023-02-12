@@ -18,8 +18,7 @@ Otter is perhaps the ~~furriest~~ easiest way in the universe to embed a content
 npm i -S otter-editor --legacy-peer-deps
 🐟 🐟 🐟
 <Otter.Editor blocks={blocks}
-              data={data}
-              load_state={Otter.State.Loaded} />
+              initial_data={data} />
 🐟 🐟 🐟
 ```
 
@@ -56,18 +55,16 @@ The `<Otter.Editor />` element renders the editor.
 
 ```jsx
 <Otter.Editor blocks={blocks}
-              data={data}
-              load_state={Otter.State.Loaded} />
+              initial_data={data} />
 ```
 
 | Property             | Value                                           | Required | Default          |                                                                                                                                    |
 | :---------------     | :---------------------------------------------  | :------- | :--------------- | :--------------------------------------------------------------------------------------------------------------------------------- |
 | `blocks`             | array of blocks                                 | Yes      |                  | Defines the [blocks](#blocks) available in the editor.                                                                             |
-| `data`               | Loaded document data                            |          |                  | The loaded page data.                                                                                                              |
-| `load_state`         | `Otter.State.Loading` or `.Loaded` or `.Error`  | Yes      |                  | Set the editor state. Use `Loading` and `Error` to display useful feedback to the user when asynchronously fetching content data.  |
+| `initial_data`               | Loaded document data                            |          |                  | The loaded page data.                                                                                                      |
 | `block_numbers`      | `bool`                                          |          | `false`          | Label each block with its 1-based index                                                                                            |
 | `add_block_msg`      | `string`                                        |          | `'Insert block'` | Label for the 'insert block' button                                                                                                |
-| `can_add_and_remove_blocks`     | `bool`                                          |          | `true`           | If set to false, the user cannot add or remove blocks. Useful if you want an editor with a single pre-programmed block.            |
+| `can_add_and_remove_blocks`     | `bool`                                          |          | `true`           | If set to false, the user cannot add or remove blocks. Useful if you want an editor with a single pre-programmed block. |
 | `custom_classes`     | `Object`                                        |          |                  | Allows you to specify custom CSS classes on a variety of editor elements. See [CSS](#css-and-tailwind) for details.                |
 | `save`               | `function(data)`                                |          |                  | Save the document.                                                                                                                 |
 | `update_height`      | `function(new_height_in_pixels)`                |          |                  | Called by Otter when the editor height changes, in case this is useful to you.                                                     |
@@ -214,7 +211,7 @@ Properties on fields:
 
 | Property           | Value                                   | Required   |                                                                                                          |
 | :----------------- | :-------------------------------------- | :--------- | :------------------------------------------------------------------------------------------------------- |
-| `name`             | `<string>`                              | Yes        | The block data save key.                                                                                 |
+| `name`             | `<string>`                              | Yes        | Key to save the field data under within the block.                                                                                 |
 | `description`      | `<string>`                              |            | Field label displayed to the user. If not present Otter will use a prettified version of the field name. |
 | `type`             | `Otter.Field.<FieldType>`               | Yes        | The [field type](#field-types).                                                                          |
 | `display_if`       | `<DisplayRule>`, `Array(<DisplayRule>)` |            | Show/hide this field based on the value(s) of its sibling(s).                                            |

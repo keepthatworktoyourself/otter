@@ -14,9 +14,7 @@ import {
   iterate_data,
   blocks_are_grouped,
 } from '../../definitions/utils'
-import State from '../../definitions/state'
 import Block from './Block/Block'
-import {classNames} from '../../helpers/style'
 import AddBlockBtn from './Block/AddBlockBtn'
 import Modal from '../primitives/Modal'
 import BlockPicker from './other/BlockPicker'
@@ -24,7 +22,6 @@ import animations from '../../definitions/animations'
 import design_options from '../../definitions/design-options'
 import classes from '../../definitions/classes'
 import {ThemeContext} from '../../contexts/ThemeContext'
-import {useOnFirstRender} from '../../hooks/useOnFirstRender'
 import merge from '../../helpers/merge'
 
 function field_type_supports_empty_string_value(field_type) {
@@ -115,12 +112,6 @@ function ensure_display_ifs_are_arrays(block_defs) {
   })
 }
 
-const Msg = msg => (
-  <div className={classNames('p-4 text-center', classes.typography.copy)}>
-    {msg}
-  </div>
-)
-
 function ctx_reducer(state, op) {
   if (!state.data) {
     state.data = []
@@ -167,8 +158,7 @@ function ctx_reducer(state, op) {
 
 export default function Editor({
   blocks: block_defs = [],
-  data = [],
-  load_state,
+  initial_data = [],
   block_numbers,
   can_add_and_remove_blocks = true,
   DragDropContext = DnD.DragDropContext,
@@ -183,14 +173,11 @@ export default function Editor({
   open_media_library,
   dev_mode,
 }) {
-  const valid_state = Object.values(State).includes(load_state)
   const [block_picker_open, set_block_picker_open] = useState(false)
   const [block_to_insert, set_block_to_insert] = useState({insert_at_index: 0, type: null})
-  const [previous_load_state, set_previous_load_state] = useState(null)
   const [_, update] = useState({ })
-  const initial_data = useMemo(() => copy(data), [])
-  const [ctx, dispatch_ctx] = useReducer(ctx_reducer, {data: initial_data, block_defs})
-  const first_render = useOnFirstRender()
+  const data = useMemo(() => copy(initial_data), [])
+  const [ctx, dispatch_ctx] = useReducer(ctx_reducer, {data, block_defs})
 
   function enqueue_save_on_input() {
     setTimeout(do_save)
@@ -226,15 +213,11 @@ export default function Editor({
     do_set_block_picker_open(false)
   }
   function insert_block() {
-    if (!block_to_insert?.type || (!block_to_insert?.insert_at_index && block_to_insert.insert_at_index !== 0)) return
+    if (!block_to_insert?.type || (!block_to_insert?.insert_at_index && block_to_insert.insert_at_index !== 0)) {
+      return
+    }
     add_item(block_to_insert.type, block_to_insert.insert_at_index)
   }
-
-  useEffect(() => {
-    if (!first_render) {
-      dispatch_ctx({set_data: data})
-    }
-  }, [data])
 
   useEffect(() => {
     // Blocks are inserted AFTER the block picker
@@ -274,16 +257,8 @@ export default function Editor({
   ensure_uids(ctx.data)
   ensure_display_ifs_are_arrays(ctx.block_defs)
 
-  if (load_state === State.Loaded && previous_load_state !== State.Loaded) {
-    do_update_height()
-  }
-  if (load_state !== previous_load_state) {
-    set_previous_load_state(load_state)
-  }
-
   const show_block_picker = (
     can_add_and_remove_blocks &&
-    load_state === State.Loaded &&
     block_picker_open !== false &&
     blocks_are_grouped(ctx.block_defs)
   )
@@ -302,49 +277,44 @@ export default function Editor({
       }}
       >
         <div className="relative">
-          {!valid_state && Msg(`Unknown load state: ${load_state}`)}
-          {load_state === State.Error && Msg(`Error loading post data`)}
-          {load_state === State.Loading && Msg(`Loading...`)}
-          {load_state === State.Loaded && (
-            <div className="mx-auto"
-                 style={{
-                   minHeight: `${block_picker_open === false ? '20' : '50'}rem`,
-                   maxWidth:  '45rem',
-                 }}
-            >
-              {can_add_and_remove_blocks && (
-                <div className="flex justify-center">
-                  <AddBlockBtn index={0}
-                               suggest_add_block={n_items === 0}
-                               popup_direction={'down'} />
-                </div>
-              )}
-
-              {n_items > 0 && (
-                <DragDropContext onDragEnd={drag => reorder_items(drag)}>
-                  <Droppable droppableId="d-blocks"
-                             isDropDisabled={!can_add_and_remove_blocks}
-                             type="block"
-                  >{prov => (
-                    <div ref={prov.innerRef} {...prov.droppableProps}>
-                      <AnimatePresence initial={false}>
-                        {ctx.data.map((block_data, index) => (
-                          <motion.div key={block_data.__uid}
-                                      {...animations.item_add_and_remove}
-                          >
-                            <Block block_data={block_data}
-                                   index={index}
-                                   block_numbers={block_numbers} />
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
-                      {prov.placeholder}
-                    </div>
-                  )}</Droppable>
-                </DragDropContext>
-              )}
+          <div className="mx-auto"
+               style={{
+                 minHeight: `${block_picker_open === false ? '20' : '50'}rem`,
+                 maxWidth:  '45rem',
+               }}
+          >
+            {can_add_and_remove_blocks && (
+            <div className="flex justify-center">
+              <AddBlockBtn index={0}
+                           suggest_add_block={n_items === 0}
+                           popup_direction={'down'} />
             </div>
-          )}
+            )}
+
+            {n_items > 0 && (
+            <DragDropContext onDragEnd={drag => reorder_items(drag)}>
+              <Droppable droppableId="d-blocks"
+                         isDropDisabled={!can_add_and_remove_blocks}
+                         type="block"
+              >{prov => (
+                <div ref={prov.innerRef} {...prov.droppableProps}>
+                  <AnimatePresence initial={false}>
+                    {ctx.data.map((block_data, index) => (
+                      <motion.div key={block_data.__uid}
+                                  {...animations.item_add_and_remove}
+                      >
+                        <Block block_data={block_data}
+                               index={index}
+                               block_numbers={block_numbers} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                  {prov.placeholder}
+                </div>
+              )}</Droppable>
+            </DragDropContext>
+            )}
+          </div>
 
 
           {picker_container_ref?.current && (

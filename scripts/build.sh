@@ -1,6 +1,6 @@
 [[ -z $DIST ]] && DIST=dist
 
-set -e
+set -ex
 export DIST
 
 npm run clean
