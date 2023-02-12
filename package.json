@@ -1,7 +1,7 @@
 {
   "name": "otter-editor",
   "description": "Content editor with declaratively defined content blocks.",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "author": "Benjamin Hall and Peter Rundle (https://github.com/keepthatworktoyourself)",
   "license": "MIT",
   "homepage": "https://github.com/keepthatworktoyourself/otter",

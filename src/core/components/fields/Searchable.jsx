@@ -51,7 +51,6 @@ export default function Searchable({field_def, parent_block_data}) {
               onChange={cb__change}
               ref={input_ref} />
 
-
       <PopupMenuAnimated isOpen={search_results.length > 0}
                          items={search_results.map((item, i) => ({
                            label:   item.display,
@@ -61,17 +60,15 @@ export default function Searchable({field_def, parent_block_data}) {
                          className="absolute left-0 w-full top-4 z-10"
                          classNameTypography={theme_ctx.classes.typography.input_label} />
 
-
       {error && (
         <p className={classNames(
           'text-xs text-red-600 mt-1 pl-2',
           theme_ctx.classes.typography.copy,
         )}
         >
-          {error}
+          {error.message}
         </p>
       )}
     </div>
   )
 }
-
