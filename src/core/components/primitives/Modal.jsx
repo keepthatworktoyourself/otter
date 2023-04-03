@@ -52,7 +52,7 @@ const scaleIn = {
 }
 
 
-const ModalLayout = ({children, close}) => {
+const ModalLayout = ({children, close, overflow}) => {
   const ref = useRef()
   useOnClickOutside({ref, handler: () => close?.()})
 
@@ -78,7 +78,7 @@ const ModalLayout = ({children, close}) => {
                   style={{
                     maxHeight: '70vh',
                     height:    '800px',
-                    overflow:  'scroll',
+                    overflow,
                     zIndex:    1,
                   }}
       >
@@ -101,13 +101,13 @@ const ModalLayout = ({children, close}) => {
 }
 
 
-const Modal = ({isOpen, close, children, onExitComplete}) => (
+const Modal = ({isOpen, close, children, onExitComplete, overflow = 'scroll'}) => (
   <AnimatePresence initial={true}
                    exitBeforeEnter={true}
                    onExitComplete={onExitComplete}
   >
     {isOpen && (
-      <ModalLayout close={close}>
+      <ModalLayout close={close} overflow={overflow}>
         {children}
       </ModalLayout>
     )}
