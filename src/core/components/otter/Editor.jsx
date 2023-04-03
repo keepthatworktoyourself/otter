@@ -266,9 +266,6 @@ export default function Editor({
 
   const n_items = ctx.data?.length || 0
 
-  // Temp
-  useEffect(() => set_block_picker_state(true), [])
-
   return (
     <ThemeContext.Provider value={{
       classes:        merge(classes, custom_classes),
