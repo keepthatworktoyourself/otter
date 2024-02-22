@@ -1,8 +1,7 @@
 import PencilSolid from 'simple-react-heroicons/icons/PencilSolid'
-import CogSolid from 'simple-react-heroicons/icons/CogSolid'
-import MenuAlt2Solid from 'simple-react-heroicons/icons/MenuAlt2Solid'
-import MenuSolid from 'simple-react-heroicons/icons/MenuSolid'
-import MenuAlt3Solid from 'simple-react-heroicons/icons/MenuAlt3Solid'
+import Cog8ToothSolid from 'simple-react-heroicons/icons/Cog8ToothSolid'
+import Bars2Solid from 'simple-react-heroicons/icons/Bars2Solid'
+import Bars3Solid from 'simple-react-heroicons/icons/Bars3Solid'
 import Otter from '../src/index'
 import FieldTypes from '../src/core/definitions/field-types'
 import {dynamic_data, set_dynamic_data} from '../src/core/definitions/utils'
@@ -248,17 +247,16 @@ const header_block_field_names = header_block_fields.map(field => field.name)
 
 export const header_block = {
   type:      'Header',
-  thumbnail:
-    'https://res.cloudinary.com/drtjqpz13/image/upload/v1638776102/Wombat/Screenshot_2021-12-06_at_07.34.30.png',
-  fields: [...header_block_fields, ...block_options.fields],
-  tabs:   [
+  thumbnail: 'https://res.cloudinary.com/drtjqpz13/image/upload/v1638776102/Wombat/Screenshot_2021-12-06_at_07.34.30.png',
+  fields:    [...header_block_fields, ...block_options.fields],
+  tabs:      [
     {
       Icon:   PencilSolid,
       label:  'Content',
       fields: header_block_field_names,
     },
     {
-      Icon:   CogSolid,
+      Icon:   Cog8ToothSolid,
       label:  'Settings',
       fields: block_options_field_names,
     },
@@ -288,9 +286,9 @@ export const text_block = {
         right:  'Right',
       },
       icons: {
-        left:   MenuAlt2Solid,
-        center: MenuSolid,
-        right:  MenuAlt3Solid,
+        left:   Bars2Solid,
+        center: Bars2Solid,
+        right:  Bars3Solid,
       },
     },
     {
@@ -333,7 +331,7 @@ export const text_block_with_icon_tabs = {
     },
     {
       label:  'Tab 2', // label is overriden by Icon
-      Icon:   CogSolid,
+      Icon:   Cog8ToothSolid,
       fields: ['display_if_example', 'display_if_example_target'],
     },
   ],

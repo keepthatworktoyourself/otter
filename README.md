@@ -1,6 +1,6 @@
 # Otter, an embeddable content editor <img align="right" src="files/otter.png" width=60 height=60>
 
-[![Build Status](https://travis-ci.com/bhallstein/otter.svg?branch=int)](https://travis-ci.com/bhallstein/otter)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/keepthatworktoyourself/otter/tree/int.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/keepthatworktoyourself/otter/tree/int)
 
 Otter is perhaps the ~~furriest~~ easiest way in the universe to embed a content editor in your react/preact application.
 
@@ -182,7 +182,7 @@ export const header_block = {
       fields: ['heading', 'subheading'],
     },
     {
-      Icon:   CogSolid,
+      Icon:   Cog8ToothSolid,
       fields: ['align'],
     },
   ],

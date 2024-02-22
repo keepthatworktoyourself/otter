@@ -1,0 +1,13 @@
+version: 2.1
+jobs:
+  otter-tests:
+    docker:
+      - image: cimg/node:current
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm test
+workflows:
+  run-all:
+    jobs:
+      - otter-tests

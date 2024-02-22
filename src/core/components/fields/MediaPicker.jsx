@@ -1,9 +1,9 @@
 import React from 'react'
 import DocumentOutline from 'simple-react-heroicons/icons/DocumentOutline'
 import DocumentTextOutline from 'simple-react-heroicons/icons/DocumentTextOutline'
-import DocumentReportOutline from 'simple-react-heroicons/icons/DocumentReportOutline'
+import DocumentChartBarOutline from 'simple-react-heroicons/icons/DocumentChartBarOutline'
 import FilmOutline from 'simple-react-heroicons/icons/FilmOutline'
-import ChartSquareBarOutline from 'simple-react-heroicons/icons/ChartSquareBarOutline'
+import ChartBarSquareOutline from 'simple-react-heroicons/icons/ChartBarSquareOutline'
 import PresentationChartBarOutline from 'simple-react-heroicons/icons/PresentationChartBarOutline'
 import {useThemeContext} from '../../contexts/ThemeContext'
 import {classNames} from '../../helpers/style'
@@ -48,11 +48,11 @@ function MediaPickerImagePreview({value, className}) {
 
   else {
     const Icon = {
-      pdf:  DocumentReportOutline,
+      pdf:  DocumentChartBarOutline,
       doc:  DocumentTextOutline,
       docx: DocumentTextOutline,
-      xls:  ChartSquareBarOutline,
-      xlsx: ChartSquareBarOutline,
+      xls:  ChartBarSquareOutline,
+      xlsx: ChartBarSquareOutline,
       ppt:  PresentationChartBarOutline,
       pptx: PresentationChartBarOutline,
       mov:  FilmOutline,

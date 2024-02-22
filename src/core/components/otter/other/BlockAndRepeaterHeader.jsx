@@ -1,6 +1,6 @@
 import React from 'react'
 import ChevronDownSolid from 'simple-react-heroicons/icons/ChevronDownSolid'
-import ClipboardCopySolid from 'simple-react-heroicons/icons/ClipboardCopySolid'
+import ClipboardDocumentCheckSolid from 'simple-react-heroicons/icons/ClipboardDocumentCheckSolid'
 import TrashSolid from 'simple-react-heroicons/icons/TrashSolid'
 import {TabsBtn} from '../../primitives/Tabs'
 import {useThemeContext} from '../../../contexts/ThemeContext'
@@ -118,7 +118,7 @@ export default function BlockAndRepeaterHeader({
 
       <div className="flex svg-font items-center" style={{fontSize: '1.25em'}}>
         {ctx.dev_mode && (
-          <TabIcon Icon={ClipboardCopySolid}
+          <TabIcon Icon={ClipboardDocumentCheckSolid}
                    onClick={() => copy_to_clipboard(ctx.data[index])}
                    iconThemeClassNamesObj={iconThemeClassNamesObj} />
         )}

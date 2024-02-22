@@ -1,5 +1,5 @@
 import React, {useCallback, useRef, useState} from 'react'
-import SearchSolid from 'simple-react-heroicons/icons/SearchSolid'
+import MagnifyingGlassSolid from 'simple-react-heroicons/icons/MagnifyingGlassSolid'
 import OInput from '../default-ui/OInput'
 import PopupMenuAnimated from '../otter/PopupMenu'
 import {usePageData} from '../../contexts/PageDataContext'
@@ -46,7 +46,7 @@ export default function Searchable({field_def, parent_block_data}) {
   return (
     <div className="relative">
       <OInput type="text"
-              Icon={SearchSolid}
+              Icon={MagnifyingGlassSolid}
               value={value && search_term === null ? value?.display : search_term}
               onChange={cb__change}
               ref={input_ref} />
